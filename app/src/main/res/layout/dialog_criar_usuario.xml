@@ -1,0 +1,236 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogCriarUsuario"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".caixadialogo.DialogCriarUsuario">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margem_lateral_formulario"
+        android:layout_marginBottom="@dimen/margem_lateral_formulario">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextNome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:hint="@string/nome_usuario"
+                    android:inputType="textPersonName" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextNumeroTelefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:ems="10"
+                    android:hint="@string/Numero_Telefone"
+                    android:inputType="phone" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEndereco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:ems="10"
+                    android:hint="@string/endereco"
+                    android:inputType="textMultiLine|text"
+                    android:lines="5" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/txt_estado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/estado"
+                android:textColor="@color/black" />
+
+
+            <Switch
+                android:id="@+id/switch_estado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/estado_desbloqueado" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editCodigoPin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/cor_castanha" >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextCodigoPin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:digits="0123456789"
+                    android:ems="10"
+                    android:hint="@string/codigopin"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberPassword"
+                    android:maxLines="1"
+                    android:text="123456" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editCodigoPinNovamente"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/cor_castanha" >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextCodigoPinNovamente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:digits="0123456789"
+                    android:ems="10"
+                    android:hint="@string/codigopinnovamente"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberPassword"
+                    android:maxLines="1"
+                    android:text="123456" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/textDataCria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textDataModifica"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <Button
+                android:id="@+id/buttonCriarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/criar" />
+
+            <Button
+                android:id="@+id/buttonGuardar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/salvar_alteracao"
+                android:visibility="gone"
+                app:backgroundTint="@android:color/holo_green_light" />
+
+            <Button
+                android:id="@+id/buttonEliminarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/eliminar_usuario"
+                android:visibility="gone"
+                app:backgroundTint="@android:color/holo_red_light" />
+
+            <Button
+                android:id="@+id/buttonCancelar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/cancelar"
+                app:backgroundTint="@android:color/holo_orange_light" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
+
+
+
+</LinearLayout>

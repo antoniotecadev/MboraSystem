@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".caixadialogo.DialogCriarProduto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/divider8"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:text="@string/categorias"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerCategoria"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:spinnerMode="dropdown" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <Button
+                android:id="@+id/btnExportarImportarLocal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/exportar_local" />
+
+            <Button
+                android:id="@+id/btnExportarImportarNuvem"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/exportar_nuvem" />
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:text="@string/cancelar"
+                app:backgroundTint="@android:color/holo_orange_light" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.appcompat.widget.LinearLayoutCompat>

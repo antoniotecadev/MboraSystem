@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/nome_sistema"
+        android:textAlignment="center"
+        android:textColor="@color/cor_castanha"
+        android:textSize="@dimen/tamanho_nome_sistema_tela_inicial_600"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/tvinfoCodigoPin"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:text="@string/tvIntroduzirCodigoPin"
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="25dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="203dp" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="50dp"
+        app:columnCount="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvinfoCodigoPin"
+        app:layout_constraintStart_toStartOf="@+id/tvinfoCodigoPin"
+        app:rowCount="4">
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:text="1"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:layout_marginLeft="@dimen/margem_teclado"
+            android:layout_marginRight="@dimen/margem_teclado"
+            android:text="2"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn3"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:text="3"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn4"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:text="4"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn5"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:layout_marginLeft="@dimen/margem_teclado"
+            android:layout_marginRight="@dimen/margem_teclado"
+            android:text="5"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn6"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:text="6"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn7"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:text="7"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn8"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:layout_marginLeft="@dimen/margem_teclado"
+            android:layout_marginRight="@dimen/margem_teclado"
+            android:text="8"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn9"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:text="9"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btnMenu"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            app:icon="@android:drawable/ic_menu_myplaces"
+            app:iconGravity="textEnd"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn0"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:layout_marginLeft="@dimen/margem_teclado"
+            android:layout_marginRight="@dimen/margem_teclado"
+            android:text="0"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/purple_500"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btnApagar"
+            android:layout_width="@dimen/tamanho_teclado_600"
+            android:layout_height="@dimen/tamanho_teclado_600"
+            android:textSize="@dimen/tamanho_texto_teclado_600"
+            app:backgroundTint="@color/cor_castanha"
+            app:icon="@drawable/ic_baseline_backspace_24"
+            app:iconGravity="textEnd"
+            tools:layout_editor_absoluteX="233dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <TextView
+        android:id="@+id/d6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="●"
+        android:textSize="@dimen/tamanho_bolinha_600"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintEnd_toEndOf="@+id/tvinfoCodigoPin"
+        app:layout_constraintStart_toEndOf="@+id/d5" />
+
+    <TextView
+        android:id="@+id/d1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="●"
+        android:textSize="@dimen/tamanho_bolinha_600"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintEnd_toStartOf="@+id/d2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tvinfoCodigoPin" />
+
+    <TextView
+        android:id="@+id/d3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="●"
+        android:textSize="@dimen/tamanho_bolinha_600"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintEnd_toStartOf="@+id/d4"
+        app:layout_constraintStart_toEndOf="@+id/d2" />
+
+    <TextView
+        android:id="@+id/d5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="●"
+        android:textSize="@dimen/tamanho_bolinha_600"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintEnd_toStartOf="@+id/d6"
+        app:layout_constraintStart_toEndOf="@+id/d4" />
+
+    <TextView
+        android:id="@+id/d2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="●"
+        android:textSize="@dimen/tamanho_bolinha_600"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintEnd_toStartOf="@+id/d3"
+        app:layout_constraintStart_toEndOf="@+id/d1" />
+
+    <TextView
+        android:id="@+id/d4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="●"
+        android:textSize="@dimen/tamanho_bolinha_600"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+        app:layout_constraintEnd_toStartOf="@+id/d5"
+        app:layout_constraintStart_toEndOf="@+id/d3" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,193 @@
+package com.yoga.mborasystem.view;
+
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.xwray.groupie.GroupAdapter;
+import com.xwray.groupie.GroupieViewHolder;
+import com.xwray.groupie.Item;
+import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.FragmentUsuarioListBinding;
+import com.yoga.mborasystem.model.entidade.Usuario;
+import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
+
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+public class UsuarioFragment extends Fragment {
+
+    private Bundle bundle;
+    private GroupAdapter adapter;
+    private UsuarioViewModel usuarioViewModel;
+    private FragmentUsuarioListBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new GroupAdapter();
+        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
+        binding = FragmentUsuarioListBinding.inflate(inflater, container, false);
+
+        binding.recyclerViewListaUsuario.setAdapter(adapter);
+        binding.recyclerViewListaUsuario.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        binding.criarUsuarioFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario);
+            }
+        });
+
+        usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), new Observer<List<Usuario>>() {
+            @Override
+            public void onChanged(List<Usuario> usuarios) {
+                adapter.clear();
+                for (Usuario usuario : usuarios) {
+                    adapter.add(new ItemUsuario(usuario));
+                }
+            }
+        });
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (getArguments() != null) {
+            if (getArguments().getBoolean("master")) {
+                inflater.inflate(R.menu.menu_criar_usuario, menu);
+            } else {
+                binding.criarUsuarioFragment.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+        return NavigationUI.onNavDestinationSelected(item, navController)
+                || super.onOptionsItemSelected(item);
+    }
+
+    class ItemUsuario extends Item<GroupieViewHolder> {
+
+        Usuario usuario;
+
+        public ItemUsuario(Usuario usuarios) {
+            this.usuario = usuarios;
+        }
+
+        @Override
+        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
+
+            bundle = new Bundle();
+
+            TextView nome = viewHolder.itemView.findViewById(R.id.txtNomeUsuario);
+            TextView estado = viewHolder.itemView.findViewById(R.id.txtBloquear);
+            TextView tel = viewHolder.itemView.findViewById(R.id.txtTel);
+            TextView end = viewHolder.itemView.findViewById(R.id.txtEnd);
+
+            if (getArguments() != null) {
+                if (!getArguments().getBoolean("master")) {
+                    viewHolder.itemView.findViewById(R.id.btnEntrar).setEnabled(false);
+                    viewHolder.itemView.findViewById(R.id.btnEliminar).setVisibility(View.GONE);
+                }
+            }
+
+            nome.setText(usuario.getNome());
+            tel.setText(usuario.getTelefone());
+            end.setText(usuario.getEndereco());
+            estado.setText(usuario.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
+
+            viewHolder.itemView.findViewById(R.id.btnEntrar).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Ultilitario.onClickColorRecyclerView(viewHolder.itemView);
+                    verDadosUsuario();
+                }
+            });
+
+            viewHolder.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    menu.setHeaderTitle(usuario.getNome());
+                    menu.add(R.string.editar).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            verDadosUsuario();
+                            return false;
+                        }
+                    });//groupId, itemId, order, title
+                    menu.add(R.string.eliminar_usuario).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            deleteUser();
+                            return false;
+                        }
+                    });
+                }
+            });
+
+            viewHolder.itemView.findViewById(R.id.btnEliminar).setOnClickListener(v -> deleteUser());
+
+        }
+
+        @Override
+        public int getLayout() {
+            return com.yoga.mborasystem.R.layout.fragment_usuario;
+        }
+
+        private void verDadosUsuario() {
+            if (getArguments() != null) {
+                bundle.putBoolean("master", getArguments().getBoolean("master"));
+            }
+            bundle.putParcelable("usuario", usuario);
+            Navigation.findNavController(getView()).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario, bundle);
+        }
+
+        private void deleteUser() {
+            usuario.setId(usuario.getId());
+            usuario.setEstado(3);
+            usuario.setData_elimina(Ultilitario.getDateCurrent());
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+            alert.setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")");
+            alert.setMessage(getString(R.string.tem_certeza_eliminar_usuario));
+            alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
+            alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> usuarioViewModel.eliminarUsuario(usuario, true, null));
+            alert.show();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        if (bundle != null) {
+            bundle.clear();
+        }
+    }
+}

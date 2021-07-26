@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <dialog
+        android:id="@+id/dialogCodigoPin"
+        android:name="com.yoga.mborasystem.caixadialogo.DialogSenha"
+        android:label="@string/admin_master"
+        tools:layout="@layout/dialog_senha">
+        <action
+            android:id="@+id/action_dialogCodigoPin_to_navigation"
+            app:destination="@id/navigation"
+            app:popUpTo="@id/dialogCodigoPin"
+            app:popUpToInclusive="true" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/bloquearFragment"
+        android:name="com.yoga.mborasystem.view.LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_activarMbora"
+            app:destination="@id/activarMbora"
+            app:enterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_loginFragment_to_dialogCodigoPin"
+            app:destination="@id/dialogCodigoPin" />
+        <action
+            android:id="@+id/action_loginFragment_to_navigation"
+            app:destination="@id/navigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/bloquearFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/cadastrarClienteFragment"
+        android:name="com.yoga.mborasystem.view.CadastrarClienteFragment"
+        android:label="@string/criar_conta"
+        tools:layout="@layout/fragment_cadastrar_cliente">
+        <action
+            android:id="@+id/action_cadastrarClienteFragment_to_activarMbora"
+            app:destination="@id/activarMbora"
+            app:enterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/cadastrarClienteFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/activarMbora"
+        android:name="com.yoga.mborasystem.view.ActivarMboraSystem"
+        android:label="@string/activar_mborasystem"
+        tools:layout="@layout/fragment_activar_mborasytem" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.yoga.mborasystem.view.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/bloquearFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_cadastrarClienteFragment"
+            app:destination="@id/cadastrarClienteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <navigation
+        android:id="@+id/navigation"
+        app:startDestination="@id/homeFragment">
+        <action
+            android:id="@+id/action_global_bloquearFragment"
+            app:destination="@id/bloquearFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <dialog
+            android:id="@+id/dialogCriarProduto"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogCriarProduto"
+            android:label="DialogCriarProduto"
+            tools:layout="@layout/dialog_criar_produto" />
+        <dialog
+            android:id="@+id/dialogCriarCategoria"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogCriarCategoria"
+            android:label="DialogCriarCategoria"
+            tools:layout="@layout/dialog_criar_categoria" />
+        <dialog
+            android:id="@+id/dialogCriarUsuario"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogCriarUsuario"
+            android:label="DialogCriarUsuario"
+            tools:layout="@layout/dialog_criar_usuario" />
+        <dialog
+            android:id="@+id/alterarClienteFragment"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogAlterarCliente"
+            android:label="DialogAlterarCliente"
+            tools:layout="@layout/fragment_cadastrar_cliente" />
+        <dialog
+            android:id="@+id/dialogFiltrarProduto"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogFiltrarProduto"
+            android:label="DialogFiltrarProduto"
+            tools:layout="@layout/dialog_filtrar_produto" />
+        <dialog
+            android:id="@+id/dialogExportarImportar"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogExportarImportar"
+            android:label="DialogExportarImportar"
+            tools:layout="@layout/dialog_exportar_importar" />
+        <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.yoga.mborasystem.view.HomeFragment"
+            android:label="@string/casa"
+            tools:layout="@layout/fragment_home">
+            <action
+                android:id="@+id/action_homeFragment_to_usuarioFragment"
+                app:destination="@id/usuarioFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_homeFragment_to_categoriaProdutoFragment"
+                app:destination="@id/categoriaProdutoFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_homeFragment_to_dialogAlterarCliente"
+                app:destination="@id/alterarClienteFragment" />
+            <action
+                android:id="@+id/action_homeFragment_to_dialogSenha"
+                app:destination="@id/dialogSenha" />
+            <action
+                android:id="@+id/action_homeFragment_to_facturaFragment"
+                app:destination="@id/facturaFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/usuarioFragment"
+            android:name="com.yoga.mborasystem.view.UsuarioFragment"
+            android:label="@string/usuarios"
+            tools:layout="@layout/fragment_usuario_list">
+            <action
+                android:id="@+id/action_usuarioFragment_to_dialogCriarUsuario"
+                app:destination="@id/dialogCriarUsuario" />
+        </fragment>
+        <fragment
+            android:id="@+id/categoriaProdutoFragment"
+            android:name="com.yoga.mborasystem.view.CategoriaProdutoFragment"
+            android:label="@string/categorias"
+            tools:layout="@layout/fragment_categoria_produto">
+            <action
+                android:id="@+id/action_categoriaProdutoFragment_to_listProdutoFragment"
+                app:destination="@id/listProdutoFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_categoriaProdutoFragment_to_dialogCriarCategoria"
+                app:destination="@id/dialogCriarCategoria"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_categoriaProdutoFragment_to_dialogExportarImportar"
+                app:destination="@id/dialogExportarImportar" />
+        </fragment>
+        <fragment
+            android:id="@+id/listProdutoFragment"
+            android:name="com.yoga.mborasystem.view.ListProdutoFragment"
+            tools:layout="@layout/fragment_produto_list">
+            <action
+                android:id="@+id/action_listProdutoFragment_to_dialogCriarProduto"
+                app:destination="@id/dialogCriarProduto"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_listProdutoFragment_to_dialogFiltrarProduto2"
+                app:destination="@id/dialogFiltrarProduto" />
+        </fragment>
+        <dialog
+            android:id="@+id/dialogSenha"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogSenha"
+            android:label="DialogSenha"
+            tools:layout="@layout/dialog_senha"/>
+        <fragment
+            android:id="@+id/facturaFragment"
+            android:name="com.yoga.mborasystem.view.FacturaFragment"
+            android:label="@string/factura"
+            tools:layout="@layout/fragment_factura" >
+            <action
+                android:id="@+id/action_facturaFragment_to_dialogVerificarVenda"
+                app:destination="@id/dialogVerificarVenda" />
+        </fragment>
+        <dialog
+            android:id="@+id/dialogVerificarVenda"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogVerificarVenda"
+            android:label="DialogVerificarVenda"
+            tools:layout="@layout/dialog_verificar_venda"/>
+    </navigation>
+
+</navigation>

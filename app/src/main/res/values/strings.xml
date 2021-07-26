@@ -1,0 +1,308 @@
+<resources>
+    <string name="app_name">MboraSystem</string>
+    <string name="nome_sistema">MboraSystem</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="tvIntroduzirCodigoPin">Introduzir código PIN</string>
+    <string name="infoPinIncorreto">PIN incorreto</string>
+    <string name="senha_incorreta">Senha incorreta</string>
+
+    <string name="infoAviso1">
+        <br>Código PIN incorreto\n</br>
+        <br>A aplicação será bloqueada\n</br>
+        por 1 minuto se errar mais 2 vezes
+    </string>
+
+    <string name="infoAviso2">
+        <br>Código PIN incorreto\n</br>
+        <br>A aplicação será bloqueada\n</br>
+        por 1 minuto se errar mais 1 vez
+    </string>
+
+    <string name="infoActivacaoMboraSystem">
+        Você precisa inserir uma chave do app (App key) para activar o MboraSystem.
+        Sua chave do app (App key) irá ser enviada para o seu número de telefone e para o seu email, após a criação da conta online do MboraSystem e pagamentos regularizados.
+    </string>
+
+    <string name="nome_produto">Nome do Produto</string>
+    <string name="Sobre_Nome">Sobrenome</string>
+    <string name="nifbi">NIF/BI</string>
+    <string name="Numero_Telefone">Número de telefone</string>
+    <string name="Numero_Telefone_Alternativo">Número de telefone alternativo</string>
+    <string name="Email">Email</string>
+    <string name="localizacao_e_endereco">Localização e Endereço do Estabelecimento</string>
+    <string name="identificação">Identificação</string>
+    <string name="municipio">Município</string>
+    <string name="bairro">Bairro</string>
+    <string name="rua">Rua</string>
+    <string name="codigopin">Código PIN</string>
+    <string name="criar_conta">Criar Conta</string>
+    <string name="codigopinnovamente">Repetir código PIN</string>
+    <string name="nome_invalido">Nome não é válido</string>
+    <string name="sobrenome_invalido">Sobrenome não é válido</string>
+    <string name="nifbi_invalido">NIF/BI não é válido</string>
+    <string name="numero_invalido">Número não é válido</string>
+    <string name="email_invalido">Email não é válido</string>
+    <string name="municipio_invalido">Município não é válido</string>
+    <string name="bairro_invalido">Bairro não é válida</string>
+    <string name="rua_invalida">Rua não é válida</string>
+    <string name="nome_curto">"Nome muito curto "</string>
+    <string name="sobrenome_curto">Sobrenome muito curto</string>
+    <string name="nifbi_incompleto">NIF/BI incompleto</string>
+    <string name="numero_incompleto">"Número incompleto "</string>
+    <string name="senha_invalida">Senha não é válida</string>
+    <string name="codigopin_incompleto">O código PIN requer 6 dígitos</string>
+    <string name="pin_diferente">Código PIN diferente</string>
+    <string name="entrar_conta">Entrar em minha conta</string>
+    <string name="pressior_sair">Pressione novamente voltar para sair</string>
+    <string name="codigo_activacao">Código de Activação</string>
+    <string name="activar_mborasystem">Activar MboraSystem</string>
+    <string name="introduzir_codigo_activacao">Introduzir código de activação</string>
+    <string name="active_mborasystem">Active o MboraSystem</string>
+    <string name="categoria_produto">Categoria/Produto</string>
+    <string name="usuario">Usuário</string>
+    <string name="venda">Venda</string>
+    <string name="cliente">Cliente</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="dados_usuarios_actividades">Dados de usuários e suas actividades</string>
+    <string name="lista_produtos_categorias">Lista de produtos e suas categorias</string>
+    <string name="venda_produtos_efectuadas">Venda de produtos efectuadas</string>
+    <string name="dados_clientes_compras">Dados de clientes e suas compras</string>
+    <string name="casa">Casa</string>
+    <string name="usuarios">USUÁRIOS</string>
+    <string name="criar_usuario">CRIAR USUÁRIO</string>
+    <string name="provincia">Província:</string>
+    <string name="normal">Normal</string>
+    <string name="admin">Administrador</string>
+    <string name="criar">CRIAR</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="usuario_criado">Usuário Criado</string>
+    <string name="usuario_nao_criado">Erro: Usuário não criado</string>
+    <string name="editar">Editar</string>
+    <string name="eliminar_produto">Eliminar Produto</string>
+    <string name="desativar">Desativar</string>
+    <string name="estado">Estado:</string>
+    <string name="Estado">ESTADO</string>
+    <string name="tipo">Tipo:</string>
+    <string name="desactivado">Desactivado</string>
+    <string name="estado_desbloqueado">Desbloqueado</string>
+    <string name="estado_bloqueado">Bloqueado</string>
+    <string name="salvar_alteracao">Salvar Alteração</string>
+    <string name="falha_lista_usuario">Falha ao carregar lista de usuários</string>
+    <string name="alteracao_feita">Alteração feita</string>
+    <string name="usuario_eliminado">Usuário eliminado</string>
+    <string name="usuario_nao_eliminado">Usuário não eliminado</string>
+    <string name="confirmacao">Confirmação (eliminar)</string>
+    <string name="confirmar">CONFIRMAR</string>
+    <string name="codigopin_invalido">Código pin não é válido</string>
+    <string name="criar_categoria">CRIAR CATEGORIA</string>
+    <string name="categorias">CATEGORIAS</string>
+    <string name="nova_categoria">Nova categoria</string>
+    <string name="categoria_criada">Categoria criada</string>
+    <string name="categoria_existe">Esta categoria já existe</string>
+    <string name="categoria_nao_criada">Categoria não criada</string>
+    <string name="falha_lista_categoria">Falha ao carregar categorias</string>
+    <string name="alterar_categoria">Alterar Categoria</string>
+    <string name="abrir">Abrir</string>
+    <string name="cadastrar_produto">CADASTRAR PRODUTO</string>
+    <string name="criar_produto">Criar produto</string>
+    <string name="preco">Preço</string>
+    <string name="quantidade">Quantidade</string>
+    <string name="codigo_bar">Código de barra</string>
+    <string name="scanear">scanear</string>
+    <string name="scaner_code_bar_cancelado">Scaneamento de código de barra cancelado</string>
+    <string name="novo_produto">Novo produto</string>
+    <string name="foto">Foto</string>
+    <string name="falha_carregar_img">Falha ao carregar a imagem</string>
+    <string name="img_carregada">Imagem carregada</string>
+    <string name="categorias_carregar">Categorias carregadas</string>
+    <string name="alinhar_codigo_barra">Alinhar código de barras para fazer a leitura</string>
+    <string name="continuar_criar_produto">Continuar a criar produto</string>
+    <string name="descricao">Descrição</string>
+    <string name="descricao_invalida">Descrição não é válida</string>
+    <string name="bazar">Bazar</string>
+    <string name="bebidas">Bebidas</string>
+    <string name="charcutaria_lacticios">Charcutaria/Lacticínios</string>
+    <string name="frutas_legumes">Frutas e Legumes</string>
+    <string name="higiene_beleza">Higiene e Beleza</string>
+    <string name="merciaria">Merciaria</string>
+    <string name="padaria_pastelaria">Padaria/Pastelaria</string>
+    <string name="peixaria">Peixaria</string>
+    <string name="talho_congelados">Talho e Congelados</string>
+    <string name="maquina_electrodomestico">Máquina Electrodoméstico etc...</string>
+    <string name="agua_gasosa_sumo">Água Gasosa Sumo etc...</string>
+    <string name="chourico_queijo_leite_yogurte">Chouriço Queijo Leite Yogurte etc...</string>
+    <string name="tomate_maca_laranja">Tomate Maçã Laranja etc...</string>
+    <string name="papelhigienico_detergente_pastadedente_batom">Papel higiênico Detergente Pasta de dente Batom etc...</string>
+    <string name="arroz_fuba_bolacha_cereais_cha_oleo">Arroz Fuba Bolacha Cereais Chá Óleo etc...</string>
+    <string name="pao_bolo_pasteis_bolinho">Pão Bolo Pastéis Bolinho etc...</string>
+    <string name="peixe_lagosta_caranguejo">Peixe Lagosta Caranguejo etc...</string>
+    <string name="carne_frango_salsicha">Carne Frango Salsicha etc...</string>
+    <string name="preco_invalido">Preço não é válido</string>
+    <string name="quantidade_invalida">Quantidade não é válida</string>
+    <string name="codigobarra_invalido">Código de barra não é válido</string>
+    <string name="produto_nao_criado">Produto não criado</string>
+    <string name="produto_existe">Produto já existe</string>
+    <string name="produto_criado">Produto criado</string>
+    <string name="falha_lista_produto">Produtos não carregados</string>
+    <string name="idcategoria_nao_encontrado">Id de categoria não encontrado</string>
+    <string name="produtos">PRODUTOS</string>
+    <string name="quant_produto">Quantidade de produto não encontrado</string>
+    <string name="nome_produto_invalido">Produto já existe</string>
+    <string name="codigobarra_existe">Código de barra já existe</string>
+    <string name="produto_eliminado">Produto eliminado</string>
+    <string name="produto_nao_eliminado">Produto não eliminado</string>
+    <string name="termo_politica_privacidade">Aceito os termos e política de privacidade</string>
+    <string name="conta_criada">Conta criada</string>
+    <string name="conta_nao_criada">Conta não criada</string>
+    <string name="mascara_chave_app">#####-#####-#####-#####</string>
+    <string name="chave_app_parece">A chave do app (app key) parece esta: #####-#####-#####-#####</string>
+    <string name="termo_condicao">Termos e condições</string>
+    <string name="aceito_termo_condicao">Aceito</string>
+    <string name="politica_privacidade">Política de privacidade</string>
+    <string name="conta_cliente_ja_existe">Já existe uma conta clinte para este App</string>
+    <string name="conta">Conta</string>
+    <string name="ok">Ok</string>
+    <string name="tentar_novamente">Tente novamente após 1 minuto</string>
+    <string name="admin_master">Admin(master)</string>
+    <string name="entrar">Entrar</string>
+    <string name="tem_certeza_eliminar_usuario">Tens a certeza que quer eliminar este usuário ?</string>
+    <string name="categoria_nao_renomeada">Categoria não renomeada</string>
+    <string name="categoria_renomeada">Categoria renomeada</string>
+    <string name="categoria_eliminada">Categoria eliminada</string>
+    <string name="categoria_nao_eliminada">" Categoria não eliminada"</string>
+    <string name="tem_certeza_eliminar_produto">Tens a certeza que quer eliminar este produto ?</string>
+    <string name="tem_certeza_eliminar_categoria">Todas as actividades e produtos relacionados(as) a esta categoria também serão eliminados(as)\nTens a certeza que ques eliminar esta categoria ?</string>
+    <string name="pesquisar_produto">Pesquisar produto</string>
+    <string name="pesquisar_categoria">Pesquisar categoria</string>
+    <string name="fechar">Fechar</string>
+    <string name="introduza_chave_aqui">Introduza a chave aqui</string>
+    <string name="dados_nao_encontrado">Dados não encontrado</string>
+    <string name="dados_empresa">Empresa</string>
+    <string name="subscricao_pacote">Subscrição de pacote</string>
+    <string name="bloquear">Bloquear</string>
+    <string name="sair">Sair</string>
+    <string name="tem_certeza_sair_app">Tem a certeza que quer sair do MboraSystem</string>
+    <string name="nao">Não</string>
+    <string name="sim">Sim</string>
+    <string name="nome_loja">Nome da Loja</string>
+    <string name="referencia">Referência</string>
+    <string name="filtrar_produto">Filtrar Produto</string>
+    <string name="pesquisar_nome_referencia">Pesquisar por Nome ou Referência</string>
+    <string name="preco_max">max</string>
+    <string name="preco_min">min</string>
+    <string name="limpar">Limpar</string>
+    <string name="nome_referencia_invalida">Nome ou Referência inválida</string>
+    <string name="preco_min_invalido">Preço mínimo inválido</string>
+    <string name="preco_max_invalido">Preço máximo inválido</string>
+    <string name="id_categoria_vazio">Id de categoria vazio</string>
+    <string name="produto_nao_encontrado">Produto não encontrado</string>
+    <string name="preco_fornecedor">Preço fornecedor</string>
+    <string name="precisa_ajuda">Precisa de ajuda?</string>
+    <string name="exportar_produto">Exportar Produtos</string>
+    <string name="importar_produto">Importar Produtos</string>
+    <string name="eliminar_categoria">Eliminar Categoria</string>
+    <string name="nome_categoria">Nome da Categoria</string>
+    <string name="nome_usuario">Nome do Usuário</string>
+    <string name="eliminar_usuario">Eliminar Usuário</string>
+    <string name="nome">Nome</string>
+    <string name="alterar_usuario">Alterar Usuário</string>
+    <string name="exportar_importar_produto">Exportar/Importar Produtos</string>
+    <string name="exportar_importar_categoria">Exportar/Importar Categorias</string>
+    <string name="exportar_categoria">Exportar Categorias</string>
+    <string name="importar_categoria">Importar Categorias</string>
+    <string name="exportar">Exportar</string>
+    <string name="importar">Importar</string>
+    <string name="exportar_local">Exportar(Local)</string>
+    <string name="exportar_nuvem">Exportar(Núvem)</string>
+    <string name="salvar">Salvar</string>
+    <string name="categoria_nao_encontrada">Categoria não encontrada</string>
+    <string name="produto_nao_encontrada">Produto não encontrado</string>
+    <string name="turn_on_flashlight">Turn on Flashlight</string>
+    <string name="turn_off_flashlight">Turn off Flashlight</string>
+    <string name="factura">Factura</string>
+    <string name="nome_cliente">Nome do cliente</string>
+    <string name="criar_cliente">Criar Cliente</string>
+    <string name="clientes">Clientes</string>
+    <string name="endereco_invalido">Endereço inválido</string>
+    <string name="cliente_criado">Cliente criado</string>
+    <string name="cliente_nao_criado">Cliente não criado</string>
+    <string name="falha_lista_clientes">Falha ao carregar clientes</string>
+    <string name="alteracao_nao_feita">Alteração</string>
+    <string name="cliente_eliminado">Cliente eliminado(a)</string>
+    <string name="cliente_nao_eliminado">Cliente não eliminado(a)</string>
+    <string name="cliente_nao_encontrado">Cliente não encontrado(a)</string>
+    <string name="alterar_cliente">Alterar Cliente</string>
+    <string name="senha">Senha</string>
+    <string name="repetir_senha">Repetir Senha</string>
+    <string name="codigopin_vazio">Digite o código PIN</string>
+    <string name="usuario_bloqueado">Usuário bloqueado</string>
+    <string name="usuario_desbloqueado">Usuário desbloqueado</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="endereco">Endereço</string>
+    <string name="opcao_conta">Opção de conta:</string>
+    <string name="vencimento_conta">Vencimento da conta:</string>
+    <string name="nunca">Nunca</string>
+    <string name="data">Data:</string>
+    <string name="diamesano">d/m/a</string>
+    <string name="certifique_data">Certique se a data esta certa.</string>
+    <string name="alterar_codigo_pin">Alterar código pin</string>
+    <string name="erro">Erro</string>
+    <string name="data_cria">Data de criação</string>
+    <string name="data_modifica">Data de modificação</string>
+    <string name="info_usuario_bloqueado">Entra em contacto com o seu Administrador</string>
+    <string name="possivel_lucro">Possível lucro:</string>
+    <string name="preco_zero">0,00 Kz</string>
+    <string name="lucro_negativo">! lucro negativo</string>
+    <string name="possivel_lucro_percentagem">Em percentagem:</string>
+    <string name="possivel_receita">Possível receita:</string>
+    <string name="iva">IVA(14%):</string>
+    <string name="montante_iva">IVA</string>
+    <string name="categorias_produtos">Categorias e seus produtos</string>
+    <string name="adicionar_produto">Adicionar produto</string>
+    <string name="total">Total</string>
+    <string name="desfazer">Desfazer</string>
+    <string name="produto_adicionado">adicionado</string>
+    <string name="produto_removido">removido</string>
+    <string name="taxa">Taxa</string>
+    <string name="valor">Valor</string>
+    <string name="ja_scaneado">Produto já foi scaneado</string>
+    <string name="falha">\"Falha: \"</string>
+    <string name="partilhar">Partilhar</string>
+    <string name="produto_importado">Produtos importados</string>
+    <string name="ficheiro_certo">"Erro: Produto não importado, seleccione um ficheiro de produto."</string>
+    <string name="zero">0</string>
+    <string name="desconto">Desconto:</string>
+    <string name="percentagem">%</string>
+    <string name="valor_kwanza">Valor em kwanza</string>
+    <string name="forma_pagamento">Forma de pagamento:</string>
+    <string name="cartao_multicaixa">Cartão Multicaixa</string>
+    <string name="dinheiro">Dinheiro</string>
+    <string name="deposito_bancario">Depósito Bancário</string>
+    <string name="transferencia_bancario">Transferência Bancária</string>
+    <string name="efectuar_venda">Efectuar Venda</string>
+    <string name="verificar_venda">Verificar Venda</string>
+    <string name="total_desconto">Total com desconto</string>
+
+    <string-array name="provincias">
+        <item>Luanda</item>
+    </string-array>
+
+    <string-array name="quantidade">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="estadoproduto">
+        <item>Todos(as)</item>
+        <item>Bloquados(as)</item>
+        <item>Desbloqueados(as)</item>
+    </string-array>
+
+    <string name="desconto_maior">O desconto não pode ser maior que o total.</string>
+    <string name="venda_nao_efectuada">Venda não efectuda</string>
+    <string name="selecciona_forma_pagamento">Selecciona a forma de pagamento</string>
+</resources>

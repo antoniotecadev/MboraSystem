@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/categoriaProdutoFragment"
+        android:icon="@drawable/ic_produto_60"
+        android:title="@string/categoria_produto" />
+    <item
+        android:id="@+id/usuarioFragment"
+        android:icon="@drawable/ic_usario_60"
+        android:title="@string/usuario" />
+</menu>

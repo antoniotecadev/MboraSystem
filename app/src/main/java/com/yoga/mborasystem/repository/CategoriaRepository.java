@@ -1,0 +1,102 @@
+package com.yoga.mborasystem.repository;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.widget.Toast;
+
+import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
+import com.yoga.mborasystem.model.dao.CategoriaDao;
+import com.yoga.mborasystem.model.entidade.Categoria;
+import com.yoga.mborasystem.util.Ultilitario;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Map;
+
+import androidx.appcompat.app.AlertDialog;
+import io.reactivex.Flowable;
+
+public class CategoriaRepository {
+
+    private AppDataBase appDataBase;
+    private CategoriaDao categoriaDao;
+    private WeakReference<Context> contextWeakReference;
+
+    public CategoriaRepository(Context context) {
+        contextWeakReference = new WeakReference<>(context);
+        appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
+        categoriaDao = appDataBase.categoriaDao();
+    }
+
+    public void insert(Categoria cat) {
+        categoriaDao.insert(cat);
+    }
+
+    public void update(Categoria cat) {
+        categoriaDao.update(cat.getCategoria(), cat.getDescricao(), cat.getEstado(), cat.getData_modifica(), cat.getId());
+    }
+
+    public void delete(Categoria cat, boolean lx) {
+        if (lx && (cat != null)) {
+            categoriaDao.deleteLixeira(cat.getEstado(), cat.getData_elimina(), cat.getId());
+        } else {
+            categoriaDao.delete(cat);
+        }
+    }
+
+    public Flowable<List<Categoria>> getCategorias() {
+        return categoriaDao.getCategorias();
+    }
+
+    public Flowable<List<Categoria>> searchCategorias(String categoria) {
+        return categoriaDao.searchCategorias(categoria);
+    }
+
+    public void importarCategorias(Map<String, String> categorias, Context context) {
+        new CategoriaIm(categorias, context).execute();
+    }
+
+    class CategoriaIm extends AsyncTask<Void, Void, Void> {
+
+        Context context;
+        Map<String, String> categorias;
+
+        CategoriaIm(Map<String, String> categorias, Context context) {
+            this.context = context;
+            this.categorias = categorias;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            Categoria categoria = new Categoria();
+
+            for (String ct : categorias.keySet()) {
+                categoria.setCategoria(ct);
+                categoria.setDescricao(categorias.get(ct));
+                categoria.setEstado(1);
+                categoria.setData_cria(Ultilitario.getDateCurrent());
+                categoriaDao.insert(categoria);
+            }
+//            ContentValues contentValues = new ContentValues();
+//
+//            for (String ct : categorias.keySet()) {
+//                contentValues.put("categoria", ct);
+//                contentValues.put("descricao", categorias.get(ct));
+//                contentValues.put("estado", true);
+//                contentValues.put("data_cria", Ultilitario.getDateCurrent());
+//                appDataBase.getOpenHelper().getWritableDatabase().insert("categorias", 0, contentValues);
+//            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(context, R.string.categorias_carregar, Toast.LENGTH_LONG).show();
+        }
+    }
+
+}

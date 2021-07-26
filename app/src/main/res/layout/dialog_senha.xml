@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margem_lateral_formulario"
+        app:boxBackgroundColor="@color/material_on_background_disabled"
+        app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/cor_castanha">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/senha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margem_lateral_formulario"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/margem_lateral_formulario"
+            android:ems="10"
+            android:hint="@string/senha"
+            android:imeOptions="actionDone"
+            android:inputType="textPersonName|text|textPassword"
+            android:text="123456">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutSenhaRepete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margem_lateral_formulario"
+        android:visibility="gone"
+        app:boxBackgroundColor="@color/material_on_background_disabled"
+        app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/cor_castanha">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/senhaRepete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margem_lateral_formulario"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/margem_lateral_formulario"
+            android:ems="10"
+            android:digits="0123456789"
+            android:hint="@string/codigopinnovamente"
+            android:imeOptions="actionDone"
+            android:inputType="numberPassword"
+            android:maxLength="6"
+            android:text="123456">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnEntrar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="@dimen/margem_lateral_formulario"
+        android:layout_marginRight="@dimen/margem_lateral_formulario"
+        android:text="@string/entrar" />
+
+    <Button
+        android:id="@+id/btnAlterar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="@dimen/margem_lateral_formulario"
+        android:layout_marginRight="@dimen/margem_lateral_formulario"
+        android:text="@string/ok"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnCancelar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="@dimen/margem_lateral_formulario"
+        android:layout_marginRight="@dimen/margem_lateral_formulario"
+        android:layout_marginBottom="20dp"
+        android:text="@string/cancelar"
+        app:backgroundTint="@android:color/holo_orange_light" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
