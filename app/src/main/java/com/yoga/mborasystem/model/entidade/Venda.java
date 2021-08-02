@@ -12,6 +12,7 @@ public class Venda {
     private int desconto;
     private int quantidade;
     private int valor_base;
+    private String codigo_Barra;
     private int valor_iva;
     private String pagamento;
     private int total_desconto;
@@ -73,6 +74,14 @@ public class Venda {
 
     public void setValor_base(int valor_base) {
         this.valor_base = valor_base;
+    }
+
+    public String getCodigo_Barra() {
+        return codigo_Barra;
+    }
+
+    public void setCodigo_Barra(String codigo_Barra) {
+        this.codigo_Barra = codigo_Barra;
     }
 
     public int getValor_iva() {

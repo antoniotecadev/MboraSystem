@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
 import android.util.Log;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -43,11 +45,13 @@ public class VendaViewModel extends AndroidViewModel {
         vendaRepository = new VendaRepository(getApplication());
     }
 
-    public void cadastrarVenda(TextInputEditText txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+    @SuppressLint("CheckResult")
+    public void cadastrarVenda(TextInputEditText txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoBarra, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         venda.setNome_cliente(txtNomeCliente.getText().toString());
         venda.setDesconto(Ultilitario.removerKZ(desconto));
         venda.setQuantidade(quantidade);
         venda.setValor_base(valorBase);
+        venda.setCodigo_Barra(codigoBarra);
         venda.setValor_iva(valorIva);
         venda.setPagamento(formaPagamento);
         venda.setTotal_desconto(totalDesconto);

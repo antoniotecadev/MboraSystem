@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.view;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,7 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,11 +40,12 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentFacturaBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.model.entidade.Produto;
-import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +53,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuItemCompat;
@@ -71,6 +74,7 @@ public class FacturaFragment extends Fragment {
     private ArrayList<String> listaCategoria;
     private ProdutoViewModel produtoViewModel;
     private GroupAdapter adapter, adapterFactura;
+    @SuppressLint("StaticFieldLeak")
     private static DecoratedBarcodeView barcodeView;
     private ArrayAdapter<String> listCategoriaAdapter;
     private int total, totaldesconto, valorBase, valorIva;
@@ -117,8 +121,9 @@ public class FacturaFragment extends Fragment {
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         produtoViewModel.getListaProdutosFactura().setValue(produtos);
         binding = FragmentFacturaBinding.inflate(inflater, container, false);
@@ -136,7 +141,6 @@ public class FacturaFragment extends Fragment {
             binding.viewStub.setVisibility(View.VISIBLE);
             barcodeView.resume();
         });
-
         binding.btnClose.setOnClickListener(v -> {
             binding.viewStub.setVisibility(View.GONE);
             barcodeView.pause();
@@ -181,13 +185,10 @@ public class FacturaFragment extends Fragment {
                 }
             }
         });
-
         binding.textTaxa.setText("14%");
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
 
-        binding.btnLimpar.setOnClickListener(v -> {
-            Ultilitario.zerarPreco(binding.textDesconto);
-        });
+        binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
 
         binding.textDesconto.addTextChangedListener(new TextWatcher() {
             @Override
@@ -216,7 +217,21 @@ public class FacturaFragment extends Fragment {
 
         binding.btnEfectuarVenda.setOnClickListener(v -> {
             if (isCheckedFormaPagamento()) {
-                vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal);
+                String codigoBarra = getCodigoDeBarra(10000000) + "" + getCodigoDeBarra(10000000);
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.confirmar_venda)
+                        .setMessage(getString(R.string.cliente) + ": " + binding.txtNomeCliente.getText().toString() + "\n" +
+                                getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
+                                + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
+                                + getString(R.string.desconto) + " " + Ultilitario.formatPreco(binding.textDesconto.getText().toString()) + "\n"
+                                + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
+                                + getString(R.string.valo_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
+                                + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
+                                + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
+                        )
+                        .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoBarra, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal))
+                        .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                        .show();
             } else {
                 Ultilitario.showToast(getContext(), Color.rgb(250, 170, 5), getString(R.string.selecciona_forma_pagamento), R.drawable.ic_toast_erro);
             }
@@ -237,6 +252,10 @@ public class FacturaFragment extends Fragment {
         return binding.checkboxDinheiro.isChecked() || binding.checkboxCartaoMulticaixa.isChecked() || binding.checkboxDepositoBancario.isChecked() || binding.checkboxTransferenciaBancario.isChecked();
     }
 
+    private String getCodigoDeBarra(int numbarBound) {
+        return String.valueOf(new Random().nextInt((numbarBound - 1) + 1) + 1);
+    }
+
     public class ItemProduto extends Item<GroupieViewHolder> {
         private Produto produto;
         private Button btnRemover;
@@ -246,6 +265,7 @@ public class FacturaFragment extends Fragment {
             this.produto = produto;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
             nome = viewHolder.itemView.findViewById(R.id.txtProduto);
@@ -274,11 +294,7 @@ public class FacturaFragment extends Fragment {
         }
 
         private void habilitarDesabilitarButtonEfectuarVenda() {
-            if (adapterFactura.getItemCount() > 0) {
-                binding.btnEfectuarVenda.setEnabled(true);
-            } else {
-                binding.btnEfectuarVenda.setEnabled(false);
-            }
+            binding.btnEfectuarVenda.setEnabled(adapterFactura.getItemCount() > 0);
         }
 
         private void adicionarProduto(long id, Produto produto, View v, boolean b) {
@@ -294,14 +310,11 @@ public class FacturaFragment extends Fragment {
         private void desfazer(String message, long id, View view, Produto produto) {
             Snackbar.make(binding.myCoordinatorLayout, message,
                     Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.desfazer, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (produto == null) {
-                                removerProduto(id, view, "", false);
-                            } else {
-                                adicionarProduto(id, produto, view, false);
-                            }
+                    .setAction(R.string.desfazer, v -> {
+                        if (produto == null) {
+                            removerProduto(id, view, "", false);
+                        } else {
+                            adicionarProduto(id, produto, view, false);
                         }
                     })
                     .show();
@@ -322,6 +335,7 @@ public class FacturaFragment extends Fragment {
             habilitarDesabilitarButtonEfectuarVenda();
         }
 
+        @SuppressLint("SetTextI18n")
         private void somarPreco(Map<Long, Integer> pTotal, long id, boolean isIva, int quant, boolean isRemove) {
             int totalGer = 0, precoUnit = 0, valorGer = 0, ivaGer = 0;
             for (Map.Entry<Long, Integer> precototal : pTotal.entrySet()) {
@@ -365,6 +379,7 @@ public class FacturaFragment extends Fragment {
                 this.produto = produto;
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
                 posicao.put(produto.getId(), position);

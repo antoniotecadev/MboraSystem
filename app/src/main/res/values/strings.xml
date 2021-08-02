@@ -130,15 +130,15 @@
     <string name="padaria_pastelaria">Padaria/Pastelaria</string>
     <string name="peixaria">Peixaria</string>
     <string name="talho_congelados">Talho e Congelados</string>
-    <string name="maquina_electrodomestico">Máquina Electrodoméstico etc...</string>
-    <string name="agua_gasosa_sumo">Água Gasosa Sumo etc...</string>
-    <string name="chourico_queijo_leite_yogurte">Chouriço Queijo Leite Yogurte etc...</string>
-    <string name="tomate_maca_laranja">Tomate Maçã Laranja etc...</string>
-    <string name="papelhigienico_detergente_pastadedente_batom">Papel higiênico Detergente Pasta de dente Batom etc...</string>
-    <string name="arroz_fuba_bolacha_cereais_cha_oleo">Arroz Fuba Bolacha Cereais Chá Óleo etc...</string>
-    <string name="pao_bolo_pasteis_bolinho">Pão Bolo Pastéis Bolinho etc...</string>
-    <string name="peixe_lagosta_caranguejo">Peixe Lagosta Caranguejo etc...</string>
-    <string name="carne_frango_salsicha">Carne Frango Salsicha etc...</string>
+    <string name="maquina_electrodomestico">Máquina Electrodoméstico etc…</string>
+    <string name="agua_gasosa_sumo">Água Gasosa Sumo etc…</string>
+    <string name="chourico_queijo_leite_yogurte">Chouriço Queijo Leite Yogurte etc…</string>
+    <string name="tomate_maca_laranja">Tomate Maçã Laranja etc…</string>
+    <string name="papelhigienico_detergente_pastadedente_batom">Papel higiênico Detergente Pasta de dente Batom etc…</string>
+    <string name="arroz_fuba_bolacha_cereais_cha_oleo">Arroz Fuba Bolacha Cereais Chá Óleo etc…</string>
+    <string name="pao_bolo_pasteis_bolinho">Pão Bolo Pastéis Bolinho etc…</string>
+    <string name="peixe_lagosta_caranguejo">Peixe Lagosta Caranguejo etc…</string>
+    <string name="carne_frango_salsicha">Carne Frango Salsicha etc…</string>
     <string name="preco_invalido">Preço não é válido</string>
     <string name="quantidade_invalida">Quantidade não é válida</string>
     <string name="codigobarra_invalido">Código de barra não é válido</string>
@@ -163,7 +163,7 @@
     <string name="politica_privacidade">Política de privacidade</string>
     <string name="conta_cliente_ja_existe">Já existe uma conta clinte para este App</string>
     <string name="conta">Conta</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="tentar_novamente">Tente novamente após 1 minuto</string>
     <string name="admin_master">Admin(master)</string>
     <string name="entrar">Entrar</string>
@@ -305,4 +305,7 @@
     <string name="desconto_maior">O desconto não pode ser maior que o total.</string>
     <string name="venda_nao_efectuada">Venda não efectuda</string>
     <string name="selecciona_forma_pagamento">Selecciona a forma de pagamento</string>
+    <string name="confirmar_venda">Confirmar venda</string>
+    <string name="vender">vender</string>
+    <string name="valo_base">Valor base</string>
 </resources>
