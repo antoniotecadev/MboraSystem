@@ -257,7 +257,7 @@
     <string name="lucro_negativo">! lucro negativo</string>
     <string name="possivel_lucro_percentagem">Em percentagem:</string>
     <string name="possivel_receita">Possível receita:</string>
-    <string name="iva">IVA(14%):</string>
+    <string name="iva">IVA(14%)</string>
     <string name="montante_iva">IVA</string>
     <string name="categorias_produtos">Categorias e seus produtos</string>
     <string name="adicionar_produto">Adicionar produto</string>
@@ -273,7 +273,7 @@
     <string name="produto_importado">Produtos importados</string>
     <string name="ficheiro_certo">"Erro: Produto não importado, seleccione um ficheiro de produto."</string>
     <string name="zero">0</string>
-    <string name="desconto">Desconto:</string>
+    <string name="desconto">Desconto</string>
     <string name="percentagem">%</string>
     <string name="valor_kwanza">Valor em kwanza</string>
     <string name="forma_pagamento">Forma de pagamento:</string>
@@ -307,5 +307,32 @@
     <string name="selecciona_forma_pagamento">Selecciona a forma de pagamento</string>
     <string name="confirmar_venda">Confirmar venda</string>
     <string name="vender">vender</string>
-    <string name="valo_base">Valor base</string>
+    <string name="valor_base">Valor base</string>
+    <string name="venda_efectuada">Venda Efectuada</string>
+    <string name="imprimir">Imprimir</string>
+    <string name="valor_pago">Valor Pago</string>
+    <string name="troco">Troco</string>
+    <string name="digite_valor_pago">Digite o valor pago</string>
+    <string name="factura_recibo">FACTURA/RECIBO</string>
+    <string name="clienteupper">CLIENTE:</string>
+    <string name="desc_prec_qtd_val">Desc Preco Qtd Valor</string>
+    <string name="total_desc">Total Desconto</string>
+    <string name="pago">Pago</string>
+    <string name="pagamento">Pagamento:</string>
+    <string name="operador">Operador:</string>
+    <string name="nif">NIF:</string>
+    <string name="contacto">CONTACTO:</string>
+    <string name="tel">TEL:</string>
+    <string name="dados_admin_nao">Dados do Admin não encontrado</string>
+    <string name="precisa_kitkat_maior">O seu Android precisa ser igual ou maior que a versão 4.4 (KITKAT)</string>
+    <string name="iva_factura">(iva)</string>
+    <string name="venda_vazia">Venda vazia</string>
+    <string name="factura_guardada">Factura Guardada em MboraSystem</string>
+    <string name="guardar_pdf">Guardar PDF</string>
+    <string name="guardar_primeiro">Guardar PDF para Imprimir</string>
+    <string name="enviar_whatsapp">Enviar Pelo WhatsApp</string>
+    <string name="numero_whatsapp">Número Whatsapp</string>
+    <string name="digite_numero_w">Digite o número do WhatsApp</string>
+    <string name="enviar_w_primeiro">Guardar PDF para Enviar</string>
+
 </resources>

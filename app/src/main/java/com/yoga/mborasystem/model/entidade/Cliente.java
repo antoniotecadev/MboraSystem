@@ -25,11 +25,11 @@ public class Cliente implements Parcelable {
     private String senha;
     private String nomeEmpresa;
 
-    @Ignore private String telefonealternativo;
+    private String telefonealternativo;
     @Ignore private String provincia;
     @Ignore private String municipio;
-    @Ignore private String bairro;
-    @Ignore private String rua;
+    private String bairro;
+    private String rua;
 
     protected Cliente(Parcel in) {
         id = in.readLong();

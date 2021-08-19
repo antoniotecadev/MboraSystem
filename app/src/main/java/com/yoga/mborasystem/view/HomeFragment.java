@@ -1,7 +1,6 @@
 package com.yoga.mborasystem.view;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,13 +9,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.util.Ultilitario;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -42,49 +39,33 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         Toolbar toolbar = binding.toolbar;
         toolbar.inflateMenu(R.menu.menu_bloquear);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Navigation.findNavController(getView()).navigate(R.id.action_global_bloquearFragment);
-                return false;
-            }
+        toolbar.setOnMenuItemClickListener(item -> {
+            Navigation.findNavController(getView()).navigate(R.id.action_global_bloquearFragment);
+            return false;
         });
 
-        binding.floatingActionButtonVenda.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                startActivity(new Intent(getContext(), CustomScannerActivity.class));
-//                startActivity(new Intent(getContext(), ContinuousCaptureActivity.class));
-                Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_facturaFragment);
-            }
+        binding.floatingActionButtonVenda.setOnClickListener(v -> {
+            bundle.putLong("idoperador", getArguments().getLong("idusuario",0));
+            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
 
-        binding.btnUsuario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getArguments() != null) {
-                    bundle.putBoolean("master", getArguments().getBoolean("master"));
-                }
-                Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_usuarioFragment, bundle);
+        binding.btnUsuario.setOnClickListener(v -> {
+            if (getArguments() != null) {
+                bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
+            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_usuarioFragment, bundle);
         });
 
-        binding.btnProduto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getArguments() != null) {
-                    bundle.putBoolean("master", getArguments().getBoolean("master"));
-                }
-                Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
+        binding.btnProduto.setOnClickListener(v -> {
+            if (getArguments() != null) {
+                bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
+            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
         });
 
-        binding.btnCliente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        binding.btnCliente.setOnClickListener(v -> {
         });
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(),getContext()));
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
 
@@ -99,7 +80,7 @@ public class HomeFragment extends Fragment {
                 binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
                 menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
                 menu.findItem(R.id.dialogPlanoPacote).setVisible(false);
-            }else {
+            } else {
                 menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
             }
         }

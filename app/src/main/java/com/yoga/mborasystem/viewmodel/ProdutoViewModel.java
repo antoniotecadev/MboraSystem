@@ -76,13 +76,6 @@ public class ProdutoViewModel extends AndroidViewModel {
         return listaProdutosImport;
     }
 
-    public MutableLiveData<Map<Long, Produto>> getListaProdutosFactura() {
-        if (listaProdutosFactura == null) {
-            listaProdutosFactura = new MutableLiveData<>();
-        }
-        return listaProdutosFactura;
-    }
-
     public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Switch estado, AlertDialog dialog, Boolean continuar, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();

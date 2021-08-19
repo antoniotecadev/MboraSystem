@@ -1,10 +1,13 @@
 package com.yoga.mborasystem.model.entidade;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "vendas")
-public class Venda {
+public class Venda implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -19,6 +22,39 @@ public class Venda {
     private int total_venda;
     private String data_cria;
     private String data_elimina;
+    private long idoperador;
+
+    public Venda(Parcel in) {
+        id = in.readLong();
+        nome_cliente = in.readString();
+        desconto = in.readInt();
+        quantidade = in.readInt();
+        valor_base = in.readInt();
+        codigo_Barra = in.readString();
+        valor_iva = in.readInt();
+        pagamento = in.readString();
+        total_desconto = in.readInt();
+        total_venda = in.readInt();
+        data_cria = in.readString();
+        data_elimina = in.readString();
+        idoperador = in.readLong();
+    }
+
+    public static final Creator<Venda> CREATOR = new Creator<Venda>() {
+        @Override
+        public Venda createFromParcel(Parcel in) {
+            return new Venda(in);
+        }
+
+        @Override
+        public Venda[] newArray(int size) {
+            return new Venda[size];
+        }
+    };
+
+    public Venda() {
+
+    }
 
     public long getId() {
         return id;
@@ -114,5 +150,35 @@ public class Venda {
 
     public void setTotal_venda(int total_venda) {
         this.total_venda = total_venda;
+    }
+
+    public long getIdoperador() {
+        return idoperador;
+    }
+
+    public void setIdoperador(long idoperador) {
+        this.idoperador = idoperador;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(nome_cliente);
+        dest.writeInt(desconto);
+        dest.writeInt(quantidade);
+        dest.writeInt(valor_base);
+        dest.writeString(codigo_Barra);
+        dest.writeInt(valor_iva);
+        dest.writeString(pagamento);
+        dest.writeInt(total_desconto);
+        dest.writeInt(total_venda);
+        dest.writeString(data_cria);
+        dest.writeString(data_elimina);
+        dest.writeLong(idoperador);
     }
 }

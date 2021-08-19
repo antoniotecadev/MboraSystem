@@ -190,14 +190,19 @@
             android:label="@string/factura"
             tools:layout="@layout/fragment_factura" >
             <action
-                android:id="@+id/action_facturaFragment_to_dialogVerificarVenda"
-                app:destination="@id/dialogVerificarVenda" />
+                android:id="@+id/action_facturaFragment_to_dialogVendaEfectuada"
+                app:destination="@id/dialogVendaEfectuada" />
         </fragment>
         <dialog
-            android:id="@+id/dialogVerificarVenda"
-            android:name="com.yoga.mborasystem.caixadialogo.DialogVerificarVenda"
-            android:label="DialogVerificarVenda"
-            tools:layout="@layout/dialog_verificar_venda"/>
+            android:id="@+id/dialogVendaEfectuada"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogVendaEfectuada"
+            android:label="dialog_venda_efectuada"
+            tools:layout="@layout/dialog_venda_efectuada" >
+            <argument
+                android:name="precoTotal"
+                app:argType="integer"
+                android:defaultValue="0" />
+        </dialog>
     </navigation>
 
 </navigation>

@@ -19,12 +19,9 @@ import com.yoga.mborasystem.model.entidade.Usuario;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -55,20 +52,14 @@ public class UsuarioFragment extends Fragment {
         binding.recyclerViewListaUsuario.setAdapter(adapter);
         binding.recyclerViewListaUsuario.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        binding.criarUsuarioFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario);
-            }
+        binding.criarUsuarioFragment.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario);
         });
 
-        usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), new Observer<List<Usuario>>() {
-            @Override
-            public void onChanged(List<Usuario> usuarios) {
-                adapter.clear();
-                for (Usuario usuario : usuarios) {
-                    adapter.add(new ItemUsuario(usuario));
-                }
+        usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> {
+            adapter.clear();
+            for (Usuario usuario : usuarios) {
+                adapter.add(new ItemUsuario(usuario));
             }
         });
         return binding.getRoot();
@@ -119,16 +110,13 @@ public class UsuarioFragment extends Fragment {
             }
 
             nome.setText(usuario.getNome());
-            tel.setText(usuario.getTelefone());
+            tel.setText(usuario.getTelefone() + " / MS" + usuario.getId());
             end.setText(usuario.getEndereco());
             estado.setText(usuario.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
 
-            viewHolder.itemView.findViewById(R.id.btnEntrar).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Ultilitario.onClickColorRecyclerView(viewHolder.itemView);
-                    verDadosUsuario();
-                }
+            viewHolder.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> {
+                Ultilitario.onClickColorRecyclerView(viewHolder.itemView);
+                verDadosUsuario();
             });
 
             viewHolder.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -142,12 +130,9 @@ public class UsuarioFragment extends Fragment {
                             return false;
                         }
                     });//groupId, itemId, order, title
-                    menu.add(R.string.eliminar_usuario).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            deleteUser();
-                            return false;
-                        }
+                    menu.add(R.string.eliminar_usuario).setOnMenuItemClickListener(item -> {
+                        deleteUser();
+                        return false;
                     });
                 }
             });

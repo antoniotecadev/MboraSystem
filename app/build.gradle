@@ -70,7 +70,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
-//    apply plugin: "androidx.navigation.safeargs"
+    apply plugin: "androidx.navigation.safeargs"
 
     // Room DataBase
     def room_version = "2.3.0-rc01"
@@ -115,5 +115,10 @@ dependencies {
     implementation('com.journeyapps:zxing-android-embedded:4.2.0') { transitive = false }
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.zxing:core:3.3.0'
+
+    //itext for genereted pdf
+    implementation 'com.itextpdf:itextg:5.5.10'
+    //Permission
+    implementation 'com.karumi:dexter:6.2.3'
 
 }

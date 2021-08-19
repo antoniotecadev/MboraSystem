@@ -1,10 +1,10 @@
 package com.yoga.mborasystem.view;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -39,7 +39,9 @@ import com.xwray.groupie.Item;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentFacturaBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
+import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
+import com.yoga.mborasystem.util.CriarFactura;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
@@ -56,6 +58,7 @@ import java.util.Map;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -64,11 +67,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 public class FacturaFragment extends Fragment {
 
     private long idc;
-    private String lastText;
+    private Cliente cliente;
     private BeepManager beepManager;
     private Map<Long, View> itemView;
     private Map<Long, Boolean> estado;
     private Map<Long, Produto> produtos;
+    private String lastText, codigoQr, facturaPath;
     private VendaViewModel vendaViewModel;
     private FragmentFacturaBinding binding;
     private ArrayList<String> listaCategoria;
@@ -77,11 +81,11 @@ public class FacturaFragment extends Fragment {
     @SuppressLint("StaticFieldLeak")
     private static DecoratedBarcodeView barcodeView;
     private ArrayAdapter<String> listCategoriaAdapter;
-    private int total, totaldesconto, valorBase, valorIva;
+    private int total, totaldesconto, valorBase, valorIva, desconto, troco, valorPago;
     private Map<Long, Integer> precoTotal, iva, valor, posicao;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
 
-    private BarcodeCallback callback = new BarcodeCallback() {
+    private final BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() == null || result.getText().equals(lastText)) {
@@ -108,6 +112,7 @@ public class FacturaFragment extends Fragment {
         setHasOptionsMenu(true);
         iva = new HashMap<>();
         valor = new HashMap<>();
+        cliente = new Cliente();
         estado = new HashMap<>();
         posicao = new HashMap<>();
         produtos = new HashMap<>();
@@ -125,7 +130,6 @@ public class FacturaFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        produtoViewModel.getListaProdutosFactura().setValue(produtos);
         binding = FragmentFacturaBinding.inflate(inflater, container, false);
         barcodeView = binding.viewStub.inflate().findViewById(R.id.barcode_scanner);
         binding.viewStub.setVisibility(View.GONE);
@@ -135,7 +139,7 @@ public class FacturaFragment extends Fragment {
         barcodeView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
         barcodeView.initializeFromIntent(integrator.createScanIntent());
         barcodeView.decodeContinuous(callback);
-        beepManager = new BeepManager(getActivity());
+        beepManager = new BeepManager(requireActivity());
 
         binding.btnScannerBack.setOnClickListener(v -> {
             binding.viewStub.setVisibility(View.VISIBLE);
@@ -154,8 +158,7 @@ public class FacturaFragment extends Fragment {
         binding.recyclerViewFactura.setAdapter(adapterFactura);
         binding.recyclerViewFactura.setLayoutManager(new LinearLayoutManager(getContext()));
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
-            if (categorias.isEmpty()) {
-            } else {
+            if (!categorias.isEmpty()) {
                 for (Categoria categoria : categorias) {
                     listaCategoria.add(categoria.getId() + " - " + categoria.getCategoria());
                 }
@@ -187,9 +190,7 @@ public class FacturaFragment extends Fragment {
         });
         binding.textTaxa.setText("14%");
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
-
         binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
-
         binding.textDesconto.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -199,12 +200,51 @@ public class FacturaFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().contains("Kz")) {
-                    int desconto = Ultilitario.removerKZ(binding.textDesconto);
+                    desconto = Ultilitario.removerKZ(binding.textDesconto);
                     if (total >= desconto) {
                         totaldesconto = total - desconto;
                         binding.totalDesconto.setText(getText(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)));
+
+                        if (valorPago >= (total - desconto)) {
+                            troco = valorPago - totaldesconto;
+                            binding.troco.setText(getText(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)));
+                        }
+                        if (desconto == 0) {
+                            totaldesconto = 0;
+                            binding.totalDesconto.setText(getText(R.string.total_desconto) + ": " + Ultilitario.formatPreco("0"));
+                        }
                     } else {
+                        binding.textDesconto.requestFocus();
                         binding.textDesconto.setError(getString(R.string.desconto_maior));
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        Ultilitario.precoFormat(getContext(), binding.textValorPago);
+
+        binding.btnLimparValorPago.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textValorPago));
+
+        binding.textValorPago.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().contains("Kz")) {
+                    valorPago = Ultilitario.removerKZ(binding.textValorPago);
+                    if ((total - desconto) <= valorPago) {
+                        troco = valorPago - (total - desconto);
+                        binding.troco.setText(getText(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)));
+                    } else {
+                        troco = 0;
+                        binding.troco.setText(getText(R.string.troco) + ": " + Ultilitario.formatPreco("0"));
                     }
                 }
             }
@@ -216,24 +256,110 @@ public class FacturaFragment extends Fragment {
         });
 
         binding.btnEfectuarVenda.setOnClickListener(v -> {
+            facturaPath = "";
             if (isCheckedFormaPagamento()) {
-                String codigoBarra = getCodigoDeBarra(10000000) + "" + getCodigoDeBarra(10000000);
-                new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.confirmar_venda)
-                        .setMessage(getString(R.string.cliente) + ": " + binding.txtNomeCliente.getText().toString() + "\n" +
-                                getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
-                                + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
-                                + getString(R.string.desconto) + " " + Ultilitario.formatPreco(binding.textDesconto.getText().toString()) + "\n"
-                                + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
-                                + getString(R.string.valo_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
-                                + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
-                                + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
-                        )
-                        .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoBarra, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal))
-                        .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
-                        .show();
+                if (valorPago > 0) {
+                    codigoQr = getCodigoDeBarra() + "" + getCodigoDeBarra();
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.confirmar_venda)
+                            .setMessage(getString(R.string.cliente) + ": " + binding.txtNomeCliente.getText().toString() + "\n" +
+                                    getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
+                                    + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
+                                    + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(binding.textDesconto.getText().toString()) + "\n"
+                                    + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
+                                    + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
+                                    + getString(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)) + "\n"
+                                    + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
+                                    + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
+                                    + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
+                            )
+                            .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, getArguments().getLong("idoperador", 0), getView()))
+                            .setNegativeButton(R.string.cancelar, (dialog, which) -> {
+                                facturaPath = "";
+                                dialog.dismiss();
+                            })
+                            .show();
+                } else {
+                    binding.textValorPago.requestFocus();
+                    binding.textValorPago.setError(getString(R.string.digite_valor_pago));
+                }
             } else {
                 Ultilitario.showToast(getContext(), Color.rgb(250, 170, 5), getString(R.string.selecciona_forma_pagamento), R.drawable.ic_toast_erro);
+            }
+        });
+
+        vendaViewModel.getDataAdminMaster();
+        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> {
+            this.cliente = cliente;
+        });
+
+        vendaViewModel.getGuardarPdfLiveData().setValue(false);
+        vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                if (!codigoQr.isEmpty()) {
+                    facturaPath = "venda" + codigoQr + "_" + Ultilitario.getDateCurrent() + ".pdf";
+                    CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, getArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        vendaViewModel.getPrintLiveData().setValue(false);
+        vendaViewModel.getPrintLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (facturaPath.isEmpty()) {
+                        Toast.makeText(getContext(), getString(R.string.guardar_primeiro), Toast.LENGTH_LONG).show();
+                    } else {
+                        CriarFactura.printPDF(getActivity(), getContext(), facturaPath);
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.precisa_kitkat_maior), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        vendaViewModel.getEnviarWhatsAppLiveData().setValue("");
+        vendaViewModel.getEnviarWhatsAppLiveData().observe(getViewLifecycleOwner(), numero -> {
+            if (!numero.isEmpty()) {
+                if (facturaPath.isEmpty()) {
+                    Toast.makeText(getContext(), getString(R.string.enviar_w_primeiro), Toast.LENGTH_LONG).show();
+                } else {
+                    Ultilitario.openWhatsApp(getActivity(), numero);
+                }
+            }
+        });
+
+        vendaViewModel.getAlertDialogLiveData().setValue(null);
+        vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), alertDialog -> {
+            if (alertDialog != null) {
+                binding.txtNomeCliente.setText("");
+                estado.clear();
+                produtos.clear();
+                adapterFactura.clear();
+                precoTotal.clear();
+                valor.clear();
+                iva.clear();
+                posicao.clear();
+                total = 0;
+                totaldesconto = 0;
+                valorBase = 0;
+                valorIva = 0;
+                desconto = 0;
+                troco = 0;
+                valorPago = 0;
+                binding.textTotal.setText(Ultilitario.formatPreco("0"));
+                binding.textValor.setText(Ultilitario.formatPreco("0"));
+                binding.textIva.setText(Ultilitario.formatPreco("0"));
+                binding.txtTot.setText(Ultilitario.formatPreco("0"));
+                binding.totalDesconto.setText(Ultilitario.formatPreco("0"));
+                binding.troco.setText(Ultilitario.formatPreco("0"));
+                binding.btnEfectuarVenda.setEnabled(false);
+                Ultilitario.zerarPreco(binding.textDesconto);
+                Ultilitario.zerarPreco(binding.textValorPago);
+                produtoViewModel.consultarProdutos(idc, false, null);
+                alertDialog.dismiss();
             }
         });
 
@@ -252,12 +378,12 @@ public class FacturaFragment extends Fragment {
         return binding.checkboxDinheiro.isChecked() || binding.checkboxCartaoMulticaixa.isChecked() || binding.checkboxDepositoBancario.isChecked() || binding.checkboxTransferenciaBancario.isChecked();
     }
 
-    private String getCodigoDeBarra(int numbarBound) {
-        return String.valueOf(new Random().nextInt((numbarBound - 1) + 1) + 1);
+    private String getCodigoDeBarra() {
+        return String.valueOf(new Random().nextInt((10000000 - 1) + 1) + 1);
     }
 
     public class ItemProduto extends Item<GroupieViewHolder> {
-        private Produto produto;
+        private final Produto produto;
         private Button btnRemover;
         private TextView nome, precoref, prod, ref, pr, totaluni;
 
@@ -341,9 +467,7 @@ public class FacturaFragment extends Fragment {
             for (Map.Entry<Long, Integer> precototal : pTotal.entrySet()) {
                 totalGer += precototal.getValue();
             }
-            if (pTotal.get(id) != null) {
-                precoUnit = (pTotal.get(id) / quant);
-            }
+            if (pTotal.get(id) != null) precoUnit = (pTotal.get(id) / quant);
             if (isRemove) {
                 iva.remove(id);
                 valor.remove(id);
@@ -373,7 +497,7 @@ public class FacturaFragment extends Fragment {
         private class ItemFactura extends Item<GroupieViewHolder> {
             private Spinner qt;
             private int totalUnit, quantidade;
-            private Produto produto;
+            private final Produto produto;
 
             public ItemFactura(Produto produto) {
                 this.produto = produto;

@@ -282,7 +282,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margem_lateral_formulario"
                     android:layout_weight="1"
-                    app:icon="@drawable/ic_baseline_cleaning_services_24" />
+                    app:icon="@drawable/ic_baseline_cleaning_services_24"
+                    android:backgroundTint="@color/zxing_possible_result_points"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -294,6 +295,69 @@
 
             <TextView
                 android:id="@+id/totalDesconto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0,00"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:text="@string/valor_pago" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:boxBackgroundColor="@color/material_on_background_disabled"
+                    app:boxStrokeColor="@color/white"
+                    app:hintTextColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textValorPago"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/valor_kwanza"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:text="@string/preco_zero"
+                        android:maxLength="15"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnLimparValorPago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                    android:layout_weight="1"
+                    app:icon="@drawable/ic_baseline_cleaning_services_24"
+                    android:backgroundTint="@color/zxing_possible_result_points" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/troco"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0,00"

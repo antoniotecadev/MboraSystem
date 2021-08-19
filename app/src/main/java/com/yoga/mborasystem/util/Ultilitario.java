@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
+import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -72,7 +75,8 @@ public class Ultilitario {
     public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4;
     public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, SINCO = 5, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 5;
 
-    public Ultilitario() { }
+    public Ultilitario() {
+    }
 
     @SuppressLint("WrongConstant")
     public static void showToast(Context context, int color, String s, int imagem) {
@@ -377,7 +381,7 @@ public class Ultilitario {
         activity.startActivityForResult(intent, PICK_CSV_FILE);
     }
 
-    public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout){
+    public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout) {
         if (mySwipeRefreshLayout != null) {
             mySwipeRefreshLayout.setRefreshing(false);
         }
@@ -387,6 +391,34 @@ public class Ultilitario {
         String formatted = NumberFormat.getCurrencyInstance(pt_AO).format((0));
         preco.setText(formatted);
         preco.setSelection(formatted.length());
+    }
+
+    public static void openWhatsApp(Activity activity, String numero) {
+        boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp", activity);
+        if (isWhatsappInstalled) {
+            Intent sendIntent = new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(numero) + "@s.whatsapp.net");//phone number without "+" prefix
+            activity.startActivity(sendIntent);
+        } else {
+            Uri uri = Uri.parse("market://details?id=com.whatsapp");
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            Toast.makeText(activity.getApplicationContext(), "WhatsApp not Installed",
+                    Toast.LENGTH_SHORT).show();
+            activity.startActivity(goToMarket);
+        }
+    }
+
+    private static boolean whatsappInstalledOrNot(String uri, Activity activity) {
+        PackageManager pm = activity.getPackageManager();
+        boolean app_installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
     }
 
 }
