@@ -112,7 +112,6 @@ public class CriarFactura {
             addLineSpace(document);
             document.add(qr_code_image);
             addNewItem(document, codigoQr, Element.ALIGN_CENTER, font);
-            addNewItem(document, activity.getString(R.string.obr_vol_semp), Element.ALIGN_CENTER, font);
             document.close();
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {

@@ -285,26 +285,12 @@
     <string name="verificar_venda">Verificar Venda</string>
     <string name="total_desconto">Total com desconto</string>
 
-    <string-array name="provincias">
-        <item>Luanda</item>
-    </string-array>
-
-    <string-array name="quantidade">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
-    <string-array name="estadoproduto">
-        <item>Todos(as)</item>
-        <item>Bloquados(as)</item>
-        <item>Desbloqueados(as)</item>
-    </string-array>
-
     <string name="desconto_maior">O desconto não pode ser maior que o total.</string>
+
     <string name="venda_nao_efectuada">Venda não efectuda</string>
+
     <string name="selecciona_forma_pagamento">Selecciona a forma de pagamento</string>
+
     <string name="confirmar_venda">Confirmar venda</string>
     <string name="vender">vender</string>
     <string name="valor_base">Valor base</string>
@@ -335,5 +321,19 @@
     <string name="digite_numero_w">Digite o número do WhatsApp</string>
     <string name="enviar_w_primeiro">Guardar PDF para Enviar</string>
     <string name="obr_vol_semp">OBRIGADO E VOLTE SEMPRE !</string>
+    <string-array name="provincias">
+        <item>Luanda</item>
+    </string-array>
+    <string-array name="quantidade">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="estadoproduto">
+        <item>Todos(as)</item>
+        <item>Bloquados(as)</item>
+        <item>Desbloqueados(as)</item>
+    </string-array>
 
 </resources>
