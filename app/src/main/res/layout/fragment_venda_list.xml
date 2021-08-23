@@ -15,6 +15,6 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         tools:context=".view.VendaFragment"
-        tools:listitem="@layout/fragment_usuario"/>
+        tools:listitem="@layout/fragment_venda"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

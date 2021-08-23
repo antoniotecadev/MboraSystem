@@ -107,7 +107,7 @@ public class CriarFactura {
             addNewLineWithLeftAndRight(document, activity.getString(R.string.troco), Ultilitario.formatPreco(String.valueOf(troco)), font, font);
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.pagamento) + " " + formaPagamento, Element.ALIGN_LEFT, font);
-            addNewItem(document, activity.getString(R.string.operador) + (idOperador > 0 ? " MS" + idOperador : " MSA" + cliente.getId()), Element.ALIGN_LEFT, font);
+            addNewItem(document, activity.getString(R.string.operador) + (idOperador > 0 ? " MSU" + idOperador : " MSA" + cliente.getId()), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             addLineSpace(document);
             document.add(qr_code_image);
