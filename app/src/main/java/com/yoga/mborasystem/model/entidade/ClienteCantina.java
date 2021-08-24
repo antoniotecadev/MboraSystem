@@ -3,7 +3,7 @@ package com.yoga.mborasystem.model.entidade;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "clientecantina")
 public class ClienteCantina {
 
     public ClienteCantina(long id, String nome, String telefone) {
@@ -16,6 +16,8 @@ public class ClienteCantina {
     private long id;
     private String nome;
     private String telefone;
+
+    private int estado;
 
     private String data_cria;
     private String data_modifica;
@@ -45,6 +47,14 @@ public class ClienteCantina {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 
     public String getData_cria() {

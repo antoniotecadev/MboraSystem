@@ -324,6 +324,7 @@
     <string name="dat_ven">Data de venda:</string>
     <string name="dvd">Dívida</string>
     <string name="sem_dvd">Sem dívida</string>
+    <string name="eliminar_cliente">Eliminar Cliente</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

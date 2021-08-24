@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +47,7 @@ import com.yoga.mborasystem.util.AutoCompleteClienteCantinaAdapter;
 import com.yoga.mborasystem.util.CriarFactura;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
+import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
@@ -64,6 +66,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class FacturaFragment extends Fragment {
@@ -78,9 +81,10 @@ public class FacturaFragment extends Fragment {
     private VendaViewModel vendaViewModel;
     private FragmentFacturaBinding binding;
     private ArrayList<String> listaCategoria;
-    private ArrayList<ClienteCantina> clienteCantinas;
+    private ArrayList<ClienteCantina> clienteCantina;
     private ProdutoViewModel produtoViewModel;
     private GroupAdapter adapter, adapterFactura;
+    private ClienteCantinaViewModel clienteCantinaViewModel;
     @SuppressLint("StaticFieldLeak")
     private static DecoratedBarcodeView barcodeView;
     private ArrayAdapter<String> listCategoriaAdapter;
@@ -124,9 +128,10 @@ public class FacturaFragment extends Fragment {
         precoTotal = new HashMap<>();
         listaCategoria = new ArrayList<>();
         adapterFactura = new GroupAdapter();
-        clienteCantinas = new ArrayList<>();
+        clienteCantina = new ArrayList<>();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
+        clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
     }
 
@@ -136,10 +141,7 @@ public class FacturaFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentFacturaBinding.inflate(inflater, container, false);
 
-        getListClienteCantina();
-
-        AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(getContext(), clienteCantinas);
-        binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);
+        getListClientesCantina();
 
         barcodeView = binding.viewStub.inflate().findViewById(R.id.barcode_scanner);
         binding.viewStub.setVisibility(View.GONE);
@@ -150,6 +152,10 @@ public class FacturaFragment extends Fragment {
         barcodeView.initializeFromIntent(integrator.createScanIntent());
         barcodeView.decodeContinuous(callback);
         beepManager = new BeepManager(requireActivity());
+
+        binding.btnCriarCliente.setOnClickListener(v -> {
+            Navigation.findNavController(getView()).navigate(R.id.action_facturaFragment_to_dialogCriarClienteCantina);
+        });
 
         binding.btnScannerBack.setOnClickListener(v -> {
             binding.viewStub.setVisibility(View.VISIBLE);
@@ -301,7 +307,7 @@ public class FacturaFragment extends Fragment {
             facturaPath = "";
             if (isCheckedFormaPagamento()) {
                 if (valorPago > 0) {
-                    codigoQr = getCodigoDeBarra() + "" + getCodigoDeBarra();
+                    codigoQr = System.currentTimeMillis() / 1000 + "" + getCodigoDeBarra();
                     new AlertDialog.Builder(getContext())
                             .setTitle(R.string.confirmar_venda)
                             .setMessage(getString(R.string.cliente) + ": " + binding.txtNomeCliente.getText().toString() + "\n" +
@@ -408,11 +414,16 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void getListClienteCantina() {
-        clienteCantinas.add(new ClienteCantina(1, "Antonio Marcos", "932359808"));
-        clienteCantinas.add(new ClienteCantina(2, "Carlos Marcos", "936984753"));
-        clienteCantinas.add(new ClienteCantina(3, "Martins Marcos", "914789541"));
-        clienteCantinas.add(new ClienteCantina(4, "Ana Marcos", "925369852"));
+    private void getListClientesCantina() {
+        clienteCantinaViewModel.consultarClientesCantina();
+        clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientesCantina -> {
+            clienteCantina.clear();
+            for (ClienteCantina cliente : clientesCantina) {
+                clienteCantina.add(new ClienteCantina(cliente.getId(), cliente.getNome(), cliente.getTelefone()));
+            }
+            AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(getContext(), clienteCantina);
+            binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);
+        });
     }
 
     private String getFormaPamento(FragmentFacturaBinding binding) {
@@ -428,7 +439,7 @@ public class FacturaFragment extends Fragment {
     }
 
     private String getCodigoDeBarra() {
-        return String.valueOf(new Random().nextInt((10000000 - 1) + 1) + 1);
+        return String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
     }
 
     public class ItemProduto extends Item<GroupieViewHolder> {

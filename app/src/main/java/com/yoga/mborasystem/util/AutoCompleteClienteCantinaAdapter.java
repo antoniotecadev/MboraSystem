@@ -41,7 +41,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
 
         if (clienteCantina != null) {
             binding.textNome.setText(clienteCantina.getNome());
-            binding.textId.setText("" + clienteCantina.getId());
+            binding.textId.setText("MSCC" + clienteCantina.getId());
             binding.textTelefone.setText(clienteCantina.getTelefone());
         }
 

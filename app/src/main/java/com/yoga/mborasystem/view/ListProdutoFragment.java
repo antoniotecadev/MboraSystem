@@ -10,13 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -36,7 +33,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class ListProdutoFragment extends Fragment {
 
@@ -103,12 +99,8 @@ public class ListProdutoFragment extends Fragment {
                 }
             }
         });
-        binding.mySwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
-                    }
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+                    produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
                 }
         );
         return binding.getRoot();
@@ -219,7 +211,7 @@ public class ListProdutoFragment extends Fragment {
             precoProdutoFronecedor.setText(context.getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
             quantidadeProduto.setText(context.getText(R.string.quantidade) + ": " + produto.getQuantidade());
             codigoBarraProduto.setText(context.getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra());
-            referenciaProduto.setText(context.getText(R.string.referencia) + ": MR" + produto.getId());
+            referenciaProduto.setText(context.getText(R.string.referencia) + ": MSP" + produto.getId());
             if (produto.getEstado() == Ultilitario.UM) {
                 estadoProduto.setChecked(true);
                 estadoProduto.setTextColor(Color.BLUE);

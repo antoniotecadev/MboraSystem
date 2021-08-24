@@ -192,6 +192,9 @@
             <action
                 android:id="@+id/action_facturaFragment_to_dialogVendaEfectuada"
                 app:destination="@id/dialogVendaEfectuada" />
+            <action
+                android:id="@+id/action_facturaFragment_to_dialogCriarClienteCantina"
+                app:destination="@id/dialogCriarClienteCantina" />
         </fragment>
         <dialog
             android:id="@+id/dialogVendaEfectuada"
@@ -203,6 +206,11 @@
                 app:argType="integer"
                 android:defaultValue="0" />
         </dialog>
+        <dialog
+            android:id="@+id/dialogCriarClienteCantina"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogCriarClienteCantina"
+            android:label="DialogCriarClienteCantina"
+            tools:layout="@layout/dialog_criar_cliente_cantina" />
     </navigation>
 
 </navigation>

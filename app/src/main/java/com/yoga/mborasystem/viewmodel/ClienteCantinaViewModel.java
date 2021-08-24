@@ -4,7 +4,6 @@ import android.app.Application;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.widget.AutoCompleteTextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.R;
@@ -12,9 +11,12 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.repository.ClienteCantinaRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -45,11 +47,20 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
-    public void criarCliente(AutoCompleteTextView nomeCliente, TextInputEditText telefone) {
-
+    public void criarCliente(TextInputEditText nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
+        validarCliente(Ultilitario.Operacao.CRIAR, nomeCliente, telefone, dialog);
     }
 
-    public void validarCliente(Ultilitario.Operacao operacao, AutoCompleteTextView nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
+    private MutableLiveData<List<ClienteCantina>> listaClientesCantina;
+
+    public MutableLiveData<List<ClienteCantina>> getListaClientesCantina() {
+        if (listaClientesCantina == null) {
+            listaClientesCantina = new MutableLiveData<>();
+        }
+        return listaClientesCantina;
+    }
+
+    private void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
         if (isCampoVazio(nomeCliente.getText().toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
             nomeCliente.requestFocus();
             nomeCliente.setError(getApplication().getString(R.string.nome_invalido));
@@ -61,8 +72,9 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             clienteCantina.setTelefone(telefone.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 clienteCantina.setId(0);
+                clienteCantina.setEstado(1);
                 clienteCantina.setData_cria(Ultilitario.getDateCurrent());
-                criarCliente(clienteCantina, dialog);
+                criarClienteCantina(clienteCantina, dialog);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
 //                clienteCantina.setId(id);
                 clienteCantina.setData_modifica(Ultilitario.getDateCurrent());
@@ -71,7 +83,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         }
     }
 
-    private void criarCliente(ClienteCantina clienteCantina, AlertDialog dialog) {
+    private void criarClienteCantina(ClienteCantina clienteCantina, AlertDialog dialog) {
         Completable.fromAction(() -> clienteCantinaRepository.insert(clienteCantina))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -92,6 +104,17 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cliente_nao_criado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
+    }
+
+    public void consultarClientesCantina() {
+        compositeDisposable.add(clienteCantinaRepository.getClientesCantina()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(clientesCantina -> {
+                    getListaClientesCantina().setValue(clientesCantina);
+                }, throwable -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
+                }));
     }
 
     @Override
