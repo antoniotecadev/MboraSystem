@@ -14,8 +14,8 @@ import io.reactivex.Single;
 
 public class UsuarioRepository {
 
-    UsuarioDao usuarioDao;
-    WeakReference<Context> cwr;
+    private UsuarioDao usuarioDao;
+    private WeakReference<Context> cwr;
 
     public UsuarioRepository(Context c) {
         cwr = new WeakReference<>(c);

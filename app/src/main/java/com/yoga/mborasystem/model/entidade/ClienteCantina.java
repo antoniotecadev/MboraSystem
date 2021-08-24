@@ -17,6 +17,12 @@ public class ClienteCantina {
     private String nome;
     private String telefone;
 
+    private String data_cria;
+    private String data_modifica;
+    private String data_elimina;
+
+    public ClienteCantina() { }
+
     public long getId() {
         return id;
     }
@@ -39,5 +45,29 @@ public class ClienteCantina {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getData_cria() {
+        return data_cria;
+    }
+
+    public void setData_cria(String data_cria) {
+        this.data_cria = data_cria;
+    }
+
+    public String getData_modifica() {
+        return data_modifica;
+    }
+
+    public void setData_modifica(String data_modifica) {
+        this.data_modifica = data_modifica;
+    }
+
+    public String getData_elimina() {
+        return data_elimina;
+    }
+
+    public void setData_elimina(String data_elimina) {
+        this.data_elimina = data_elimina;
     }
 }

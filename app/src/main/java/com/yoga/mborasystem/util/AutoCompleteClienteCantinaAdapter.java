@@ -80,4 +80,5 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
             return ((ClienteCantina) resultValue).getNome();
         }
     };
+
 }
