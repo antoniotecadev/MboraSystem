@@ -39,10 +39,11 @@ import java.io.IOException;
 import java.util.Map;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, TextInputEditText txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+    public static void getPemissionAcessStoregeExternal(Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
@@ -63,7 +64,7 @@ public class CriarFactura {
                 }).check();
     }
 
-    private static void createPdfFile(String path, Activity activity, Context context, Cliente cliente, Long idOperador, TextInputEditText txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+    private static void createPdfFile(String path, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         if (new File(path).exists())
             new File(path).delete();
         try {

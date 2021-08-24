@@ -322,6 +322,8 @@
     <string name="enviar_w_primeiro">Guardar PDF para Enviar</string>
     <string name="obr_vol_semp">OBRIGADO E VOLTE SEMPRE !</string>
     <string name="dat_ven">Data de venda:</string>
+    <string name="dvd">Dívida</string>
+    <string name="sem_dvd">Sem dívida</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

@@ -40,7 +40,9 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentFacturaBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.model.entidade.Produto;
+import com.yoga.mborasystem.util.AutoCompleteClienteCantinaAdapter;
 import com.yoga.mborasystem.util.CriarFactura;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
@@ -76,12 +78,13 @@ public class FacturaFragment extends Fragment {
     private VendaViewModel vendaViewModel;
     private FragmentFacturaBinding binding;
     private ArrayList<String> listaCategoria;
+    private ArrayList<ClienteCantina> clienteCantinas;
     private ProdutoViewModel produtoViewModel;
     private GroupAdapter adapter, adapterFactura;
     @SuppressLint("StaticFieldLeak")
     private static DecoratedBarcodeView barcodeView;
     private ArrayAdapter<String> listCategoriaAdapter;
-    private int total, totaldesconto, valorBase, valorIva, desconto, troco, valorPago;
+    private int total, totaldesconto, valorBase, valorIva, desconto, troco, valorPago, valorDivida;
     private Map<Long, Integer> precoTotal, iva, valor, posicao;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
 
@@ -119,8 +122,9 @@ public class FacturaFragment extends Fragment {
         itemView = new HashMap<>();
         adapter = new GroupAdapter();
         precoTotal = new HashMap<>();
-        adapterFactura = new GroupAdapter();
         listaCategoria = new ArrayList<>();
+        adapterFactura = new GroupAdapter();
+        clienteCantinas = new ArrayList<>();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
@@ -131,6 +135,12 @@ public class FacturaFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentFacturaBinding.inflate(inflater, container, false);
+
+        getListClienteCantina();
+
+        AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(getContext(), clienteCantinas);
+        binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);
+
         barcodeView = binding.viewStub.inflate().findViewById(R.id.barcode_scanner);
         binding.viewStub.setVisibility(View.GONE);
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
@@ -255,6 +265,38 @@ public class FacturaFragment extends Fragment {
             }
         });
 
+        binding.checkboxDivida.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                binding.textValorDivida.setEnabled(true);
+            } else {
+                binding.textValorDivida.setText(Ultilitario.formatPreco("0"));
+                binding.textValorDivida.setEnabled(false);
+            }
+        });
+
+        Ultilitario.precoFormat(getContext(), binding.textValorDivida);
+
+        binding.btnLimparValorDivida.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textValorDivida));
+
+        binding.textValorDivida.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().contains("Kz")) {
+                    valorDivida = Ultilitario.removerKZ(binding.textValorDivida);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         binding.btnEfectuarVenda.setOnClickListener(v -> {
             facturaPath = "";
             if (isCheckedFormaPagamento()) {
@@ -273,7 +315,7 @@ public class FacturaFragment extends Fragment {
                                     + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
                                     + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
                             )
-                            .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, getArguments().getLong("idoperador", 0), getView()))
+                            .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, getArguments().getLong("idoperador", 0), getView()))
                             .setNegativeButton(R.string.cancelar, (dialog, which) -> {
                                 facturaPath = "";
                                 dialog.dismiss();
@@ -364,6 +406,13 @@ public class FacturaFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void getListClienteCantina() {
+        clienteCantinas.add(new ClienteCantina(1, "Antonio Marcos", "932359808"));
+        clienteCantinas.add(new ClienteCantina(2, "Carlos Marcos", "936984753"));
+        clienteCantinas.add(new ClienteCantina(3, "Martins Marcos", "914789541"));
+        clienteCantinas.add(new ClienteCantina(4, "Ana Marcos", "925369852"));
     }
 
     private String getFormaPamento(FragmentFacturaBinding binding) {
