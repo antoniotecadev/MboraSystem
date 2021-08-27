@@ -307,25 +307,16 @@ public class FacturaFragment extends Fragment {
             if (isCheckedFormaPagamento()) {
                 if (valorPago > 0) {
                     codigoQr = System.currentTimeMillis() / 1000 + "" + getCodigoDeBarra();
-                    new AlertDialog.Builder(getContext())
-                            .setTitle(R.string.confirmar_venda)
-                            .setMessage(getString(R.string.cliente) + ": " + binding.txtNomeCliente.getText().toString() + "\n" +
-                                    getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
-                                    + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
-                                    + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(binding.textDesconto.getText().toString()) + "\n"
-                                    + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
-                                    + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
-                                    + getString(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)) + "\n"
-                                    + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
-                                    + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
-                                    + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
-                            )
-                            .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, getArguments().getLong("idoperador", 0), getView()))
-                            .setNegativeButton(R.string.cancelar, (dialog, which) -> {
-                                facturaPath = "";
-                                dialog.dismiss();
-                            })
-                            .show();
+                    if (binding.checkboxDivida.isChecked()) {
+                        if (valorDivida > 0) {
+                            dialogVerificarVenda();
+                        } else {
+                            binding.textValorDivida.requestFocus();
+                            binding.textValorDivida.setError(getString(R.string.dt_vl_dv));
+                        }
+                    } else {
+                        dialogVerificarVenda();
+                    }
                 } else {
                     binding.textValorPago.requestFocus();
                     binding.textValorPago.setError(getString(R.string.digite_valor_pago));
@@ -411,6 +402,29 @@ public class FacturaFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void dialogVerificarVenda() {
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.confirmar_venda)
+                .setMessage(getString(R.string.cliente) + ": " + binding.txtNomeCliente.getText().toString() + "\n" +
+                        getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
+                        + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
+                        + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(binding.textDesconto.getText().toString()) + "\n"
+                        + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
+                        + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
+                        + getString(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)) + "\n"
+                        + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
+                        + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
+                        + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
+                        + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
+                )
+                .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, getArguments().getLong("idoperador", 0), getView()))
+                .setNegativeButton(R.string.cancelar, (dialog, which) -> {
+                    facturaPath = "";
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void getListClientesCantina() {

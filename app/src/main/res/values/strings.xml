@@ -325,6 +325,7 @@
     <string name="dvd">Dívida</string>
     <string name="sem_dvd">Sem dívida</string>
     <string name="eliminar_cliente">Eliminar Cliente</string>
+    <string name="dt_vl_dv">Digite o valor da dívida</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
