@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -154,7 +153,7 @@ public class FacturaFragment extends Fragment {
         beepManager = new BeepManager(requireActivity());
 
         binding.btnCriarCliente.setOnClickListener(v -> {
-            Navigation.findNavController(getView()).navigate(R.id.action_facturaFragment_to_dialogCriarClienteCantina);
+            Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString()));
         });
 
         binding.btnScannerBack.setOnClickListener(v -> {

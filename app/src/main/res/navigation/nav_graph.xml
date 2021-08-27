@@ -210,7 +210,11 @@
             android:id="@+id/dialogCriarClienteCantina"
             android:name="com.yoga.mborasystem.caixadialogo.DialogCriarClienteCantina"
             android:label="DialogCriarClienteCantina"
-            tools:layout="@layout/dialog_criar_cliente_cantina" />
+            tools:layout="@layout/dialog_criar_cliente_cantina" >
+            <argument
+                android:name="nomeCliente"
+                app:argType="string" />
+        </dialog>
     </navigation>
 
 </navigation>

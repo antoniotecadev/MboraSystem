@@ -31,6 +31,8 @@ public class DialogCriarClienteCantina extends DialogFragment {
         builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.criar_cliente));
 
+        binding.editTextNome.setText(DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getNomeCliente());
+
         binding.buttonCriarCliente.setOnClickListener(v -> {
             clienteCantinaViewModel.criarCliente(binding.editTextNome, binding.editTextNumeroTelefone, dialog);
         });
