@@ -156,6 +156,15 @@ public class FacturaFragment extends Fragment {
             Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString()));
         });
 
+        binding.btnCleaNameClient.setOnClickListener(v -> {
+            binding.txtNomeCliente.setEnabled(true);
+            binding.txtNomeCliente.setText("");
+            binding.txtNomeCliente.requestFocus();
+        });
+
+        binding.txtNomeCliente.setOnItemClickListener((parent, view, position, id) -> {
+            binding.txtNomeCliente.setEnabled(false);
+        });
         binding.btnScannerBack.setOnClickListener(v -> {
             binding.viewStub.setVisibility(View.VISIBLE);
             barcodeView.resume();
@@ -384,6 +393,7 @@ public class FacturaFragment extends Fragment {
                 totaldesconto = 0;
                 valorBase = 0;
                 valorIva = 0;
+                valorDivida = 0;
                 desconto = 0;
                 troco = 0;
                 valorPago = 0;
@@ -393,6 +403,10 @@ public class FacturaFragment extends Fragment {
                 binding.txtTot.setText(Ultilitario.formatPreco("0"));
                 binding.totalDesconto.setText(Ultilitario.formatPreco("0"));
                 binding.troco.setText(Ultilitario.formatPreco("0"));
+                binding.txtNomeCliente.setEnabled(true);
+                binding.checkboxDivida.setChecked(false);
+                binding.textValorDivida.setEnabled(false);
+                binding.textValorDivida.setText(Ultilitario.formatPreco("0"));
                 binding.btnEfectuarVenda.setEnabled(false);
                 Ultilitario.zerarPreco(binding.textDesconto);
                 Ultilitario.zerarPreco(binding.textValorPago);
@@ -405,9 +419,17 @@ public class FacturaFragment extends Fragment {
     }
 
     private void dialogVerificarVenda() {
+        long idcliente;
+        String[] nomeIDcliente;
+        nomeIDcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
+        if (nomeIDcliente.length == 2) {
+            idcliente = Long.parseLong(nomeIDcliente[1].trim());
+        } else {
+            idcliente = 0;
+        }
         new AlertDialog.Builder(getContext())
                 .setTitle(R.string.confirmar_venda)
-                .setMessage(getString(R.string.cliente) + ": " + binding.txtNomeCliente.getText().toString() + "\n" +
+                .setMessage(getString(R.string.cliente) + ": " + nomeIDcliente[0] + "\n" +
                         getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
                         + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
                         + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(binding.textDesconto.getText().toString()) + "\n"
@@ -419,7 +441,7 @@ public class FacturaFragment extends Fragment {
                         + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                         + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
                 )
-                .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, getArguments().getLong("idoperador", 0), getView()))
+                .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, getArguments().getLong("idoperador", 0), idcliente, getView()))
                 .setNegativeButton(R.string.cancelar, (dialog, which) -> {
                     facturaPath = "";
                     dialog.dismiss();

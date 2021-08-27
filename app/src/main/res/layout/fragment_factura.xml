@@ -52,13 +52,25 @@
                     android:hint="@string/cliente"
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName|text">
-
                 </androidx.appcompat.widget.AppCompatAutoCompleteTextView>
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+                android:id="@+id/btnCleaNameClient"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:textAlignment="textEnd"
+                app:backgroundTint="@android:color/holo_red_light"
+                app:icon="@android:drawable/ic_delete"
+                app:iconGravity="textStart"
+                app:iconSize="25dp" />
+
+
+            <Button
                 android:id="@+id/btnCriarCliente"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="@dimen/margem_lateral_formulario"

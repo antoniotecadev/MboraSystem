@@ -94,7 +94,7 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void cadastrarVenda(AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, long idOperador, View view) {
+    public void cadastrarVenda(AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, long idoperador, long idcliente, View view) {
         venda.setNome_cliente(txtNomeCliente.getText().toString());
         venda.setDesconto(Ultilitario.removerKZ(desconto));
         venda.setQuantidade(quantidade);
@@ -106,8 +106,8 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setTotal_venda(totalVenda);
         venda.setTotal_venda(valorDivida);
         venda.setData_cria(Ultilitario.getDateCurrent());
-        venda.setIdoperador(idOperador);
-        venda.setIdoperador(idOperador);
+        venda.setIdoperador(idoperador);
+        venda.setIdclicant(idcliente);
         Completable.fromAction(() -> vendaRepository.insert(venda, produtos, precoTotalUnit))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
