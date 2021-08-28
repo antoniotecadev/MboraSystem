@@ -70,8 +70,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class FacturaFragment extends Fragment {
 
-    private long idc;
     private Cliente cliente;
+    private long idc, idcliente;
     private BeepManager beepManager;
     private Map<Long, View> itemView;
     private Map<Long, Boolean> estado;
@@ -315,16 +315,22 @@ public class FacturaFragment extends Fragment {
             facturaPath = "";
             if (isCheckedFormaPagamento()) {
                 if (valorPago > 0) {
+                    String[] nomeIDcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
                     codigoQr = System.currentTimeMillis() / 1000 + "" + getCodigoDeBarra();
                     if (binding.checkboxDivida.isChecked()) {
                         if (valorDivida > 0) {
-                            dialogVerificarVenda();
+                            if (nomeIDcliente.length == 2 && Long.parseLong(nomeIDcliente[1].trim()) > 0) {
+                                dialogVerificarVenda(nomeIDcliente);
+                            } else {
+                                binding.txtNomeCliente.requestFocus();
+                                binding.txtNomeCliente.setError(getString(R.string.dvd_atri_cl_cad));
+                            }
                         } else {
                             binding.textValorDivida.requestFocus();
                             binding.textValorDivida.setError(getString(R.string.dt_vl_dv));
                         }
                     } else {
-                        dialogVerificarVenda();
+                        dialogVerificarVenda(nomeIDcliente);
                     }
                 } else {
                     binding.textValorPago.requestFocus();
@@ -418,10 +424,7 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void dialogVerificarVenda() {
-        long idcliente;
-        String[] nomeIDcliente;
-        nomeIDcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
+    private void dialogVerificarVenda(String[] nomeIDcliente) {
         if (nomeIDcliente.length == 2) {
             idcliente = Long.parseLong(nomeIDcliente[1].trim());
         } else {

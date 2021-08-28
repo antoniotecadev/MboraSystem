@@ -28,10 +28,11 @@
                     android:id="@+id/editTextNome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
                     android:layout_marginLeft="@dimen/margem_lateral_formulario"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:digits="@string/nome_cli_carac_aceite"
+                    android:ems="10"
                     android:hint="@string/nome_cliente"
                     android:inputType="textPersonName" />
 
