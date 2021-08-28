@@ -298,7 +298,6 @@ public class DialogCriarProduto extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
         if (resultCode == Activity.RESULT_OK) {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {

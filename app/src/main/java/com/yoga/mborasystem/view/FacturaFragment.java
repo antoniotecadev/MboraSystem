@@ -1,8 +1,10 @@
 package com.yoga.mborasystem.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,6 +64,8 @@ import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -76,13 +80,14 @@ public class FacturaFragment extends Fragment {
     private Map<Long, View> itemView;
     private Map<Long, Boolean> estado;
     private Map<Long, Produto> produtos;
-    private String lastText, codigoQr, facturaPath;
+    private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private VendaViewModel vendaViewModel;
     private FragmentFacturaBinding binding;
     private ArrayList<String> listaCategoria;
-    private ArrayList<ClienteCantina> clienteCantina;
     private ProdutoViewModel produtoViewModel;
     private GroupAdapter adapter, adapterFactura;
+    private String lastText, codigoQr, facturaPath;
+    private ArrayList<ClienteCantina> clienteCantina;
     private ClienteCantinaViewModel clienteCantinaViewModel;
     @SuppressLint("StaticFieldLeak")
     private static DecoratedBarcodeView barcodeView;
@@ -145,6 +150,7 @@ public class FacturaFragment extends Fragment {
         barcodeView = binding.viewStub.inflate().findViewById(R.id.barcode_scanner);
         binding.viewStub.setVisibility(View.GONE);
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
+        integrator.setCameraId(0);
         integrator.setPrompt(getString(R.string.alinhar_codigo_barra));
         Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39);
         barcodeView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
@@ -166,16 +172,21 @@ public class FacturaFragment extends Fragment {
             binding.txtNomeCliente.setEnabled(false);
         });
         binding.btnScannerBack.setOnClickListener(v -> {
-            binding.viewStub.setVisibility(View.VISIBLE);
-            barcodeView.resume();
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            }
         });
+
         binding.btnClose.setOnClickListener(v -> {
             binding.viewStub.setVisibility(View.GONE);
             barcodeView.pause();
         });
         binding.btnScannerFront.setOnClickListener(v -> {
-            binding.viewStub.setVisibility(View.VISIBLE);
-            barcodeView.resume();
+            openCamera();
         });
         binding.recyclerViewFacturaProduto.setAdapter(adapter);
         binding.recyclerViewFacturaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -464,6 +475,11 @@ public class FacturaFragment extends Fragment {
         });
     }
 
+    private void openCamera() {
+        binding.viewStub.setVisibility(View.VISIBLE);
+        barcodeView.resume();
+    }
+
     private String getFormaPamento(FragmentFacturaBinding binding) {
         CharSequence dinheiro = binding.checkboxDinheiro.isChecked() ? binding.checkboxDinheiro.getText() : "";
         CharSequence cartaoMulticaixa = binding.checkboxCartaoMulticaixa.isChecked() ? binding.checkboxCartaoMulticaixa.getText() : "";
@@ -707,4 +723,21 @@ public class FacturaFragment extends Fragment {
             barcodeView.onKeyDown(keyCode, event);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
+                if ((grantResults != null && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    openCamera();
+                } else {
+                    Toast.makeText(getContext(), getText(R.string.noa_scan_codbar), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 }

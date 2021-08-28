@@ -84,4 +84,12 @@ public class MainActivity extends AppCompatActivity {
         FacturaFragment.myOnKeyDown(keyCode, event);
         return super.onKeyDown(keyCode, event);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (Fragment fragment : getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getFragments()) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 }
