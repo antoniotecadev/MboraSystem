@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/app_bar_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/pesquisar_categoria"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/dialogCriarCategori"
+        android:icon="@drawable/ic_baseline_create_new_folder_24"
+        android:title="@string/criar_categoria"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:title="@string/exp_venda"
+        app:showAsAction="never">
+    </item>
+
+    <item
+        android:title="@string/imp_venda"
+        app:showAsAction="never">
+    </item>
+
+</menu>

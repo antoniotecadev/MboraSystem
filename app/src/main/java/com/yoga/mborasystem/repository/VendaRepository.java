@@ -32,4 +32,8 @@ public class VendaRepository {
         return vendaDao.getVendas();
     }
 
+    public Flowable<List<Venda>> getSearchVendas(String codQr) {
+        return vendaDao.getSearchVendas(codQr);
+    }
+
 }

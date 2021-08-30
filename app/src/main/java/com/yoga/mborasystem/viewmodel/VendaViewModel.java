@@ -173,6 +173,18 @@ public class VendaViewModel extends AndroidViewModel {
                 }));
     }
 
+    public void searchVendas(String codQr) {
+        compositeDisposable.add(vendaRepository.getSearchVendas(codQr)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(vendas -> {
+                    getListaVendasLiveData().setValue(vendas);
+                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                }, throwable -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
+                }));
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();

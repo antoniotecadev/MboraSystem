@@ -25,6 +25,9 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVenda();
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_Barra LIKE '%' || :codQr || '%'")
+    abstract Flowable<List<Venda>> searchVenda(String codQr);
+
     @Transaction
     public void insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
@@ -42,5 +45,9 @@ public abstract class VendaDao {
 
     public Flowable<List<Venda>> getVendas() {
         return getVenda();
+    }
+
+    public Flowable<List<Venda>> getSearchVendas(String codQr) {
+        return searchVenda(codQr);
     }
 }

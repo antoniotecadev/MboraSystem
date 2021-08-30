@@ -6,11 +6,14 @@
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/cliente_autocomplete_row.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/dialog_criar_cliente_cantina.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/dialog_criar_usuario.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_categoria_produto.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_factura.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_usuario.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_usuario_list.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_venda.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_venda_list.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_pesquisar_criar_categoria.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_venda.xml" value="0.22" />
       </map>
     </option>
   </component>

@@ -332,6 +332,8 @@
     <string name="vds">Vendas</string>
     <string name="falha_venda">Falha ao carregar vendas</string>
     <string name="venda_nao_encontrada">Venda não encontrada</string>
+    <string name="exp_venda">Exportar Vendas</string>
+    <string name="imp_venda">Importar Vendas</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
