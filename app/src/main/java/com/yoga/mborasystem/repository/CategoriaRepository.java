@@ -1,6 +1,5 @@
 package com.yoga.mborasystem.repository;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 
-import androidx.appcompat.app.AlertDialog;
 import io.reactivex.Flowable;
 
 public class CategoriaRepository {
@@ -80,15 +78,6 @@ public class CategoriaRepository {
                 categoria.setData_cria(Ultilitario.getDateCurrent());
                 categoriaDao.insert(categoria);
             }
-//            ContentValues contentValues = new ContentValues();
-//
-//            for (String ct : categorias.keySet()) {
-//                contentValues.put("categoria", ct);
-//                contentValues.put("descricao", categorias.get(ct));
-//                contentValues.put("estado", true);
-//                contentValues.put("data_cria", Ultilitario.getDateCurrent());
-//                appDataBase.getOpenHelper().getWritableDatabase().insert("categorias", 0, contentValues);
-//            }
             return null;
         }
 

@@ -5,10 +5,8 @@ import android.content.Context;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.ClienteDao;
 import com.yoga.mborasystem.model.entidade.Cliente;
-import com.yoga.mborasystem.model.entidade.Usuario;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import io.reactivex.Single;
 
