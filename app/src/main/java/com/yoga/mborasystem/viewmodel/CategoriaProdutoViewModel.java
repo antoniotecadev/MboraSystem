@@ -24,7 +24,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class CategoriaProdutoViewModel extends AndroidViewModel {
@@ -45,20 +44,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
     private boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
-    }
-
-    public void validarImportacaoCategoria(String nome, String descricao, AlertDialog dialog) {
-        if (isCampoVazio(nome) || Ultilitario.letras.matcher(nome).find()) {
-            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.nome_invalido), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(descricao) || Ultilitario.letras.matcher(descricao).find()) {
-            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.descricao_invalida), R.drawable.ic_toast_erro);
-        } else {
-            categoria.setCategoria(nome);
-            categoria.setDescricao(descricao);
-            categoria.setEstado(Ultilitario.UM);
-            categoria.setData_cria(Ultilitario.getDateCurrent());
-            criarCategoria(categoria, dialog);
-        }
     }
 
     public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, Switch estado, AlertDialog dialog, long idcategoria) {
@@ -128,19 +113,13 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         compositeDisposable.add(categoriaRepository.getCategorias()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Categoria>>() {
-                    @Override
-                    public void accept(List<Categoria> categorias) throws Exception {
-                        getListaCategorias().setValue(categorias);
-                        Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                        Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable e) throws Exception {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                    }
+                .subscribe(categorias -> {
+                    getListaCategorias().setValue(categorias);
+                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
+                }, e -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                 }));
     }
 
@@ -148,17 +127,11 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         compositeDisposable.add(categoriaRepository.searchCategorias(categoria)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Categoria>>() {
-                    @Override
-                    public void accept(List<Categoria> categorias) throws Exception {
-                        getListaCategorias().setValue(categorias);
-                        Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                    }
+                .subscribe(categorias -> {
+                    getListaCategorias().setValue(categorias);
+                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                }, e -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                 }));
     }
 

@@ -488,20 +488,13 @@ public class ProdutoViewModel extends AndroidViewModel {
         compositeDisposable.add(listProduto
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Produto>>() {
-                    @Override
-                    public void accept(List<Produto> produtos) throws Exception {
-                        getListaProdutos().setValue(produtos);
-                        if (!produtos.isEmpty()) {
-//                            Ultilitario.showToast(getApplication(), Color.rgb(102, 50, 0), getApplication().getString(R.string.produto_nao_encontrado), R.drawable.ic_baseline_close_24);
-                            dialog.dismiss();
-                        }
+                .subscribe(produtos -> {
+                    getListaProdutos().setValue(produtos);
+                    if (!produtos.isEmpty()) {
+                        dialog.dismiss();
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                    }
+                }, throwable -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
                 }));
     }
 
@@ -510,28 +503,22 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public void codigoBarra(IntentResult result, TextInputEditText codigoBarra) {
-            if (result.getContents() == null) {
-                Toast.makeText(getApplication(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
-            } else {
-                codigoBarra.setText("");
-                codigoBarra.setText("" + result.getContents());
-            }
+        if (result.getContents() == null) {
+            Toast.makeText(getApplication(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
+        } else {
+            codigoBarra.setText("");
+            codigoBarra.setText("" + result.getContents());
+        }
     }
 
     public void searchProduto(String produto) {
         compositeDisposable.add(produtoRepository.searchProdutos(produto)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Produto>>() {
-                    @Override
-                    public void accept(List<Produto> produtoPagingData) throws Exception {
-                        getListaProdutos().setValue(produtoPagingData);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                    }
+                .subscribe(produtos -> {
+                    getListaProdutos().setValue(produtos);
+                }, throwable -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
                 }));
     }
 

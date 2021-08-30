@@ -27,7 +27,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class UsuarioViewModel extends AndroidViewModel {
@@ -214,16 +213,10 @@ public class UsuarioViewModel extends AndroidViewModel {
         compositeDisposable.add(usuarioRepository.getUsuarios()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Usuario>>() {
-                    @Override
-                    public void accept(List<Usuario> usuarios) throws Exception {
-                        getListaUsuarios().setValue(usuarios);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable e) throws Exception {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                    }
+                .subscribe(usuarios -> {
+                    getListaUsuarios().setValue(usuarios);
+                }, e -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                 }));
     }
 
