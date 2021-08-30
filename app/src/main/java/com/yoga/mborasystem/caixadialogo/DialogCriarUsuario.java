@@ -103,14 +103,6 @@ public class DialogCriarUsuario extends DialogFragment {
             }
         });
 
-//        binding.rdNunca.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                binding.editTextData.setText("");
-//                binding.editTextData.setEnabled(true);
-//            }
-//        });
-//
 //        binding.rdData.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

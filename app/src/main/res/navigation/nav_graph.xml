@@ -224,7 +224,16 @@
             android:id="@+id/vendaFragment"
             android:name="com.yoga.mborasystem.view.VendaFragment"
             android:label="@string/vds"
-            tools:layout="@layout/fragment_venda_list" />
+            tools:layout="@layout/fragment_venda_list" >
+            <action
+                android:id="@+id/action_vendaFragment_to_datePickerFragment"
+                app:destination="@id/datePickerFragment" />
+        </fragment>
+        <dialog
+            android:id="@+id/datePickerFragment"
+            android:name="com.yoga.mborasystem.caixadialogo.DatePickerFragment"
+            android:label="DatePickerFragment" />
+
     </navigation>
 
 </navigation>

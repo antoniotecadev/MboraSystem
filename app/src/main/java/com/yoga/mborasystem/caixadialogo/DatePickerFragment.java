@@ -3,26 +3,47 @@ package com.yoga.mborasystem.caixadialogo;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.DatePicker;
 
-import com.yoga.mborasystem.R;
-import com.yoga.mborasystem.databinding.DialogCriarUsuarioBinding;
+import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
-    private DialogCriarUsuarioBinding binding;
 
-    public DatePickerFragment(DialogCriarUsuarioBinding binding) {
-        this.binding = binding;
+    private VendaViewModel vendaViewModel;
+    private Map<Integer, String> listMonth;
+
+    public DatePickerFragment() {
+        listMonth = new HashMap<>();
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
+
+        listMonth.put(1, "janeiro");
+        listMonth.put(2, "fevereiro");
+        listMonth.put(3, "março");
+        listMonth.put(4, "abril");
+        listMonth.put(5, "maio");
+        listMonth.put(6, "junho");
+        listMonth.put(7, "julho");
+        listMonth.put(8, "agosto");
+        listMonth.put(9, "setembro");
+        listMonth.put(10, "outubro");
+        listMonth.put(11, "novembro");
+        listMonth.put(12, "dezembro");
+
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -34,7 +55,12 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//        binding.editTextData.setText("");
-//        binding.editTextData.setText(((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + ((month < 10 ? "0" : "") + (month + 1)) + year);
+//        Log.i("Picker", ((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + ((month < 10 ? "0" : "") + (month + 1)) + "-" + year);
+        String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + getMonthString(month + 1)) + "-" + year;
+        vendaViewModel.getVendasPoData(data);
+    }
+
+    private String getMonthString(int month) {
+        return listMonth.get(month);
     }
 }
