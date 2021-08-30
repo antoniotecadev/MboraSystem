@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -162,12 +163,13 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    public void consultarVendas() {
+    public void consultarVendas(SwipeRefreshLayout mySwipeRefreshLayout) {
         compositeDisposable.add(vendaRepository.getVendas()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> {
                     getListaVendasLiveData().setValue(vendas);
+                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                 }, e -> {
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                 }));

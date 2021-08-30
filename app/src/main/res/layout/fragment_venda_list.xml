@@ -8,6 +8,15 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/mySwipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewListaVenda"
         android:name="com.yoga.mborasystem.view.VendaFragment"
@@ -16,5 +25,7 @@
         app:layoutManager="LinearLayoutManager"
         tools:context=".view.VendaFragment"
         tools:listitem="@layout/fragment_venda"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

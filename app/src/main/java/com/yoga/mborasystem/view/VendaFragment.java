@@ -1,7 +1,9 @@
 package com.yoga.mborasystem.view;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -22,9 +27,13 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class VendaFragment extends Fragment {
@@ -48,9 +57,14 @@ public class VendaFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentVendaListBinding.inflate(inflater, container, false);
 
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
+                }
+        );
+
         binding.recyclerViewListaVenda.setAdapter(adapter);
         binding.recyclerViewListaVenda.setLayoutManager(new LinearLayoutManager(getContext()));
-        vendaViewModel.consultarVendas();
+        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
         vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
             adapter.clear();
             if (vendas.isEmpty()) {
@@ -61,6 +75,14 @@ public class VendaFragment extends Fragment {
             }
         });
         return binding.getRoot();
+    }
+
+    private void scanearCodigoQr(int camera) {
+        new IntentIntegrator(getActivity())
+                .setPrompt(getString(R.string.alinhar_codigo_qr))
+                .setOrientationLocked(false)
+                .setCameraId(camera)
+                .initiateScan();
     }
 
     class ItemVenda extends Item<GroupieViewHolder> {
@@ -127,7 +149,7 @@ public class VendaFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                vendaViewModel.consultarVendas();
+                vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
                 return true;
             }
         });
@@ -141,13 +163,49 @@ public class VendaFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    vendaViewModel.consultarVendas();
+                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
                 } else {
                     vendaViewModel.searchVendas(newText);
                 }
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+        switch (item.getItemId()) {
+            case R.id.btnScannerBack:
+                scanearCodigoQr(0);
+                break;
+            case R.id.exportarvenda:
+//                exportarImportar(Ultilitario.EXPORTAR_PRODUTO);
+                break;
+            case R.id.importarvenda:
+//                exportarImportar(Ultilitario.IMPORTAR_PRODUTO);
+                break;
+            default:
+                break;
+        }
+        return NavigationUI.onNavDestinationSelected(item, navController)
+                || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null) {
+                if (result.getContents() == null) {
+                    Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_SHORT).show();
+                } else {
+                    vendaViewModel.searchVendas(result.getContents());
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 
     @Override

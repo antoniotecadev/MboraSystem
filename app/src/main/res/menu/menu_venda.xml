@@ -9,17 +9,19 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
-        android:id="@+id/dialogCriarCategori"
-        android:icon="@drawable/ic_baseline_create_new_folder_24"
-        android:title="@string/criar_categoria"
+        android:id="@+id/btnScannerBack"
+        android:icon="@drawable/ic_baseline_camera_rear_24"
+        android:title="@string/scan_qr"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
+        android:id="@+id/exportarvenda"
         android:title="@string/exp_venda"
         app:showAsAction="never">
     </item>
 
     <item
+        android:id="@+id/importarvenda"
         android:title="@string/imp_venda"
         app:showAsAction="never">
     </item>

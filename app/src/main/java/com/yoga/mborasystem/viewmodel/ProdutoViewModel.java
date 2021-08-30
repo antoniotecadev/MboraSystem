@@ -510,14 +510,12 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public void codigoBarra(IntentResult result, TextInputEditText codigoBarra) {
-        if (result != null) {
             if (result.getContents() == null) {
                 Toast.makeText(getApplication(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
             } else {
                 codigoBarra.setText("");
                 codigoBarra.setText("" + result.getContents());
             }
-        }
     }
 
     public void searchProduto(String produto) {
