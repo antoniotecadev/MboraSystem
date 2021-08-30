@@ -21,6 +21,8 @@ public class Venda implements Parcelable {
     private int total_desconto;
     private int total_venda;
     private int divida;
+    private int valor_pago;
+    private int estado;
     private String data_cria;
     private String data_elimina;
     private long idclicant;
@@ -38,6 +40,8 @@ public class Venda implements Parcelable {
         total_desconto = in.readInt();
         total_venda = in.readInt();
         divida = in.readInt();
+        valor_pago = in.readInt();
+        estado = in.readInt();
         data_cria = in.readString();
         data_elimina = in.readString();
         idclicant = in.readLong();
@@ -164,6 +168,22 @@ public class Venda implements Parcelable {
         this.divida = divida;
     }
 
+    public int getValor_pago() {
+        return valor_pago;
+    }
+
+    public void setValor_pago(int valor_pago) {
+        this.valor_pago = valor_pago;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
     public long getIdclicant() {
         return idclicant;
     }
@@ -198,6 +218,8 @@ public class Venda implements Parcelable {
         dest.writeInt(total_desconto);
         dest.writeInt(total_venda);
         dest.writeInt(divida);
+        dest.writeInt(valor_pago);
+        dest.writeInt(estado);
         dest.writeString(data_cria);
         dest.writeString(data_elimina);
         dest.writeLong(idclicant);

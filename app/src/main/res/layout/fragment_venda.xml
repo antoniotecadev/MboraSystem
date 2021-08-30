@@ -84,6 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
+                android:textColor="@color/cor_castanha"
                 app:layout_constraintStart_toStartOf="@+id/textView19"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
@@ -101,9 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.392"
-                app:layout_constraintStart_toEndOf="@+id/textQtProd"
+                app:layout_constraintStart_toStartOf="@+id/textView22"
                 app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
             <TextView
@@ -143,9 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.392"
-                app:layout_constraintStart_toEndOf="@+id/textDesc"
+                app:layout_constraintStart_toStartOf="@+id/textView28"
                 app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
             <TextView
@@ -160,18 +157,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/textDesc" />
 
             <TextView
-                android:id="@+id/textView32"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/troco"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.334"
-                app:layout_constraintStart_toEndOf="@+id/textView31"
-                app:layout_constraintTop_toBottomOf="@+id/textTotDesc" />
-
-            <TextView
                 android:id="@+id/textPago"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -181,26 +166,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView31" />
 
             <TextView
-                android:id="@+id/textTroco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.392"
-                app:layout_constraintStart_toEndOf="@+id/textPago"
-                app:layout_constraintTop_toBottomOf="@+id/textView32" />
-
-            <TextView
                 android:id="@+id/textView36"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="55dp"
                 android:text="@string/montante_iva"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.321"
                 app:layout_constraintStart_toEndOf="@+id/textView35"
-                app:layout_constraintTop_toBottomOf="@+id/textTroco" />
+                app:layout_constraintTop_toBottomOf="@+id/textTotDesc" />
 
             <TextView
                 android:id="@+id/textView35"
@@ -227,9 +202,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.392"
-                app:layout_constraintStart_toEndOf="@+id/textValBas"
+                app:layout_constraintStart_toStartOf="@+id/textView36"
                 app:layout_constraintTop_toBottomOf="@+id/textView36" />
 
             <TextView
@@ -245,13 +218,11 @@
 
             <TextView
                 android:id="@+id/textForPag"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.117"
-                app:layout_constraintStart_toEndOf="@+id/textView39"
+                app:layout_constraintStart_toStartOf="@+id/textVaIva"
                 app:layout_constraintTop_toBottomOf="@+id/textVaIva" />
 
             <TextView
@@ -271,9 +242,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.29"
-                app:layout_constraintStart_toEndOf="@+id/textView41"
+                android:textColor="@color/cor_castanha"
+                app:layout_constraintStart_toStartOf="@+id/textForPag"
                 app:layout_constraintTop_toBottomOf="@+id/textForPag" />
 
             <TextView
@@ -293,10 +263,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.377"
-                app:layout_constraintStart_toEndOf="@+id/textView43"
+                app:layout_constraintStart_toStartOf="@+id/textDatVen"
                 app:layout_constraintTop_toBottomOf="@+id/textDatVen" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/dvd"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.338"
+                app:layout_constraintStart_toEndOf="@+id/textView31"
+                app:layout_constraintTop_toBottomOf="@+id/textTotDesc" />
+
+            <TextView
+                android:id="@+id/textDivida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="@+id/textView23"
+                app:layout_constraintTop_toBottomOf="@+id/textView23" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

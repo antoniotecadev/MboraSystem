@@ -1,7 +1,6 @@
 package com.yoga.mborasystem.view;
 
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,15 +51,12 @@ public class UsuarioFragment extends Fragment {
         binding.recyclerViewListaUsuario.setAdapter(adapter);
         binding.recyclerViewListaUsuario.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        binding.criarUsuarioFragment.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario);
-        });
+        binding.criarUsuarioFragment.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario));
 
         usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> {
             adapter.clear();
-            for (Usuario usuario : usuarios) {
+            for (Usuario usuario : usuarios)
                 adapter.add(new ItemUsuario(usuario));
-            }
         });
         return binding.getRoot();
     }
@@ -86,7 +82,7 @@ public class UsuarioFragment extends Fragment {
 
     class ItemUsuario extends Item<GroupieViewHolder> {
 
-        Usuario usuario;
+        private Usuario usuario;
 
         public ItemUsuario(Usuario usuarios) {
             this.usuario = usuarios;
@@ -119,22 +115,16 @@ public class UsuarioFragment extends Fragment {
                 verDadosUsuario();
             });
 
-            viewHolder.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-                @Override
-                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                    menu.setHeaderTitle(usuario.getNome());
-                    menu.add(R.string.editar).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            verDadosUsuario();
-                            return false;
-                        }
-                    });//groupId, itemId, order, title
-                    menu.add(R.string.eliminar_usuario).setOnMenuItemClickListener(item -> {
-                        deleteUser();
-                        return false;
-                    });
-                }
+            viewHolder.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                menu.setHeaderTitle(usuario.getNome());
+                menu.add(R.string.editar).setOnMenuItemClickListener(item -> {
+                    verDadosUsuario();
+                    return false;
+                });//groupId, itemId, order, title
+                menu.add(R.string.eliminar_usuario).setOnMenuItemClickListener(item -> {
+                    deleteUser();
+                    return false;
+                });
             });
 
             viewHolder.itemView.findViewById(R.id.btnEliminar).setOnClickListener(v -> deleteUser());

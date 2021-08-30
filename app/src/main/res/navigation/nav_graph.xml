@@ -137,6 +137,11 @@
             <action
                 android:id="@+id/action_homeFragment_to_facturaFragment"
                 app:destination="@id/facturaFragment" />
+            <action
+                android:id="@+id/action_homeFragment_to_vendaFragment"
+                app:destination="@id/vendaFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
         </fragment>
         <fragment
             android:id="@+id/usuarioFragment"
@@ -215,6 +220,11 @@
                 android:name="nomeCliente"
                 app:argType="string" />
         </dialog>
+        <fragment
+            android:id="@+id/vendaFragment"
+            android:name="com.yoga.mborasystem.view.VendaFragment"
+            android:label="@string/vds"
+            tools:layout="@layout/fragment_venda_list" />
     </navigation>
 
 </navigation>

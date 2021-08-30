@@ -1,7 +1,6 @@
 package com.yoga.mborasystem.repository;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.VendaDao;
@@ -9,9 +8,13 @@ import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.Venda;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Flowable;
+
 public class VendaRepository {
+
     private VendaDao vendaDao;
     private WeakReference<Context> contextWeakReference;
 
@@ -23,6 +26,10 @@ public class VendaRepository {
 
     public void insert(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
+    }
+
+    public Flowable<List<Venda>> getVendas() {
+        return vendaDao.getVendas();
     }
 
 }

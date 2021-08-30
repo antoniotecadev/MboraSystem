@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
-            bundle.putLong("idoperador", getArguments().getLong("idusuario",0));
+            bundle.putLong("idoperador", getArguments().getLong("idusuario", 0));
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
 
@@ -61,6 +61,10 @@ public class HomeFragment extends Fragment {
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
+        });
+
+        binding.btnVenda.setOnClickListener(v -> {
+            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_vendaFragment);
         });
 
         binding.btnCliente.setOnClickListener(v -> {

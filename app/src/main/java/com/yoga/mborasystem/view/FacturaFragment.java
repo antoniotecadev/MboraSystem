@@ -455,7 +455,7 @@ public class FacturaFragment extends Fragment {
                         + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                         + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
                 )
-                .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, getArguments().getLong("idoperador", 0), idcliente, getView()))
+                .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, getArguments().getLong("idoperador", 0), idcliente, getView()))
                 .setNegativeButton(R.string.cancelar, (dialog, which) -> {
                     facturaPath = "";
                     dialog.dismiss();

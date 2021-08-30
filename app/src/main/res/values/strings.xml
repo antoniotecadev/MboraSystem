@@ -329,6 +329,9 @@
     <string name="dvd_atri_cl_cad">"A dívida só pode ser atribuída ao cliente cadastrado. "</string>
     <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ "</string>
     <string name="noa_scan_codbar">Não vai poder acessar a camera.</string>
+    <string name="vds">Vendas</string>
+    <string name="falha_venda">Falha ao carregar vendas</string>
+    <string name="venda_nao_encontrada">Venda não encontrada</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

@@ -17,11 +17,11 @@ import com.yoga.mborasystem.view.FacturaFragmentDirections;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
@@ -93,9 +93,18 @@ public class VendaViewModel extends AndroidViewModel {
         return dialog;
     }
 
+    MutableLiveData<List<Venda>> listaVendas;
+
+    public MutableLiveData<List<Venda>> getListaVendasLiveData() {
+        if (listaVendas == null) {
+            listaVendas = new MutableLiveData<>();
+        }
+        return listaVendas;
+    }
+
     @SuppressLint("CheckResult")
-    public void cadastrarVenda(AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, long idoperador, long idcliente, View view) {
-        venda.setNome_cliente(txtNomeCliente.getText().toString());
+    public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
+        venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
         venda.setQuantidade(quantidade);
         venda.setValor_base(valorBase);
@@ -104,7 +113,9 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setPagamento(formaPagamento);
         venda.setTotal_desconto(totalDesconto);
         venda.setTotal_venda(totalVenda);
-        venda.setTotal_venda(valorDivida);
+        venda.setDivida(valorDivida);
+        venda.setValor_pago(valorPago);
+        venda.setEstado(Ultilitario.UM);
         venda.setData_cria(Ultilitario.getDateCurrent());
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
@@ -149,6 +160,17 @@ public class VendaViewModel extends AndroidViewModel {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.dados_admin_nao) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
+    }
+
+    public void consultarVendas() {
+        compositeDisposable.add(vendaRepository.getVendas()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(vendas -> {
+                    getListaVendasLiveData().setValue(vendas);
+                }, e -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                }));
     }
 
     @Override

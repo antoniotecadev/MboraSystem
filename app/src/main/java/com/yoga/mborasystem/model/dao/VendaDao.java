@@ -4,11 +4,14 @@ import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
 
+import java.util.List;
 import java.util.Map;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.Query;
 import androidx.room.Transaction;
+import io.reactivex.Flowable;
 
 @Dao
 public abstract class VendaDao {
@@ -18,6 +21,9 @@ public abstract class VendaDao {
 
     @Insert
     abstract void insert(ProdutoVenda produtoVenda);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVenda();
 
     @Transaction
     public void insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
@@ -32,5 +38,9 @@ public abstract class VendaDao {
             produtoVenda.setIdvenda(idvenda);
             insert(produtoVenda);
         }
+    }
+
+    public Flowable<List<Venda>> getVendas() {
+        return getVenda();
     }
 }
