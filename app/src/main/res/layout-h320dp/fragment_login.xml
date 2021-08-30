@@ -249,6 +249,4 @@
         app:layout_constraintBottom_toTopOf="@+id/gridLayout"
         app:layout_constraintEnd_toStartOf="@+id/d5"
         app:layout_constraintStart_toEndOf="@+id/d3" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

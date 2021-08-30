@@ -3,16 +3,28 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout-h320dp/fragment_login.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/cliente_autocomplete_row.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/dialog_criar_cliente_cantina.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/dialog_criar_usuario.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/dialog_exportar_importar.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_activar_mborasytem.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_cadastrar_cliente.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_categoria.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_categoria_produto.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_cliente.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_factura.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_lista_factura.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_produto.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_produto_list.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_usuario.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_usuario_list.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_vazio.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_venda.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_venda_list.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/progress_dialogo_view.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/toast_layout.xml" value="0.18802083333333333" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_pesquisar_criar_categoria.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_venda.xml" value="0.22" />
       </map>

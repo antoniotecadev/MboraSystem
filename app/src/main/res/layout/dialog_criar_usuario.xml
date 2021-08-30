@@ -230,7 +230,4 @@
                 app:backgroundTint="@android:color/holo_orange_light" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
-
-
-
 </LinearLayout>
