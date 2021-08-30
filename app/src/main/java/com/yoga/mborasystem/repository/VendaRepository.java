@@ -11,6 +11,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 
+import androidx.lifecycle.LiveData;
 import io.reactivex.Flowable;
 
 public class VendaRepository {
@@ -38,6 +39,10 @@ public class VendaRepository {
 
     public Flowable<List<Venda>> getSearchVendas(String codQr) {
         return vendaDao.getSearchVendas(codQr);
+    }
+
+    public LiveData<Long> getQuantidadeVendas() {
+        return vendaDao.getQuantidadeVendas();
     }
 
 }

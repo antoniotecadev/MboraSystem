@@ -5,16 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <ViewStub-->
-<!--        android:id="@+id/viewStub"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout="@layout/progress_dialogo_view"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <Button
         android:id="@+id/btnCriarProdutoFragment"
         android:layout_width="match_parent"
@@ -59,7 +49,7 @@
         android:layout_gravity="center_horizontal|end"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="840"
+        android:text="0"
         android:textColor="#FFFFFF"
         app:chipBackgroundColor="@color/cor_castanha"
         app:layout_constraintEnd_toEndOf="parent"

@@ -74,6 +74,11 @@ public class VendaFragment extends Fragment {
                     adapter.add(new ItemVenda(venda));
             }
         });
+
+        vendaViewModel.consultarQuantidadeVendas().observe(getViewLifecycleOwner(), quantidade -> {
+            binding.chipQuantVenda.setText(String.valueOf(quantidade));
+        });
+
         return binding.getRoot();
     }
 

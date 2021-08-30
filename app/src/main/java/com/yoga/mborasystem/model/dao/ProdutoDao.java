@@ -30,7 +30,7 @@ public interface ProdutoDao {
     Flowable<List<Produto>> getProdutos(long idcat);
 
     @Query("SELECT COUNT(id) FROM produtos  WHERE idcategoria = :idcategoria AND estado = 1")
-    LiveData<Integer> getQuantidadeProduto(long idcategoria);
+    LiveData<Long> getQuantidadeProduto(long idcategoria);
 
     @Query("SELECT * FROM produtos WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
     Flowable<List<Produto>> searchProdutos(String search);

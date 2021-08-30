@@ -47,7 +47,7 @@ public class ProdutoRepository {
         return produtoDao.getProdutos(idcat);
     }
 
-    public LiveData<Integer> getQuantidadeProduto(long idcat) {
+    public LiveData<Long> getQuantidadeProduto(long idcat) {
         return produtoDao.getQuantidadeProduto(idcat);
     }
 

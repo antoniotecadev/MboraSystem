@@ -505,7 +505,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 }));
     }
 
-    public LiveData<Integer> consultarQuantidadeProduto(long idcategoria) {
+    public LiveData<Long> consultarQuantidadeProduto(long idcategoria) {
         return produtoRepository.getQuantidadeProduto(idcategoria);
     }
 

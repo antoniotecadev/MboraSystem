@@ -23,6 +23,7 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -197,6 +198,10 @@ public class VendaViewModel extends AndroidViewModel {
                 }, throwable -> {
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
                 }));
+    }
+
+    public LiveData<Long> consultarQuantidadeVendas() {
+        return vendaRepository.getQuantidadeVendas();
     }
 
     @Override

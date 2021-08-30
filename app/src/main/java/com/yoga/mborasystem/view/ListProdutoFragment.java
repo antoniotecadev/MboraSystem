@@ -85,12 +85,13 @@ public class ListProdutoFragment extends Fragment {
                 }
             }
         });
-        produtoViewModel.consultarQuantidadeProduto(idcategoria).observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        produtoViewModel.consultarQuantidadeProduto(idcategoria).observe(getViewLifecycleOwner(), new Observer<Long>() {
             @Override
-            public void onChanged(Integer integer) {
-                binding.chipQuantidadeProduto.setText(integer + "");
+            public void onChanged(Long quant) {
+                binding.chipQuantidadeProduto.setText(quant + "");
             }
         });
+
         binding.btnCriarProdutoFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

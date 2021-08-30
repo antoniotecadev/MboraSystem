@@ -3,7 +3,6 @@ package com.yoga.mborasystem.caixadialogo;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
