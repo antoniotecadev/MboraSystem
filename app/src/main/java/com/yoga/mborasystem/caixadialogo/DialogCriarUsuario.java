@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.yoga.mborasystem.R;
@@ -33,7 +32,6 @@ public class DialogCriarUsuario extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         binding = DialogCriarUsuarioBinding.inflate(LayoutInflater.from(getContext()));
-//        binding.editTextData.addTextChangedListener(MaskEditUtil.mask(binding.editTextData, MaskEditUtil.FORMAT_DATE));
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
         builder = new AlertDialog.Builder(getActivity());
@@ -73,16 +71,13 @@ public class DialogCriarUsuario extends DialogFragment {
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
 
-        binding.switchEstado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    buttonView.setText(getString(R.string.estado_bloqueado));
-                    Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.usuario_bloqueado), R.drawable.ic_toast_erro);
-                } else {
-                    buttonView.setText(getString(R.string.estado_desbloqueado));
-                    Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.usuario_desbloqueado), R.drawable.ic_toast_feito);
-                }
+        binding.switchEstado.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                buttonView.setText(getString(R.string.estado_bloqueado));
+                Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.usuario_bloqueado), R.drawable.ic_toast_erro);
+            } else {
+                buttonView.setText(getString(R.string.estado_desbloqueado));
+                Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.usuario_desbloqueado), R.drawable.ic_toast_feito);
             }
         });
 
@@ -102,14 +97,6 @@ public class DialogCriarUsuario extends DialogFragment {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-//        binding.rdData.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DialogFragment dialogFragment = new DatePickerFragment(binding);
-//                dialogFragment.show(getParentFragmentManager(), "datePicker");
-//            }
-//        });
 
         binding.buttonEliminarUsuario.setOnClickListener(v -> deleteUser());
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());

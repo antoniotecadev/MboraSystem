@@ -165,45 +165,27 @@ public class DialogCriarProduto extends DialogFragment {
         binding.btnScannerBack.setOnClickListener(v -> scanearCodigoBar(0));
         binding.btnScannerFront.setOnClickListener(v -> scanearCodigoBar(1));
 
-        binding.switchEstado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    buttonView.setText(getString(R.string.estado_bloqueado));
-                    Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.estado_bloqueado), R.drawable.ic_toast_erro);
-                } else {
-                    buttonView.setText(getString(R.string.estado_desbloqueado));
-                    Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.estado_desbloqueado), R.drawable.ic_toast_feito);
-                }
+        binding.switchEstado.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                buttonView.setText(getString(R.string.estado_bloqueado));
+                Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.estado_bloqueado), R.drawable.ic_toast_erro);
+            } else {
+                buttonView.setText(getString(R.string.estado_desbloqueado));
+                Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.estado_desbloqueado), R.drawable.ic_toast_feito);
             }
         });
 
         binding.btnCriarProduto.setOnClickListener(v -> createProduto(idcategoria));
         binding.btnSalvarProduto.setOnClickListener(v -> updateProduto(idproduto, idcategoria));
         binding.btnEliminarProduto.setOnClickListener(v -> deleteProduto(produto));
-        binding.btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
 
         Ultilitario.precoFormat(getContext(), binding.txtPrecoProduto);
         Ultilitario.precoFormat(getContext(), binding.txtPrecoProdutoFornecedor);
 
-        binding.btnLimparPreco.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Ultilitario.zerarPreco(binding.txtPrecoProduto);
-            }
-        });
+        binding.btnLimparPreco.setOnClickListener(v -> Ultilitario.zerarPreco(binding.txtPrecoProduto));
 
-        binding.btnLimparPrecoFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Ultilitario.zerarPreco(binding.txtPrecoProdutoFornecedor);
-            }
-        });
+        binding.btnLimparPrecoFornecedor.setOnClickListener(v -> Ultilitario.zerarPreco(binding.txtPrecoProdutoFornecedor));
 
         return dialog;
     }

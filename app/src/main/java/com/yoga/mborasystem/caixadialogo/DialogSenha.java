@@ -62,27 +62,21 @@ public class DialogSenha extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
 
 
-        binding.btnEntrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCampoVazio(binding.senha.getText().toString()) || letraNumero.matcher(binding.senha.getText().toString()).find()) {
-                    binding.senha.requestFocus();
-                    binding.senha.setError(getString(R.string.senha_invalida));
-                } else {
-                    clienteViewModel.logar(binding.senha);
-                }
+        binding.btnEntrar.setOnClickListener(v -> {
+            if (isCampoVazio(binding.senha.getText().toString()) || letraNumero.matcher(binding.senha.getText().toString()).find()) {
+                binding.senha.requestFocus();
+                binding.senha.setError(getString(R.string.senha_invalida));
+            } else {
+                clienteViewModel.logar(binding.senha);
             }
         });
 
-        binding.btnAlterar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    alterarCodigoPin(dialog);
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        binding.btnAlterar.setOnClickListener(v -> {
+            try {
+                alterarCodigoPin(dialog);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
