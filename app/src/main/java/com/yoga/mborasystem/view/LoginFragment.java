@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentLoginBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
-import com.yoga.mborasystem.model.entidade.Usuario;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 import com.yoga.mborasystem.viewmodel.LoginViewModel;
@@ -56,17 +55,14 @@ public class LoginFragment extends Fragment {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
 
-        final Observer<String> infoPinObserver = new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                if (s == "4") {
-                    desabilitarTecladoPersonalisado();
-                    contarTempoDeEspera();
-                } else {
-                    binding.tvinfoCodigoPin.setText(s);
-                    limparCodigoPin();
-                    vibrarTelefone(getContext());
-                }
+        final Observer<String> infoPinObserver = s -> {
+            if (s == "4") {
+                desabilitarTecladoPersonalisado();
+                contarTempoDeEspera();
+            } else {
+                binding.tvinfoCodigoPin.setText(s);
+                limparCodigoPin();
+                vibrarTelefone(getContext());
             }
         };
         //  observador está vinculado ao objeto Lifecycle associado ao proprietário
@@ -110,14 +106,11 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        loginViewModel.getUsuarioMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Usuario>() {
-            @Override
-            public void onChanged(Usuario usuario) {
-                bundle.putString("nome", usuario.getNome());
-                bundle.putBoolean("master", false);
-                bundle.putLong("idusuario", usuario.getId());
-                Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
-            }
+        loginViewModel.getUsuarioMutableLiveData().observe(getViewLifecycleOwner(), usuario -> {
+            bundle.putString("nome", usuario.getNome());
+            bundle.putBoolean("master", false);
+            bundle.putLong("idusuario", usuario.getId());
+            Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
         });
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
@@ -173,20 +166,17 @@ public class LoginFragment extends Fragment {
     }
 
     private void habilitarTecladoPersonalisado() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                binding.tvinfoCodigoPin.setText(R.string.tvIntroduzirCodigoPin);
-                binding.gridLayout.setVisibility(View.VISIBLE);
-            }
+        handler.postDelayed(() -> {
+            binding.tvinfoCodigoPin.setText(R.string.tvIntroduzirCodigoPin);
+            binding.gridLayout.setVisibility(View.VISIBLE);
         }, 60000);
     }
 
 
-    private void chamarProgressBarDialog() {
-        dialog.show();
-        dialog.setContentView(R.layout.progress_dialogo_view);
-    }
+//    private void chamarProgressBarDialog() {
+//        dialog.show();
+//        dialog.setContentView(R.layout.progress_dialogo_view);
+//    }
 
     private void contarTempoDeEspera() {
         binding.tvinfoCodigoPin.setText(R.string.tentar_novamente);
@@ -232,14 +222,11 @@ public class LoginFragment extends Fragment {
     }
 
     private void retirarBolinhasDeDigitos(TextView bolinha, int tempo) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bolinha.setTextColor(Color.GRAY);
-                animation = ObjectAnimator.ofFloat(bolinha, "translationY", 0f);
-                animation.setDuration(200);
-                animation.start();
-            }
+        handler.postDelayed(() -> {
+            bolinha.setTextColor(Color.GRAY);
+            animation = ObjectAnimator.ofFloat(bolinha, "translationY", 0f);
+            animation.setDuration(200);
+            animation.start();
         }, tempo);
 
     }

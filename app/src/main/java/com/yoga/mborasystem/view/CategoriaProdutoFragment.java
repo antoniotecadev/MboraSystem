@@ -99,7 +99,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 }
             }
         });
-        produtoViewModel.getListaProdutosImport().observe(getViewLifecycleOwner(), new EventObserver<List<Produto>>(prod -> {
+        produtoViewModel.getListaProdutosImport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
             StringBuilder dt = new StringBuilder();
             if (prod.isEmpty()) {
                 Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
@@ -237,12 +237,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     listaProdutos(categoria.getId(), categoria.getCategoria());
                 }
             });
-            menu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    v.showContextMenu();
-                }
-            });
+            menu.setOnClickListener(v -> v.showContextMenu());
             viewHolder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

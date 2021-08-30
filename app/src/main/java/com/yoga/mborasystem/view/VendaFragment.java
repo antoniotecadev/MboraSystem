@@ -185,8 +185,6 @@ public class VendaFragment extends Fragment {
                 scanearCodigoQr(0);
                 break;
             case R.id.btnData:
-//                DialogFragment dialogFragment = new DatePickerFragment();
-//                dialogFragment.show(getParentFragmentManager(), "datePicker");
                 Navigation.findNavController(getView()).navigate(R.id.action_vendaFragment_to_datePickerFragment);
                 break;
             case R.id.exportarvenda:

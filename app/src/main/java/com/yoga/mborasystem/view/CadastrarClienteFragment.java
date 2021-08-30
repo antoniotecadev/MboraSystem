@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.yoga.mborasystem.R;
@@ -58,22 +57,17 @@ public class CadastrarClienteFragment extends Fragment {
                 Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        binding.checkTermoCondicao.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    binding.buttonCriarConta.setEnabled(true);
-                } else {
-                    binding.buttonCriarConta.setEnabled(false);
-                }
+        binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                binding.buttonCriarConta.setEnabled(true);
+            } else {
+                binding.buttonCriarConta.setEnabled(false);
             }
         });
 
         binding.buttonEntrarConta.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(R.id.action_cadastrarClienteFragment_to_activarMbora));
 
-        Ultilitario.getValido().observe(getViewLifecycleOwner(), new Observer<Ultilitario.Operacao>() {
-            @Override
-            public void onChanged(Ultilitario.Operacao operacao) {
+        Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao ->  {
                 switch (operacao) {
                     case CRIAR:
                         Ultilitario.dialogConta(getString(R.string.conta_criada), getContext());
@@ -85,9 +79,7 @@ public class CadastrarClienteFragment extends Fragment {
                     default:
                         break;
                 }
-            }
         });
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }

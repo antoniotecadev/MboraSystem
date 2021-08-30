@@ -92,12 +92,9 @@ public class ListProdutoFragment extends Fragment {
             }
         });
 
-        binding.btnCriarProdutoFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!idcategoria.equals("") && !categoria.isEmpty()) {
-                    createProduto(idcategoria, categoria);
-                }
+        binding.btnCriarProdutoFragment.setOnClickListener(v -> {
+            if (!idcategoria.equals("") && !categoria.isEmpty()) {
+                createProduto(idcategoria, categoria);
             }
         });
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
