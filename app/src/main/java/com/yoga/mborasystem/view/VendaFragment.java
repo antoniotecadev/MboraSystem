@@ -1,9 +1,12 @@
 package com.yoga.mborasystem.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +42,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 public class VendaFragment extends Fragment {
 
     private Venda venda;
+    private boolean isLocal;
+    private String data = "";
+    private StringBuilder dataBuilder;
     private GroupAdapter adapter;
     private VendaViewModel vendaViewModel;
     private FragmentVendaListBinding binding;
@@ -48,6 +54,7 @@ public class VendaFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new GroupAdapter();
+        dataBuilder = new StringBuilder();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
     }
 
@@ -79,6 +86,55 @@ public class VendaFragment extends Fragment {
             binding.chipQuantVenda.setText(String.valueOf(quantidade));
         });
 
+        vendaViewModel.getSelectedDataMutableLiveData().setValue(false);
+        vendaViewModel.getSelectedDataMutableLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                Navigation.findNavController(getView()).navigate(R.id.action_dialogExportarImportarVenda_to_datePickerExpImp2);
+            }
+        });
+
+        vendaViewModel.getDataExportAppLiveData().observe(getViewLifecycleOwner(), data -> {
+            this.data = data;
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.dat_sel))
+                    .setMessage(getString(R.string.exp_v) + " " + data)
+                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        dialog.dismiss();
+                    }).show();
+        });
+
+        vendaViewModel.getExportarLocalLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (this.data.isEmpty()) {
+                Toast.makeText(getContext(), getString(R.string.selec_data), Toast.LENGTH_LONG).show();
+            } else {
+                if (aBoolean) {
+                    isLocal = true;
+                    vendaViewModel.getVendasPorData(this.data, true);
+                } else if (!aBoolean) {
+                    isLocal = false;
+                    vendaViewModel.getVendasPorData(this.data, true);
+                }
+
+            }
+        });
+
+        vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), vendas -> {
+            StringBuilder dt = new StringBuilder();
+            if (vendas.isEmpty()) {
+                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.nao_tem_venda), R.drawable.ic_toast_erro);
+            } else {
+                for (Venda venda : vendas) {
+                    dt.append(venda.getNome_cliente() + "," + venda.getCodigo_Barra() + "," + venda.getQuantidade() + "," + venda.getTotal_venda() + "," + venda.getDesconto() + "," + venda.getTotal_desconto() + "," + venda.getValor_pago() + "," + venda.getDivida() + "," + venda.getValor_base() + "," + venda.getValor_iva() + "," + venda.getPagamento() + "," + venda.getData_cria() + "," + venda.getIdoperador() + "," + venda.getIdclicant() + "," + venda.getData_elimina() + "," + venda.getEstado() + "\n");
+                }
+                dataBuilder = dt;
+                if (isLocal) {
+                    Ultilitario.exportarLocal(getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data, Ultilitario.CREATE_FILE_PRODUTO);
+                } else {
+                    Ultilitario.exportarNuvem(getContext(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
+                }
+            }
+            this.data = "";
+        });
         return binding.getRoot();
     }
 
@@ -188,7 +244,7 @@ public class VendaFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.action_vendaFragment_to_datePickerFragment);
                 break;
             case R.id.exportarvenda:
-//                exportarImportar(Ultilitario.EXPORTAR_PRODUTO);
+                exportarVenda(Ultilitario.EXPORTAR_VENDA);
                 break;
             case R.id.importarvenda:
 //                exportarImportar(Ultilitario.IMPORTAR_PRODUTO);
@@ -200,10 +256,33 @@ public class VendaFragment extends Fragment {
                 || super.onOptionsItemSelected(item);
     }
 
+    private void exportarVenda(int exportarVenda) {
+        Navigation.findNavController(getView()).navigate(R.id.action_vendaFragment_to_dialogExportarImportarVenda);
+    }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent resultData) {
+
+        if (requestCode == Ultilitario.CREATE_FILE_PRODUTO && resultCode == Activity.RESULT_OK) {
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                Ultilitario.alterDocument(uri, dataBuilder, getActivity());
+                dataBuilder.delete(0, data.length());
+                Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
+//            Uri uri = null;
+//            if (resultData != null) {
+//                uri = resultData.getData();
+//                try {
+////                    readTextFromUri(uri);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+        } else if (resultCode == Activity.RESULT_OK) {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, resultData);
             if (result != null) {
                 if (result.getContents() == null) {
                     Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_SHORT).show();
@@ -211,9 +290,10 @@ public class VendaFragment extends Fragment {
                     vendaViewModel.searchVendas(result.getContents());
                 }
             } else {
-                super.onActivityResult(requestCode, resultCode, data);
+                super.onActivityResult(requestCode, resultCode, resultData);
             }
         }
+
     }
 
     @Override

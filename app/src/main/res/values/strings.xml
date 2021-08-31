@@ -338,6 +338,11 @@
     <string name="alinhar_codigo_qr">Alinhar código Qr para fazer a leitura</string>
     <string name="scaner_cod_qr_cancel">Scaneamento de código Qr cancelada</string>
     <string name="pes_dat">Pesquisar com Data</string>
+    <string name="selec_data">Seleccionar Data</string>
+    <string name="dat_sel">Data Seleccionada</string>
+    <string name="exp_v">"Exportar vendas de "</string>
+    <string name="vendas">Vendas</string>
+    <string name="nao_tem_venda">Não tem nenhuma venda nesta data</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

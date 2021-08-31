@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".caixadialogo.DialogExportarImportarVenda">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/divider8"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <Button
+                android:id="@+id/btnSelectedData"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/selec_data"
+                app:backgroundTint="#7CB342" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <Button
+                android:id="@+id/btnExportarLocal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/exportar_local" />
+
+            <Button
+                android:id="@+id/btnExportarNuvem"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:text="@string/exportar_nuvem" />
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:text="@string/cancelar"
+                app:backgroundTint="@android:color/holo_orange_light" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -228,11 +228,28 @@
             <action
                 android:id="@+id/action_vendaFragment_to_datePickerFragment"
                 app:destination="@id/datePickerFragment" />
+            <action
+                android:id="@+id/action_vendaFragment_to_dialogExportarImportarVenda"
+                app:destination="@id/dialogExportarImportarVenda" />
         </fragment>
         <dialog
             android:id="@+id/datePickerFragment"
             android:name="com.yoga.mborasystem.caixadialogo.DatePickerFragment"
-            android:label="DatePickerFragment" />
+            android:label="DatePickerFragment" >
+        </dialog>
+        <dialog
+            android:id="@+id/dialogExportarImportarVenda"
+            android:name="com.yoga.mborasystem.caixadialogo.DialogExportarImportarVenda"
+            android:label="dialog_exportar_importar_venda"
+            tools:layout="@layout/dialog_exportar_importar_venda" >
+            <action
+                android:id="@+id/action_dialogExportarImportarVenda_to_datePickerExpImp2"
+                app:destination="@id/datePickerExpImp2" />
+        </dialog>
+        <dialog
+            android:id="@+id/datePickerExpImp2"
+            android:name="com.yoga.mborasystem.util.DatePickerExpImp"
+            android:label="DatePickerExpImp" />
 
     </navigation>
 

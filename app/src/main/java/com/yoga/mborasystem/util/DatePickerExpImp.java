@@ -1,29 +1,27 @@
-package com.yoga.mborasystem.caixadialogo;
+package com.yoga.mborasystem.util;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
-import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import java.util.Calendar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-public class DatePickerFragment extends DialogFragment
+public class DatePickerExpImp extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
     private VendaViewModel vendaViewModel;
 
-    public DatePickerFragment() {
-
-    }
-
+    @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
 
@@ -37,9 +35,8 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//        Log.i("Picker", ((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + ((month < 10 ? "0" : "") + (month + 1)) + "-" + year);
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
-        vendaViewModel.getVendasPorData(data, false);
+        vendaViewModel.getDataExportAppLiveData().setValue(data);
     }
 
 }

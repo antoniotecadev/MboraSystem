@@ -48,7 +48,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -72,7 +74,7 @@ public class Ultilitario {
     private static ArrayList<Integer> listaQuantidade;
     public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");
     public static Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç0-9\n ]");
-    public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4;
+    public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4, EXPORTAR_VENDA = 5, IMPORTAR_VENDA = 6;
     public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, SINCO = 5, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 5;
 
     public Ultilitario() {
@@ -319,21 +321,21 @@ public class Ultilitario {
         spinner.setAdapter(itemAdapter);
     }
 
-    public static void exportarLocal(Activity activity, StringBuilder data, String ficheiro, String nomeFicheiro, int CREATE_FILE) {
+    public static void exportarLocal(Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data, int CREATE_FILE) {
         try {
             FileOutputStream out = activity.openFileOutput(ficheiro, Context.MODE_PRIVATE);
-            out.write((data.toString()).getBytes());
+            out.write((dataStringBuilder.toString()).getBytes());
             out.close();
 
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/csv");
-            intent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + Ultilitario.getDateCurrent() + ".csv");
+            intent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data + ".csv");
             intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
             activity.startActivityForResult(intent, CREATE_FILE);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(activity.getBaseContext(), activity.getString(R.string.falha) + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getBaseContext(), activity.getString(R.string.falha) + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -346,29 +348,31 @@ public class Ultilitario {
             csv.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    public static void exportarNuvem(Context context, StringBuilder data, String ficheiro, String nomeFicheiro) {
+    public static void exportarNuvem(Context context, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data) {
         try {
             //saving the file into device
             FileOutputStream out = context.openFileOutput(ficheiro, Context.MODE_PRIVATE);
-            out.write((data.toString()).getBytes());
+            out.write((dataStringBuilder.toString()).getBytes());
             out.close();
             //exporting
             File filelocation = new File(context.getFilesDir(), ficheiro);
             Uri path = FileProvider.getUriForFile(context, "com.yoga.mborasystem", filelocation);
             Intent fileIntent = new Intent(Intent.ACTION_SEND);
             fileIntent.setType("text/csv");
-            fileIntent.putExtra(Intent.EXTRA_SUBJECT, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + Ultilitario.getDateCurrent());
+            fileIntent.putExtra(Intent.EXTRA_SUBJECT, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data);
             fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             fileIntent.putExtra(Intent.EXTRA_STREAM, path);
             context.startActivity(Intent.createChooser(fileIntent, context.getString(R.string.partilhar)));
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(context, context.getString(R.string.falha) + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.falha) + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -419,6 +423,26 @@ public class Ultilitario {
             app_installed = false;
         }
         return app_installed;
+    }
+
+    public static String getMonth(int month) {
+
+        Map<Integer, String> listMonth = new HashMap<>();
+
+        listMonth.put(1, "janeiro");
+        listMonth.put(2, "fevereiro");
+        listMonth.put(3, "março");
+        listMonth.put(4, "abril");
+        listMonth.put(5, "maio");
+        listMonth.put(6, "junho");
+        listMonth.put(7, "julho");
+        listMonth.put(8, "agosto");
+        listMonth.put(9, "setembro");
+        listMonth.put(10, "outubro");
+        listMonth.put(11, "novembro");
+        listMonth.put(12, "dezembro");
+
+        return listMonth.get(month);
     }
 
 }

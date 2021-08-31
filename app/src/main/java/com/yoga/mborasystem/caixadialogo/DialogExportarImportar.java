@@ -151,9 +151,9 @@ public class DialogExportarImportar extends DialogFragment {
         }
         this.data = data;
         if (isLocal) {
-            Ultilitario.exportarLocal(getActivity(), data, ficheiro, nomeFicheiro, Ultilitario.CREATE_FILE_CATEGORIA);
+            Ultilitario.exportarLocal(getActivity(), data, ficheiro, nomeFicheiro, Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_CATEGORIA);
         } else {
-            Ultilitario.exportarNuvem(getContext(), data, ficheiro, nomeFicheiro);
+            Ultilitario.exportarNuvem(getContext(), data, ficheiro, nomeFicheiro, Ultilitario.getDateCurrent());
         }
     }
 

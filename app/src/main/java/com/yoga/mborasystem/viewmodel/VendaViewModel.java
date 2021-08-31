@@ -53,8 +53,8 @@ public class VendaViewModel extends AndroidViewModel {
         clienteRepository = new ClienteRepository(getApplication());
     }
 
-    MutableLiveData<Boolean> imprimir, guardarPdf;
-    MutableLiveData<String> enviarWhatsApp;
+    MutableLiveData<Boolean> imprimir, guardarPdf, selectedData, exportLocal;
+    MutableLiveData<String> enviarWhatsApp, dataExport;
 
     public MutableLiveData<Boolean> getPrintLiveData() {
         if (imprimir == null) {
@@ -95,13 +95,41 @@ public class VendaViewModel extends AndroidViewModel {
         return dialog;
     }
 
-    MutableLiveData<List<Venda>> listaVendas;
+    public MutableLiveData<Boolean> getSelectedDataMutableLiveData() {
+        if (selectedData == null) {
+            selectedData = new MutableLiveData<>();
+        }
+        return selectedData;
+    }
+
+    MutableLiveData<List<Venda>> listaVendas, vendas;
 
     public MutableLiveData<List<Venda>> getListaVendasLiveData() {
         if (listaVendas == null) {
             listaVendas = new MutableLiveData<>();
         }
         return listaVendas;
+    }
+
+    public MutableLiveData<String> getDataExportAppLiveData() {
+        if (dataExport == null) {
+            dataExport = new MutableLiveData<>();
+        }
+        return dataExport;
+    }
+
+    public MutableLiveData<List<Venda>> getVendasParaExportar() {
+        if (vendas == null) {
+            vendas = new MutableLiveData<>();
+        }
+        return vendas;
+    }
+
+    public MutableLiveData<Boolean> getExportarLocalLiveData() {
+        if (exportLocal == null) {
+            exportLocal = new MutableLiveData<>();
+        }
+        return exportLocal;
     }
 
     @SuppressLint("CheckResult")
@@ -188,12 +216,16 @@ public class VendaViewModel extends AndroidViewModel {
                 }));
     }
 
-    public void getVendasPoData(String data) {
+    public void getVendasPorData(String data, boolean isExport) {
         compositeDisposable.add(vendaRepository.getVendasPorData(data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> {
-                    getListaVendasLiveData().setValue(vendas);
+                    if (isExport) {
+                        getVendasParaExportar().setValue(vendas);
+                    } else {
+                        getListaVendasLiveData().setValue(vendas);
+                    }
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                 }, throwable -> {
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);

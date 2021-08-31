@@ -124,9 +124,9 @@ public class CategoriaProdutoFragment extends Fragment {
 
     private void exportarProdutos(String ficheiro, String nomeFicheiro, boolean isLocal) {
         if (isLocal) {
-            Ultilitario.exportarLocal(getActivity(), data, ficheiro, nomeFicheiro, Ultilitario.CREATE_FILE_PRODUTO);
+            Ultilitario.exportarLocal(getActivity(), data, ficheiro, nomeFicheiro, Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_PRODUTO);
         } else {
-            Ultilitario.exportarNuvem(getContext(), data, ficheiro, nomeFicheiro);
+            Ultilitario.exportarNuvem(getContext(), data, ficheiro, nomeFicheiro, Ultilitario.getDateCurrent());
         }
     }
 
@@ -338,6 +338,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     readTextFromUri(uri);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }
