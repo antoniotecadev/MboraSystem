@@ -4,9 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "vendas")
+@Entity(tableName = "vendas", indices = {@Index(value = {"codigo_qr", "data_cria"})})
 public class Venda implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
@@ -15,7 +16,7 @@ public class Venda implements Parcelable {
     private int desconto;
     private int quantidade;
     private int valor_base;
-    private String codigo_Barra;
+    private String codigo_qr;
     private int valor_iva;
     private String pagamento;
     private int total_desconto;
@@ -34,7 +35,7 @@ public class Venda implements Parcelable {
         desconto = in.readInt();
         quantidade = in.readInt();
         valor_base = in.readInt();
-        codigo_Barra = in.readString();
+        codigo_qr = in.readString();
         valor_iva = in.readInt();
         pagamento = in.readString();
         total_desconto = in.readInt();
@@ -120,12 +121,12 @@ public class Venda implements Parcelable {
         this.valor_base = valor_base;
     }
 
-    public String getCodigo_Barra() {
-        return codigo_Barra;
+    public String getCodigo_qr() {
+        return codigo_qr;
     }
 
-    public void setCodigo_Barra(String codigo_Barra) {
-        this.codigo_Barra = codigo_Barra;
+    public void setCodigo_qr(String codigo_qr) {
+        this.codigo_qr = codigo_qr;
     }
 
     public int getValor_iva() {
@@ -212,7 +213,7 @@ public class Venda implements Parcelable {
         dest.writeInt(desconto);
         dest.writeInt(quantidade);
         dest.writeInt(valor_base);
-        dest.writeString(codigo_Barra);
+        dest.writeString(codigo_qr);
         dest.writeInt(valor_iva);
         dest.writeString(pagamento);
         dest.writeInt(total_desconto);

@@ -26,7 +26,7 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVenda();
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_Barra LIKE '%' || :codQr || '%'")
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :codQr || '%'")
     abstract Flowable<List<Venda>> searchVenda(String codQr);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :codQr || '%'")
@@ -62,7 +62,32 @@ public abstract class VendaDao {
         return searchVenda(codQr);
     }
 
-    public LiveData<Long> getQuantidadeVendas(){
+    public LiveData<Long> getQuantidadeVendas() {
         return getQuantidadeVenda();
+    }
+
+    @Transaction
+    public void insertVenda(List<String> vendas) {
+        Venda venda = new Venda();
+        for (String vd : vendas) {
+            String[] vend = vd.split(",");
+            venda.setNome_cliente(vend[0]);
+            venda.setCodigo_qr(vend[1]);
+            venda.setQuantidade(Integer.parseInt(vend[2]));
+            venda.setTotal_venda(Integer.parseInt(vend[3]));
+            venda.setTotal_desconto(Integer.parseInt(vend[4]));
+            venda.setTotal_desconto(Integer.parseInt(vend[5]));
+            venda.setValor_pago(Integer.parseInt(vend[6]));
+            venda.setDivida(Integer.parseInt(vend[7]));
+            venda.setValor_base(Integer.parseInt(vend[8]));
+            venda.setValor_iva(Integer.parseInt(vend[9]));
+            venda.setPagamento(vend[10]);
+            venda.setData_cria(vend[11]);
+            venda.setIdoperador(Integer.parseInt(vend[12]));
+            venda.setIdclicant(Integer.parseInt(vend[13]));
+            venda.setData_elimina(vend[14]);
+            venda.setEstado(Integer.parseInt(vend[15]));
+            insert(venda);
+        }
     }
 }

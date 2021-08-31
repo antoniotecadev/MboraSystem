@@ -36,7 +36,7 @@ public class DatePickerExpImp extends DialogFragment
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
-        vendaViewModel.getDataExportAppLiveData().setValue(data);
+        vendaViewModel.getDataExportAppLiveData().setValue(new Event<>(data));
     }
 
 }

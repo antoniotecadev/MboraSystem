@@ -45,4 +45,8 @@ public class VendaRepository {
         return vendaDao.getQuantidadeVendas();
     }
 
+    public void importarVendas(List<String> vendas) {
+        vendaDao.insertVenda(vendas);
+    }
+
 }

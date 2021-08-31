@@ -12,6 +12,7 @@ import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.repository.ClienteRepository;
 import com.yoga.mborasystem.repository.VendaRepository;
+import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.view.FacturaFragmentDirections;
 
@@ -54,7 +55,8 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     MutableLiveData<Boolean> imprimir, guardarPdf, selectedData, exportLocal;
-    MutableLiveData<String> enviarWhatsApp, dataExport;
+    MutableLiveData<String> enviarWhatsApp;
+    MutableLiveData<Event<String>> dataExport;
 
     public MutableLiveData<Boolean> getPrintLiveData() {
         if (imprimir == null) {
@@ -102,7 +104,8 @@ public class VendaViewModel extends AndroidViewModel {
         return selectedData;
     }
 
-    MutableLiveData<List<Venda>> listaVendas, vendas;
+    MutableLiveData<List<Venda>> listaVendas;
+    MutableLiveData<Event<List<Venda>>> vendas;
 
     public MutableLiveData<List<Venda>> getListaVendasLiveData() {
         if (listaVendas == null) {
@@ -111,14 +114,14 @@ public class VendaViewModel extends AndroidViewModel {
         return listaVendas;
     }
 
-    public MutableLiveData<String> getDataExportAppLiveData() {
+    public MutableLiveData<Event<String>> getDataExportAppLiveData() {
         if (dataExport == null) {
             dataExport = new MutableLiveData<>();
         }
         return dataExport;
     }
 
-    public MutableLiveData<List<Venda>> getVendasParaExportar() {
+    public MutableLiveData<Event<List<Venda>>> getVendasParaExportar() {
         if (vendas == null) {
             vendas = new MutableLiveData<>();
         }
@@ -138,7 +141,7 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setDesconto(Ultilitario.removerKZ(desconto));
         venda.setQuantidade(quantidade);
         venda.setValor_base(valorBase);
-        venda.setCodigo_Barra(codigoQr);
+        venda.setCodigo_qr(codigoQr);
         venda.setValor_iva(valorIva);
         venda.setPagamento(formaPagamento);
         venda.setTotal_desconto(totalDesconto);
@@ -222,7 +225,7 @@ public class VendaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> {
                     if (isExport) {
-                        getVendasParaExportar().setValue(vendas);
+                        getVendasParaExportar().setValue(new Event<>(vendas));
                     } else {
                         getListaVendasLiveData().setValue(vendas);
                     }
@@ -234,6 +237,28 @@ public class VendaViewModel extends AndroidViewModel {
 
     public LiveData<Long> consultarQuantidadeVendas() {
         return vendaRepository.getQuantidadeVendas();
+    }
+
+    public void importarVenda(List<String> vendas) {
+        Completable.fromAction(() -> vendaRepository.importarVendas(vendas))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.venda_impo), R.drawable.ic_toast_feito);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_n_impo) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
     }
 
     @Override

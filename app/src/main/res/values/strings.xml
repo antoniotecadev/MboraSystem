@@ -343,6 +343,8 @@
     <string name="exp_v">"Exportar vendas de "</string>
     <string name="vendas">Vendas</string>
     <string name="nao_tem_venda">Não tem nenhuma venda nesta data</string>
+    <string name="venda_n_impo">Vendas não importadas</string>
+    <string name="venda_impo">Vendas importadas</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

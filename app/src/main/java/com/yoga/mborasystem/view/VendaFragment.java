@@ -26,8 +26,17 @@ import com.xwray.groupie.Item;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
 import com.yoga.mborasystem.model.entidade.Venda;
+import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -93,7 +102,7 @@ public class VendaFragment extends Fragment {
             }
         });
 
-        vendaViewModel.getDataExportAppLiveData().observe(getViewLifecycleOwner(), data -> {
+        vendaViewModel.getDataExportAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             this.data = data;
             new AlertDialog.Builder(getContext())
                     .setTitle(getString(R.string.dat_sel))
@@ -101,7 +110,7 @@ public class VendaFragment extends Fragment {
                     .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         dialog.dismiss();
                     }).show();
-        });
+        }));
 
         vendaViewModel.getExportarLocalLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
             if (this.data.isEmpty()) {
@@ -118,13 +127,14 @@ public class VendaFragment extends Fragment {
             }
         });
 
-        vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), vendas -> {
+//        vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), vendas -> {
+        vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             StringBuilder dt = new StringBuilder();
             if (vendas.isEmpty()) {
                 Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.nao_tem_venda), R.drawable.ic_toast_erro);
             } else {
                 for (Venda venda : vendas) {
-                    dt.append(venda.getNome_cliente() + "," + venda.getCodigo_Barra() + "," + venda.getQuantidade() + "," + venda.getTotal_venda() + "," + venda.getDesconto() + "," + venda.getTotal_desconto() + "," + venda.getValor_pago() + "," + venda.getDivida() + "," + venda.getValor_base() + "," + venda.getValor_iva() + "," + venda.getPagamento() + "," + venda.getData_cria() + "," + venda.getIdoperador() + "," + venda.getIdclicant() + "," + venda.getData_elimina() + "," + venda.getEstado() + "\n");
+                    dt.append(venda.getNome_cliente() + "," + venda.getCodigo_qr() + "," + venda.getQuantidade() + "," + venda.getTotal_venda() + "," + venda.getDesconto() + "," + venda.getTotal_desconto() + "," + venda.getValor_pago() + "," + venda.getDivida() + "," + venda.getValor_base() + "," + venda.getValor_iva() + "," + venda.getPagamento() + "," + venda.getData_cria() + "," + venda.getIdoperador() + "," + venda.getIdclicant() + "," + venda.getData_elimina() + "," + venda.getEstado() + "\n");
                 }
                 dataBuilder = dt;
                 if (isLocal) {
@@ -134,7 +144,7 @@ public class VendaFragment extends Fragment {
                 }
             }
             this.data = "";
-        });
+        }));
         return binding.getRoot();
     }
 
@@ -172,7 +182,7 @@ public class VendaFragment extends Fragment {
             operador = viewHolder.itemView.findViewById(R.id.textOper);
 
             nomeCliente.setText(venda.getNome_cliente());
-            codigoQr.setText(venda.getCodigo_Barra());
+            codigoQr.setText(venda.getCodigo_qr());
             quantidade.setText(String.valueOf(venda.getQuantidade()));
             total.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
             desconto.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto())));
@@ -247,7 +257,7 @@ public class VendaFragment extends Fragment {
                 exportarVenda(Ultilitario.EXPORTAR_VENDA);
                 break;
             case R.id.importarvenda:
-//                exportarImportar(Ultilitario.IMPORTAR_PRODUTO);
+                Ultilitario.importarCategoriasProdutos(getActivity(), Ultilitario.QUATRO);
                 break;
             default:
                 break;
@@ -272,15 +282,16 @@ public class VendaFragment extends Fragment {
                 Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
-//            Uri uri = null;
-//            if (resultData != null) {
-//                uri = resultData.getData();
-//                try {
-////                    readTextFromUri(uri);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    readTextFromUri(uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
         } else if (resultCode == Activity.RESULT_OK) {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, resultData);
             if (result != null) {
@@ -294,6 +305,19 @@ public class VendaFragment extends Fragment {
             }
         }
 
+    }
+
+    public void readTextFromUri(Uri uri) throws IOException {
+        List<String> vendas = new ArrayList<>();
+        try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+             BufferedReader reader = new BufferedReader(
+                     new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                vendas.add(line);
+            }
+            vendaViewModel.importarVenda(vendas);
+        }
     }
 
     @Override
