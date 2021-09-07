@@ -29,4 +29,20 @@ public class ClienteCantinaRepository {
     public Flowable<List<ClienteCantina>> getClientesCantina() {
         return clienteCantinaDao.getClientesCantina();
     }
+
+    public Flowable<List<ClienteCantina>> searchCliente(String cliente) {
+        return clienteCantinaDao.searchCliente(cliente);
+    }
+
+    public void update(String nome, String telefone, int estado, String dataModif, long id) {
+        clienteCantinaDao.update(nome, telefone, estado, dataModif, id);
+    }
+
+    public void delete(ClienteCantina clienteCantina, boolean lx) {
+        if (lx && (clienteCantina != null)) {
+            clienteCantinaDao.deleteLixeira(clienteCantina.getEstado(), clienteCantina.getData_elimina(), clienteCantina.getId());
+        } else if (clienteCantina != null) {
+            clienteCantinaDao.delete(clienteCantina);
+        }
+    }
 }

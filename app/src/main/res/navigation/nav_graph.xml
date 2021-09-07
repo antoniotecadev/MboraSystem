@@ -136,10 +136,17 @@
                 app:destination="@id/dialogSenha" />
             <action
                 android:id="@+id/action_homeFragment_to_facturaFragment"
-                app:destination="@id/facturaFragment" />
+                app:destination="@id/facturaFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
             <action
                 android:id="@+id/action_homeFragment_to_vendaFragment"
                 app:destination="@id/vendaFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_homeFragment_to_listaClienteFragment"
+                app:destination="@id/listaClienteFragment"
                 app:enterAnim="@android:anim/fade_in"
                 app:popExitAnim="@android:anim/fade_out" />
         </fragment>
@@ -219,6 +226,12 @@
             <argument
                 android:name="nomeCliente"
                 app:argType="string" />
+            <argument
+                android:name="telefoneCliente"
+                app:argType="string" />
+            <argument
+                android:name="idcliente"
+                app:argType="long" />
         </dialog>
         <fragment
             android:id="@+id/vendaFragment"
@@ -271,6 +284,15 @@
             <argument
                 android:name="quant"
                 app:argType="integer" />
+        </fragment>
+        <fragment
+            android:id="@+id/listaClienteFragment"
+            android:name="com.yoga.mborasystem.view.ListaClienteFragment"
+            android:label="@string/clientes"
+            tools:layout="@layout/fragment_lista_cliente" >
+            <action
+                android:id="@+id/action_listaClienteFragment_to_dialog_ClienteCantina"
+                app:destination="@id/dialogCriarClienteCantina" />
         </fragment>
 
     </navigation>

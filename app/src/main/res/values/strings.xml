@@ -167,7 +167,7 @@
     <string name="tentar_novamente">Tente novamente após 1 minuto</string>
     <string name="admin_master">Admin(master)</string>
     <string name="entrar">Entrar</string>
-    <string name="tem_certeza_eliminar_usuario">Tens a certeza que quer eliminar este usuário ?</string>
+    <string name="tem_certeza_eliminar_usuario">Tem a certeza que quer eliminar este usuário ?</string>
     <string name="categoria_nao_renomeada">Categoria não renomeada</string>
     <string name="categoria_renomeada">Categoria renomeada</string>
     <string name="categoria_eliminada">Categoria eliminada</string>
@@ -229,7 +229,7 @@
     <string name="cliente_criado">Cliente criado</string>
     <string name="cliente_nao_criado">Cliente não criado</string>
     <string name="falha_lista_clientes">Falha ao carregar clientes</string>
-    <string name="alteracao_nao_feita">Alteração</string>
+    <string name="alteracao_nao_feita">Alteração não efectuda</string>
     <string name="cliente_eliminado">Cliente eliminado(a)</string>
     <string name="cliente_nao_eliminado">Cliente não eliminado(a)</string>
     <string name="cliente_nao_encontrado">Cliente não encontrado(a)</string>
@@ -355,6 +355,10 @@
     <string name="div_liq">Dívida liquidada</string>
     <string name="vend_elim">Venda eliminada</string>
     <string name="vend_n_elim">Venda não eliminada</string>
+    <string name="cli_nao_enc">Clientes não encontrado</string>
+    <string name="tem_cert_elim_cli">Tem a certeza que quer eliminar este cliente?</string>
+    <string name="cli_elim">Cliente eliminado</string>
+    <string name="cli_n_elim">Cliente não eliminado</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

@@ -68,6 +68,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnCliente.setOnClickListener(v -> {
+            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_listaClienteFragment);
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();

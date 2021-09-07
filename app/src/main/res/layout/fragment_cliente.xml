@@ -6,13 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageButton
+        android:id="@+id/imgBtnMenu"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_menu_more_vert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imgCliente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_cliente_60"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_cliente_60" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtNomeCliente"
@@ -23,9 +33,35 @@
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/txtQuantidadeProduto"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnMenu"
         app:layout_constraintStart_toEndOf="@+id/imgCliente"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtTelefone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnMenu"
+        app:layout_constraintStart_toEndOf="@+id/imgCliente"
+        app:layout_constraintTop_toBottomOf="@+id/txtNomeCliente" />
+
+    <TextView
+        android:id="@+id/textDataCriacao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/txtTelefone"
+        app:layout_constraintStart_toStartOf="@+id/txtTelefone"
+        app:layout_constraintTop_toBottomOf="@+id/txtTelefone" />
+
+    <TextView
+        android:id="@+id/textDataModificacao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/textDataCriacao"
+        app:layout_constraintStart_toStartOf="@+id/textDataCriacao"
+        app:layout_constraintTop_toBottomOf="@+id/textDataCriacao" />
 
     <View
         android:id="@+id/divider9"
@@ -37,35 +73,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
-
-    <ImageButton
-        android:id="@+id/imgBtnMenu"
-        android:layout_width="40dp"
-        android:layout_height="70dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_menu_more_vert" />
-
-    <TextView
-        android:id="@+id/txtQuantidadeProduto"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/imgBtnMenu"
-        app:layout_constraintTop_toBottomOf="@+id/divider9" />
-
-    <TextView
-        android:id="@+id/txtBiNif"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/txtQuantidadeProduto"
-        app:layout_constraintStart_toEndOf="@+id/imgCliente"
-        app:layout_constraintTop_toBottomOf="@+id/txtNomeCliente" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

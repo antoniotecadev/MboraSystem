@@ -158,7 +158,7 @@ public class FacturaFragment extends Fragment {
         barcodeView.decodeContinuous(callback);
         beepManager = new BeepManager(requireActivity());
 
-        binding.btnCriarCliente.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString())));
+        binding.btnCriarCliente.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "",0)));
 
         binding.btnCleaNameClient.setOnClickListener(v -> {
             binding.txtNomeCliente.setEnabled(true);
@@ -166,7 +166,9 @@ public class FacturaFragment extends Fragment {
             binding.txtNomeCliente.requestFocus();
         });
 
-        binding.txtNomeCliente.setOnItemClickListener((parent, view, position, id) -> { binding.txtNomeCliente.setEnabled(false); });
+        binding.txtNomeCliente.setOnItemClickListener((parent, view, position, id) -> {
+            binding.txtNomeCliente.setEnabled(false);
+        });
         binding.btnScannerBack.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.READ_CONTACTS)
@@ -181,7 +183,9 @@ public class FacturaFragment extends Fragment {
             binding.viewStub.setVisibility(View.GONE);
             barcodeView.pause();
         });
-        binding.btnScannerFront.setOnClickListener(v -> { openCamera(); });
+        binding.btnScannerFront.setOnClickListener(v -> {
+            openCamera();
+        });
         binding.recyclerViewFacturaProduto.setAdapter(adapter);
         binding.recyclerViewFacturaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewFactura.setAdapter(adapterFactura);
@@ -458,7 +462,7 @@ public class FacturaFragment extends Fragment {
     }
 
     private void getListClientesCantina() {
-        clienteCantinaViewModel.consultarClientesCantina();
+        clienteCantinaViewModel.consultarClientesCantina(null);
         clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientesCantina -> {
             clienteCantina.clear();
             for (ClienteCantina cliente : clientesCantina) {

@@ -49,7 +49,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class CategoriaProdutoFragment extends Fragment {
 
@@ -111,14 +110,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 exportarProdutos("produtos.csv", Ultilitario.categoria, Ultilitario.isLocal);
             }
         }));
-        binding.mySwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout);
-                    }
-                }
-        );
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> { categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout); });
         return binding.getRoot();
     }
 
@@ -242,7 +234,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 @Override
                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                     menu.setHeaderTitle(categoria.getCategoria());
-                    menu.add(getString(R.string.abrir)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             listaProdutos(categoria.getId(), categoria.getCategoria());
