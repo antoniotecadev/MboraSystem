@@ -10,4 +10,17 @@
         android:id="@+id/usuarioFragment"
         android:icon="@drawable/ic_usario_60"
         android:title="@string/usuario" />
+    <item
+        android:id="@+id/vendaFragment"
+        android:icon="@drawable/ic_venda_60"
+        android:title="@string/venda" />
+    <item
+        android:id="@+id/listaClienteFragment"
+        android:icon="@drawable/ic_cliente_60"
+        android:title="@string/cliente" />
+
+    <item
+        android:id="@+id/facturaFragment"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="@string/factura" />
 </menu>

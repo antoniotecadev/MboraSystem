@@ -158,7 +158,10 @@ public class FacturaFragment extends Fragment {
         barcodeView.decodeContinuous(callback);
         beepManager = new BeepManager(requireActivity());
 
-        binding.btnCriarCliente.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "",0)));
+        binding.btnCriarCliente.setOnClickListener(v -> {
+            Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0));
+            binding.txtNomeCliente.setText("");
+        });
 
         binding.btnCleaNameClient.setOnClickListener(v -> {
             binding.txtNomeCliente.setEnabled(true);
@@ -324,7 +327,12 @@ public class FacturaFragment extends Fragment {
             facturaPath = "";
             if (isCheckedFormaPagamento()) {
                 if (valorPago > 0) {
-                    String[] nomeIDcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
+                    String[] nomeIDcliente;
+                    if (binding.txtNomeCliente.getText().toString().trim().isEmpty()) {
+                        nomeIDcliente = TextUtils.split("*****", "-");
+                    } else {
+                        nomeIDcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
+                    }
                     codigoQr = System.currentTimeMillis() / 1000 + "" + getCodigoDeBarra();
                     if (binding.checkboxDivida.isChecked()) {
                         if (valorDivida > 0) {

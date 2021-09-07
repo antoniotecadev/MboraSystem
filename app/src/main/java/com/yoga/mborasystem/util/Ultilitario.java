@@ -402,7 +402,7 @@ public class Ultilitario {
         if (isWhatsappInstalled) {
             Intent sendIntent = new Intent("android.intent.action.MAIN");
             sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
-            sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(numero) + "@s.whatsapp.net");//phone number without "+" prefix
+            sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators("244" + numero) + "@s.whatsapp.net");//phone number without "+" prefix
             activity.startActivity(sendIntent);
         } else {
             Uri uri = Uri.parse("market://details?id=com.whatsapp");

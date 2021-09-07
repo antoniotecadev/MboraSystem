@@ -359,6 +359,7 @@
     <string name="tem_cert_elim_cli">Tem a certeza que quer eliminar este cliente?</string>
     <string name="cli_elim">Cliente eliminado</string>
     <string name="cli_n_elim">Cliente não eliminado</string>
+    <string name="cod_qr">Código QR</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
