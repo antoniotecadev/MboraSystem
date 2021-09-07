@@ -9,6 +9,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
+import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.repository.ClienteRepository;
 import com.yoga.mborasystem.repository.VendaRepository;
@@ -135,6 +136,15 @@ public class VendaViewModel extends AndroidViewModel {
         return exportLocal;
     }
 
+    MutableLiveData<List<ProdutoVenda>> produtosVenda;
+
+    public MutableLiveData<List<ProdutoVenda>> getProdutosVendaLiveDta() {
+        if (produtosVenda == null) {
+            produtosVenda = new MutableLiveData<>();
+        }
+        return produtosVenda;
+    }
+
     @SuppressLint("CheckResult")
     public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
         venda.setNome_cliente(txtNomeCliente);
@@ -257,6 +267,61 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_n_impo) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
+    }
+
+    public void getProdutosVenda(long idvenda) {
+        compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(produtos -> {
+                    getProdutosVendaLiveDta().setValue(produtos);
+                }, throwable -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
+                }));
+    }
+
+    public void liquidarDivida(int divida, long idivida) {
+        Completable.fromAction(() -> vendaRepository.liquidarDivida(divida, idivida))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.div_liq), R.drawable.ic_toast_feito);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.div_n_liq) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
+    }
+
+    public void eliminarVendaLixeira(int estado, String data, long idivida) {
+        Completable.fromAction(() -> vendaRepository.eliminarVendaLixeira(estado, data, idivida))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }

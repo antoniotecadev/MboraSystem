@@ -18,6 +18,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
@@ -40,6 +41,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -126,8 +128,6 @@ public class VendaFragment extends Fragment {
 
             }
         });
-
-//        vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), vendas -> {
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             StringBuilder dt = new StringBuilder();
             if (vendas.isEmpty()) {
@@ -145,6 +145,7 @@ public class VendaFragment extends Fragment {
             }
             this.data = "";
         }));
+
         return binding.getRoot();
     }
 
@@ -159,6 +160,7 @@ public class VendaFragment extends Fragment {
     class ItemVenda extends Item<GroupieViewHolder> {
 
         private Venda venda;
+        private CardView btnEntrar;
         private TextView nomeCliente, codigoQr, quantidade, total, desconto, totalDesc, valorPago, divida, valorBase, iva, forPag, dataVenda, operador;
 
         public ItemVenda(Venda venda) {
@@ -181,6 +183,8 @@ public class VendaFragment extends Fragment {
             dataVenda = viewHolder.itemView.findViewById(R.id.textDatVen);
             operador = viewHolder.itemView.findViewById(R.id.textOper);
 
+            btnEntrar = viewHolder.itemView.findViewById(R.id.btnEntrar);
+
             nomeCliente.setText(venda.getNome_cliente());
             codigoQr.setText(venda.getCodigo_qr());
             quantidade.setText(String.valueOf(venda.getQuantidade()));
@@ -194,11 +198,50 @@ public class VendaFragment extends Fragment {
             forPag.setText(venda.getPagamento());
             dataVenda.setText(venda.getData_cria());
             operador.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA" + venda.getIdoperador()));
+
+            btnEntrar.setOnClickListener(v -> {
+                VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                Navigation.findNavController(getView()).navigate(directions);
+            });
+
+            btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                menu.setHeaderTitle(venda.getCodigo_qr());
+                menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
+                    VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                    Navigation.findNavController(getView()).navigate(directions);
+                    return false;
+                });//groupId, itemId, order, title
+                menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
+                    if (venda.getDivida() == Ultilitario.ZERO)
+                        Snackbar.make(getView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
+                    else
+                        caixaDialogo(R.string.liq_div, R.string.enc_div_vend, true);
+                    return false;
+                });
+                menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                    caixaDialogo(R.string.elim_vend, R.string.cert_elim_vend, false);
+                    return false;
+                });
+            });
         }
 
         @Override
         public int getLayout() {
             return R.layout.fragment_venda;
+        }
+
+        private void caixaDialogo(int titulo, int mensagem, boolean isliquidar) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(titulo))
+                    .setMessage(getString(mensagem))
+                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        if (isliquidar) {
+                            vendaViewModel.liquidarDivida(Ultilitario.ZERO, venda.getId());
+                        } else {
+                            vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda.getId());
+                        }
+                    }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .show();
         }
     }
 
@@ -271,7 +314,8 @@ public class VendaFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent resultData) {
+    public void onActivityResult(int requestCode, int resultCode,
+                                 @Nullable Intent resultData) {
 
         if (requestCode == Ultilitario.CREATE_FILE_PRODUTO && resultCode == Activity.RESULT_OK) {
             Uri uri = null;

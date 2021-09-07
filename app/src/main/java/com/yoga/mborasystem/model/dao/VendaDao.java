@@ -9,6 +9,7 @@ import java.util.Map;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
@@ -34,6 +35,18 @@ public abstract class VendaDao {
 
     @Query("SELECT COUNT(id) FROM vendas  WHERE estado = 1")
     abstract LiveData<Long> getQuantidadeVenda();
+
+    @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda")
+    abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda);
+
+    @Query("UPDATE vendas SET divida = :divida WHERE id = :idvenda")
+    abstract void setDivida(int divida, long idvenda);
+
+    @Delete
+    abstract void delete(Venda venda);
+
+    @Query("UPDATE vendas SET estado = :est, data_elimina = :data WHERE id = :id")
+    public abstract void deleteLixeira(int est, String data, long id);
 
     @Transaction
     public void insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
@@ -89,5 +102,16 @@ public abstract class VendaDao {
             venda.setEstado(Integer.parseInt(vend[15]));
             insert(venda);
         }
+    }
+
+    public Flowable<List<ProdutoVenda>> getProdutosVenda(long idvenda) {
+        return getProdutoVenda(idvenda);
+    }
+
+    public void liquidardivida(int divida, long idvenda) {
+        setDivida(divida, idvenda);
+    }
+    public void eliminarVendaLixeira(int estado, String data, long idvenda){
+        deleteLixeira(estado, data, idvenda);
     }
 }

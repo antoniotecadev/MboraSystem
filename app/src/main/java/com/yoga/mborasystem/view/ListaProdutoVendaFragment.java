@@ -1,0 +1,103 @@
+package com.yoga.mborasystem.view;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Switch;
+import android.widget.TextView;
+
+import com.xwray.groupie.GroupAdapter;
+import com.xwray.groupie.GroupieViewHolder;
+import com.xwray.groupie.Item;
+import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.FragmentListaProdutoVendaBinding;
+import com.yoga.mborasystem.model.entidade.ProdutoVenda;
+import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.VendaViewModel;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+public class ListaProdutoVendaFragment extends Fragment {
+
+    private GroupAdapter adapter;
+    private VendaViewModel vendaViewModel;
+    private FragmentListaProdutoVendaBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new GroupAdapter();
+        vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentListaProdutoVendaBinding.inflate(inflater, container, false);
+
+        long idvenda = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getIdvenda();
+        int vendaTotal = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getVendaTotal();
+        int quant = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getQuant();
+
+        getActivity().setTitle(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(vendaTotal)));
+
+        binding.recyclerViewListaProduto.setAdapter(adapter);
+        binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.chipQuantidadeProduto.setText(quant + "");
+
+        vendaViewModel.getProdutosVenda(idvenda);
+        vendaViewModel.getProdutosVendaLiveDta().observe(getViewLifecycleOwner(), produtos -> {
+            adapter.clear();
+            if (produtos.isEmpty()) {
+                Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
+            } else {
+                for (ProdutoVenda produto : produtos)
+                    adapter.add(new Item<GroupieViewHolder>() {
+
+                        private Switch estadoProduto;
+                        private TextView nomeProduto, precoProduto, quantidadeProduto, codigoBarraProduto, referenciaProduto, precoProdutoFronecedor;
+
+                        @Override
+                        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
+                            nomeProduto = viewHolder.itemView.findViewById(R.id.txtNomeProduto);
+                            precoProduto = viewHolder.itemView.findViewById(R.id.txtPrecoProduto);
+                            precoProdutoFronecedor = viewHolder.itemView.findViewById(R.id.txtPrecoProdutoFornecedor);
+                            quantidadeProduto = viewHolder.itemView.findViewById(R.id.txtQuantidadeProduto);
+                            codigoBarraProduto = viewHolder.itemView.findViewById(R.id.txtCodigoBarProduto);
+                            estadoProduto = viewHolder.itemView.findViewById(R.id.estado_produto);
+                            referenciaProduto = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
+
+                            nomeProduto.setText(produto.getNome_produto());
+                            precoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())));
+                            precoProdutoFronecedor.setText("------------");
+                            quantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
+                            codigoBarraProduto.setText(getText(R.string.codigo_bar) + ": " + produto.getCodigo_Barra());
+                            referenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());
+                            if (produto.isIva()) {
+                                estadoProduto.setChecked(true);
+                                estadoProduto.setTextColor(Color.BLUE);
+                                estadoProduto.setText(getString(R.string.iva));
+                            } else {
+                                estadoProduto.setChecked(false);
+                                estadoProduto.setTextColor(Color.GRAY);
+                                estadoProduto.setText(getString(R.string.sem_iva));
+                            }
+                        }
+
+                        @Override
+                        public int getLayout() {
+                            return R.layout.fragment_produto;
+                        }
+                    });
+            }
+        });
+
+
+        return binding.getRoot();
+    }
+}

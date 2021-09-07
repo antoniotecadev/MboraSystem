@@ -5,6 +5,7 @@ import android.content.Context;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.VendaDao;
 import com.yoga.mborasystem.model.entidade.Produto;
+import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
 
 import java.lang.ref.WeakReference;
@@ -47,6 +48,18 @@ public class VendaRepository {
 
     public void importarVendas(List<String> vendas) {
         vendaDao.insertVenda(vendas);
+    }
+
+    public Flowable<List<ProdutoVenda>> getProdutosVenda(long idvenda) {
+        return vendaDao.getProdutosVenda(idvenda);
+    }
+
+    public void liquidarDivida(int divida, long idivida) {
+        vendaDao.liquidardivida(divida, idivida);
+    }
+
+    public void eliminarVendaLixeira(int estado, String data, long idvenda){
+        vendaDao.deleteLixeira(estado, data, idvenda);
     }
 
 }

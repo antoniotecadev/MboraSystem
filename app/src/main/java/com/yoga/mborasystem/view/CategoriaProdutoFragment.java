@@ -242,14 +242,14 @@ public class CategoriaProdutoFragment extends Fragment {
                 @Override
                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                     menu.setHeaderTitle(categoria.getCategoria());
-                    menu.add(R.string.abrir).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    menu.add(getString(R.string.abrir)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             listaProdutos(categoria.getId(), categoria.getCategoria());
                             return false;
                         }
                     });//groupId, itemId, order, title
-                    menu.add(R.string.alterar_categoria).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    menu.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (getArguments() != null) {
@@ -261,7 +261,7 @@ public class CategoriaProdutoFragment extends Fragment {
                             return false;
                         }
                     });
-                    menu.add(R.string.eliminar_categoria).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    menu.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (getArguments() != null) {

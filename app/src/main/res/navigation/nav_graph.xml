@@ -231,6 +231,11 @@
             <action
                 android:id="@+id/action_vendaFragment_to_dialogExportarImportarVenda"
                 app:destination="@id/dialogExportarImportarVenda" />
+            <action
+                android:id="@+id/action_vendaFragment_to_listaProdutoVendaFragment"
+                app:destination="@id/listaProdutoVendaFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
         </fragment>
         <dialog
             android:id="@+id/datePickerFragment"
@@ -250,6 +255,23 @@
             android:id="@+id/datePickerExpImp2"
             android:name="com.yoga.mborasystem.util.DatePickerExpImp"
             android:label="DatePickerExpImp" />
+        <fragment
+            android:id="@+id/listaProdutoVendaFragment"
+            android:name="com.yoga.mborasystem.view.ListaProdutoVendaFragment"
+            android:label="fragment_lista_produto_venda"
+            tools:layout="@layout/fragment_lista_produto_venda" >
+            <argument
+                android:name="idvenda"
+                app:argType="long"
+                android:defaultValue="0L" />
+            <argument
+                android:name="vendaTotal"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="quant"
+                app:argType="integer" />
+        </fragment>
 
     </navigation>
 
