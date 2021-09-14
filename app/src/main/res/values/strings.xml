@@ -173,7 +173,7 @@
     <string name="categoria_eliminada">Categoria eliminada</string>
     <string name="categoria_nao_eliminada">" Categoria não eliminada"</string>
     <string name="tem_certeza_eliminar_produto">Tem a certeza que quer eliminar este produto ?</string>
-    <string name="tem_certeza_eliminar_categoria">Todas as actividades e produtos relacionados(as) a esta categoria também serão eliminados(as)\nTens a certeza que ques eliminar esta categoria ?</string>
+    <string name="tem_certeza_eliminar_categoria">Todas as actividades e produtos relacionados(as) a esta categoria também serão eliminados(as)\nTem a certeza que quer eliminar esta categoria ?</string>
     <string name="pesquisar_produto">Pesquisar produto</string>
     <string name="pesquisar_categoria">Pesquisar categoria</string>
     <string name="fechar">Fechar</string>

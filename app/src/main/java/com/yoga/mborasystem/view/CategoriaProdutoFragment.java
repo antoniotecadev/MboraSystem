@@ -261,6 +261,7 @@ public class CategoriaProdutoFragment extends Fragment {
                         public boolean onMenuItemClick(MenuItem item) {
                             if (getArguments() != null) {
                                 if (getArguments().getBoolean("master")) {
+                                    getProgressBar();
                                     bundle.putParcelable("categoria", categoria);
                                     Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
                                 }
