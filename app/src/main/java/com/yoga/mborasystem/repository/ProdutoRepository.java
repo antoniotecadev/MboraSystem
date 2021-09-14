@@ -14,7 +14,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import io.reactivex.Flowable;
 
 public class ProdutoRepository {
@@ -47,9 +46,9 @@ public class ProdutoRepository {
         return produtoDao.getProdutos(idcat);
     }
 
-    public LiveData<Long> getQuantidadeProduto(long idcat) {
-        return produtoDao.getQuantidadeProduto(idcat);
-    }
+//    public LiveData<Long> getQuantidadeProduto(long idcat) {
+//        return produtoDao.getQuantidadeProduto(idcat);
+//    }
 
     public Flowable<List<Produto>> searchProdutos(String produto) {
         return produtoDao.searchProdutos(produto);

@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.reactivex.Completable;
@@ -523,9 +522,9 @@ public class ProdutoViewModel extends AndroidViewModel {
                 }));
     }
 
-    public LiveData<Long> consultarQuantidadeProduto(long idcategoria) {
-        return produtoRepository.getQuantidadeProduto(idcategoria);
-    }
+//    public LiveData<Long> consultarQuantidadeProduto(long idcategoria) {
+//        return produtoRepository.getQuantidadeProduto(idcategoria);
+//    }
 
     public void codigoBarra(IntentResult result, TextInputEditText codigoBarra) {
         if (result.getContents() == null) {

@@ -77,6 +77,7 @@ public class ListProdutoFragment extends Fragment {
         produtoViewModel.getListaProdutos().observe(getViewLifecycleOwner(), new Observer<List<Produto>>() {
             @Override
             public void onChanged(List<Produto> produtos) {
+                binding.chipQuantidadeProduto.setText(produtos.size() + "");
                 adapter.clear();
                 if (produtos.isEmpty()) {
                     Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
@@ -87,12 +88,12 @@ public class ListProdutoFragment extends Fragment {
                 }
             }
         });
-        produtoViewModel.consultarQuantidadeProduto(idcategoria).observe(getViewLifecycleOwner(), new Observer<Long>() {
-            @Override
-            public void onChanged(Long quant) {
-                binding.chipQuantidadeProduto.setText(quant + "");
-            }
-        });
+//        produtoViewModel.consultarQuantidadeProduto(idcategoria).observe(getViewLifecycleOwner(), new Observer<Long>() {
+//            @Override
+//            public void onChanged(Long quant) {
+//                binding.chipQuantidadeProduto.setText(quant + "");
+//            }
+//        });
 
         binding.btnCriarProdutoFragment.setOnClickListener(v -> {
             if (!idcategoria.equals("") && !categoria.isEmpty()) {

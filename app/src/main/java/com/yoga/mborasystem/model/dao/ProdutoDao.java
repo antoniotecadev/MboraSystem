@@ -4,7 +4,6 @@ import com.yoga.mborasystem.model.entidade.Produto;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -29,8 +28,8 @@ public interface ProdutoDao {
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getProdutos(long idcat);
 
-    @Query("SELECT COUNT(id) FROM produtos  WHERE idcategoria = :idcategoria AND estado = 1")
-    LiveData<Long> getQuantidadeProduto(long idcategoria);
+//    @Query("SELECT COUNT(id) FROM produtos  WHERE idcategoria = :idcategoria AND estado = 1")
+//    LiveData<Long> getQuantidadeProduto(long idcategoria);
 
     @Query("SELECT * FROM produtos WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
     Flowable<List<Produto>> searchProdutos(String search);
