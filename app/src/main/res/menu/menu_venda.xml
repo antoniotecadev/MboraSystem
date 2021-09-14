@@ -5,7 +5,7 @@
     <item
         android:id="@+id/app_bar_search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="@string/pesquisar_categoria"
+        android:title="@string/pes_ven"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item

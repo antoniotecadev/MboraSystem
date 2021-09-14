@@ -332,9 +332,9 @@
     <string name="vds">Vendas</string>
     <string name="falha_venda">Falha ao carregar vendas</string>
     <string name="venda_nao_encontrada">Venda não encontrada</string>
-    <string name="exp_venda">Exportar Vendas</string>
-    <string name="imp_venda">Importar Vendas</string>
-    <string name="scan_qr">Scanear Qr</string>
+    <string name="exp_venda">Exportar Venda(s)</string>
+    <string name="imp_venda">Importar Venda(s)</string>
+    <string name="scan_qr">Scanear Código Qr</string>
     <string name="alinhar_codigo_qr">Alinhar código Qr para fazer a leitura</string>
     <string name="scaner_cod_qr_cancel">Scaneamento de código Qr cancelada</string>
     <string name="pes_dat">Pesquisar com Data</string>
@@ -360,6 +360,7 @@
     <string name="cli_elim">Cliente eliminado</string>
     <string name="cli_n_elim">Cliente não eliminado</string>
     <string name="cod_qr">Código QR</string>
+    <string name="pes_ven">Pesquisar Venda(s)</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
