@@ -137,6 +137,12 @@ public class CategoriaProdutoFragment extends Fragment {
         Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogExportarImportar, bundle);
     }
 
+    private void getProgressBar() {
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialogo_view);
+        progressDialog.getWindow().setLayout(200, 200);
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -230,6 +236,7 @@ public class CategoriaProdutoFragment extends Fragment {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    getProgressBar();
                     v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
                     listaProdutos(categoria.getId(), categoria.getCategoria());
                 }
@@ -242,6 +249,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
+                            getProgressBar();
                             listaProdutos(categoria.getId(), categoria.getCategoria());
                             return false;
                         }

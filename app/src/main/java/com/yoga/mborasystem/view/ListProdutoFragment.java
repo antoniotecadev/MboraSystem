@@ -34,6 +34,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class ListProdutoFragment extends Fragment {
 
     private Bundle bundle;
@@ -246,6 +248,14 @@ public class ListProdutoFragment extends Fragment {
         binding = null;
         if (bundle != null) {
             bundle.clear();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 }
