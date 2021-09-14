@@ -365,6 +365,8 @@
     <string name="se_val_pag">Sem valor pago</string>
     <string name="check_dvd">Checar dívida</string>
     <string name="alter">Alterar</string>
+    <string name="prod">Produto</string>
+    <string name="ou">ou</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
