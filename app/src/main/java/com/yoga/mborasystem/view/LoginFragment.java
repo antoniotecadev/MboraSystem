@@ -1,7 +1,6 @@
 package com.yoga.mborasystem.view;
 
 import android.animation.ObjectAnimator;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentLoginBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -34,13 +32,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class LoginFragment extends Fragment {
 
     private Bundle bundle;
     private Handler handler;
     private List<String> digitos;
-    private ProgressDialog progressDialog;
     private ObjectAnimator animation;
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
@@ -53,7 +51,6 @@ public class LoginFragment extends Fragment {
         bundle = new Bundle();
         digitos = new ArrayList<>();
         handler = new Handler(Looper.getMainLooper());
-        progressDialog = new ProgressDialog(getContext());
 
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
@@ -90,12 +87,10 @@ public class LoginFragment extends Fragment {
         binding.btn0.setOnClickListener(v -> digitarCodigoPin(0));
         binding.btnApagar.setOnClickListener(v -> limparCodigoPin());
         binding.btnMenu.setOnClickListener(v -> {
-//            progressDialog = getProgressBarDialog(progressDialog, true);
-            MainActivity.progressDialog.show();
-            MainActivity.progressDialog.setContentView(R.layout.progress_dialogo_view);;
-            MainActivity.progressDialog.getWindow().setLayout(200, 200);
+            progressDialog.show();
+            progressDialog.setContentView(R.layout.progress_dialogo_view);;
+            progressDialog.getWindow().setLayout(200, 200);
             Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
-//            progressDialog.dismiss();
         });
 
         clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Cliente>() {
@@ -191,6 +186,9 @@ public class LoginFragment extends Fragment {
         if (codigoPin.length() > 6 || codigoPin.length() < 6) {
             binding.tvinfoCodigoPin.setError(getString(R.string.infoPinIncorreto));
         } else {
+            progressDialog.show();
+            progressDialog.setContentView(R.layout.progress_dialogo_view);;
+            progressDialog.getWindow().setLayout(200, 200);
             loginViewModel.logar(codigoPin);
         }
     }

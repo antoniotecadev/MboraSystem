@@ -21,6 +21,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
@@ -131,6 +133,14 @@ public class HomeFragment extends Fragment {
         binding = null;
         if (bundle != null) {
             bundle.clear();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 }

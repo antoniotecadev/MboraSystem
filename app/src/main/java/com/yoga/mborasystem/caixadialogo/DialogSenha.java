@@ -69,6 +69,9 @@ public class DialogSenha extends DialogFragment {
                 binding.senha.requestFocus();
                 binding.senha.setError(getString(R.string.senha_invalida));
             } else {
+                progressDialog.show();
+                progressDialog.setContentView(R.layout.progress_dialogo_view);;
+                progressDialog.getWindow().setLayout(200, 200);
                 clienteViewModel.logar(binding.senha);
             }
         });
