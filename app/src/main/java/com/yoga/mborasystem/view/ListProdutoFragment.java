@@ -107,6 +107,7 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void createProduto(long id, String categoria) {
+        getProgressBar();
         bundle.clear();
         bundle.putLong("idcategoria", id);
         bundle.putString("categoria", categoria);
@@ -117,6 +118,12 @@ public class ListProdutoFragment extends Fragment {
         bundle.clear();
         bundle.putLong("idcategoria", id);
         Navigation.findNavController(getView()).navigate(R.id.action_listProdutoFragment_to_dialogFiltrarProduto2, bundle);
+    }
+
+    private void getProgressBar() {
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialogo_view);
+        progressDialog.getWindow().setLayout(200, 200);
     }
 
     @Override

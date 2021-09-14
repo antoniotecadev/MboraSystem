@@ -29,6 +29,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class DialogCriarProduto extends DialogFragment {
 
     private AlertDialog dialog;
@@ -294,6 +296,9 @@ public class DialogCriarProduto extends DialogFragment {
     public void onStart() {
         super.onStart();
         Ultilitario.fullScreenDialog(getDialog());
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override
