@@ -82,7 +82,7 @@ public class CategoriaProdutoFragment extends Fragment {
         binding.recyclerViewCategoriaProduto.setAdapter(adapter);
         binding.recyclerViewCategoriaProduto.setHasFixedSize(true);
         binding.recyclerViewCategoriaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.btncriarCategoriaDialog.setOnClickListener(v -> createCategory());
+        binding.btncriarCategoriaDialog.setOnClickListener(v ->{ createCategory(); });
 
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new Observer<List<Categoria>>() {
             @Override
@@ -127,6 +127,7 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     private void createCategory() {
+        getProgressBar();
         Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
     }
 
