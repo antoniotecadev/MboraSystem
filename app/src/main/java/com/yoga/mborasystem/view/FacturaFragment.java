@@ -295,14 +295,50 @@ public class FacturaFragment extends Fragment {
 
         binding.checkboxDivida.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                binding.textValorDivida.setEnabled(true);
+                if (valorPago < total) {
+                    binding.textValorDivida.setText("" + ((total - desconto) - valorPago));
+                } else {
+                    buttonView.setChecked(false);
+                    Toast.makeText(getContext(), getString(R.string.no_pos_apl_div), Toast.LENGTH_LONG).show();
+                }
             } else {
+                binding.switchEdit.setChecked(false);
+                binding.checkboxSemValorPago.setChecked(false);
                 binding.textValorDivida.setText(Ultilitario.formatPreco("0"));
                 binding.textValorDivida.setEnabled(false);
             }
         });
 
         Ultilitario.precoFormat(getContext(), binding.textValorDivida);
+
+        binding.checkboxSemValorPago.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (binding.checkboxDivida.isChecked()) {
+                    binding.textValorPago.setEnabled(false);
+                    binding.textValorPago.setText(Ultilitario.formatPreco("0"));
+                    binding.textValorPago.setHint(getString(R.string.se_val_pag));
+                } else {
+                    buttonView.setChecked(false);
+                    Toast.makeText(getContext(), getString(R.string.check_dvd), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                binding.textValorPago.setEnabled(true);
+                binding.textValorPago.setText(Ultilitario.formatPreco("0"));
+            }
+        });
+
+        binding.switchEdit.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (binding.checkboxDivida.isChecked()) {
+                    binding.textValorDivida.setEnabled(true);
+                } else {
+                    binding.switchEdit.setChecked(false);
+                    Toast.makeText(getContext(), getString(R.string.check_dvd), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                binding.textValorDivida.setEnabled(false);
+            }
+        });
 
         binding.btnLimparValorDivida.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textValorDivida));
 
@@ -328,7 +364,7 @@ public class FacturaFragment extends Fragment {
         binding.btnEfectuarVenda.setOnClickListener(v -> {
             facturaPath = "";
             if (isCheckedFormaPagamento()) {
-                if (valorPago > 0) {
+                if (valorPago > 0 || binding.checkboxSemValorPago.isChecked()) {
                     String[] nomeIDcliente;
                     if (binding.txtNomeCliente.getText().toString().trim().isEmpty()) {
                         nomeIDcliente = TextUtils.split("*****", "-");

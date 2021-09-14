@@ -361,6 +361,10 @@
     <string name="cli_n_elim">Cliente não eliminado</string>
     <string name="cod_qr">Código QR</string>
     <string name="pes_ven">Pesquisar Venda(s)</string>
+    <string name="no_pos_apl_div">Não é possível aplicar dívida, valor pago deve ser menor que o total.</string>
+    <string name="se_val_pag">Sem valor pago</string>
+    <string name="check_dvd">Checar dívida</string>
+    <string name="alter">Alterar</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

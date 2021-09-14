@@ -402,13 +402,26 @@
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/checkbox_divida"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:text="@string/dvd" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkbox_sem_valor_pago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/se_val_pag" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -446,6 +459,13 @@
                     android:backgroundTint="@color/zxing_possible_result_points" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:text="@string/alter"/>
 
             <View
                 android:layout_width="match_parent"
