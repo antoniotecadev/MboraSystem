@@ -37,6 +37,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class VendaViewModel extends AndroidViewModel {
 
     private Venda venda;
@@ -145,6 +147,12 @@ public class VendaViewModel extends AndroidViewModel {
         return produtosVenda;
     }
 
+    private void dismissProgressBar() {
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
     @SuppressLint("CheckResult")
     public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
         venda.setNome_cliente(txtNomeCliente);
@@ -173,6 +181,7 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        dismissProgressBar();
                         FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada().setPrecoTotal(totalVenda);
                         Navigation.findNavController(view).navigate(action);
                     }

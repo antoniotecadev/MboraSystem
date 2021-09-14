@@ -479,6 +479,12 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void getProgressBar() {
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialogo_view);
+        progressDialog.getWindow().setLayout(200, 200);
+    }
+
     private void dialogVerificarVenda(String[] nomeIDcliente) {
         if (nomeIDcliente.length == 2) {
             idcliente = Long.parseLong(nomeIDcliente[1].trim());
@@ -499,7 +505,10 @@ public class FacturaFragment extends Fragment {
                         + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                         + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
                 )
-                .setPositiveButton(R.string.vender, (dialog, which) -> vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, getArguments().getLong("idoperador", 0), idcliente, getView()))
+                .setPositiveButton(R.string.vender, (dialog, which) -> {
+                    getProgressBar();
+                    vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, getArguments().getLong("idoperador", 0), idcliente, getView());
+                })
                 .setNegativeButton(R.string.cancelar, (dialog, which) -> {
                     facturaPath = "";
                     dialog.dismiss();
