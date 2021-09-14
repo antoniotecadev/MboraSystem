@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
+            getProgressBar();
             bundle.putLong("idoperador", getArguments().getLong("idusuario", 0));
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
@@ -74,6 +75,12 @@ public class HomeFragment extends Fragment {
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
+    }
+
+    private void getProgressBar() {
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialogo_view);
+        progressDialog.getWindow().setLayout(200, 200);
     }
 
     @Override

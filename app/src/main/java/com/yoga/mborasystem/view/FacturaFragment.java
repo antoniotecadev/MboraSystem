@@ -72,6 +72,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class FacturaFragment extends Fragment {
 
     private Cliente cliente;
@@ -722,6 +724,14 @@ public class FacturaFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     public static void myOnKeyDown(int keyCode, KeyEvent event) {
