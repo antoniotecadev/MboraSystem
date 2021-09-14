@@ -115,6 +115,7 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void filtrarProduto(long id) {
+        getProgressBar();
         bundle.clear();
         bundle.putLong("idcategoria", id);
         Navigation.findNavController(getView()).navigate(R.id.action_listProdutoFragment_to_dialogFiltrarProduto2, bundle);

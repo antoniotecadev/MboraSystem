@@ -20,6 +20,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class DialogFiltrarProduto extends DialogFragment {
 
     private Bundle bundle;
@@ -105,7 +107,6 @@ public class DialogFiltrarProduto extends DialogFragment {
                 binding.switchEstado.setVisibility(View.GONE);
             }
         });
-
         binding.btnFiltrarProduto.setOnClickListener(v -> {
             if (binding.checkBoxNomeReferencia.isChecked() && binding.checkBoxPreco.isChecked() && binding.checkBoxCodigoBarra.isChecked() && binding.checkBoxEstado.isChecked()) {
                 produtoViewModel.validarProdutoFiltro(idcategoria, binding.txtReferenciaNomeProduto, binding.txtCodigoBar, binding.txtPrecoProdutoMin, binding.txtPrecoProdutoMax, binding.switchEstado, dialog);
@@ -154,6 +155,14 @@ public class DialogFiltrarProduto extends DialogFragment {
         binding = null;
         if (bundle != null) {
             bundle.clear();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 

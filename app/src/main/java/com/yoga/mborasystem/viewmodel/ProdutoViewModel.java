@@ -36,6 +36,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class ProdutoViewModel extends AndroidViewModel {
 
     private Produto produto;
@@ -76,6 +78,12 @@ public class ProdutoViewModel extends AndroidViewModel {
         return listaProdutosImport;
     }
 
+    private void getProgressBar() {
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialogo_view);
+        progressDialog.getWindow().setLayout(200, 200);
+    }
+
     public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Switch estado, AlertDialog dialog, Boolean continuar, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
@@ -95,6 +103,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         } else if (isCampoVazio(String.valueOf(idcategoria)) || numero.matcher(String.valueOf(idcategoria)).find()) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.idcategoria_nao_encontrado), R.drawable.ic_toast_erro);
         } else {
+            getProgressBar();
             produto.setNome(nome.getText().toString());
             produto.setPreco(Ultilitario.removerKZ(preco));
             produto.setPrecofornecedor(Ultilitario.removerKZ(precofornecedor));
@@ -120,6 +129,12 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
+    private void dismissProgressBar() {
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
     public void criarProduto(EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Switch estado, AlertDialog dialog, boolean c, long idcategoria) {
         validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, estado, dialog, c, idcategoria);
     }
@@ -142,6 +157,7 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_criado) + " " + ++contar, R.drawable.ic_toast_feito);
                         if (continuar) {
                             dialog.dismiss();
@@ -150,6 +166,7 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_criado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -167,12 +184,14 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.alteracao_feita), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        dismissProgressBar();
                         if (e.getMessage().contains("UNIQUE")) {
                             Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.produto_existe) + " ou " + getApplication().getString(R.string.codigobarra_existe), R.drawable.ic_toast_erro);
                         } else {
@@ -183,6 +202,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public void eliminarProduto(Produto produto, boolean lx, Dialog dialog) {
+        getProgressBar();
         Completable.fromAction(() -> produtoRepository.delete(produto, lx))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -194,12 +214,14 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_eliminado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -485,6 +507,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     private void filtrar(Flowable<List<Produto>> listProduto, AlertDialog dialog) {
+        getProgressBar();
         compositeDisposable.add(listProduto
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -493,7 +516,9 @@ public class ProdutoViewModel extends AndroidViewModel {
                     if (!produtos.isEmpty()) {
                         dialog.dismiss();
                     }
+                    dismissProgressBar();
                 }, throwable -> {
+                    dismissProgressBar();
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
                 }));
     }
