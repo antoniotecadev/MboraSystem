@@ -134,7 +134,9 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     getListaCategorias().setValue(categorias);
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
+                    dismissProgressBar();
                 }, e -> {
+                    dismissProgressBar();
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                 }));

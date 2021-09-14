@@ -113,6 +113,7 @@ public class CategoriaProdutoFragment extends Fragment {
             }
         }));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            getProgressBar();
             categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout);
         });
         return binding.getRoot();
