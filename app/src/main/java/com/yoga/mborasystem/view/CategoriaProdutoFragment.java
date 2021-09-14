@@ -50,6 +50,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class CategoriaProdutoFragment extends Fragment {
 
     private Bundle bundle;
@@ -110,7 +112,9 @@ public class CategoriaProdutoFragment extends Fragment {
                 exportarProdutos("produtos.csv", Ultilitario.categoria, Ultilitario.isLocal);
             }
         }));
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> { categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout); });
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout);
+        });
         return binding.getRoot();
     }
 
@@ -148,6 +152,7 @@ public class CategoriaProdutoFragment extends Fragment {
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint(getString(R.string.cat));
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.onActionViewExpanded();
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
@@ -295,6 +300,14 @@ public class CategoriaProdutoFragment extends Fragment {
         binding = null;
         if (bundle != null) {
             bundle.clear();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 

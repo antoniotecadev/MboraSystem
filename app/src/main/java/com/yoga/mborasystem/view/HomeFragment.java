@@ -60,6 +60,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnProduto.setOnClickListener(v -> {
+            getProgressBar();
             if (getArguments() != null) {
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }

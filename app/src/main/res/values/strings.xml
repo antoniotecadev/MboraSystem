@@ -367,6 +367,7 @@
     <string name="alter">Alterar</string>
     <string name="prod">Produto</string>
     <string name="ou">ou</string>
+    <string name="cat">Categoria</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
