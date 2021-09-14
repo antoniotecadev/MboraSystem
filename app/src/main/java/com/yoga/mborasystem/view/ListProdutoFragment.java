@@ -101,6 +101,7 @@ public class ListProdutoFragment extends Fragment {
             }
         });
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+                    getProgressBar();
                     produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
                 }
         );

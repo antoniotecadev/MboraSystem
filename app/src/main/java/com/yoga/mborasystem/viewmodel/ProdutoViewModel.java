@@ -239,10 +239,12 @@ public class ProdutoViewModel extends AndroidViewModel {
                             getListaProdutos().setValue(produtos);
                             Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                         }
+                        dismissProgressBar();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
                         Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                     }
