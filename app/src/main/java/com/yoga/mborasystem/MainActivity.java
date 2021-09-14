@@ -1,5 +1,6 @@
 package com.yoga.mborasystem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavController navController;
+    public static ProgressDialog progressDialog;
     private NavigationView navigationView;
     private AppBarConfiguration appBarConfiguration;
 
@@ -32,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         toolbar = findViewById(R.id.toolbarMainActivity);
         drawerLayout = findViewById(R.id.drawer_layout);

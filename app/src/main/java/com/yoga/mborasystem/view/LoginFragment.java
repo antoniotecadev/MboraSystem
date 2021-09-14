@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentLoginBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -39,7 +40,7 @@ public class LoginFragment extends Fragment {
     private Bundle bundle;
     private Handler handler;
     private List<String> digitos;
-    private ProgressDialog dialog;
+    private ProgressDialog progressDialog;
     private ObjectAnimator animation;
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
@@ -50,7 +51,9 @@ public class LoginFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         bundle = new Bundle();
+        digitos = new ArrayList<>();
         handler = new Handler(Looper.getMainLooper());
+        progressDialog = new ProgressDialog(getContext());
 
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
@@ -75,10 +78,6 @@ public class LoginFragment extends Fragment {
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
-        dialog = new ProgressDialog(getContext());
-        dialog.setCanceledOnTouchOutside(false);
-        digitos = new ArrayList<>();
-
         binding.btn1.setOnClickListener(v -> digitarCodigoPin(1));
         binding.btn2.setOnClickListener(v -> digitarCodigoPin(2));
         binding.btn3.setOnClickListener(v -> digitarCodigoPin(3));
@@ -90,7 +89,14 @@ public class LoginFragment extends Fragment {
         binding.btn9.setOnClickListener(v -> digitarCodigoPin(9));
         binding.btn0.setOnClickListener(v -> digitarCodigoPin(0));
         binding.btnApagar.setOnClickListener(v -> limparCodigoPin());
-        binding.btnMenu.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin));
+        binding.btnMenu.setOnClickListener(v -> {
+//            progressDialog = getProgressBarDialog(progressDialog, true);
+            MainActivity.progressDialog.show();
+            MainActivity.progressDialog.setContentView(R.layout.progress_dialogo_view);;
+            MainActivity.progressDialog.getWindow().setLayout(200, 200);
+            Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
+//            progressDialog.dismiss();
+        });
 
         clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Cliente>() {
             @Override
@@ -171,12 +177,6 @@ public class LoginFragment extends Fragment {
             binding.gridLayout.setVisibility(View.VISIBLE);
         }, 60000);
     }
-
-
-//    private void chamarProgressBarDialog() {
-//        dialog.show();
-//        dialog.setContentView(R.layout.progress_dialogo_view);
-//    }
 
     private void contarTempoDeEspera() {
         binding.tvinfoCodigoPin.setText(R.string.tentar_novamente);

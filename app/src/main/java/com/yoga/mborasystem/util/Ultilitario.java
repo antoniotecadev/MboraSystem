@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -443,6 +444,15 @@ public class Ultilitario {
         listMonth.put(12, "dezembro");
 
         return listMonth.get(month);
+    }
+
+    public static ProgressDialog getProgressBarDialog(ProgressDialog progressDialog, boolean canceLable) {
+        progressDialog.setCancelable(canceLable);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialogo_view);
+        progressDialog.getWindow().setLayout(200, 200);
+        return progressDialog;
     }
 
 }

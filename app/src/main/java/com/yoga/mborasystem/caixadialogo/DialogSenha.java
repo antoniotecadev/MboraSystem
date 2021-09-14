@@ -22,6 +22,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import static com.yoga.mborasystem.MainActivity.progressDialog;
+
 public class DialogSenha extends DialogFragment {
 
     private AlertDialog dialog;
@@ -111,5 +113,13 @@ public class DialogSenha extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }
