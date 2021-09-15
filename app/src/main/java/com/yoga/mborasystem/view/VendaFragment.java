@@ -341,7 +341,7 @@ public class VendaFragment extends Fragment {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, resultData);
             if (result != null) {
                 if (result.getContents() == null) {
-                    Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
                 } else {
                     vendaViewModel.searchVendas(result.getContents());
                 }

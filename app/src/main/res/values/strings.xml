@@ -120,7 +120,7 @@
     <string name="alinhar_codigo_barra">Alinhar código de barras para fazer a leitura</string>
     <string name="continuar_criar_produto">Continuar a criar produto</string>
     <string name="descricao">Descrição</string>
-    <string name="descricao_invalida">Descrição não é válida</string>
+    <string name="descricao_invalida">Descrição não é válida\nNão use caracteres especias</string>
     <string name="bazar">Bazar</string>
     <string name="bebidas">Bebidas</string>
     <string name="charcutaria_lacticios">Charcutaria/Lacticínios</string>
@@ -368,6 +368,8 @@
     <string name="prod">Produto</string>
     <string name="ou">ou</string>
     <string name="cat">Categoria</string>
+    <string name="scan_bar">Scanear Código de Barra</string>
+    <string name="scaner_cod_bar_cancel">Scaneamento de código de barra cancelado</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

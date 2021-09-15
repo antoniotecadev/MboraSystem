@@ -1,7 +1,9 @@
 package com.yoga.mborasystem.view;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -26,6 +31,7 @@ import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
@@ -105,6 +111,7 @@ public class ListProdutoFragment extends Fragment {
                     produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
                 }
         );
+
         return binding.getRoot();
     }
 
@@ -127,6 +134,14 @@ public class ListProdutoFragment extends Fragment {
         progressDialog.show();
         progressDialog.setContentView(R.layout.progress_dialogo_view);
         progressDialog.getWindow().setLayout(200, 200);
+    }
+
+    private void scanearCodigoQr(int camera) {
+        new IntentIntegrator(getActivity())
+                .setPrompt(getString(R.string.alinhar_codigo_qr))
+                .setOrientationLocked(false)
+                .setCameraId(camera)
+                .initiateScan();
     }
 
     @Override
@@ -187,6 +202,9 @@ public class ListProdutoFragment extends Fragment {
                 if (!idcategoria.equals("")) {
                     filtrarProduto(idcategoria);
                 }
+                break;
+            case R.id.btnScannerBack:
+                scanearCodigoQr(0);
                 break;
             default:
                 break;
@@ -250,6 +268,23 @@ public class ListProdutoFragment extends Fragment {
         @Override
         public int getLayout() {
             return R.layout.fragment_produto;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 @Nullable Intent resultData) {
+        if (resultCode == Activity.RESULT_OK) {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, resultData);
+            if (result != null) {
+                if (result.getContents() == null) {
+                    Toast.makeText(getContext(), R.string.scaner_cod_bar_cancel, Toast.LENGTH_LONG).show();
+                } else {
+                    produtoViewModel.searchProduto(result.getContents());
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, resultData);
+            }
         }
     }
 
