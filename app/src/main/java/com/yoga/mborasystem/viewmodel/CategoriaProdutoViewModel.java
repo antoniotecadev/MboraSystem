@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.repository.CategoriaRepository;
@@ -25,8 +26,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class CategoriaProdutoViewModel extends AndroidViewModel {
 
@@ -48,18 +47,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
 
-    private void getProgressBar() {
-        progressDialog.show();
-        progressDialog.setContentView(R.layout.progress_dialogo_view);
-        progressDialog.getWindow().setLayout(200, 200);
-    }
-
-    private void dismissProgressBar() {
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
-
     public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, Switch estado, AlertDialog dialog, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || Ultilitario.letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
@@ -68,7 +55,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
             descricao.requestFocus();
             descricao.setError(getApplication().getString(R.string.descricao_invalida));
         } else {
-            getProgressBar();
+            MainActivity.getProgressBar();
             categoria.setCategoria(nome.getText().toString());
             categoria.setDescricao(descricao.getText().toString());
             categoria.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
@@ -109,14 +96,14 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        dismissProgressBar();
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.categoria_criada), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        dismissProgressBar();
+                        MainActivity.dismissProgressBar();
                         if (e.getMessage().contains("UNIQUE")) {
                             Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.categoria_existe), R.drawable.ic_toast_erro);
                         } else {
@@ -134,9 +121,9 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     getListaCategorias().setValue(categorias);
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                    dismissProgressBar();
+                    MainActivity.dismissProgressBar();
                 }, e -> {
-                    dismissProgressBar();
+                    MainActivity.dismissProgressBar();
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                 }));
@@ -166,14 +153,14 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        dismissProgressBar();
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.categoria_renomeada), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        dismissProgressBar();
+                        MainActivity.dismissProgressBar();
                         if (e.getMessage().contains("UNIQUE")) {
                             Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.categoria_existe), R.drawable.ic_toast_erro);
                         } else {
@@ -184,7 +171,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     public void eliminarCategoria(Categoria cat, boolean lx) {
-        getProgressBar();
+        MainActivity.getProgressBar();
         Completable.fromAction(() -> categoriaRepository.delete(cat, lx))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -196,13 +183,13 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        dismissProgressBar();
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        dismissProgressBar();
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_eliminada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });

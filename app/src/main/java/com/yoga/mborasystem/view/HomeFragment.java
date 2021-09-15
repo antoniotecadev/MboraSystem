@@ -22,8 +22,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import static com.yoga.mborasystem.MainActivity.progressDialog;
-
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
@@ -48,7 +46,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
-            getProgressBar();
+            MainActivity.getProgressBar();
             bundle.putLong("idoperador", getArguments().getLong("idusuario", 0));
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
@@ -63,29 +61,23 @@ public class HomeFragment extends Fragment {
 
         binding.btnProduto.setOnClickListener(v -> {
             if (getArguments() != null) {
-                getProgressBar();
+                MainActivity.getProgressBar();
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
         });
 
         binding.btnVenda.setOnClickListener(v -> {
-            getProgressBar();
+            MainActivity.getProgressBar();
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_vendaFragment);
         });
 
         binding.btnCliente.setOnClickListener(v -> {
-            getProgressBar();
+            MainActivity.getProgressBar();
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_listaClienteFragment);
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
-    }
-
-    private void getProgressBar() {
-        progressDialog.show();
-        progressDialog.setContentView(R.layout.progress_dialogo_view);
-        progressDialog.getWindow().setLayout(200, 200);
     }
 
     @Override
@@ -151,8 +143,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 }

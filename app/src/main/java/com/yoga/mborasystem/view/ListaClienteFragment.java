@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentListaClienteBinding;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
@@ -83,6 +84,7 @@ public class ListaClienteFragment extends Fragment {
                             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
 
                             viewHolder.itemView.setOnClickListener(v -> {
+                                MainActivity.getProgressBar();
                                 v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
                                 ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
                                 Navigation.findNavController(getView()).navigate(direction);
@@ -110,6 +112,7 @@ public class ListaClienteFragment extends Fragment {
                                         return false;
                                     });//groupId, itemId, order, title
                                     menu.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
+                                        MainActivity.getProgressBar();
                                         ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
                                         Navigation.findNavController(getView()).navigate(direction);
                                         return false;
@@ -192,6 +195,7 @@ public class ListaClienteFragment extends Fragment {
         NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
         switch (item.getItemId()) {
             case R.id.criarClienteCantina:
+                MainActivity.getProgressBar();
                 ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0);
                 Navigation.findNavController(getView()).navigate(direction);
                 break;
@@ -200,5 +204,17 @@ public class ListaClienteFragment extends Fragment {
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainActivity.dismissProgressBar();
     }
 }

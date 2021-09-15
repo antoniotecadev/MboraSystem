@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentListaProdutoVendaBinding;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
@@ -21,8 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class ListaProdutoVendaFragment extends Fragment {
 
@@ -106,9 +105,13 @@ public class ListaProdutoVendaFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
 }

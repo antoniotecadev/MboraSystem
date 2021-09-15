@@ -24,6 +24,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
 import com.yoga.mborasystem.model.entidade.Venda;
@@ -52,7 +53,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class VendaFragment extends Fragment {
 
-    private Venda venda;
     private boolean isLocal;
     private String data = "";
     private StringBuilder dataBuilder;
@@ -76,9 +76,9 @@ public class VendaFragment extends Fragment {
         binding = FragmentVendaListBinding.inflate(inflater, container, false);
 
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
-                }
-        );
+            MainActivity.getProgressBar();
+            vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
+        });
 
         binding.recyclerViewListaVenda.setAdapter(adapter);
         binding.recyclerViewListaVenda.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -200,6 +200,7 @@ public class VendaFragment extends Fragment {
             operador.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA" + venda.getIdoperador()));
 
             btnEntrar.setOnClickListener(v -> {
+                MainActivity.getProgressBar();
                 VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                 Navigation.findNavController(getView()).navigate(directions);
             });
@@ -207,6 +208,7 @@ public class VendaFragment extends Fragment {
             btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                 menu.setHeaderTitle(venda.getCodigo_qr());
                 menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
+                    MainActivity.getProgressBar();
                     VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                     Navigation.findNavController(getView()).navigate(directions);
                     return false;
@@ -235,6 +237,7 @@ public class VendaFragment extends Fragment {
                     .setTitle(getString(titulo))
                     .setMessage(getString(mensagem))
                     .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        MainActivity.getProgressBar();
                         if (isliquidar) {
                             vendaViewModel.liquidarDivida(Ultilitario.ZERO, venda.getId());
                         } else {
@@ -369,5 +372,11 @@ public class VendaFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainActivity.dismissProgressBar();
     }
 }

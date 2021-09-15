@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.repository.ClienteCantinaRepository;
@@ -74,6 +75,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             telefone.requestFocus();
             telefone.setError(getApplication().getString(R.string.numero_invalido));
         } else {
+            MainActivity.getProgressBar();
             clienteCantina.setNome(nomeCliente.getText().toString());
             clienteCantina.setTelefone(telefone.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
@@ -104,12 +106,14 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cliente_criado), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cliente_nao_criado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -152,18 +156,21 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.alteracao_feita), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.alteracao_nao_feita) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
 
     public void eliminarCliente(ClienteCantina clienteCantina, boolean lx, Dialog dg) {
+        MainActivity.getProgressBar();
         Completable.fromAction(() -> clienteCantinaRepository.delete(clienteCantina, lx))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -175,6 +182,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         if (dg != null) {
                             dg.dismiss();
                         }
@@ -183,6 +191,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cli_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });

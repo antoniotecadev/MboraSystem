@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Usuario;
 import com.yoga.mborasystem.repository.UsuarioRepository;
@@ -99,6 +100,7 @@ public class UsuarioViewModel extends AndroidViewModel {
             codigoPinNovamente.requestFocus();
             codigoPinNovamente.setError(getApplication().getString(R.string.pin_diferente));
         } else {
+            MainActivity.getProgressBar();
             usuario.setNome(nome.getText().toString());
             usuario.setTelefone(telefone.getText().toString());
             usuario.setEndereco(endereco.getText().toString());
@@ -128,12 +130,14 @@ public class UsuarioViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.usuario_criado), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.usuario_nao_criado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -151,12 +155,14 @@ public class UsuarioViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.alteracao_feita), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.alteracao_nao_feita) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -185,6 +191,7 @@ public class UsuarioViewModel extends AndroidViewModel {
     }
 
     public void eliminarUsuario(Usuario u, boolean lx, Dialog dg) {
+        MainActivity.getProgressBar();
         Completable.fromAction(() -> usuarioRepository.delete(u, lx))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -196,6 +203,7 @@ public class UsuarioViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         if (dg != null) {
                             dg.dismiss();
                         }
@@ -204,6 +212,7 @@ public class UsuarioViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.usuario_nao_eliminado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });

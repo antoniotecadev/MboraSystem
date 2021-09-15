@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogCriarClienteCantinaBinding;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
@@ -83,6 +84,18 @@ public class DialogCriarClienteCantina extends DialogFragment {
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, true, dialog))
                 .show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainActivity.dismissProgressBar();
     }
 
 }

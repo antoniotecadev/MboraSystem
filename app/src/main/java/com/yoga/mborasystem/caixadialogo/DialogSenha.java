@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.model.entidade.Usuario;
@@ -21,8 +22,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class DialogSenha extends DialogFragment {
 
@@ -69,9 +68,7 @@ public class DialogSenha extends DialogFragment {
                 binding.senha.requestFocus();
                 binding.senha.setError(getString(R.string.senha_invalida));
             } else {
-                progressDialog.show();
-                progressDialog.setContentView(R.layout.progress_dialogo_view);;
-                progressDialog.getWindow().setLayout(200, 200);
+                MainActivity.getProgressBar();
                 clienteViewModel.logar(binding.senha);
             }
         });
@@ -121,8 +118,6 @@ public class DialogSenha extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 }

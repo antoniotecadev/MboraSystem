@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogCriarCategoriaBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
@@ -17,8 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class DialogCriarCategoria extends DialogFragment {
 
@@ -89,8 +88,6 @@ public class DialogCriarCategoria extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 }

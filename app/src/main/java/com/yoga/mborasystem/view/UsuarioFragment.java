@@ -52,7 +52,10 @@ public class UsuarioFragment extends Fragment {
         binding.recyclerViewListaUsuario.setAdapter(adapter);
         binding.recyclerViewListaUsuario.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        binding.criarUsuarioFragment.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario));
+        binding.criarUsuarioFragment.setOnClickListener(v -> {
+            MainActivity.getProgressBar();
+            Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario);
+        });
 
         usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> {
             adapter.clear();
@@ -139,6 +142,7 @@ public class UsuarioFragment extends Fragment {
 
         private void verDadosUsuario() {
             if (getArguments() != null) {
+                MainActivity.getProgressBar();
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
             bundle.putParcelable("usuario", usuario);

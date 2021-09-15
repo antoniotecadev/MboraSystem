@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -36,8 +37,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class VendaViewModel extends AndroidViewModel {
 
@@ -147,12 +146,6 @@ public class VendaViewModel extends AndroidViewModel {
         return produtosVenda;
     }
 
-    private void dismissProgressBar() {
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
-
     @SuppressLint("CheckResult")
     public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
         venda.setNome_cliente(txtNomeCliente);
@@ -181,13 +174,14 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        dismissProgressBar();
+                        MainActivity.dismissProgressBar();
                         FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada().setPrecoTotal(totalVenda);
                         Navigation.findNavController(view).navigate(action);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_nao_efectuada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -221,7 +215,9 @@ public class VendaViewModel extends AndroidViewModel {
                 .subscribe(vendas -> {
                     getListaVendasLiveData().setValue(vendas);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
+                    MainActivity.dismissProgressBar();
                 }, e -> {
+                    MainActivity.dismissProgressBar();
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                 }));
     }
@@ -303,11 +299,13 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.div_liq), R.drawable.ic_toast_feito);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.div_n_liq) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -325,11 +323,13 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });

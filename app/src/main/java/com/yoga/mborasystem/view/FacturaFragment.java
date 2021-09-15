@@ -38,6 +38,7 @@ import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentFacturaBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
@@ -71,8 +72,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class FacturaFragment extends Fragment {
 
@@ -161,6 +160,7 @@ public class FacturaFragment extends Fragment {
         beepManager = new BeepManager(requireActivity());
 
         binding.btnCriarCliente.setOnClickListener(v -> {
+            MainActivity.getProgressBar();
             Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0));
             binding.txtNomeCliente.setText("");
         });
@@ -420,6 +420,7 @@ public class FacturaFragment extends Fragment {
                     if (facturaPath.isEmpty()) {
                         Toast.makeText(getContext(), getString(R.string.guardar_primeiro), Toast.LENGTH_LONG).show();
                     } else {
+                        MainActivity.getProgressBar();
                         CriarFactura.printPDF(getActivity(), getContext(), facturaPath);
                     }
                 } else {
@@ -479,12 +480,6 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void getProgressBar() {
-        progressDialog.show();
-        progressDialog.setContentView(R.layout.progress_dialogo_view);
-        progressDialog.getWindow().setLayout(200, 200);
-    }
-
     private void dialogVerificarVenda(String[] nomeIDcliente) {
         if (nomeIDcliente.length == 2) {
             idcliente = Long.parseLong(nomeIDcliente[1].trim());
@@ -506,7 +501,7 @@ public class FacturaFragment extends Fragment {
                         + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
                 )
                 .setPositiveButton(R.string.vender, (dialog, which) -> {
-                    getProgressBar();
+                    MainActivity.getProgressBar();
                     vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, getArguments().getLong("idoperador", 0), idcliente, getView());
                 })
                 .setNegativeButton(R.string.cancelar, (dialog, which) -> {
@@ -775,9 +770,7 @@ public class FacturaFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 
     public static void myOnKeyDown(int keyCode, KeyEvent event) {

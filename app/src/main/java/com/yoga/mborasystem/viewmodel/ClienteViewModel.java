@@ -3,9 +3,9 @@ package com.yoga.mborasystem.viewmodel;
 import android.app.Application;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.repository.ClienteRepository;
@@ -215,6 +215,7 @@ public class ClienteViewModel extends AndroidViewModel {
                             if (Ultilitario.validateSenhaPin(senha.getText().toString(), cliente.getSenha())) {
                                 getClienteMutableLiveData().setValue(cliente);
                             } else {
+                                MainActivity.dismissProgressBar();
                                 senha.setError(getApplication().getString(R.string.senha_incorreta));
                             }
                         } catch (NoSuchAlgorithmException e) {
@@ -223,11 +224,14 @@ public class ClienteViewModel extends AndroidViewModel {
                         } catch (InvalidKeySpecException e) {
                             e.printStackTrace();
                             senha.setError(e.getMessage());
+                        } finally {
+                            MainActivity.dismissProgressBar();
                         }
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         senha.setError("Erro: " + e.getMessage());
                     }
                 });

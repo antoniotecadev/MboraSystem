@@ -22,6 +22,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentProdutoListBinding;
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -39,8 +40,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class ListProdutoFragment extends Fragment {
 
@@ -107,7 +106,7 @@ public class ListProdutoFragment extends Fragment {
             }
         });
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-                    getProgressBar();
+                    MainActivity.getProgressBar();
                     produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
                 }
         );
@@ -116,7 +115,7 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void createProduto(long id, String categoria) {
-        getProgressBar();
+        MainActivity.getProgressBar();
         bundle.clear();
         bundle.putLong("idcategoria", id);
         bundle.putString("categoria", categoria);
@@ -124,16 +123,10 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void filtrarProduto(long id) {
-        getProgressBar();
+        MainActivity.getProgressBar();
         bundle.clear();
         bundle.putLong("idcategoria", id);
         Navigation.findNavController(getView()).navigate(R.id.action_listProdutoFragment_to_dialogFiltrarProduto2, bundle);
-    }
-
-    private void getProgressBar() {
-        progressDialog.show();
-        progressDialog.setContentView(R.layout.progress_dialogo_view);
-        progressDialog.getWindow().setLayout(200, 200);
     }
 
     private void scanearCodigoQr(int camera) {
@@ -300,8 +293,6 @@ public class ListProdutoFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 }

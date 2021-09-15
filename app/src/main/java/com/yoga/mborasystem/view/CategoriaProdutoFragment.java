@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCategoriaProdutoBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
@@ -49,8 +50,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class CategoriaProdutoFragment extends Fragment {
 
@@ -113,7 +112,7 @@ public class CategoriaProdutoFragment extends Fragment {
             }
         }));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-            getProgressBar();
+            MainActivity.getProgressBar();
             categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout);
         });
         return binding.getRoot();
@@ -128,7 +127,7 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     private void createCategory() {
-        getProgressBar();
+        MainActivity.getProgressBar();
         Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
     }
 
@@ -137,12 +136,6 @@ public class CategoriaProdutoFragment extends Fragment {
         bundle.putStringArrayList("categorias", stringList);
         bundle.putStringArrayList("descricao", stringListDesc);
         Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogExportarImportar, bundle);
-    }
-
-    private void getProgressBar() {
-        progressDialog.show();
-        progressDialog.setContentView(R.layout.progress_dialogo_view);
-        progressDialog.getWindow().setLayout(200, 200);
     }
 
     @Override
@@ -238,7 +231,7 @@ public class CategoriaProdutoFragment extends Fragment {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getProgressBar();
+                    MainActivity.getProgressBar();
                     v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
                     listaProdutos(categoria.getId(), categoria.getCategoria());
                 }
@@ -251,7 +244,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            getProgressBar();
+                            MainActivity.getProgressBar();
                             listaProdutos(categoria.getId(), categoria.getCategoria());
                             return false;
                         }
@@ -261,7 +254,7 @@ public class CategoriaProdutoFragment extends Fragment {
                         public boolean onMenuItemClick(MenuItem item) {
                             if (getArguments() != null) {
                                 if (getArguments().getBoolean("master")) {
-                                    getProgressBar();
+                                    MainActivity.getProgressBar();
                                     bundle.putParcelable("categoria", categoria);
                                     Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
                                 }
@@ -317,9 +310,7 @@ public class CategoriaProdutoFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 
     public void readTextFromUri(Uri uri) throws IOException {

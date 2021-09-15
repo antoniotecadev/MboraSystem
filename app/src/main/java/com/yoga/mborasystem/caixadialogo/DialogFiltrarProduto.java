@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogFiltrarProdutoBinding;
 import com.yoga.mborasystem.util.Ultilitario;
@@ -19,8 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class DialogFiltrarProduto extends DialogFragment {
 
@@ -161,9 +160,7 @@ public class DialogFiltrarProduto extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 
 }

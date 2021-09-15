@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogCriarUsuarioBinding;
 import com.yoga.mborasystem.model.entidade.Usuario;
@@ -127,6 +128,7 @@ public class DialogCriarUsuario extends DialogFragment {
     public void onStart() {
         super.onStart();
         Ultilitario.fullScreenDialog(getDialog());
+        MainActivity.dismissProgressBar();
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentLoginBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -32,7 +33,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import static android.content.Context.VIBRATOR_SERVICE;
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class LoginFragment extends Fragment {
 
@@ -87,9 +87,7 @@ public class LoginFragment extends Fragment {
         binding.btn0.setOnClickListener(v -> digitarCodigoPin(0));
         binding.btnApagar.setOnClickListener(v -> limparCodigoPin());
         binding.btnMenu.setOnClickListener(v -> {
-            progressDialog.show();
-            progressDialog.setContentView(R.layout.progress_dialogo_view);;
-            progressDialog.getWindow().setLayout(200, 200);
+            MainActivity.getProgressBar();
             Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
         });
 
@@ -186,9 +184,7 @@ public class LoginFragment extends Fragment {
         if (codigoPin.length() > 6 || codigoPin.length() < 6) {
             binding.tvinfoCodigoPin.setError(getString(R.string.infoPinIncorreto));
         } else {
-            progressDialog.show();
-            progressDialog.setContentView(R.layout.progress_dialogo_view);;
-            progressDialog.getWindow().setLayout(200, 200);
+            MainActivity.getProgressBar();
             loginViewModel.logar(codigoPin);
         }
     }

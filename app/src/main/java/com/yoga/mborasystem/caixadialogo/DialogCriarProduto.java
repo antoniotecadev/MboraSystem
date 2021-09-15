@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogCriarProdutoBinding;
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -28,8 +29,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import static com.yoga.mborasystem.MainActivity.progressDialog;
 
 public class DialogCriarProduto extends DialogFragment {
 
@@ -296,9 +295,7 @@ public class DialogCriarProduto extends DialogFragment {
     public void onStart() {
         super.onStart();
         Ultilitario.fullScreenDialog(getDialog());
-        if (progressDialog.isShowing() && progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        MainActivity.dismissProgressBar();
     }
 
     @Override
