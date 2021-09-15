@@ -77,6 +77,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public static void getProgressBar() {
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialogo_view);
+        progressDialog.getWindow().setLayout(200, 200);
+    }
+
+    public static void dismissProgressBar() {
+        if (progressDialog.isShowing() && progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.util.Ultilitario;
@@ -54,24 +55,27 @@ public class HomeFragment extends Fragment {
 
         binding.btnUsuario.setOnClickListener(v -> {
             if (getArguments() != null) {
+                MainActivity.getProgressBar();
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_usuarioFragment, bundle);
         });
 
         binding.btnProduto.setOnClickListener(v -> {
-            getProgressBar();
             if (getArguments() != null) {
+                getProgressBar();
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
         });
 
         binding.btnVenda.setOnClickListener(v -> {
+            getProgressBar();
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_vendaFragment);
         });
 
         binding.btnCliente.setOnClickListener(v -> {
+            getProgressBar();
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_listaClienteFragment);
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));

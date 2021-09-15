@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentUsuarioListBinding;
 import com.yoga.mborasystem.model.entidade.Usuario;
@@ -155,6 +156,12 @@ public class UsuarioFragment extends Fragment {
             alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> usuarioViewModel.eliminarUsuario(usuario, true, null));
             alert.show();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainActivity.dismissProgressBar();
     }
 
     @Override
