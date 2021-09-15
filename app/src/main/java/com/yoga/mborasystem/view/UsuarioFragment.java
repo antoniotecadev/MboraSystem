@@ -58,6 +58,7 @@ public class UsuarioFragment extends Fragment {
         });
 
         usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> {
+            getActivity().setTitle(getString(R.string.usuarios) + " = " + usuarios.size());
             adapter.clear();
             for (Usuario usuario : usuarios)
                 adapter.add(new ItemUsuario(usuario));
