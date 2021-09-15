@@ -84,6 +84,7 @@ public class VendaFragment extends Fragment {
         binding.recyclerViewListaVenda.setLayoutManager(new LinearLayoutManager(getContext()));
         vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
         vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
+            binding.chipQuantVenda.setText(String.valueOf(vendas.size()));
             adapter.clear();
             if (vendas.isEmpty()) {
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.venda_nao_encontrada);
@@ -91,10 +92,6 @@ public class VendaFragment extends Fragment {
                 for (Venda venda : vendas)
                     adapter.add(new ItemVenda(venda));
             }
-        });
-
-        vendaViewModel.consultarQuantidadeVendas().observe(getViewLifecycleOwner(), quantidade -> {
-            binding.chipQuantVenda.setText(String.valueOf(quantidade));
         });
 
         vendaViewModel.getSelectedDataMutableLiveData().setValue(false);

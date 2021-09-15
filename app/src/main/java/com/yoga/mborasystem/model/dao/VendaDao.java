@@ -7,7 +7,6 @@ import com.yoga.mborasystem.model.entidade.Venda;
 import java.util.List;
 import java.util.Map;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -32,9 +31,6 @@ public abstract class VendaDao {
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :codQr || '%'")
     abstract Flowable<List<Venda>> getVenda(String codQr);
-
-    @Query("SELECT COUNT(id) FROM vendas  WHERE estado = 1")
-    abstract LiveData<Long> getQuantidadeVenda();
 
     @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda")
     abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda);
@@ -73,10 +69,6 @@ public abstract class VendaDao {
 
     public Flowable<List<Venda>> getSearchVendas(String codQr) {
         return searchVenda(codQr);
-    }
-
-    public LiveData<Long> getQuantidadeVendas() {
-        return getQuantidadeVenda();
     }
 
     @Transaction

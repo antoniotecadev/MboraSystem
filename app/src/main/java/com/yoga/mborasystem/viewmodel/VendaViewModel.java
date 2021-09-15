@@ -250,10 +250,6 @@ public class VendaViewModel extends AndroidViewModel {
                 }));
     }
 
-    public LiveData<Long> consultarQuantidadeVendas() {
-        return vendaRepository.getQuantidadeVendas();
-    }
-
     public void importarVenda(List<String> vendas) {
         Completable.fromAction(() -> vendaRepository.importarVendas(vendas))
                 .subscribeOn(Schedulers.io())
