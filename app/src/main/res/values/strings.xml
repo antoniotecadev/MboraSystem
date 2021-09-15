@@ -370,6 +370,7 @@
     <string name="cat">Categoria</string>
     <string name="scan_bar">Scanear Código de Barra</string>
     <string name="scaner_cod_bar_cancel">Scaneamento de código de barra cancelado</string>
+    <string name="telefone">Telefone</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
