@@ -337,7 +337,7 @@
     <string name="scan_qr">Scanear Código Qr</string>
     <string name="alinhar_codigo_qr">Alinhar código Qr para fazer a leitura</string>
     <string name="scaner_cod_qr_cancel">Scaneamento de código Qr cancelada</string>
-    <string name="pes_dat">Pesquisar com Data</string>
+    <string name="pes_dat">Pesquisar por Data</string>
     <string name="selec_data">Seleccionar Data</string>
     <string name="dat_sel">Data Seleccionada</string>
     <string name="exp_v">"Exportar vendas de "</string>
@@ -371,6 +371,7 @@
     <string name="scan_bar">Scanear Código de Barra</string>
     <string name="scaner_cod_bar_cancel">Scaneamento de código de barra cancelado</string>
     <string name="telefone">Telefone</string>
+    <string name="expo_concl">Exportação concluída</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

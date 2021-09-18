@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +34,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -111,7 +113,7 @@ public class VendaFragment extends Fragment {
                     }).show();
         }));
 
-        vendaViewModel.getExportarLocalLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
+        vendaViewModel.getExportarLocalLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(aBoolean -> {
             if (this.data.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.selec_data), Toast.LENGTH_LONG).show();
             } else {
@@ -124,7 +126,7 @@ public class VendaFragment extends Fragment {
                 }
 
             }
-        });
+        }));
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             StringBuilder dt = new StringBuilder();
             if (vendas.isEmpty()) {
@@ -301,6 +303,7 @@ public class VendaFragment extends Fragment {
                 exportarVenda(Ultilitario.EXPORTAR_VENDA);
                 break;
             case R.id.importarvenda:
+                //Importa as vendas
                 Ultilitario.importarCategoriasProdutos(getActivity(), Ultilitario.QUATRO);
                 break;
             default:
@@ -324,7 +327,6 @@ public class VendaFragment extends Fragment {
                 uri = resultData.getData();
                 Ultilitario.alterDocument(uri, dataBuilder, getActivity());
                 dataBuilder.delete(0, data.length());
-                Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
             Uri uri = null;
@@ -353,16 +355,37 @@ public class VendaFragment extends Fragment {
     }
 
     public void readTextFromUri(Uri uri) throws IOException {
-        List<String> vendas = new ArrayList<>();
-        try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                vendas.add(line);
+        new AsyncTask<Void, Void, List<String>>() {
+
+            @Override
+            protected List<String> doInBackground(Void... voids) {
+                List<String> vendas = new ArrayList<>();
+
+                try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                     BufferedReader reader = new BufferedReader(
+                             new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        vendas.add(line);
+                    }
+                } catch (
+                        FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                return vendas;
             }
-            vendaViewModel.importarVenda(vendas);
-        }
+
+            @Override
+            protected void onPostExecute(List<String> vendas) {
+                super.onPostExecute(vendas);
+                vendaViewModel.importarVenda(vendas);
+            }
+        }.execute();
+
     }
 
     @Override

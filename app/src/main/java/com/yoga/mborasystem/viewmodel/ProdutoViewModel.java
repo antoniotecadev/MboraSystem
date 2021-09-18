@@ -224,8 +224,8 @@ public class ProdutoViewModel extends AndroidViewModel {
                             getListaProdutosImport().setValue(new Event<>(produtos));
                         } else {
                             getListaProdutos().setValue(produtos);
-                            Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                         }
+                        Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                         MainActivity.dismissProgressBar();
                     }
                 }, new Consumer<Throwable>() {

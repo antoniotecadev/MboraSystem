@@ -26,7 +26,6 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -56,7 +55,8 @@ public class VendaViewModel extends AndroidViewModel {
         clienteRepository = new ClienteRepository(getApplication());
     }
 
-    MutableLiveData<Boolean> imprimir, guardarPdf, selectedData, exportLocal;
+    MutableLiveData<Event<Boolean>> exportLocal;
+    MutableLiveData<Boolean> imprimir, guardarPdf, selectedData;
     MutableLiveData<String> enviarWhatsApp;
     MutableLiveData<Event<String>> dataExport;
 
@@ -130,7 +130,7 @@ public class VendaViewModel extends AndroidViewModel {
         return vendas;
     }
 
-    public MutableLiveData<Boolean> getExportarLocalLiveData() {
+    public MutableLiveData<Event<Boolean>> getExportarLocalLiveData() {
         if (exportLocal == null) {
             exportLocal = new MutableLiveData<>();
         }

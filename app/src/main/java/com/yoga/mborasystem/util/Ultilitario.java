@@ -4,13 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.telephony.PhoneNumberUtils;
@@ -341,19 +341,18 @@ public class Ultilitario {
     }
 
     public static void alterDocument(Uri uri, StringBuilder data, Activity activity) {
+
+        ParcelFileDescriptor csv = null;
         try {
-            ParcelFileDescriptor csv = activity.getContentResolver().openFileDescriptor(uri, "w");
-            FileOutputStream fileOutputStream = new FileOutputStream(csv.getFileDescriptor());
-            fileOutputStream.write((data.toString()).getBytes());
-            fileOutputStream.close();
-            csv.close();
+            csv = activity.getContentResolver().openFileDescriptor(uri, "w");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+        FileOutputStream fileOutputStream = new FileOutputStream(csv.getFileDescriptor());
+
+        new ExportarAsyncTask(csv, fileOutputStream, uri, activity).execute(data.toString());
+
     }
 
     public static void exportarNuvem(Context context, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data) {
@@ -446,13 +445,46 @@ public class Ultilitario {
         return listMonth.get(month);
     }
 
-    public static ProgressDialog getProgressBarDialog(ProgressDialog progressDialog, boolean canceLable) {
-        progressDialog.setCancelable(canceLable);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-        progressDialog.setContentView(R.layout.progress_dialogo_view);
-        progressDialog.getWindow().setLayout(200, 200);
-        return progressDialog;
+    private static class ExportarAsyncTask extends AsyncTask<String, Void, String> {
+
+        private Uri uri;
+        private Activity activity;
+        private StringBuilder data;
+        private ParcelFileDescriptor csv;
+        private FileOutputStream fileOutputStream;
+
+        public ExportarAsyncTask(ParcelFileDescriptor csv, FileOutputStream fileOutputStream, Uri uri, Activity activity) {
+            this.uri = uri;
+            this.csv = csv;
+            this.activity = activity;
+            this.fileOutputStream = fileOutputStream;
+        }
+
+        @Override
+        protected String doInBackground(String... data) {
+
+            try {
+
+                fileOutputStream.write((data[0]).getBytes());
+                fileOutputStream.close();
+                csv.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            return activity.getString(R.string.expo_concl) + "\n" + uri;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(activity.getBaseContext(), s, Toast.LENGTH_LONG).show();
+        }
     }
+
 
 }

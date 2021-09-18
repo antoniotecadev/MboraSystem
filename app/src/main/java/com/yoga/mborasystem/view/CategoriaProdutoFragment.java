@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,7 +83,9 @@ public class CategoriaProdutoFragment extends Fragment {
         binding.recyclerViewCategoriaProduto.setAdapter(adapter);
         binding.recyclerViewCategoriaProduto.setHasFixedSize(true);
         binding.recyclerViewCategoriaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.btncriarCategoriaDialog.setOnClickListener(v ->{ createCategory(); });
+        binding.btncriarCategoriaDialog.setOnClickListener(v -> {
+            createCategory();
+        });
 
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new Observer<List<Categoria>>() {
             @Override
@@ -314,16 +318,38 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     public void readTextFromUri(Uri uri) throws IOException {
-        List<String> produtos = new ArrayList<>();
-        try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                produtos.add(line);
+
+        new AsyncTask<Void, Void, List<String>>() {
+
+            @Override
+            protected List<String> doInBackground(Void... voids) {
+                List<String> produtos = new ArrayList<>();
+
+                try (
+                        InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                        BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        produtos.add(line);
+                    }
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                return produtos;
             }
-            produtoViewModel.importarProdutos(produtos);
-        }
+
+            @Override
+            protected void onPostExecute(List<String> produtos) {
+                super.onPostExecute(produtos);
+                produtoViewModel.importarProdutos(produtos);
+            }
+        }.execute();
     }
 
     @Override
@@ -335,7 +361,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 uri = resultData.getData();
                 Ultilitario.alterDocument(uri, data, getActivity());
                 data.delete(0, data.length());
-                Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
             Uri uri = null;

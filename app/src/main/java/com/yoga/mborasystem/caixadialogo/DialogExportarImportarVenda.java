@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 
 import com.yoga.mborasystem.databinding.DialogExportarImportarVendaBinding;
+import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import androidx.annotation.NonNull;
@@ -33,9 +34,9 @@ public class DialogExportarImportarVenda extends DialogFragment {
 
         binding.btnSelectedData.setOnClickListener(v -> vendaViewModel.getSelectedDataMutableLiveData().setValue(true));
 
-        binding.btnExportarLocal.setOnClickListener(v -> vendaViewModel.getExportarLocalLiveData().setValue(true));
+        binding.btnExportarLocal.setOnClickListener(v -> vendaViewModel.getExportarLocalLiveData().setValue(new Event<>(true)));
 
-        binding.btnExportarNuvem.setOnClickListener(v -> vendaViewModel.getExportarLocalLiveData().setValue(false));
+        binding.btnExportarNuvem.setOnClickListener(v -> vendaViewModel.getExportarLocalLiveData().setValue(new Event<>(false)));
 
         binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
 
