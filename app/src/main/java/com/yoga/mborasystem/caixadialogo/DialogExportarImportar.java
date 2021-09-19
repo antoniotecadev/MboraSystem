@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -166,17 +168,38 @@ public class DialogExportarImportar extends DialogFragment {
     }
 
     public void readTextFromUri(Uri uri) throws IOException {
-        Map<String, String> categorias = new HashMap<>();
-        try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] categoria = line.split(",");
-                categorias.put(categoria[0], categoria[1]);
+
+        new AsyncTask<Void, Void, Map<String, String>>() {
+
+            @Override
+            protected Map<String, String> doInBackground(Void... voids) {
+                Map<String, String> categorias = new HashMap<>();
+                try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                     BufferedReader reader = new BufferedReader(
+                             new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] categoria = line.split(",");
+                        categorias.put(categoria[0], categoria[1]);
+                    }
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                return categorias;
             }
-            categoriaProdutoViewModel.importarCategorias(categorias, dialog);
-        }
+
+            @Override
+            protected void onPostExecute(Map<String, String> categorias) {
+                super.onPostExecute(categorias);
+                categoriaProdutoViewModel.importarCategorias(categorias);
+            }
+
+        }.execute();
     }
 
     @Override
@@ -188,7 +211,6 @@ public class DialogExportarImportar extends DialogFragment {
                 uri = resultData.getData();
                 Ultilitario.alterDocument(uri, data, getActivity());
                 data.delete(0, data.length());
-                Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == Ultilitario.SINCO && resultCode == Activity.RESULT_OK) {
             Uri uri = null;

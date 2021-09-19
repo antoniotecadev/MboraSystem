@@ -195,9 +195,8 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void importarCategorias(Map<String, String> categorias, AlertDialog dialog) {
+    public void importarCategorias(Map<String, String> categorias) {
         categoriaRepository.importarCategorias(categorias, getApplication());
-        dialog.dismiss();
     }
 
     @Override
