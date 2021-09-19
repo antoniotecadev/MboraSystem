@@ -159,6 +159,12 @@ public class FacturaFragment extends Fragment {
         barcodeView.decodeContinuous(callback);
         beepManager = new BeepManager(requireActivity());
 
+        binding.buttonFechar.setOnClickListener(v -> {
+            binding.viewStub.setVisibility(View.GONE);
+            binding.buttonFechar.setVisibility(View.GONE);
+            barcodeView.pause();
+        });
+
         binding.btnCriarCliente.setOnClickListener(v -> {
             MainActivity.getProgressBar();
             Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0));
@@ -182,6 +188,7 @@ public class FacturaFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             }
+            binding.buttonFechar.setVisibility(View.VISIBLE);
         });
 
         binding.btnClose.setOnClickListener(v -> {
@@ -525,6 +532,7 @@ public class FacturaFragment extends Fragment {
 
     private void openCamera() {
         binding.viewStub.setVisibility(View.VISIBLE);
+        binding.buttonFechar.setVisibility(View.VISIBLE);
         barcodeView.resume();
     }
 

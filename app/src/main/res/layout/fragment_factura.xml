@@ -24,8 +24,20 @@
             <ViewStub
                 android:id="@+id/viewStub"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="350dp"
                 android:layout="@layout/barcodescanner" />
+
+            <Button
+                android:id="@+id/buttonFechar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:text="@string/fechar"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:backgroundTint="#E53935" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
