@@ -45,8 +45,8 @@ public class VendaRepository {
         vendaDao.insertVenda(vendas);
     }
 
-    public Flowable<List<ProdutoVenda>> getProdutosVenda(long idvenda) {
-        return vendaDao.getProdutosVenda(idvenda);
+    public Flowable<List<ProdutoVenda>> getProdutosVenda(long idvenda, String codQr) {
+        return vendaDao.getProdutosVenda(idvenda, codQr);
     }
 
     public void liquidarDivida(int divida, long idivida) {

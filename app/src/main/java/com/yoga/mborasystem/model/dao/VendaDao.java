@@ -32,8 +32,8 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :codQr || '%'")
     abstract Flowable<List<Venda>> getVenda(String codQr);
 
-    @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda")
-    abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda);
+    @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda OR codigo_Barra = :codQr")
+    abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda, String codQr);
 
     @Query("UPDATE vendas SET divida = :divida WHERE id = :idvenda")
     abstract void setDivida(int divida, long idvenda);
@@ -52,7 +52,7 @@ public abstract class VendaDao {
             produtoVenda.setNome_produto(produto.getValue().getNome());
             produtoVenda.setQuantidade(precoTotalUnit.get(produto.getKey()).intValue() / produto.getValue().getPreco());
             produtoVenda.setPreco_total(precoTotalUnit.get(produto.getKey()).intValue());
-            produtoVenda.setCodigo_Barra(produto.getValue().getCodigoBarra());
+            produtoVenda.setCodigo_Barra(venda.getCodigo_qr());
             produtoVenda.setIva(produto.getValue().isIva());
             produtoVenda.setIdvenda(idvenda);
             insert(produtoVenda);
@@ -96,14 +96,15 @@ public abstract class VendaDao {
         }
     }
 
-    public Flowable<List<ProdutoVenda>> getProdutosVenda(long idvenda) {
-        return getProdutoVenda(idvenda);
+    public Flowable<List<ProdutoVenda>> getProdutosVenda(long idvenda, String codQr) {
+        return getProdutoVenda(idvenda, codQr);
     }
 
     public void liquidardivida(int divida, long idvenda) {
         setDivida(divida, idvenda);
     }
-    public void eliminarVendaLixeira(int estado, String data, long idvenda){
+
+    public void eliminarVendaLixeira(int estado, String data, long idvenda) {
         deleteLixeira(estado, data, idvenda);
     }
 }

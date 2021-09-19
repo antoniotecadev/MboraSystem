@@ -200,7 +200,7 @@ public class VendaFragment extends Fragment {
 
             btnEntrar.setOnClickListener(v -> {
                 MainActivity.getProgressBar();
-                VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                 Navigation.findNavController(getView()).navigate(directions);
             });
 
@@ -208,7 +208,7 @@ public class VendaFragment extends Fragment {
                 menu.setHeaderTitle(venda.getCodigo_qr());
                 menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
                     MainActivity.getProgressBar();
-                    VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                    VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                     Navigation.findNavController(getView()).navigate(directions);
                     return false;
                 });//groupId, itemId, order, title

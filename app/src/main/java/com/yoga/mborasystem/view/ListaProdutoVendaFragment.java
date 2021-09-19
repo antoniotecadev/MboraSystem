@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -44,6 +45,7 @@ public class ListaProdutoVendaFragment extends Fragment {
         long idvenda = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getIdvenda();
         int vendaTotal = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getVendaTotal();
         int quant = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getQuant();
+        String codQr = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getCodQr();
 
         getActivity().setTitle(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(vendaTotal)));
 
@@ -51,7 +53,8 @@ public class ListaProdutoVendaFragment extends Fragment {
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.chipQuantidadeProduto.setText(quant + "");
 
-        vendaViewModel.getProdutosVenda(idvenda);
+        Toast.makeText(getContext(), codQr, Toast.LENGTH_SHORT).show();
+        vendaViewModel.getProdutosVenda(idvenda, codQr);
         vendaViewModel.getProdutosVendaLiveDta().observe(getViewLifecycleOwner(), produtos -> {
             adapter.clear();
             if (produtos.isEmpty()) {
@@ -61,7 +64,7 @@ public class ListaProdutoVendaFragment extends Fragment {
                     adapter.add(new Item<GroupieViewHolder>() {
 
                         private Switch estadoProduto;
-                        private TextView nomeProduto, precoProduto, quantidadeProduto, codigoBarraProduto, referenciaProduto, precoProdutoFronecedor;
+                        private TextView nomeProduto, precoProduto, quantidadeProduto, referenciaProduto, codigoQr, precoProdutoFronecedor;
 
                         @Override
                         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
@@ -69,16 +72,16 @@ public class ListaProdutoVendaFragment extends Fragment {
                             precoProduto = viewHolder.itemView.findViewById(R.id.txtPrecoProduto);
                             precoProdutoFronecedor = viewHolder.itemView.findViewById(R.id.txtPrecoProdutoFornecedor);
                             quantidadeProduto = viewHolder.itemView.findViewById(R.id.txtQuantidadeProduto);
-                            codigoBarraProduto = viewHolder.itemView.findViewById(R.id.txtCodigoBarProduto);
+                            referenciaProduto = viewHolder.itemView.findViewById(R.id.txtCodigoBarProduto);
                             estadoProduto = viewHolder.itemView.findViewById(R.id.estado_produto);
-                            referenciaProduto = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
+                            codigoQr = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
 
                             nomeProduto.setText(produto.getNome_produto());
                             precoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())));
                             precoProdutoFronecedor.setText("------------");
                             quantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
-                            codigoBarraProduto.setText(getText(R.string.codigo_bar) + ": " + produto.getCodigo_Barra());
                             referenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());
+                            codigoQr.setText(getText(R.string.venda) + "Qr: " + produto.getCodigo_Barra());
                             if (produto.isIva()) {
                                 estadoProduto.setChecked(true);
                                 estadoProduto.setTextColor(Color.BLUE);

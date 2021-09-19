@@ -284,6 +284,9 @@
             <argument
                 android:name="quant"
                 app:argType="integer" />
+            <argument
+                android:name="codQr"
+                app:argType="string" />
         </fragment>
         <fragment
             android:id="@+id/listaClienteFragment"
