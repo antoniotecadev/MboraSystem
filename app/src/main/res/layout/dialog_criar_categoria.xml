@@ -112,13 +112,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnCancelar"
+            android:id="@+id/buttonFechar"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginLeft="@dimen/margem_lateral_formulario"
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:layout_marginBottom="20dp"
-            android:text="@string/cancelar"
+            android:text="@string/fechar"
             app:backgroundTint="@android:color/holo_orange_light" />
 
         <View

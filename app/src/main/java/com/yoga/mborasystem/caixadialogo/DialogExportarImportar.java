@@ -84,7 +84,7 @@ public class DialogExportarImportar extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
         binding.btnExportarImportarLocal.setOnClickListener(v -> importarExportar(true));
         binding.btnExportarImportarNuvem.setOnClickListener(v -> importarExportar(false));
-        binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
+        binding.buttonFechar.setOnClickListener(v -> dialog.dismiss());
         return dialog;
     }
 

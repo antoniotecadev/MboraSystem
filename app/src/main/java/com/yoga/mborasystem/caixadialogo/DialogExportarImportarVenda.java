@@ -38,7 +38,7 @@ public class DialogExportarImportarVenda extends DialogFragment {
 
         binding.btnExportarNuvem.setOnClickListener(v -> vendaViewModel.getExportarLocalLiveData().setValue(new Event<>(false)));
 
-        binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
+        binding.buttonFechar.setOnClickListener(v -> dialog.dismiss());
 
         return dialog;
     }

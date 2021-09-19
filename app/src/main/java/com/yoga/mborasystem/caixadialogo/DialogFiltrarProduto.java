@@ -139,7 +139,7 @@ public class DialogFiltrarProduto extends DialogFragment {
                 produtoViewModel.validarProdutoEstado(idcategoria, binding.switchEstado, dialog);
             }
         });
-        binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
+        binding.buttonFechar.setOnClickListener(v -> dialog.dismiss());
         return dialog;
     }
 

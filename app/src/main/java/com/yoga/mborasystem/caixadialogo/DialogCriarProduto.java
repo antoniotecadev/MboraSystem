@@ -110,7 +110,7 @@ public class DialogCriarProduto extends DialogFragment {
                     binding.btnScannerBack.setVisibility(View.GONE);
                     binding.divider11.setVisibility(View.GONE);
                     binding.switchEstado.setEnabled(false);
-                    binding.btnCancelar.setText(getText(R.string.fechar));
+                    binding.buttonFechar.setText(getText(R.string.fechar));
                 }
 
             }
@@ -179,7 +179,7 @@ public class DialogCriarProduto extends DialogFragment {
         binding.btnCriarProduto.setOnClickListener(v -> createProduto(idcategoria));
         binding.btnSalvarProduto.setOnClickListener(v -> updateProduto(idproduto, idcategoria));
         binding.btnEliminarProduto.setOnClickListener(v -> deleteProduto(produto));
-        binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
+        binding.buttonFechar.setOnClickListener(v -> dialog.dismiss());
 
         Ultilitario.precoFormat(getContext(), binding.txtPrecoProduto);
         Ultilitario.precoFormat(getContext(), binding.txtPrecoProdutoFornecedor);

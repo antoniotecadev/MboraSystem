@@ -74,7 +74,7 @@ public class DialogCriarCategoria extends DialogFragment {
             }
         });
 
-        binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
+        binding.buttonFechar.setOnClickListener(v -> dialog.dismiss());
 
         return dialog;
     }

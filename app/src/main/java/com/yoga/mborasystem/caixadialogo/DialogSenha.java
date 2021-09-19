@@ -82,7 +82,7 @@ public class DialogSenha extends DialogFragment {
             }
         });
 
-        binding.btnCancelar.setOnClickListener(v -> dialog.dismiss());
+        binding.buttonFechar.setOnClickListener(v -> dialog.dismiss());
 
         return dialog;
     }
