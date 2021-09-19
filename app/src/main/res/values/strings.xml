@@ -372,6 +372,7 @@
     <string name="scaner_cod_bar_cancel">Scaneamento de código de barra cancelado</string>
     <string name="telefone">Telefone</string>
     <string name="expo_concl">Exportação concluída</string>
+    <string name="dig_preco">Digite o preço</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

@@ -83,9 +83,9 @@ public class ProdutoViewModel extends AndroidViewModel {
         } else if (isCampoVazio(precofornecedor.getText().toString())) {
             precofornecedor.requestFocus();
             precofornecedor.setError(getApplication().getString(R.string.preco_invalido));
-        } else if (isCampoVazio(preco.getText().toString())) {
+        } else if (isCampoVazio(preco.getText().toString()) || Ultilitario.removerKZ(preco) <= 0) {
             preco.requestFocus();
-            preco.setError(getApplication().getString(R.string.preco_invalido));
+            preco.setError(getApplication().getString(R.string.dig_preco));
         } else if (isCampoVazio(quantidade.getText().toString()) || numero.matcher(quantidade.getText().toString()).find() || quantidade.length() > 4) {
             quantidade.requestFocus();
             quantidade.setError(getApplication().getString(R.string.quantidade_invalida));
