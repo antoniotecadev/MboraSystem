@@ -39,6 +39,18 @@
                 android:visibility="gone"
                 app:backgroundTint="#E53935" />
 
+            <Button
+                android:id="@+id/switchFlashlightButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:text="@string/turn_on_flashlight"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:backgroundTint="#FDD835" />
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

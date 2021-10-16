@@ -162,11 +162,38 @@ public class FacturaFragment extends Fragment {
         barcodeView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
         barcodeView.initializeFromIntent(integrator.createScanIntent());
         barcodeView.decodeContinuous(callback);
+
         beepManager = new BeepManager(requireActivity());
+
+        barcodeView.setTorchListener(new DecoratedBarcodeView.TorchListener() {
+            @Override
+            public void onTorchOn() {
+                binding.switchFlashlightButton.setText(R.string.turn_off_flashlight);
+            }
+
+            @Override
+            public void onTorchOff() {
+                binding.switchFlashlightButton.setText(R.string.turn_on_flashlight);
+            }
+        });
+
+        if (!hasFlash()) {
+            binding.switchFlashlightButton.setVisibility(View.GONE);
+        }
+
+        binding.switchFlashlightButton.setOnClickListener(v -> {
+            if (getString(R.string.turn_on_flashlight).equals(binding.switchFlashlightButton.getText())) {
+                barcodeView.setTorchOn();
+            } else {
+                barcodeView.setTorchOff();
+            }
+        });
 
         binding.buttonFechar.setOnClickListener(v -> {
             binding.viewStub.setVisibility(View.GONE);
             binding.buttonFechar.setVisibility(View.GONE);
+            binding.switchFlashlightButton.setVisibility(View.GONE);
+            barcodeView.setTorchOff();
             barcodeView.pause();
         });
 
@@ -193,7 +220,7 @@ public class FacturaFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             }
-            binding.buttonFechar.setVisibility(View.VISIBLE);
+            visibityButton();
         });
 
         binding.btnClose.setOnClickListener(v -> {
@@ -504,6 +531,16 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private boolean hasFlash() {
+        return getActivity().getApplicationContext().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
+    private void visibityButton() {
+        binding.buttonFechar.setVisibility(View.VISIBLE);
+        binding.switchFlashlightButton.setVisibility(View.VISIBLE);
+    }
+
     private void checkValorFormaPagamento(MaterialCheckBox checkBox, TextInputEditText textInputEditText) {
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -569,7 +606,7 @@ public class FacturaFragment extends Fragment {
 
     private void openCamera() {
         binding.viewStub.setVisibility(View.VISIBLE);
-        binding.buttonFechar.setVisibility(View.VISIBLE);
+        visibityButton();
         barcodeView.resume();
     }
 

@@ -303,7 +303,7 @@
         <fragment
             android:id="@+id/dashboardFragment"
             android:name="com.yoga.mborasystem.view.DashboardFragment"
-            android:label="fragment_dashboard"
+            android:label="@string/dsbd_vd"
             tools:layout="@layout/fragment_dashboard" />
 
     </navigation>
