@@ -229,11 +229,11 @@ public class DashboardFragment extends Fragment {
         produtoViewModel.getPrecoFornecedor().observe(getViewLifecycleOwner(), custos -> {
             totalPrecoFornecedor = custos;
             binding.valCusto.setText(getString(R.string.cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
-            mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#56B7F1")));
+            mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
 
             if (totalVenda > totalPrecoFornecedor) {
                 binding.valLucro.setText(getString(R.string.lc) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda - totalPrecoFornecedor)));
-                mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (totalVenda - totalPrecoFornecedor) / 100, Color.parseColor("#FED70E")));
+                mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (totalVenda - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
             } else {
                 binding.valLucro.setText(getString(R.string.lc) + ": " + (totalVenda - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
             }
@@ -259,7 +259,7 @@ public class DashboardFragment extends Fragment {
         mBarChart.addBar(new BarModel("Set" + " (" + setc + ")", (set / 100), 0xFF2BA4E8));
         mBarChart.addBar(new BarModel("Out" + " (" + outc + ")", (out / 100), 0xFF1BA402));
         mBarChart.addBar(new BarModel("Nov" + " (" + novc + ")", (nov / 100), 0xFF1B69E6));
-        mBarChart.addBar(new BarModel("Dez" + " (" + dezc + ")", (dez / 100), 0xFF1B14E6));
+        mBarChart.addBar(new BarModel("Dez" + " (" + dezc + ")", (dez / 100), 0xFF147856));
     }
 
     private void vendasDiariasMensais(BarChart mBarChart, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9, int v10, int v11, int v12, int v13, int v14, int v15, int v16, int v17, int v18, int v19, int v20, int v21, int v22, int v23, int v24, int v25, int v26, int v27, int v28, int v29, int v30, int v31
