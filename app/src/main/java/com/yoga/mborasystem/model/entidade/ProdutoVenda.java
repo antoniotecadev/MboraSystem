@@ -17,6 +17,7 @@ public class ProdutoVenda {
     private int preco_total;
     private int quantidade;
     private String codigo_Barra;
+    private int preco_fornecedor;
     private boolean iva;
     private long idvenda;
 
@@ -70,5 +71,13 @@ public class ProdutoVenda {
     }
     public void setIdvenda(long idvenda) {
         this.idvenda = idvenda;
+    }
+
+    public int getPreco_fornecedor() {
+        return preco_fornecedor;
+    }
+
+    public void setPreco_fornecedor(int preco_fornecedor) {
+        this.preco_fornecedor = preco_fornecedor;
     }
 }

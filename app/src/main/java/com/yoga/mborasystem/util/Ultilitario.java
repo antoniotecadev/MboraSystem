@@ -299,11 +299,11 @@ public class Ultilitario {
     public static String getDateCurrent() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDateTime date = LocalDateTime.now(ZoneId.systemDefault());
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm:ss", Locale.getDefault());
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MMMM-yyyy-HH:mm:ss", Locale.getDefault());
             dt = date.format(dtf);
         } else {
             Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy-HH:mm:ss", Locale.getDefault());
             dt = sdf.format(date);
         }
         return dt;

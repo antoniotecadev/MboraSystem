@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MboraSystem</string>
+    <string name="app_name">Mbora\nSystem</string>
     <string name="nome_sistema">MboraSystem</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -13,7 +13,6 @@
         <br>A aplicação será bloqueada\n</br>
         por 1 minuto se errar mais 2 vezes
     </string>
-
     <string name="infoAviso2">
         <br>Código PIN incorreto\n</br>
         <br>A aplicação será bloqueada\n</br>
@@ -373,6 +372,16 @@
     <string name="telefone">Telefone</string>
     <string name="expo_concl">Exportação concluída</string>
     <string name="dig_preco">Digite o preço</string>
+    <string name="smt_siff">O somatório da forma de pagamento não pode ser diferente do valor pago.</string>
+    <string name="graf_vend">Gráficos com dados de vendas</string>
+    <string name="cst">Custos</string>
+    <string name="lc">Lucro</string>
+    <string name="qtd_vd">Qtd vendas no ano actual</string>
+    <string name="qtd_pd">Qtd produtos criados</string>
+    <string name="vd_ms">Vendas Mensais</string>
+    <string name="vd_dr_ms">Vendas diárias</string>
+    <string name="d">dia</string>
+    <string name="crd">criados</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

@@ -78,7 +78,7 @@ public class ListaProdutoVendaFragment extends Fragment {
 
                             nomeProduto.setText(produto.getNome_produto());
                             precoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())));
-                            precoProdutoFronecedor.setText("------------");
+                            precoProdutoFronecedor.setText(getString(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_fornecedor())));
                             quantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
                             referenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());
                             codigoQr.setText(getText(R.string.venda) + "Qr: " + produto.getCodigo_Barra());

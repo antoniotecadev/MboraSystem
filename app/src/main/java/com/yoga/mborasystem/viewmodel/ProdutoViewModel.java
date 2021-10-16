@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.reactivex.Completable;
@@ -236,6 +237,14 @@ public class ProdutoViewModel extends AndroidViewModel {
                         Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                     }
                 }));
+    }
+
+    public LiveData<Long> getPrecoFornecedor() {
+       return produtoRepository.getPrecoFornecedor();
+    }
+
+    public LiveData<Long> consultarProdutos() {
+        return produtoRepository.getProdutos();
     }
 
     public void validarProdutoFiltro(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, Switch estadoProd, AlertDialog dialog) {

@@ -74,7 +74,7 @@ public class CriarFactura {
             document.setMargins(10, 5, 0, 0);
             document.open();
             document.addCreationDate();
-            BarcodeQRCode my_qr_code = new BarcodeQRCode(codigoQr, 500, 500, null);
+            BarcodeQRCode my_qr_code = new BarcodeQRCode(codigoQr, 250, 250, null);
             Image qr_code_image = my_qr_code.getImage();
             qr_code_image.setAlignment(Element.ALIGN_CENTER);
 //          BaseFont fontName = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);

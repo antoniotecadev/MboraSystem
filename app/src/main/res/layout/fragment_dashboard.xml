@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.DashboardFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ano"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario" />
+
+            <TextView
+                android:id="@+id/valTotVd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="@color/cor_castanha"
+                android:padding="5dp"
+                android:text="@string/vendas"
+                android:textColor="#FDFCFC"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/valCusto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="@color/cor_castanha"
+                android:padding="5dp"
+                android:text="@string/cst"
+                android:textColor="#FDFCFC"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/valLucro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="@color/cor_castanha"
+                android:padding="5dp"
+                android:text="@string/lc"
+                android:textColor="#FDFCFC"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/qtdVenda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="@color/cor_castanha"
+                android:padding="5dp"
+                android:text="@string/qtd_vd"
+                android:textColor="#FDFCFC"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/qtdProd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="@color/cor_castanha"
+                android:padding="5dp"
+                android:text="@string/qtd_pd"
+                android:textColor="#FDFCFC"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/vend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:text="@string/vendas" />
+
+            <org.eazegraph.lib.charts.PieChart
+                android:id="@+id/start"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:padding="8dp"
+                app:egLegendTextSize="18sp"
+                app:egUsePieRotation="true"
+                app:egValueTextSize="36sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/vendMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:text="@string/vd_ms" />
+
+            <org.eazegraph.lib.charts.BarChart
+                android:id="@+id/barchart"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:padding="10dp"
+                app:egBarWidth="20dp"
+                app:egFixedBarWidth="true"
+                app:egLegendHeight="40dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/vendDiaMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:text="@string/vd_dr_ms" />
+
+            <org.eazegraph.lib.charts.BarChart
+                android:id="@+id/barchart2"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:padding="10dp"
+                app:egBarWidth="20dp"
+                app:egFixedBarWidth="true"
+                app:egLegendHeight="40dp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -149,6 +149,9 @@
                 app:destination="@id/listaClienteFragment"
                 app:enterAnim="@android:anim/fade_in"
                 app:popExitAnim="@android:anim/fade_out" />
+            <action
+                android:id="@+id/action_homeFragment_to_dashboardFragment"
+                app:destination="@id/dashboardFragment" />
         </fragment>
         <fragment
             android:id="@+id/usuarioFragment"
@@ -297,6 +300,11 @@
                 android:id="@+id/action_listaClienteFragment_to_dialog_ClienteCantina"
                 app:destination="@id/dialogCriarClienteCantina" />
         </fragment>
+        <fragment
+            android:id="@+id/dashboardFragment"
+            android:name="com.yoga.mborasystem.view.DashboardFragment"
+            android:label="fragment_dashboard"
+            tools:layout="@layout/fragment_dashboard" />
 
     </navigation>
 

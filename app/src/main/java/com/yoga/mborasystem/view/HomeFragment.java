@@ -76,6 +76,10 @@ public class HomeFragment extends Fragment {
             MainActivity.getProgressBar();
             Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_listaClienteFragment);
         });
+        binding.btnDashboard.setOnClickListener(v -> {
+            MainActivity.getProgressBar();
+            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
+        });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
