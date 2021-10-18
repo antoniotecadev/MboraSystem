@@ -615,11 +615,19 @@ public class FacturaFragment extends Fragment {
         CharSequence cartaoMulticaixa = binding.checkboxCartaoMulticaixa.isChecked() ? (binding.checkboxCartaoMulticaixa.getText() + " = " + binding.cartaoValorPago.getText()) : "";
         CharSequence depositoBancario = binding.checkboxDepositoBancario.isChecked() ? (binding.checkboxDepositoBancario.getText() + " = " + binding.depValorPago.getText()) : "";
         CharSequence transferenciaBancario = binding.checkboxTransferenciaBancario.isChecked() ? (binding.checkboxTransferenciaBancario.getText() + " = " + binding.transfValorPago.getText()) : "";
-        return dinheiro + " " + cartaoMulticaixa + " " + depositoBancario + " " + transferenciaBancario;
+        if (binding.checkboxSemValorPago.isChecked()) {
+            return getString(R.string.se_val_pag);
+        } else {
+            return dinheiro + " " + cartaoMulticaixa + " " + depositoBancario + " " + transferenciaBancario;
+        }
     }
 
     private boolean isCheckedFormaPagamento() {
-        return binding.checkboxDinheiro.isChecked() || binding.checkboxCartaoMulticaixa.isChecked() || binding.checkboxDepositoBancario.isChecked() || binding.checkboxTransferenciaBancario.isChecked();
+        if (binding.checkboxSemValorPago.isChecked()) {
+            return true;
+        } else {
+            return binding.checkboxDinheiro.isChecked() || binding.checkboxCartaoMulticaixa.isChecked() || binding.checkboxDepositoBancario.isChecked() || binding.checkboxTransferenciaBancario.isChecked();
+        }
     }
 
     private String getCodigoDeBarra() {
