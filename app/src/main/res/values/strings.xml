@@ -348,7 +348,7 @@
     <string name="ver_prod">Ver produto(s)</string>
     <string name="liq_div">Liquidar dívida</string>
     <string name="elim_vend">Eliminar venda</string>
-    <string name="enc_div_vend">Deseja encerrar a dívida desta venda?</string>
+    <string name="enc_div_vend">Com quanto deseja liquidar a dívida ?</string>
     <string name="cert_elim_vend">Tem a certeza que quer eliminar esta venda?</string>
     <string name="div_n_liq">Dívida não liquidada</string>
     <string name="div_liq">Dívida liquidada</string>
@@ -384,6 +384,8 @@
     <string name="crd">criados</string>
     <string name="dsbd_vd">Dashboard de vendas</string>
     <string name="lg_flash">Ligar flash</string>
+    <string name="vl_inv">Valor para liquidar a dívida inválido.</string>
+    <string name="vl_n_sp">O valor para liquidar não pode ser maior que a dívida.</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

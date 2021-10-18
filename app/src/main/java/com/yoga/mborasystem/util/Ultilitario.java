@@ -76,7 +76,7 @@ public class Ultilitario {
     public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");
     public static Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç0-9\n ]");
     public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4, EXPORTAR_VENDA = 5, IMPORTAR_VENDA = 6;
-    public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, SINCO = 5, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 5;
+    public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, SINCO = 5, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 10;
 
     public Ultilitario() {
     }

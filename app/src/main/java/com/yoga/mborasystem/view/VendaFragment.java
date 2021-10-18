@@ -15,11 +15,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
@@ -232,17 +234,43 @@ public class VendaFragment extends Fragment {
         }
 
         private void caixaDialogo(int titulo, int mensagem, boolean isliquidar) {
-            new AlertDialog.Builder(getContext())
-                    .setTitle(getString(titulo))
-                    .setMessage(getString(mensagem))
-                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                        MainActivity.getProgressBar();
-                        if (isliquidar) {
-                            vendaViewModel.liquidarDivida(Ultilitario.ZERO, venda.getId());
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+            alert.setTitle(getString(titulo));
+            alert.setMessage(getString(mensagem));
+
+            FrameLayout layout = new FrameLayout(getContext());
+            layout.setPadding(45, 0, 45, 0);
+            final TextInputEditText editText = new TextInputEditText(getContext());
+            editText.setHint(getString(R.string.valor_kwanza));
+            editText.setMaxLines(1);
+            Ultilitario.precoFormat(getContext(), editText);
+            editText.setText(String.valueOf(venda.getDivida()));
+
+            layout.addView(editText);
+
+            if (isliquidar) {
+                alert.setView(layout);
+            }
+            alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                MainActivity.getProgressBar();
+                if (isliquidar) {
+                    if (editText.length() < 15) {
+                        if (venda.getDivida() >= Ultilitario.removerKZ(editText)) {
+                            vendaViewModel.liquidarDivida(venda.getDivida() - Ultilitario.removerKZ(editText), venda.getId());
                         } else {
-                            vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda.getId());
+                            MainActivity.dismissProgressBar();
+                            Ultilitario.showToast(getContext(), Color.RED, getString(R.string.vl_n_sp), R.drawable.ic_toast_erro);
                         }
-                    }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    } else {
+                        Ultilitario.showToast(getContext(), Color.RED, getString(R.string.vl_inv), R.drawable.ic_toast_erro);
+                        divida.setError(getString(R.string.vl_inv));
+                        MainActivity.dismissProgressBar();
+                    }
+                } else {
+                    vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda.getId());
+                }
+            }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
         }
     }
