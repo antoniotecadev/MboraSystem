@@ -1,19 +1,1 @@
-package com.yoga.mborasystem.model.dao;
-
-import com.yoga.mborasystem.model.entidade.Cliente;
-
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-import io.reactivex.Single;
-
-@Dao
-public interface ClienteDao {
-
-    @Insert
-    void insert(Cliente cliente);
-
-    @Query("SELECT * FROM cliente")
-    Single<Cliente> clienteExiste();
-
-}
+package com.yoga.mborasystem.model.dao;import com.yoga.mborasystem.model.entidade.Cliente;import androidx.room.Dao;import androidx.room.Insert;import androidx.room.Query;import io.reactivex.Single;@Daopublic interface ClienteDao {    @Insert    void insert(Cliente cliente);    @Query("SELECT * FROM cliente")    Single<Cliente> clienteExiste();}
