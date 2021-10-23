@@ -7,7 +7,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "vendas", indices = {@Index(value = {"codigo_qr", "data_cria"})})
+@Entity(tableName = "vendas", indices = {@Index(value = {"codigo_qr", "data_cria", "idclicant", "idoperador"})})
 public class Venda implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)

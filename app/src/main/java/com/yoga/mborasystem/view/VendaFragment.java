@@ -20,6 +20,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -57,10 +58,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class VendaFragment extends Fragment {
 
-    private boolean isLocal;
+    private long idcliente;
     private String data = "";
-    private StringBuilder dataBuilder;
     private GroupAdapter adapter;
+    private StringBuilder dataBuilder;
+    private boolean isLocal, isDivida;
     private VendaViewModel vendaViewModel;
     private FragmentVendaListBinding binding;
 
@@ -71,6 +73,8 @@ public class VendaFragment extends Fragment {
         adapter = new GroupAdapter();
         dataBuilder = new StringBuilder();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
+        long idcliente = VendaFragmentArgs.fromBundle(getArguments()).getIdcliente();
+        this.idcliente = idcliente;
     }
 
     @Override
@@ -81,12 +85,32 @@ public class VendaFragment extends Fragment {
 
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
             MainActivity.getProgressBar();
-            vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
+            vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false);
+        });
+
+        binding.bottomNav.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.tdsVd:
+                        isDivida = false;
+                        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.tds_vd), R.drawable.ic_toast_feito);
+                        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false);
+                        break;
+                    case R.id.vdDvd:
+                        isDivida = true;
+                        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vd_dvd), R.drawable.ic_toast_feito);
+                        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, true);
+                        break;
+                    default:
+                        break;
+                }
+            }
         });
 
         binding.recyclerViewListaVenda.setAdapter(adapter);
         binding.recyclerViewListaVenda.setLayoutManager(new LinearLayoutManager(getContext()));
-        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
+        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false);
         vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
             binding.chipQuantVenda.setText(String.valueOf(vendas.size()));
             adapter.clear();
@@ -294,7 +318,7 @@ public class VendaFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
+                vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida);
                 return true;
             }
         });
@@ -308,9 +332,9 @@ public class VendaFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout);
+                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida);
                 } else {
-                    vendaViewModel.searchVendas(newText);
+                    vendaViewModel.searchVendas(newText, idcliente);
                 }
                 return false;
             }
@@ -373,7 +397,7 @@ public class VendaFragment extends Fragment {
                 if (result.getContents() == null) {
                     Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
                 } else {
-                    vendaViewModel.searchVendas(result.getContents());
+                    vendaViewModel.searchVendas(result.getContents(), idcliente);
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, resultData);

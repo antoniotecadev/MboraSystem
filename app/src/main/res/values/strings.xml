@@ -386,6 +386,8 @@
     <string name="lg_flash">Ligar flash</string>
     <string name="vl_inv">Valor para liquidar a dívida inválido.</string>
     <string name="vl_n_sp">O valor para liquidar não pode ser maior que a dívida.</string>
+    <string name="tds_vd">Todas vendas</string>
+    <string name="vd_dvd">Vendas com dívida</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:viewBindingIgnore="true">
 
-    <item
-        android:id="@+id/dialogCriarUsuario"
-        android:icon="@drawable/ic_add_usuario"
-        android:title="@string/criar_usuario"
-        app:showAsAction="ifRoom" />
+  <item
+      android:id="@+id/dialogCriarUsuario"
+      android:icon="@drawable/ic_add_usuario"
+      android:title="@string/criar_usuario"
+      app:showAsAction="ifRoom" />
 </menu>

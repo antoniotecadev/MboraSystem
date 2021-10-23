@@ -32,8 +32,13 @@
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/fragment_venda_list.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/progress_dialogo_view.xml" value="0.15" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout/toast_layout.xml" value="0.18802083333333333" />
-        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_cliente.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_bloquear.xml" value="0.11481481481481481" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_bottom_venda.xml" value="0.18802083333333333" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_cliente.xml" value="0.15" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_criar_usuario.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_factura.xml" value="0.11481481481481481" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_feito.xml" value="0.11481481481481481" />
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_home_ferramenta.xml" value="0.11481481481481481" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_pesquisa_criar_produto.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_pesquisar_criar_categoria.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_venda.xml" value="0.22" />

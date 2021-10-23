@@ -29,16 +29,16 @@ public class VendaRepository {
         vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
     }
 
-    public Flowable<List<Venda>> getVendas() {
-        return vendaDao.getVendas();
+    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida) {
+        return vendaDao.getVendas(idcliente, isdivida);
     }
 
     public Flowable<List<Venda>> getVendasPorData(String data) {
         return vendaDao.getVendas(data);
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr) {
-        return vendaDao.getSearchVendas(codQr);
+    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente) {
+        return vendaDao.getSearchVendas(codQr, idcliente);
     }
 
     public void importarVendas(List<String> vendas) {

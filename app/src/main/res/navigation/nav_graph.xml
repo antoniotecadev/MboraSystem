@@ -252,6 +252,10 @@
                 app:destination="@id/listaProdutoVendaFragment"
                 app:enterAnim="@android:anim/fade_in"
                 app:popExitAnim="@android:anim/fade_out" />
+            <argument
+                android:name="idcliente"
+                app:argType="long"
+                android:defaultValue="0L" />
         </fragment>
         <dialog
             android:id="@+id/datePickerFragment"
@@ -299,6 +303,11 @@
             <action
                 android:id="@+id/action_listaClienteFragment_to_dialog_ClienteCantina"
                 app:destination="@id/dialogCriarClienteCantina" />
+            <action
+                android:id="@+id/action_listaClienteFragment_to_vendaFragment"
+                app:destination="@id/vendaFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
         </fragment>
         <fragment
             android:id="@+id/dashboardFragment"

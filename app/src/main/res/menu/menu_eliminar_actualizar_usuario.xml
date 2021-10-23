@@ -2,14 +2,14 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/actualizarUsuario"
-        android:icon="@drawable/ic_guardar"
-        android:title="@string/alterar_usuario"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/eliminarUsuario"
-        android:icon="@drawable/ic_eliminar"
-        android:title="@string/eliminar_usuario"
-        app:showAsAction="ifRoom" />
+  <item
+      android:id="@+id/actualizarUsuario"
+      android:icon="@drawable/ic_guardar"
+      android:title="@string/alterar_usuario"
+      app:showAsAction="ifRoom" />
+  <item
+      android:id="@+id/eliminarUsuario"
+      android:icon="@drawable/ic_eliminar"
+      android:title="@string/eliminar_usuario"
+      app:showAsAction="ifRoom" />
 </menu>

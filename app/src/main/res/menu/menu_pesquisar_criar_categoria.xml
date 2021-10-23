@@ -2,46 +2,46 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/app_bar_search"
-        android:icon="@drawable/ic_search_black_24dp"
-        android:title="@string/pesquisar_categoria"
-        app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView" />
-    <item
-        android:id="@+id/dialogCriarCategoria"
-        android:icon="@drawable/ic_baseline_create_new_folder_24"
-        android:title="@string/criar_categoria"
-        app:showAsAction="ifRoom|collapseActionView" />
+  <item
+      android:id="@+id/app_bar_search"
+      android:icon="@drawable/ic_search_black_24dp"
+      android:title="@string/pesquisar_categoria"
+      app:actionViewClass="android.widget.SearchView"
+      app:showAsAction="ifRoom|collapseActionView" />
+  <item
+      android:id="@+id/dialogCriarCategoria"
+      android:icon="@drawable/ic_baseline_create_new_folder_24"
+      android:title="@string/criar_categoria"
+      app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
-        android:title="@string/exportar_importar_produto"
-        app:showAsAction="never">
-        <menu>
-            <item
-                android:id="@+id/exportarproduto"
-                android:icon="@drawable/ic_baseline_file_copy_24"
-                android:title="@string/exportar_produto" />
-            <item
-                android:id="@+id/importarproduto"
-                android:icon="@drawable/ic_baseline_insert_drive_file_24"
-                android:title="@string/importar_produto" />
-        </menu>
-    </item>
+  <item
+      android:title="@string/exportar_importar_produto"
+      app:showAsAction="never">
+    <menu>
+      <item
+          android:id="@+id/exportarproduto"
+          android:icon="@drawable/ic_baseline_file_copy_24"
+          android:title="@string/exportar_produto" />
+      <item
+          android:id="@+id/importarproduto"
+          android:icon="@drawable/ic_baseline_insert_drive_file_24"
+          android:title="@string/importar_produto" />
+    </menu>
+  </item>
 
-    <item
-        android:title="@string/exportar_importar_categoria"
-        app:showAsAction="never">
-        <menu>
-            <item
-                android:id="@+id/exportarcategoria"
-                android:icon="@drawable/ic_baseline_file_copy_24"
-                android:title="@string/exportar_categoria" />
-            <item
-                android:id="@+id/importarcategoria"
-                android:icon="@drawable/ic_baseline_insert_drive_file_24"
-                android:title="@string/importar_categoria" />
-        </menu>
-    </item>
+  <item
+      android:title="@string/exportar_importar_categoria"
+      app:showAsAction="never">
+    <menu>
+      <item
+          android:id="@+id/exportarcategoria"
+          android:icon="@drawable/ic_baseline_file_copy_24"
+          android:title="@string/exportar_categoria" />
+      <item
+          android:id="@+id/importarcategoria"
+          android:icon="@drawable/ic_baseline_insert_drive_file_24"
+          android:title="@string/importar_categoria" />
+    </menu>
+  </item>
 
 </menu>

@@ -56,7 +56,7 @@ public class DashboardFragment extends Fragment {
         binding.vendMes.setText(getString(R.string.vd_ms) + " - " + dataActual[2]);
         binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1]);
 
-        vendaViewModel.consultarVendas(null);
+        vendaViewModel.consultarVendas(null,0, false);
         vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
             if (vendas.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.venda_nao_encontrada), Toast.LENGTH_LONG).show();

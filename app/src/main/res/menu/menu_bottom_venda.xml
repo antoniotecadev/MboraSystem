@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tdsVd"
+        android:icon="?attr/actionModeSelectAllDrawable"
+        android:title="@string/tds_vd" />
+    <item
+        android:id="@+id/vdDvd"
+        android:icon="@drawable/ic_baseline_dry_24"
+        android:title="@string/vd_dvd" />
+</menu>

@@ -86,8 +86,10 @@ public class ListaClienteFragment extends Fragment {
                             viewHolder.itemView.setOnClickListener(v -> {
                                 MainActivity.getProgressBar();
                                 v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-                                ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
-                                Navigation.findNavController(getView()).navigate(direction);
+
+                                  ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId());
+                                  Navigation.findNavController(getView()).navigate(direction);
+
                                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                     v.setBackgroundColor(Color.parseColor("#FFFFFF"));
                                 }, 1000);

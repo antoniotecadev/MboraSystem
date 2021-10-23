@@ -23,11 +23,26 @@ public abstract class VendaDao {
     @Insert
     abstract void insert(ProdutoVenda produtoVenda);
 
+    @Query("SELECT * FROM vendas WHERE estado = 4 ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaVazia();
+
     @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVenda();
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaDiv();
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVenda(long idcliente);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0  ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaCliDiv(long idcliente);
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :codQr || '%'")
     abstract Flowable<List<Venda>> searchVenda(String codQr);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :codQr || '%' AND idclicant = :idcliente")
+    abstract Flowable<List<Venda>> searchVenda(String codQr, long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :codQr || '%'")
     abstract Flowable<List<Venda>> getVenda(String codQr);
@@ -60,16 +75,29 @@ public abstract class VendaDao {
         }
     }
 
-    public Flowable<List<Venda>> getVendas() {
-        return getVenda();
+    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida) {
+        if (idcliente == 0 && !isdivida) {
+            return getVenda();
+        } else if (idcliente > 0 && !isdivida) {
+            return getVenda(idcliente);
+        } else if (idcliente == 0 && isdivida) {
+            return getVendaDiv();
+        } else if (idcliente > 0 && isdivida) {
+            return getVendaCliDiv(idcliente);
+        }
+        return getVendaVazia();
     }
 
     public Flowable<List<Venda>> getVendas(String data) {
         return getVenda(data);
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr) {
-        return searchVenda(codQr);
+    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente) {
+        if (idcliente == 0) {
+            return searchVenda(codQr);
+        } else {
+            return searchVenda(codQr, idcliente);
+        }
     }
 
     @Transaction

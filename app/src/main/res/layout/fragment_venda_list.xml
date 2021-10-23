@@ -17,16 +17,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewListaVenda"
-        android:name="com.yoga.mborasystem.view.VendaFragment"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".view.VendaFragment"
-        tools:listitem="@layout/fragment_venda"/>
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewListaVenda"
+            android:name="com.yoga.mborasystem.view.VendaFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_nav"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".view.VendaFragment"
+            tools:listitem="@layout/fragment_venda"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@color/cor_castanha"
+            app:itemTextColor="@color/white"
+            app:menu="@menu/menu_bottom_venda" />
+
+    </RelativeLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_quant_venda"
