@@ -75,6 +75,11 @@ public class VendaFragment extends Fragment {
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         long idcliente = VendaFragmentArgs.fromBundle(getArguments()).getIdcliente();
         this.idcliente = idcliente;
+        if (idcliente > 0) {
+            getActivity().setTitle(getString(R.string.vds) + "(Cli)");
+        } else {
+            getActivity().setTitle(getString(R.string.vds));
+        }
     }
 
     @Override
@@ -91,16 +96,16 @@ public class VendaFragment extends Fragment {
         binding.bottomNav.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
             @Override
             public void onNavigationItemReselected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.tdsVd:
                         isDivida = false;
-                        getActivity().setTitle(getString(R.string.vds));
+                        getActivity().setTitle(getString(R.string.vds) + "(Cli)");
                         Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.tds_vd), R.drawable.ic_toast_feito);
                         vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false);
                         break;
                     case R.id.vdDvd:
                         isDivida = true;
-                        getActivity().setTitle(getString(R.string.dvd));
+                        getActivity().setTitle(getString(R.string.dvd) + "(Cli)");
                         Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vd_dvd), R.drawable.ic_toast_feito);
                         vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, true);
                         break;
