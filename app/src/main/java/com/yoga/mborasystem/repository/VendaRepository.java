@@ -37,8 +37,8 @@ public class VendaRepository {
         return vendaDao.getVendas(data, idcliente, isDivida);
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida) {
-        return vendaDao.getSearchVendas(codQr, idcliente, isDivida);
+    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario) {
+        return vendaDao.getSearchVendas(codQr, idcliente, isDivida, idusuario);
     }
 
     public void importarVendas(List<String> vendas) {

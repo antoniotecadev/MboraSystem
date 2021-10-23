@@ -77,9 +77,14 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaUsuario(long idusuario);
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND codigo_qr LIKE '%' || :codQr || '%' ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaUsuario(String codQr, long idusuario);
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0  ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaDivUsuario(long idusuario);
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%' ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaDivUsuario(String codQr, long idusuario);
 
 
     @Transaction
@@ -130,15 +135,21 @@ public abstract class VendaDao {
         return getVendaVazia();
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida) {
-        if (idcliente == 0 && !isDivida) {
-            return searchVenda(codQr);
-        } else if (idcliente > 0 && !isDivida) {
-            return searchVenda(codQr, idcliente);
-        } else if (idcliente == 0 && isDivida) {
-            return searchVendaDiv(codQr);
-        } else if (idcliente > 0 && isDivida) {
-            return searchVendaCliDiv(codQr, idcliente);
+    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario) {
+        if (idusuario == 0) {
+            if (idcliente == 0 && !isDivida) {
+                return searchVenda(codQr);
+            } else if (idcliente > 0 && !isDivida) {
+                return searchVenda(codQr, idcliente);
+            } else if (idcliente == 0 && isDivida) {
+                return searchVendaDiv(codQr);
+            } else if (idcliente > 0 && isDivida) {
+                return searchVendaCliDiv(codQr, idcliente);
+            }
+        } else if (isDivida) {
+            return getVendaDivUsuario(codQr, idusuario);
+        } else {
+            return getVendaUsuario(codQr, idusuario);
         }
         return getVendaVazia();
     }

@@ -359,7 +359,7 @@ public class VendaFragment extends Fragment {
                 if (newText.isEmpty()) {
                     vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida, idusuario);
                 } else {
-                    vendaViewModel.searchVendas(newText, idcliente, isDivida);
+                    vendaViewModel.searchVendas(newText, idcliente, isDivida, idusuario);
                 }
                 return false;
             }
@@ -424,7 +424,7 @@ public class VendaFragment extends Fragment {
                 if (result.getContents() == null) {
                     Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
                 } else {
-                    vendaViewModel.searchVendas(result.getContents(), idcliente, isDivida);
+                    vendaViewModel.searchVendas(result.getContents(), idcliente, isDivida, idusuario);
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, resultData);
