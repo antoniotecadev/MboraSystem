@@ -96,7 +96,7 @@ public class VendaFragment extends Fragment {
 
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
             MainActivity.getProgressBar();
-            vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false, idusuario);
+            vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida, idusuario);
         });
 
         binding.bottomNav.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
