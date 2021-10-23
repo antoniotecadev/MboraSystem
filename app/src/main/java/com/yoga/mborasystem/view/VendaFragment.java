@@ -106,7 +106,7 @@ public class VendaFragment extends Fragment {
                     case R.id.tdsVd:
                         isDivida = false;
                         if (idcliente > 0) {
-                            getActivity().setTitle(getString(R.string.vds) + "(Cli)");
+                            getActivity().setTitle(nomeCliente);
                         } else if (idusuario > 0) {
                             getActivity().setTitle(nomeUsuario);
                         } else {
