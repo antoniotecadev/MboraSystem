@@ -110,7 +110,8 @@ public class ListaClienteFragment extends Fragment {
                                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                                     menu.setHeaderTitle(cliente.getNome());
                                     menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
-
+                                        ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId());
+                                        Navigation.findNavController(getView()).navigate(direction);
                                         return false;
                                     });//groupId, itemId, order, title
                                     menu.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
