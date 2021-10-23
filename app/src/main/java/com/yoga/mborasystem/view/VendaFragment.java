@@ -170,10 +170,10 @@ public class VendaFragment extends Fragment {
             } else {
                 if (aBoolean) {
                     isLocal = true;
-                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida);
+                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida, idusuario);
                 } else if (!aBoolean) {
                     isLocal = false;
-                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida);
+                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida, idusuario);
                 }
 
             }
@@ -374,7 +374,7 @@ public class VendaFragment extends Fragment {
                 scanearCodigoQr(0);
                 break;
             case R.id.btnData:
-                VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment().setIdcliente(idcliente).setIsDivida(isDivida);
+                VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
                 Navigation.findNavController(getView()).navigate(direction);
                 break;
             case R.id.exportarvenda:
@@ -392,7 +392,7 @@ public class VendaFragment extends Fragment {
     }
 
     private void exportarVenda() {
-        VendaFragmentDirections.ActionVendaFragmentToDialogExportarImportarVenda direction = VendaFragmentDirections.actionVendaFragmentToDialogExportarImportarVenda().setIdcliente(idcliente).setIsDivida(isDivida);
+        VendaFragmentDirections.ActionVendaFragmentToDialogExportarImportarVenda direction = VendaFragmentDirections.actionVendaFragmentToDialogExportarImportarVenda().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
         Navigation.findNavController(getView()).navigate(direction);
     }
 

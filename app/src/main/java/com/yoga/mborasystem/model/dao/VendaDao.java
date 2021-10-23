@@ -77,11 +77,17 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaUsuario(long idusuario);
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaDataUsuario(String data, long idusuario);
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND codigo_qr LIKE '%' || :codQr || '%' ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaUsuario(String codQr, long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0  ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaDivUsuario(long idusuario);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaDataDivUsuario(String data, long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%' ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaDivUsuario(String codQr, long idusuario);
@@ -122,15 +128,21 @@ public abstract class VendaDao {
         return getVendaVazia();
     }
 
-    public Flowable<List<Venda>> getVendas(String data, long idcliente, boolean isDivida) {
-        if (idcliente == 0 && !isDivida) {
-            return getVenda(data);
-        } else if (idcliente > 0 && !isDivida) {
-            return getVenda(data, idcliente);
-        } else if (idcliente == 0 && isDivida) {
-            return getVendaDataDiv(data);
-        } else if (idcliente > 0 && isDivida) {
-            return getVendaDataCliDiv(data, idcliente);
+    public Flowable<List<Venda>> getVendas(String data, long idcliente, boolean isDivida, long idusuario) {
+        if (idusuario == 0) {
+            if (idcliente == 0 && !isDivida) {
+                return getVenda(data);
+            } else if (idcliente > 0 && !isDivida) {
+                return getVenda(data, idcliente);
+            } else if (idcliente == 0 && isDivida) {
+                return getVendaDataDiv(data);
+            } else if (idcliente > 0 && isDivida) {
+                return getVendaDataCliDiv(data, idcliente);
+            }
+        } else if (isDivida) {
+            return getVendaDataDivUsuario(data, idusuario);
+        } else {
+            return getVendaDataUsuario(data, idusuario);
         }
         return getVendaVazia();
     }

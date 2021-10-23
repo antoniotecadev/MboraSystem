@@ -33,8 +33,8 @@ public class VendaRepository {
         return vendaDao.getVendas(idcliente, isdivida, idusuario);
     }
 
-    public Flowable<List<Venda>> getVendasPorData(String data, long idcliente, boolean isDivida) {
-        return vendaDao.getVendas(data, idcliente, isDivida);
+    public Flowable<List<Venda>> getVendasPorData(String data, long idcliente, boolean isDivida, long idusuario) {
+        return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
     }
 
     public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario) {

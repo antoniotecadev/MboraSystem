@@ -234,8 +234,8 @@ public class VendaViewModel extends AndroidViewModel {
                 }));
     }
 
-    public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida) {
-        compositeDisposable.add(vendaRepository.getVendasPorData(data, idcliente, isDivida)
+    public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida, long idusuario) {
+        compositeDisposable.add(vendaRepository.getVendasPorData(data, idcliente, isDivida, idusuario)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> {

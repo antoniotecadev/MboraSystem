@@ -284,6 +284,10 @@
                 android:name="isDivida"
                 app:argType="boolean"
                 android:defaultValue="false" />
+            <argument
+                android:name="idusuario"
+                app:argType="long"
+                android:defaultValue="0L" />
         </dialog>
         <dialog
             android:id="@+id/dialogExportarImportarVenda"
@@ -301,6 +305,10 @@
                 android:name="isDivida"
                 app:argType="boolean"
                 android:defaultValue="false" />
+            <argument
+                android:name="idusuario"
+                app:argType="long"
+                android:defaultValue="0L" />
         </dialog>
         <dialog
             android:id="@+id/datePickerExpImp2"

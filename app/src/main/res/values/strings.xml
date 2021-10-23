@@ -392,6 +392,8 @@
     <string name="exp_tds_vd_cli">Exportar todas as vendas do cliente seleccionado.</string>
     <string name="exp_tds_vd_dvd">Exportar todas as vendas com dívida.</string>
     <string name="exp_tds_vd_dvd_cli">Exportar todas as vendas com dívida do cliente seleccionado.</string>
+    <string name="exp_tds_vd_dvd_use">Exportar todas as vendas do usuário com dívida.</string>
+    <string name="exp_tds_vd_use">Exportar todas as vendas do usuário seleccionado.</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

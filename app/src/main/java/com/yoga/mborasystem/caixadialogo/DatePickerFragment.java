@@ -43,10 +43,11 @@ public class DatePickerFragment extends DialogFragment
 
         long idcliente = DatePickerFragmentArgs.fromBundle(getArguments()).getIdcliente();
         boolean isDivida = DatePickerFragmentArgs.fromBundle(getArguments()).getIsDivida();
+        long idusuario = DatePickerFragmentArgs.fromBundle(getArguments()).getIdusuario();
 
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
         Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
-        vendaViewModel.getVendasPorData(data, false, idcliente, isDivida);
+        vendaViewModel.getVendasPorData(data, false, idcliente, isDivida, idusuario);
     }
 
 }

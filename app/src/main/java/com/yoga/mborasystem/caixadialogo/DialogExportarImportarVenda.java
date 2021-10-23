@@ -29,18 +29,25 @@ public class DialogExportarImportarVenda extends DialogFragment {
         binding = DialogExportarImportarVendaBinding.inflate(LayoutInflater.from(getContext()));
 
         long idcliente = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIdcliente();
+        long idusuario = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIdusuario();
         boolean isDivida = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIsDivida();
 
         builder = new AlertDialog.Builder(getActivity());
 
-        if (idcliente == 0 && !isDivida) {
-            builder.setTitle(getString(R.string.exp_tds_vd));
-        } else if (idcliente > 0 && !isDivida) {
-            builder.setTitle(getString(R.string.exp_tds_vd_cli));
-        } else if (idcliente == 0 && isDivida) {
-            builder.setTitle(getString(R.string.exp_tds_vd_dvd));
-        } else if (idcliente > 0 && isDivida) {
-            builder.setTitle(getString(R.string.exp_tds_vd_dvd_cli));
+        if (idusuario == 0) {
+            if (idcliente == 0 && !isDivida) {
+                builder.setTitle(getString(R.string.exp_tds_vd));
+            } else if (idcliente > 0 && !isDivida) {
+                builder.setTitle(getString(R.string.exp_tds_vd_cli));
+            } else if (idcliente == 0 && isDivida) {
+                builder.setTitle(getString(R.string.exp_tds_vd_dvd));
+            } else if (idcliente > 0 && isDivida) {
+                builder.setTitle(getString(R.string.exp_tds_vd_dvd_cli));
+            }
+        } else if (isDivida) {
+            builder.setTitle(getString(R.string.exp_tds_vd_dvd_use));
+        } else {
+            builder.setTitle(getString(R.string.exp_tds_vd_use));
         }
 
         builder.setView(binding.getRoot());
