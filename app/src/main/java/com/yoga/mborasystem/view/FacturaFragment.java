@@ -521,8 +521,16 @@ public class FacturaFragment extends Fragment {
                 binding.textValorDivida.setEnabled(false);
                 binding.textValorDivida.setText(Ultilitario.formatPreco("0"));
                 binding.btnEfectuarVenda.setEnabled(false);
+                binding.checkboxDinheiro.setChecked(false);
+                binding.checkboxCartaoMulticaixa.setChecked(false);
+                binding.checkboxDepositoBancario.setChecked(false);
+                binding.checkboxTransferenciaBancario.setChecked(false);
                 Ultilitario.zerarPreco(binding.textDesconto);
                 Ultilitario.zerarPreco(binding.textValorPago);
+                Ultilitario.zerarPreco(binding.dinheiroValorPago);
+                Ultilitario.zerarPreco(binding.cartaoValorPago);
+                Ultilitario.zerarPreco(binding.depValorPago);
+                Ultilitario.zerarPreco(binding.transfValorPago);
                 produtoViewModel.consultarProdutos(idc, false, null);
                 alertDialog.dismiss();
             }
