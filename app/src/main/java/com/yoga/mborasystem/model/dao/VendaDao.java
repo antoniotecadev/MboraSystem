@@ -41,8 +41,14 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :codQr || '%'")
     abstract Flowable<List<Venda>> searchVenda(String codQr);
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%'")
+    abstract Flowable<List<Venda>> searchVendaDiv(String codQr);
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :codQr || '%' AND idclicant = :idcliente")
     abstract Flowable<List<Venda>> searchVenda(String codQr, long idcliente);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%' AND idclicant = :idcliente")
+    abstract Flowable<List<Venda>> searchVendaCliDiv(String codQr, long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :codQr || '%'")
     abstract Flowable<List<Venda>> getVenda(String codQr);
@@ -92,12 +98,17 @@ public abstract class VendaDao {
         return getVenda(data);
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente) {
-        if (idcliente == 0) {
+    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida) {
+        if (idcliente == 0 && !isDivida) {
             return searchVenda(codQr);
-        } else {
+        } else if (idcliente > 0 && !isDivida) {
             return searchVenda(codQr, idcliente);
+        } else if (idcliente == 0 && isDivida) {
+            return searchVendaDiv(codQr);
+        } else if (idcliente > 0 && isDivida) {
+            return searchVendaCliDiv(codQr, idcliente);
         }
+        return getVendaVazia();
     }
 
     @Transaction

@@ -94,11 +94,13 @@ public class VendaFragment extends Fragment {
                 switch (item.getItemId()){
                     case R.id.tdsVd:
                         isDivida = false;
+                        getActivity().setTitle(getString(R.string.vds));
                         Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.tds_vd), R.drawable.ic_toast_feito);
                         vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false);
                         break;
                     case R.id.vdDvd:
                         isDivida = true;
+                        getActivity().setTitle(getString(R.string.dvd));
                         Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vd_dvd), R.drawable.ic_toast_feito);
                         vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, true);
                         break;
@@ -334,7 +336,7 @@ public class VendaFragment extends Fragment {
                 if (newText.isEmpty()) {
                     vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida);
                 } else {
-                    vendaViewModel.searchVendas(newText, idcliente);
+                    vendaViewModel.searchVendas(newText, idcliente, isDivida);
                 }
                 return false;
             }
@@ -397,7 +399,7 @@ public class VendaFragment extends Fragment {
                 if (result.getContents() == null) {
                     Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
                 } else {
-                    vendaViewModel.searchVendas(result.getContents(), idcliente);
+                    vendaViewModel.searchVendas(result.getContents(), idcliente, isDivida);
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, resultData);

@@ -222,8 +222,8 @@ public class VendaViewModel extends AndroidViewModel {
                 }));
     }
 
-    public void searchVendas(String codQr, long idcliente) {
-        compositeDisposable.add(vendaRepository.getSearchVendas(codQr, idcliente)
+    public void searchVendas(String codQr, long idcliente, boolean isDivida) {
+        compositeDisposable.add(vendaRepository.getSearchVendas(codQr, idcliente, isDivida)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> {
