@@ -180,6 +180,7 @@ public class UsuarioViewModel extends AndroidViewModel {
 
                     @Override
                     public void onSuccess(@io.reactivex.annotations.NonNull Usuario usuario) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.codigopin_invalido), R.drawable.ic_toast_erro);
                     }
 
