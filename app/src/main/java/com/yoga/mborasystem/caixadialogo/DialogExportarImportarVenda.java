@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
+import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogExportarImportarVendaBinding;
 import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
@@ -26,7 +27,21 @@ public class DialogExportarImportarVenda extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         binding = DialogExportarImportarVendaBinding.inflate(LayoutInflater.from(getContext()));
+
+        long idcliente = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIdcliente();
+        boolean isDivida = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIsDivida();
+
         builder = new AlertDialog.Builder(getActivity());
+
+        if (idcliente == 0 && !isDivida) {
+            builder.setTitle(getString(R.string.exp_tds_vd));
+        } else if (idcliente > 0 && !isDivida) {
+            builder.setTitle(getString(R.string.exp_tds_vd_cli));
+        } else if (idcliente == 0 && isDivida) {
+            builder.setTitle(getString(R.string.exp_tds_vd_dvd));
+        } else if (idcliente > 0 && isDivida) {
+            builder.setTitle(getString(R.string.exp_tds_vd_dvd_cli));
+        }
 
         builder.setView(binding.getRoot());
         dialog = builder.create();

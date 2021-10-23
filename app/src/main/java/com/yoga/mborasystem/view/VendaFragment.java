@@ -148,7 +148,7 @@ public class VendaFragment extends Fragment {
 
         vendaViewModel.getExportarLocalLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(aBoolean -> {
             if (this.data.isEmpty()) {
-                Toast.makeText(getContext(), getString(R.string.selec_data), Toast.LENGTH_LONG).show();
+                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.selec_data), R.drawable.ic_toast_erro);
             } else {
                 if (aBoolean) {
                     isLocal = true;
@@ -163,7 +163,7 @@ public class VendaFragment extends Fragment {
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             StringBuilder dt = new StringBuilder();
             if (vendas.isEmpty()) {
-                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.nao_tem_venda), R.drawable.ic_toast_erro);
+                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.nao_tem_venda), R.drawable.ic_toast_erro);
             } else {
                 for (Venda venda : vendas) {
                     dt.append(venda.getNome_cliente() + "," + venda.getCodigo_qr() + "," + venda.getQuantidade() + "," + venda.getTotal_venda() + "," + venda.getDesconto() + "," + venda.getTotal_desconto() + "," + venda.getValor_pago() + "," + venda.getDivida() + "," + venda.getValor_base() + "," + venda.getValor_iva() + "," + venda.getPagamento() + "," + venda.getData_cria() + "," + venda.getIdoperador() + "," + venda.getIdclicant() + "," + venda.getData_elimina() + "," + venda.getEstado() + "\n");
@@ -291,7 +291,7 @@ public class VendaFragment extends Fragment {
                             vendaViewModel.liquidarDivida(venda.getDivida() - Ultilitario.removerKZ(editText), venda.getId());
                         } else {
                             MainActivity.dismissProgressBar();
-                            Ultilitario.showToast(getContext(), Color.RED, getString(R.string.vl_n_sp), R.drawable.ic_toast_erro);
+                            Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vl_n_sp), R.drawable.ic_toast_erro);
                         }
                     } else {
                         Ultilitario.showToast(getContext(), Color.RED, getString(R.string.vl_inv), R.drawable.ic_toast_erro);
@@ -360,7 +360,7 @@ public class VendaFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(direction);
                 break;
             case R.id.exportarvenda:
-                exportarVenda(Ultilitario.EXPORTAR_VENDA);
+                exportarVenda();
                 break;
             case R.id.importarvenda:
                 //Importa as vendas
@@ -373,8 +373,9 @@ public class VendaFragment extends Fragment {
                 || super.onOptionsItemSelected(item);
     }
 
-    private void exportarVenda(int exportarVenda) {
-        Navigation.findNavController(getView()).navigate(R.id.action_vendaFragment_to_dialogExportarImportarVenda);
+    private void exportarVenda() {
+        VendaFragmentDirections.ActionVendaFragmentToDialogExportarImportarVenda direction = VendaFragmentDirections.actionVendaFragmentToDialogExportarImportarVenda().setIdcliente(idcliente).setIsDivida(isDivida);
+        Navigation.findNavController(getView()).navigate(direction);
     }
 
     @Override

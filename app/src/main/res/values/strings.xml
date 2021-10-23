@@ -388,6 +388,10 @@
     <string name="vl_n_sp">O valor para liquidar não pode ser maior que a dívida.</string>
     <string name="tds_vd">Todas vendas</string>
     <string name="vd_dvd">Vendas com dívida</string>
+    <string name="exp_tds_vd">Exportar todas as vendas.</string>
+    <string name="exp_tds_vd_cli">Exportar todas as vendas do cliente seleccionado.</string>
+    <string name="exp_tds_vd_dvd">Exportar todas as vendas com dívida.</string>
+    <string name="exp_tds_vd_dvd_cli">Exportar todas as vendas com dívida do cliente seleccionado.</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

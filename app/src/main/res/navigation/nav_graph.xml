@@ -278,6 +278,14 @@
             <action
                 android:id="@+id/action_dialogExportarImportarVenda_to_datePickerExpImp2"
                 app:destination="@id/datePickerExpImp2" />
+            <argument
+                android:name="idcliente"
+                app:argType="long"
+                android:defaultValue="0L" />
+            <argument
+                android:name="isDivida"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </dialog>
         <dialog
             android:id="@+id/datePickerExpImp2"
