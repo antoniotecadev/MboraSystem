@@ -161,6 +161,9 @@
             <action
                 android:id="@+id/action_usuarioFragment_to_dialogCriarUsuario"
                 app:destination="@id/dialogCriarUsuario" />
+            <action
+                android:id="@+id/action_usuarioFragment_to_vendaFragment"
+                app:destination="@id/vendaFragment" />
         </fragment>
         <fragment
             android:id="@+id/categoriaProdutoFragment"
@@ -256,6 +259,18 @@
                 android:name="idcliente"
                 app:argType="long"
                 android:defaultValue="0L" />
+            <argument
+                android:name="idusuario"
+                app:argType="long"
+                android:defaultValue="0L" />
+            <argument
+                android:name="nomeUsuario"
+                app:argType="string"
+                android:defaultValue="Vendas(User)" />
+            <argument
+                android:name="nomeCliente"
+                app:argType="string"
+                android:defaultValue="Vendas(Cli)" />
         </fragment>
         <dialog
             android:id="@+id/datePickerFragment"

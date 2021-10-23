@@ -87,7 +87,7 @@ public class ListaClienteFragment extends Fragment {
                                 MainActivity.getProgressBar();
                                 v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
 
-                                  ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId());
+                                  ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
                                   Navigation.findNavController(getView()).navigate(direction);
 
                                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -110,7 +110,7 @@ public class ListaClienteFragment extends Fragment {
                                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                                     menu.setHeaderTitle(cliente.getNome());
                                     menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
-                                        ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId());
+                                        ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
                                         Navigation.findNavController(getView()).navigate(direction);
                                         return false;
                                     });//groupId, itemId, order, title

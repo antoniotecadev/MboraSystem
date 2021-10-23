@@ -74,6 +74,14 @@ public abstract class VendaDao {
     @Query("UPDATE vendas SET estado = :est, data_elimina = :data WHERE id = :id")
     public abstract void deleteLixeira(int est, String data, long id);
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaUsuario(long idusuario);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0  ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaDivUsuario(long idusuario);
+
+
+
     @Transaction
     public void insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
@@ -90,15 +98,21 @@ public abstract class VendaDao {
         }
     }
 
-    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida) {
-        if (idcliente == 0 && !isdivida) {
-            return getVenda();
-        } else if (idcliente > 0 && !isdivida) {
-            return getVenda(idcliente);
-        } else if (idcliente == 0 && isdivida) {
-            return getVendaDiv();
-        } else if (idcliente > 0 && isdivida) {
-            return getVendaCliDiv(idcliente);
+    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario) {
+        if (idusuario == 0) {
+            if (idcliente == 0 && !isdivida) {
+                return getVenda();
+            } else if (idcliente > 0 && !isdivida) {
+                return getVenda(idcliente);
+            } else if (idcliente == 0 && isdivida) {
+                return getVendaDiv();
+            } else if (idcliente > 0 && isdivida) {
+                return getVendaCliDiv(idcliente);
+            }
+        } else if (isdivida) {
+            return getVendaDivUsuario(idusuario);
+        } else {
+            return getVendaUsuario(idusuario);
         }
         return getVendaVazia();
     }

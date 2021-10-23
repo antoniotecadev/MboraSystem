@@ -208,8 +208,8 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    public void consultarVendas(SwipeRefreshLayout mySwipeRefreshLayout, long idcliente, boolean isdivida) {
-        compositeDisposable.add(vendaRepository.getVendas(idcliente, isdivida)
+    public void consultarVendas(SwipeRefreshLayout mySwipeRefreshLayout, long idcliente, boolean isdivida, long idusuario) {
+        compositeDisposable.add(vendaRepository.getVendas(idcliente, isdivida, idusuario)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> {

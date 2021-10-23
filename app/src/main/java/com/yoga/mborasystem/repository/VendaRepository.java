@@ -29,8 +29,8 @@ public class VendaRepository {
         vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
     }
 
-    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida) {
-        return vendaDao.getVendas(idcliente, isdivida);
+    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario) {
+        return vendaDao.getVendas(idcliente, isdivida, idusuario);
     }
 
     public Flowable<List<Venda>> getVendasPorData(String data, long idcliente, boolean isDivida) {

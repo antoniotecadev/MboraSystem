@@ -116,8 +116,8 @@ public class UsuarioFragment extends Fragment {
             estado.setText(usuario.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
 
             viewHolder.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> {
-                Ultilitario.onClickColorRecyclerView(viewHolder.itemView);
-                verDadosUsuario();
+                UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment().setIdusuario(usuario.getId()).setNomeUsuario(usuario.getNome());
+                Navigation.findNavController(getView()).navigate(direction);
             });
 
             viewHolder.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener((menu, v, menuInfo) -> {
