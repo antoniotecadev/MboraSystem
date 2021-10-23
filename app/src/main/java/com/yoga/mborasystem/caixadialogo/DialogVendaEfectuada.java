@@ -17,50 +17,50 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class DialogVendaEfectuada extends DialogFragment {
 
-    private AlertDialog dialog;
-    private AlertDialog.Builder builder;
-    private VendaViewModel vendaViewModel;
-    private DialogVendaEfectuadaBinding binding;
+  private AlertDialog dialog;
+  private AlertDialog.Builder builder;
+  private VendaViewModel vendaViewModel;
+  private DialogVendaEfectuadaBinding binding;
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+  @NonNull
+  @Override
+  public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
+    vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
 
-        binding = DialogVendaEfectuadaBinding.inflate(LayoutInflater.from(getContext()));
+    binding = DialogVendaEfectuadaBinding.inflate(LayoutInflater.from(getContext()));
 
-        builder = new AlertDialog.Builder(getContext());
-        builder.setView(binding.getRoot());
-        dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        int total = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getPrecoTotal();
-        binding.textViewTotal.setText(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
+    builder = new AlertDialog.Builder(getContext());
+    builder.setView(binding.getRoot());
+    dialog = builder.create();
+    dialog.setCanceledOnTouchOutside(false);
+    int total = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getPrecoTotal();
+    binding.textViewTotal.setText(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
 
-        binding.btnGuardar.setOnClickListener(v -> {
-            vendaViewModel.getGuardarPdfLiveData().setValue(true);
-        });
+    binding.btnGuardar.setOnClickListener(v -> {
+      vendaViewModel.getGuardarPdfLiveData().setValue(true);
+    });
 
-        binding.btnImprimir.setOnClickListener(v -> {
-            vendaViewModel.getPrintLiveData().setValue(true);
-        });
+    binding.btnImprimir.setOnClickListener(v -> {
+      vendaViewModel.getPrintLiveData().setValue(true);
+    });
 
-        binding.btnAbrirWhatsApp.setOnClickListener(v -> {
-            String numeroWhatsApp = binding.numeroWhatsApp.getText().toString();
-            if (numeroWhatsApp.isEmpty()) {
-                binding.numeroWhatsApp.requestFocus();
-                binding.inputLayoutNumeroWhatsapp.setError(getString(R.string.digite_numero_w));
-            } else {
-                vendaViewModel.getEnviarWhatsAppLiveData().setValue(numeroWhatsApp);
-            }
-        });
-        binding.btnFechar.setOnClickListener(v -> vendaViewModel.getAlertDialogLiveData().setValue(dialog));
-        return dialog;
-    }
+    binding.btnAbrirWhatsApp.setOnClickListener(v -> {
+      String numeroWhatsApp = binding.numeroWhatsApp.getText().toString();
+      if (numeroWhatsApp.isEmpty()) {
+        binding.numeroWhatsApp.requestFocus();
+        binding.inputLayoutNumeroWhatsapp.setError(getString(R.string.digite_numero_w));
+      } else {
+        vendaViewModel.getEnviarWhatsAppLiveData().setValue(numeroWhatsApp);
+      }
+    });
+    binding.btnFechar.setOnClickListener(v -> vendaViewModel.getAlertDialogLiveData().setValue(dialog));
+    return dialog;
+  }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    binding = null;
+  }
 }

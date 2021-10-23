@@ -17,51 +17,51 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChaveAppViewModel extends AndroidViewModel {
 
-    Disposable disposable;
-    RepositoryChaveApp repositoryChaveApp;
+  Disposable disposable;
+  RepositoryChaveApp repositoryChaveApp;
 
-    public ChaveAppViewModel(@NonNull Application application) {
-        super(application);
-        disposable = new CompositeDisposable();
-        repositoryChaveApp = new RepositoryChaveApp(application);
-        chaveAppExiste();
+  public ChaveAppViewModel(@NonNull Application application) {
+    super(application);
+    disposable = new CompositeDisposable();
+    repositoryChaveApp = new RepositoryChaveApp(application);
+    chaveAppExiste();
+  }
+
+  private MutableLiveData<Ultilitario.Existe> existeMutableLiveData;
+
+  public MutableLiveData<Ultilitario.Existe> getExisteMutableLiveData() {
+    if (existeMutableLiveData == null) {
+      existeMutableLiveData = new MutableLiveData<>();
     }
+    return existeMutableLiveData;
+  }
 
-    private MutableLiveData<Ultilitario.Existe> existeMutableLiveData;
+  public void chaveAppExiste() {
+    repositoryChaveApp.chaveAppExiste().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(new SingleObserver<ChaveApp>() {
+              @Override
+              public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                disposable = d;
+              }
 
-    public MutableLiveData<Ultilitario.Existe> getExisteMutableLiveData() {
-        if (existeMutableLiveData == null) {
-            existeMutableLiveData = new MutableLiveData<>();
-        }
-        return existeMutableLiveData;
+              @Override
+              public void onSuccess(@io.reactivex.annotations.NonNull ChaveApp chaveApp) {
+                getExisteMutableLiveData().setValue(Ultilitario.Existe.SIM);
+              }
+
+              @Override
+              public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                getExisteMutableLiveData().setValue(Ultilitario.Existe.NAO);
+              }
+            });
+  }
+
+  @Override
+  protected void onCleared() {
+    super.onCleared();
+    if (disposable != null || !disposable.isDisposed()) {
+      disposable.dispose();
     }
-
-    public void chaveAppExiste() {
-        repositoryChaveApp.chaveAppExiste().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<ChaveApp>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
-                        disposable = d;
-                    }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.annotations.NonNull ChaveApp chaveApp) {
-                        getExisteMutableLiveData().setValue(Ultilitario.Existe.SIM);
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        getExisteMutableLiveData().setValue(Ultilitario.Existe.NAO);
-                    }
-                });
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
-            disposable.dispose();
-        }
-    }
+  }
 }
