@@ -261,6 +261,14 @@
             android:id="@+id/datePickerFragment"
             android:name="com.yoga.mborasystem.caixadialogo.DatePickerFragment"
             android:label="DatePickerFragment" >
+            <argument
+                android:name="idcliente"
+                app:argType="long"
+                android:defaultValue="0L" />
+            <argument
+                android:name="isDivida"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </dialog>
         <dialog
             android:id="@+id/dialogExportarImportarVenda"

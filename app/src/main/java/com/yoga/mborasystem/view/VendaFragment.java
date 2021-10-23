@@ -147,10 +147,10 @@ public class VendaFragment extends Fragment {
             } else {
                 if (aBoolean) {
                     isLocal = true;
-                    vendaViewModel.getVendasPorData(this.data, true);
+                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida);
                 } else if (!aBoolean) {
                     isLocal = false;
-                    vendaViewModel.getVendasPorData(this.data, true);
+                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida);
                 }
 
             }
@@ -351,7 +351,8 @@ public class VendaFragment extends Fragment {
                 scanearCodigoQr(0);
                 break;
             case R.id.btnData:
-                Navigation.findNavController(getView()).navigate(R.id.action_vendaFragment_to_datePickerFragment);
+                VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment().setIdcliente(idcliente).setIsDivida(isDivida);
+                Navigation.findNavController(getView()).navigate(direction);
                 break;
             case R.id.exportarvenda:
                 exportarVenda(Ultilitario.EXPORTAR_VENDA);

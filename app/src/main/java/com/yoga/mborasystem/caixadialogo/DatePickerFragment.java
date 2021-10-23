@@ -2,9 +2,11 @@ package com.yoga.mborasystem.caixadialogo;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
+import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
@@ -38,8 +40,13 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 //        Log.i("Picker", ((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + ((month < 10 ? "0" : "") + (month + 1)) + "-" + year);
+
+        long idcliente = DatePickerFragmentArgs.fromBundle(getArguments()).getIdcliente();
+        boolean isDivida = DatePickerFragmentArgs.fromBundle(getArguments()).getIsDivida();
+
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
-        vendaViewModel.getVendasPorData(data, false);
+        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
+        vendaViewModel.getVendasPorData(data, false, idcliente, isDivida);
     }
 
 }

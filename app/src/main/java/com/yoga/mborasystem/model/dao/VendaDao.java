@@ -50,8 +50,17 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%' AND idclicant = :idcliente")
     abstract Flowable<List<Venda>> searchVendaCliDiv(String codQr, long idcliente);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :codQr || '%'")
-    abstract Flowable<List<Venda>> getVenda(String codQr);
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
+    abstract Flowable<List<Venda>> getVenda(String data);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
+    abstract Flowable<List<Venda>> getVendaDataDiv(String data);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
+    abstract Flowable<List<Venda>> getVendaDataCliDiv(String data, long idcliente);
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND data_cria LIKE '%' || :data || '%'")
+    abstract Flowable<List<Venda>> getVenda(String data, long idcliente);
 
     @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda OR codigo_Barra = :codQr")
     abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda, String codQr);
@@ -94,8 +103,17 @@ public abstract class VendaDao {
         return getVendaVazia();
     }
 
-    public Flowable<List<Venda>> getVendas(String data) {
-        return getVenda(data);
+    public Flowable<List<Venda>> getVendas(String data, long idcliente, boolean isDivida) {
+        if (idcliente == 0 && !isDivida) {
+            return getVenda(data);
+        } else if (idcliente > 0 && !isDivida) {
+            return getVenda(data, idcliente);
+        } else if (idcliente == 0 && isDivida) {
+            return getVendaDataDiv(data);
+        } else if (idcliente > 0 && isDivida) {
+            return getVendaDataCliDiv(data, idcliente);
+        }
+        return getVendaVazia();
     }
 
     public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida) {
