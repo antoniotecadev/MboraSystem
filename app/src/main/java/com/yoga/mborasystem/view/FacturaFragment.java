@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.snackbar.Snackbar;
@@ -104,7 +103,7 @@ public class FacturaFragment extends Fragment {
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText().equals(resultCodeBar)) {
-                Toast.makeText(getContext(), getString(R.string.ja_scaneado), Toast.LENGTH_SHORT).show();
+                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.ja_scaneado), R.drawable.ic_toast_erro);
                 return;
             } else {
                 addScaner = true;
@@ -258,7 +257,7 @@ public class FacturaFragment extends Fragment {
         produtoViewModel.getListaProdutos().observe(getViewLifecycleOwner(), produtos -> {
             adapter.clear();
             if (produtos.isEmpty()) {
-                Toast.makeText(getContext(), getString(R.string.produto_nao_encontrada), Toast.LENGTH_LONG).show();
+                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.produto_nao_encontrada), R.drawable.ic_toast_erro);
             } else {
                 for (Produto produto : produtos) {
                     adapter.add(new ItemProduto(produto));
@@ -340,7 +339,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorDivida.setText("" + ((total - desconto) - valorPago));
                 } else {
                     buttonView.setChecked(false);
-                    Toast.makeText(getContext(), getString(R.string.no_pos_apl_div), Toast.LENGTH_LONG).show();
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.no_pos_apl_div), R.drawable.ic_toast_erro);
                 }
             } else {
                 binding.switchEdit.setChecked(false);
@@ -360,7 +359,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorPago.setHint(getString(R.string.se_val_pag));
                 } else {
                     buttonView.setChecked(false);
-                    Toast.makeText(getContext(), getString(R.string.check_dvd), Toast.LENGTH_LONG).show();
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.check_dvd), R.drawable.ic_toast_erro);
                 }
             } else {
                 binding.textValorPago.setEnabled(true);
@@ -374,7 +373,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorDivida.setEnabled(true);
                 } else {
                     binding.switchEdit.setChecked(false);
-                    Toast.makeText(getContext(), getString(R.string.check_dvd), Toast.LENGTH_LONG).show();
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.check_dvd), R.drawable.ic_toast_erro);
                 }
             } else {
                 binding.textValorDivida.setEnabled(false);
@@ -459,7 +458,7 @@ public class FacturaFragment extends Fragment {
                     facturaPath = "venda" + codigoQr + "_" + Ultilitario.getDateCurrent() + ".pdf";
                     CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, getArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
             }
         });
@@ -469,13 +468,13 @@ public class FacturaFragment extends Fragment {
             if (aBoolean) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     if (facturaPath.isEmpty()) {
-                        Toast.makeText(getContext(), getString(R.string.guardar_primeiro), Toast.LENGTH_LONG).show();
+                        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.guardar_primeiro), R.drawable.ic_toast_erro);
                     } else {
                         MainActivity.getProgressBar();
                         CriarFactura.printPDF(getActivity(), getContext(), facturaPath);
                     }
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.precisa_kitkat_maior), Toast.LENGTH_LONG).show();
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
                 }
             }
         });
@@ -484,7 +483,7 @@ public class FacturaFragment extends Fragment {
         vendaViewModel.getEnviarWhatsAppLiveData().observe(getViewLifecycleOwner(), numero -> {
             if (!numero.isEmpty()) {
                 if (facturaPath.isEmpty()) {
-                    Toast.makeText(getContext(), getString(R.string.enviar_w_primeiro), Toast.LENGTH_LONG).show();
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.enviar_w_primeiro), R.drawable.ic_toast_erro);
                 } else {
                     Ultilitario.openWhatsApp(getActivity(), numero);
                 }
@@ -596,7 +595,7 @@ public class FacturaFragment extends Fragment {
                     })
                     .show();
         } else {
-            Toast.makeText(getContext(), getString(R.string.smt_siff), Toast.LENGTH_LONG).show();
+            Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.smt_siff), R.drawable.ic_toast_erro);
         }
     }
 
@@ -890,7 +889,7 @@ public class FacturaFragment extends Fragment {
                 if ((grantResults != null && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     openCamera();
                 } else {
-                    Toast.makeText(getContext(), getText(R.string.noa_scan_codbar), Toast.LENGTH_SHORT).show();
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.noa_scan_codbar), R.drawable.ic_toast_erro);
                 }
                 break;
             default:
