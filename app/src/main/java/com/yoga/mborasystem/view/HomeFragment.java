@@ -45,6 +45,10 @@ public class HomeFragment extends Fragment {
             return false;
         });
 
+        binding.floatingActionButton.setOnClickListener(v -> {
+
+        });
+
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
             MainActivity.getProgressBar();
             bundle.putLong("idoperador", getArguments().getLong("idusuario", 0));

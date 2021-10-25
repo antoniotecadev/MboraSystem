@@ -8,7 +8,6 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
-
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="@color/cor_castanha"
@@ -17,14 +16,12 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:background="@drawable/backgroundcolapsingtoolbarlayout"
             app:contentScrim="@color/cor_castanha"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/cor_castanha"
             app:title="@string/nome_sistema"
             app:toolbarId="@+id/toolbar">
-
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

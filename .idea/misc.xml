@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout-h320dp/fragment_home.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout-h320dp/fragment_login.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout-h480dp/fragment_login.xml" value="0.6991279069767442" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/layout-h600dp/fragment_login.xml" value="0.18802083333333333" />
