@@ -32,7 +32,6 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
 import com.yoga.mborasystem.model.entidade.Venda;
-import com.yoga.mborasystem.util.CriarFactura;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
@@ -258,11 +257,6 @@ public class VendaFragment extends Fragment {
 
             btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                 menu.setHeaderTitle(venda.getCodigo_qr());
-                menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
-                    String facturaPath = "venda" + codigoQr + "_" + Ultilitario.getDateCurrent() + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, getArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
-                    return false;
-                });
                 menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
                     MainActivity.getProgressBar();
                     VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
