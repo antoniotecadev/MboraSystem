@@ -213,6 +213,11 @@
             <action
                 android:id="@+id/action_facturaFragment_to_dialogCriarClienteCantina"
                 app:destination="@id/dialogCriarClienteCantina" />
+            <action
+                android:id="@+id/action_facturaFragment_to_dialogCriarProduto"
+                app:destination="@id/dialogCriarProduto"
+                app:enterAnim="@android:anim/fade_in"
+                app:popExitAnim="@android:anim/fade_out" />
         </fragment>
         <dialog
             android:id="@+id/dialogVendaEfectuada"

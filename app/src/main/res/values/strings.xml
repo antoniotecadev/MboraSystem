@@ -409,6 +409,7 @@
         VERSÃO: 1.0.0
     </string>
     <string name="ace">Acerca</string>
+    <string name="rvr_car">Remover</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

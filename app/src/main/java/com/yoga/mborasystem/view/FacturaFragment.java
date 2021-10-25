@@ -76,6 +76,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class FacturaFragment extends Fragment {
 
+    private Bundle bundle;
     private boolean addScaner;
     private Cliente cliente;
     private long idc, idcliente;
@@ -127,6 +128,7 @@ public class FacturaFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         iva = new HashMap<>();
+        bundle = new Bundle();
         valor = new HashMap<>();
         cliente = new Cliente();
         estado = new HashMap<>();
@@ -664,23 +666,35 @@ public class FacturaFragment extends Fragment {
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }
             viewHolder.itemView.setOnClickListener(v -> {
-                if (produtos.containsKey(produto.getId())) {
-                    removerProduto(produto.getId(), v, produto.getNome(), true);
-                } else {
-                    adicionarProduto(produto.getId(), produto, v, true);
-                    habilitarDesabilitarButtonEfectuarVenda();
-                }
+                addProduto(v);
             });
             if (addScaner) {
                 addScaner = false;
                 adicionarProduto(produto.getId(), produto, viewHolder.itemView, true);
                 habilitarDesabilitarButtonEfectuarVenda();
             }
+
+            viewHolder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                menu.setHeaderTitle(produto.getNome());
+                menu.add(getString(R.string.adicionar_produto)).setOnMenuItemClickListener(item -> {
+                    addProduto(v);
+                    return false;
+                });
+            });
         }
 
         @Override
         public int getLayout() {
             return R.layout.fragment_lista_produto;
+        }
+
+        private void addProduto(View v) {
+            if (produtos.containsKey(produto.getId())) {
+                removerProduto(produto.getId(), v, produto.getNome(), true);
+            } else {
+                adicionarProduto(produto.getId(), produto, v, true);
+                habilitarDesabilitarButtonEfectuarVenda();
+            }
         }
 
         private void habilitarDesabilitarButtonEfectuarVenda() {
@@ -801,6 +815,24 @@ public class FacturaFragment extends Fragment {
                     if (itemView.containsKey(produto.getId())) {
                         removerProduto(produto.getId(), itemView.get(produto.getId()), produto.getNome(), true);
                     }
+                });
+
+                viewHolder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                    menu.setHeaderTitle(produto.getNome());
+                    menu.add(getString(R.string.editar)).setOnMenuItemClickListener(item -> {
+                        bundle.clear();
+                        bundle.putParcelable("produto", produto);
+                        bundle.putBoolean("master", true);
+                        Navigation.findNavController(getView()).navigate(R.id.action_facturaFragment_to_dialogCriarProduto, bundle);
+                        return false;
+                    });
+
+                    menu.add(getString(R.string.rvr_car)).setOnMenuItemClickListener(item -> {
+                        if (itemView.containsKey(produto.getId())) {
+                            removerProduto(produto.getId(), itemView.get(produto.getId()), produto.getNome(), true);
+                        }
+                        return false;
+                    });
                 });
             }
 
