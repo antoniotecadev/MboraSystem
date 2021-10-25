@@ -394,6 +394,21 @@
     <string name="exp_tds_vd_dvd_cli">Exportar todas as vendas com dívida do cliente seleccionado.</string>
     <string name="exp_tds_vd_dvd_use">Exportar todas as vendas do usuário com dívida.</string>
     <string name="exp_tds_vd_use">Exportar todas as vendas do usuário seleccionado.</string>
+    <string name="acerca">
+        Sistema de Gestão e facturação criado pela startup YOGA para:\n
+        ✔ Cantinas\n
+        ✔ Bares\n
+        ✔ Barbearias\n
+        ✔ Salão de beleza\n
+        ✔ Boutiques\n
+        ✔ Venda ambulante\n
+        ✔ Venda em bancadas\n
+        ✔ Restaurante\n
+        ✔ Padaria\n
+        ✔ Muito mais...\n\n
+        VERSÃO: 1.0.0
+    </string>
+    <string name="ace">Acerca</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

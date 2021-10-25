@@ -23,6 +23,9 @@
       android:icon="@android:drawable/ic_lock_lock"
       android:title="@string/bloquear" />
   <item
+      android:id="@+id/acercaMborasytem"
+      android:title="@string/ace" />
+  <item
       android:id="@+id/itemSair"
       android:icon="@drawable/ic_baseline_close_24"
       android:title="@string/sair" />

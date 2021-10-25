@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.floatingActionButton.setOnClickListener(v -> {
-
+            acercaMboraSystem();
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
@@ -121,6 +121,9 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
                 }
                 break;
+            case R.id.acercaMborasytem:
+                acercaMboraSystem();
+                break;
             case R.id.itemSair:
                 sairApp();
                 break;
@@ -131,12 +134,21 @@ public class HomeFragment extends Fragment {
     }
 
     private void sairApp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getString(R.string.sair));
-        builder.setMessage(getString(R.string.tem_certeza_sair_app));
-        builder.setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss());
-        builder.setPositiveButton(getString(R.string.sim), (dialog, which) -> getActivity().finish());
-        builder.show();
+        new AlertDialog.Builder(getContext())
+                .setTitle(getString(R.string.sair))
+                .setMessage(getString(R.string.tem_certeza_sair_app))
+                .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getString(R.string.sim), (dialog, which) -> getActivity().finish())
+                .show();
+    }
+
+    public void acercaMboraSystem() {
+        new AlertDialog.Builder(getContext())
+                .setIcon(R.drawable.ic_logotipo_yoga_original)
+                .setTitle(getString(R.string.nome_sistema))
+                .setMessage(R.string.acerca)
+                .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     @Override
