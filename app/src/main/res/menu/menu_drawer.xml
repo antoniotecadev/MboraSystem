@@ -20,6 +20,11 @@
         android:title="@string/cliente" />
 
     <item
+        android:id="@+id/dashboardFragment"
+        android:icon="@drawable/ic_dashboard_60"
+        android:title="@string/dashboard" />
+
+    <item
         android:id="@+id/facturaFragment"
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/factura" />
