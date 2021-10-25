@@ -8,80 +8,80 @@
     android:background="#FFFFFF"
     tools:context=".view.ActivarMboraSystem">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_baseline_store_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="0dp"
+      android:layout_height="80dp"
+      android:layout_marginTop="32dp"
+      android:src="@drawable/ic_baseline_store_24"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvNomeSistema"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:text="@string/nome_sistema"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/cor_castanha"
-        android:textSize="@dimen/tamanho_nome_sistema_tela_inicial_320"
-        android:textStyle="bold|italic"
-        android:typeface="normal"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+  <TextView
+      android:id="@+id/tvNomeSistema"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:fontFamily="monospace"
+      android:text="@string/nome_sistema"
+      android:textAlignment="center"
+      android:textAllCaps="false"
+      android:textColor="@color/cor_castanha"
+      android:textSize="@dimen/tamanho_nome_sistema_tela_inicial_320"
+      android:textStyle="bold|italic"
+      android:typeface="normal"
+      app:layout_constraintEnd_toEndOf="@+id/imageView"
+      app:layout_constraintStart_toStartOf="@+id/imageView"
+      app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <Button
-        android:id="@+id/btnActivar"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="@dimen/margem_lateral_formulario"
-        android:layout_marginTop="32dp"
-        android:layout_marginRight="@dimen/margem_lateral_formulario"
-        android:text="@string/activar_mborasystem"
-        app:backgroundTint="@android:color/holo_green_light"
-        app:layout_constraintEnd_toEndOf="@+id/textView17"
-        app:layout_constraintStart_toStartOf="@+id/textView17"
-        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+  <Button
+      android:id="@+id/btnActivar"
+      android:layout_width="0dp"
+      android:layout_height="60dp"
+      android:layout_marginLeft="@dimen/margem_lateral_formulario"
+      android:layout_marginTop="32dp"
+      android:layout_marginRight="@dimen/margem_lateral_formulario"
+      android:text="@string/activar_mborasystem"
+      app:backgroundTint="@android:color/holo_green_light"
+      app:layout_constraintEnd_toEndOf="@+id/textView17"
+      app:layout_constraintStart_toStartOf="@+id/textView17"
+      app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
-    <EditText
-        android:id="@+id/editTextChaveApp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@string/mascara_chave_app"
-        android:inputType="textPersonName"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/textView15"
-        app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+  <EditText
+      android:id="@+id/editTextChaveApp"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:ems="10"
+      android:hint="@string/mascara_chave_app"
+      android:inputType="textPersonName"
+      android:textAlignment="center"
+      app:layout_constraintEnd_toEndOf="@+id/textView15"
+      app:layout_constraintStart_toStartOf="@+id/textView15"
+      app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/introduza_chave_aqui"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/tvNomeSistema"
-        app:layout_constraintStart_toStartOf="@+id/tvNomeSistema"
-        app:layout_constraintTop_toBottomOf="@+id/tvNomeSistema" />
+  <TextView
+      android:id="@+id/textView15"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="@string/introduza_chave_aqui"
+      android:textAlignment="center"
+      app:layout_constraintEnd_toEndOf="@+id/tvNomeSistema"
+      app:layout_constraintStart_toStartOf="@+id/tvNomeSistema"
+      app:layout_constraintTop_toBottomOf="@+id/tvNomeSistema" />
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/politica_privacidade"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_blue_light"
-        app:layout_constraintEnd_toEndOf="@+id/editTextChaveApp"
-        app:layout_constraintStart_toStartOf="@+id/editTextChaveApp"
-        app:layout_constraintTop_toBottomOf="@+id/editTextChaveApp" />
+  <TextView
+      android:id="@+id/textView17"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="32dp"
+      android:text="@string/politica_privacidade"
+      android:textAlignment="center"
+      android:textColor="@android:color/holo_blue_light"
+      app:layout_constraintEnd_toEndOf="@+id/editTextChaveApp"
+      app:layout_constraintStart_toStartOf="@+id/editTextChaveApp"
+      app:layout_constraintTop_toBottomOf="@+id/editTextChaveApp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

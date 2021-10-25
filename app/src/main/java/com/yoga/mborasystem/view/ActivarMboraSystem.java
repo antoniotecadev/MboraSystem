@@ -38,6 +38,3 @@ public class ActivarMboraSystem extends Fragment {
         binding = null;
     }
 }
-
-
-
