@@ -235,6 +235,10 @@ public class VendaFragment extends Fragment {
 
             btnEntrar = viewHolder.itemView.findViewById(R.id.btnEntrar);
 
+            if (venda.getDivida() > 0) {
+                divida.setBackgroundColor(Color.RED);
+            }
+
             nomeCliente.setText(venda.getNome_cliente());
             codigoQr.setText(venda.getCodigo_qr());
             quantidade.setText(String.valueOf(venda.getQuantidade()));
