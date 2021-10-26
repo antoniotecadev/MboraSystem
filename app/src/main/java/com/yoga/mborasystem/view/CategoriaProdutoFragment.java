@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -55,6 +57,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class CategoriaProdutoFragment extends Fragment {
 
+    private Random random;
     private Bundle bundle;
     private StringBuilder data;
     private GroupAdapter adapter;
@@ -95,6 +98,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada);
                 } else {
                     stringList.clear();
+                    random = new Random();
                     for (Categoria categoria : categorias) {
                         stringList.add(categoria.getId() + " - " + categoria.getCategoria());
                         stringListDesc.add(categoria.getDescricao());
@@ -224,7 +228,11 @@ public class CategoriaProdutoFragment extends Fragment {
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
             TextView nome = viewHolder.itemView.findViewById(R.id.txtNomeCategoria);
             TextView descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
+            ImageView img = viewHolder.itemView.findViewById(R.id.imgCategoriaProduto);
             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
+
+            Ultilitario.colorRandomImage(img, random);
+
             nome.setText(categoria.getCategoria() + " | " + categoria.getId());
             descricao.setText(categoria.getDescricao());
             if (categoria.getEstado() == Ultilitario.DOIS) {
