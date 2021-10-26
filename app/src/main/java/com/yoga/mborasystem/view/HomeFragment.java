@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -25,12 +27,18 @@ import androidx.navigation.ui.NavigationUI;
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
+    private boolean isOpen = false;
     private FragmentHomeBinding binding;
+    private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
+        FabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        FabRClockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
+        FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
     }
 
     @Override
@@ -47,6 +55,14 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButton.setOnClickListener(v -> {
             acercaMboraSystem();
+        });
+
+        binding.floatingActionButtonLixo.setOnClickListener(v -> {
+            if (isOpen) {
+                animationLixeira(FabClose, FabRanticlockwise, false);
+            } else {
+                animationLixeira(FabOpen, FabRClockwise, true);
+            }
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
@@ -86,6 +102,23 @@ public class HomeFragment extends Fragment {
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
+    }
+
+    private void animationLixeira(Animation animation, Animation animationLixo, boolean isOpen) {
+        binding.floatingActionButtonCategoria.startAnimation(animation);
+        binding.floatingActionButtonProduto.startAnimation(animation);
+        binding.floatingActionButtonUsuario.startAnimation(animation);
+        binding.floatingActionButtonCliente.startAnimation(animation);
+        binding.floatingActionButtonVendaLixo.startAnimation(animation);
+
+        binding.floatingActionButtonLixo.startAnimation(animationLixo);
+
+        binding.floatingActionButtonCategoria.setClickable(isOpen);
+        binding.floatingActionButtonProduto.setClickable(isOpen);
+        binding.floatingActionButtonUsuario.setClickable(isOpen);
+        binding.floatingActionButtonCliente.setClickable(isOpen);
+        binding.floatingActionButtonVendaLixo.setClickable(isOpen);
+        this.isOpen = isOpen;
     }
 
     @Override
