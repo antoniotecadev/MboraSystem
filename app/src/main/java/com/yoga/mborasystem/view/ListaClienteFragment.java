@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -26,6 +27,8 @@ import com.yoga.mborasystem.databinding.FragmentListaClienteBinding;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
+
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -70,13 +73,16 @@ public class ListaClienteFragment extends Fragment {
             if (clientes.isEmpty()) {
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.cli_nao_enc);
             } else {
+                Random random = new Random();
                 for (ClienteCantina cliente : clientes)
                     adapter.add(new Item<GroupieViewHolder>() {
-
                         private TextView nomeCliente, telefoneCliente, dataCira, dataModifica;
 
                         @Override
                         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
+                            ImageView i = viewHolder.itemView.findViewById(R.id.imgCliente);
+                            Ultilitario.colorRandomImage(i, random);
+
                             nomeCliente = viewHolder.itemView.findViewById(R.id.txtNomeCliente);
                             telefoneCliente = viewHolder.itemView.findViewById(R.id.txtTelefone);
                             dataCira = viewHolder.itemView.findViewById(R.id.textDataCriacao);
@@ -87,8 +93,8 @@ public class ListaClienteFragment extends Fragment {
                                 MainActivity.getProgressBar();
                                 v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
 
-                                  ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
-                                  Navigation.findNavController(getView()).navigate(direction);
+                                ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
+                                Navigation.findNavController(getView()).navigate(direction);
 
                                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                     v.setBackgroundColor(Color.parseColor("#FFFFFF"));

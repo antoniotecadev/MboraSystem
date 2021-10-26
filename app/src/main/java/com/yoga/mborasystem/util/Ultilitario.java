@@ -486,5 +486,13 @@ public class Ultilitario {
         }
     }
 
+    public static void colorRandomImage(ImageView i, Random rand) {
+        int r, g, b;
+        r = rand.nextInt();
+        g = rand.nextInt();
+        b = rand.nextInt();
+        i.setColorFilter(Color.rgb(r, g, b));
+    }
+
 
 }
