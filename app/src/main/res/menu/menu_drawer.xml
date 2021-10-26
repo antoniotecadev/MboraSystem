@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/categoriaProdutoFragment"
@@ -28,4 +27,32 @@
         android:id="@+id/facturaFragment"
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/factura" />
+
+    <item
+        android:id="@+id/lixeiraFragment"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/lix">
+        <menu>
+            <item
+                android:id="@+id/categoriaProdutoFragment1"
+                android:icon="@drawable/ic_baseline_folder_60"
+                android:title="@string/cat" />
+            <item
+                android:id="@+id/ProdutoFragment"
+                android:icon="@android:drawable/ic_dialog_dialer"
+                android:title="@string/prod" />
+            <item
+                android:id="@+id/usuarioFragment1"
+                android:icon="@drawable/ic_usario_60"
+                android:title="@string/usuario" />
+            <item
+                android:id="@+id/vendaFragment1"
+                android:icon="@drawable/ic_venda_60"
+                android:title="@string/venda" />
+            <item
+                android:id="@+id/listaClienteFragment1"
+                android:icon="@drawable/ic_cliente_60"
+                android:title="@string/cliente" />
+        </menu>
+    </item>
 </menu>

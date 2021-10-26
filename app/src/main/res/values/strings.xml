@@ -410,6 +410,7 @@
     </string>
     <string name="ace">Acerca</string>
     <string name="rvr_car">Remover</string>
+    <string name="lix">Lixeira</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
