@@ -51,20 +51,23 @@ public class ListaClienteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new GroupAdapter();
+        clienteCantina = new ClienteCantina();
+        clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        clienteCantina = new ClienteCantina();
-
         setHasOptionsMenu(true);
         binding = FragmentListaClienteBinding.inflate(inflater, container, false);
-        clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
 
         binding.recyclerViewListaCliente.setAdapter(adapter);
         binding.recyclerViewListaCliente.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        binding.btnCriarCliente.setOnClickListener(v -> {
+            criarCliente();
+        });
 
         clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout);
         clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientes -> {
@@ -205,15 +208,19 @@ public class ListaClienteFragment extends Fragment {
         NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
         switch (item.getItemId()) {
             case R.id.criarClienteCantina:
-                MainActivity.getProgressBar();
-                ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0);
-                Navigation.findNavController(getView()).navigate(direction);
+                criarCliente();
                 break;
             default:
                 break;
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
+    }
+
+    private void criarCliente() {
+        MainActivity.getProgressBar();
+        ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0);
+        Navigation.findNavController(getView()).navigate(direction);
     }
 
     @Override
