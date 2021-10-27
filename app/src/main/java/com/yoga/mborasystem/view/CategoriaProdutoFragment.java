@@ -59,6 +59,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
     private Random random;
     private Bundle bundle;
+    private boolean isLixeira;
     private StringBuilder data;
     private GroupAdapter adapter;
     private ProdutoViewModel produtoViewModel;
@@ -76,20 +77,31 @@ public class CategoriaProdutoFragment extends Fragment {
         stringListDesc = new ArrayList<>();
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         binding = FragmentCategoriaProdutoBinding.inflate(inflater, container, false);
+
+        isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+
+        if (isLixeira) {
+            getActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.cat) + ")");
+            binding.btncriarCategoriaDialog.setVisibility(View.INVISIBLE);
+        }
+        binding.btncriarCategoriaDialog.setOnClickListener(v -> {
+            criarCategoria();
+        });
         binding.recyclerViewCategoriaProduto.setAdapter(adapter);
         binding.recyclerViewCategoriaProduto.setHasFixedSize(true);
         binding.recyclerViewCategoriaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.btncriarCategoriaDialog.setOnClickListener(v -> {
-            createCategory();
-        });
-
+        if (isLixeira) {
+            categoriaProdutoViewModel.consultarCategorias(null, true);
+        } else {
+            categoriaProdutoViewModel.consultarCategorias(null, false);
+        }
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new Observer<List<Categoria>>() {
             @Override
             public void onChanged(List<Categoria> categorias) {
@@ -121,7 +133,11 @@ public class CategoriaProdutoFragment extends Fragment {
         }));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
             MainActivity.getProgressBar();
-            categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout);
+            if (isLixeira) {
+                categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout, true);
+            } else {
+                categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout, false);
+            }
         });
         return binding.getRoot();
     }
@@ -134,7 +150,7 @@ public class CategoriaProdutoFragment extends Fragment {
         }
     }
 
-    private void createCategory() {
+    private void criarCategoria() {
         MainActivity.getProgressBar();
         Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
     }
@@ -158,6 +174,10 @@ public class CategoriaProdutoFragment extends Fragment {
                 binding.btncriarCategoriaDialog.setVisibility(View.GONE);
             }
         }
+        if (isLixeira) {
+            menu.findItem(R.id.exinpProduto).setVisible(false);
+            menu.findItem(R.id.exinpCategoria).setVisible(false);
+        }
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
@@ -172,7 +192,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout);
+                newTextIsEmpty();
                 return true;
             }
         });
@@ -185,13 +205,25 @@ public class CategoriaProdutoFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout);
+                    newTextIsEmpty();
                 } else {
-                    categoriaProdutoViewModel.searchCategoria(newText);
+                    if (isLixeira) {
+                        categoriaProdutoViewModel.searchCategoria(newText, true);
+                    } else {
+                        categoriaProdutoViewModel.searchCategoria(newText, false);
+                    }
                 }
                 return false;
             }
         });
+    }
+
+    private void newTextIsEmpty() {
+        if (isLixeira) {
+            categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout, true);
+        } else {
+            categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout, false);
+        }
     }
 
     @Override
@@ -240,59 +272,67 @@ public class CategoriaProdutoFragment extends Fragment {
                 descricao.setText(getString(R.string.desactivado));
             }
             registerForContextMenu(menu);
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity.getProgressBar();
-                    v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-                    listaProdutos(categoria.getId(), categoria.getCategoria());
-                }
-            });
+            if (!isLixeira) {
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.getProgressBar();
+                        v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
+                        listaProdutos(categoria.getId(), categoria.getCategoria());
+                    }
+                });
+            }
             menu.setOnClickListener(v -> v.showContextMenu());
             viewHolder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                     menu.setHeaderTitle(categoria.getCategoria());
-                    menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            MainActivity.getProgressBar();
-                            listaProdutos(categoria.getId(), categoria.getCategoria());
-                            return false;
-                        }
-                    });//groupId, itemId, order, title
-                    menu.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (getArguments() != null) {
-                                if (getArguments().getBoolean("master")) {
-                                    MainActivity.getProgressBar();
-                                    bundle.putParcelable("categoria", categoria);
-                                    Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
-                                }
+                    if (!isLixeira) {
+                        menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                MainActivity.getProgressBar();
+                                listaProdutos(categoria.getId(), categoria.getCategoria());
+                                return false;
                             }
-                            return false;
-                        }
-                    });
-                    menu.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (getArguments() != null) {
-                                if (getArguments().getBoolean("master", false)) {
-                                    categoria.setId(categoria.getId());
-                                    categoria.setEstado(Ultilitario.TRES);
-                                    categoria.setData_elimina(Ultilitario.getDateCurrent());
-                                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                                    alert.setTitle(getString(R.string.eliminar_categoria) + " (" + categoria.getCategoria() + ")");
-                                    alert.setMessage(getString(R.string.tem_certeza_eliminar_categoria));
-                                    alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
-                                    alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(categoria, true));
-                                    alert.show();
+                        });//groupId, itemId, order, title
+                        menu.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                if (getArguments() != null) {
+                                    if (getArguments().getBoolean("master")) {
+                                        MainActivity.getProgressBar();
+                                        bundle.putParcelable("categoria", categoria);
+                                        Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
+                                    }
                                 }
+                                return false;
                             }
+                        });
+                        menu.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                if (getArguments() != null) {
+                                    if (getArguments().getBoolean("master", false)) {
+                                        categoria.setId(categoria.getId());
+                                        categoria.setEstado(Ultilitario.TRES);
+                                        categoria.setData_elimina(Ultilitario.getDateCurrent());
+                                        dialogEliminarCategoria(getString(R.string.env_cat_lix));
+                                    }
+                                }
+                                return false;
+                            }
+                        });
+                    } else {
+                        menu.add(getString(R.string.rest_cat)).setOnMenuItemClickListener(item -> {
+                            restaurarCategoria();
                             return false;
-                        }
-                    });
+                        });
+                        menu.add(getString(R.string.elim_cat_perm)).setOnMenuItemClickListener(item -> {
+                            dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria));
+                            return false;
+                        });
+                    }
 
                 }
             });
@@ -307,6 +347,31 @@ public class CategoriaProdutoFragment extends Fragment {
             bundle.putLong("idcategoria", id);
             bundle.putString("categoria", categoria);
             Navigation.findNavController(getView()).navigate(R.id.action_categoriaProdutoFragment_to_listProdutoFragment, bundle);
+        }
+
+        private void dialogEliminarCategoria(String msg) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.eliminar_categoria) + " (" + categoria.getCategoria() + ")")
+                    .setMessage(msg)
+                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        if (isLixeira) {
+                            categoriaProdutoViewModel.eliminarCategoria(categoria, false);
+                        } else {
+                            categoriaProdutoViewModel.eliminarCategoria(categoria, true);
+                        }
+                    })
+                    .show();
+        }
+
+        private void restaurarCategoria() {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.rest_cat) + " (" + categoria.getCategoria() + ")")
+                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, categoria.getId());
+                    })
+                    .show();
         }
     }
 

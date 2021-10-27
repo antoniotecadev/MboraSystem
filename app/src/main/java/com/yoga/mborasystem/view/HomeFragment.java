@@ -19,6 +19,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -63,6 +64,22 @@ public class HomeFragment extends Fragment {
             } else {
                 animationLixeira(FabOpen, FabRClockwise, true);
             }
+        });
+
+        binding.floatingActionButtonCategoria.setOnClickListener(v -> {
+            entrarCategoria(true);
+        });
+
+        MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.categoriaProdutoFragment1:
+                    entrarCategoria(true);
+                    break;
+                default:
+                    break;
+            }
+            MainActivity.drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
@@ -182,6 +199,12 @@ public class HomeFragment extends Fragment {
                 .setMessage(R.string.acerca)
                 .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    private void entrarCategoria(boolean isLixeira) {
+        MainActivity.getProgressBar();
+        HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(isLixeira);
+        Navigation.findNavController(getView()).navigate(direction);
     }
 
     @Override

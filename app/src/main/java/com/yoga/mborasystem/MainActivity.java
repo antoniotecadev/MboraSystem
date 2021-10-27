@@ -24,10 +24,10 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
+    public static DrawerLayout drawerLayout;
     private NavController navController;
     public static ProgressDialog progressDialog;
-    private NavigationView navigationView;
+    public static NavigationView navigationView;
     private AppBarConfiguration appBarConfiguration;
 
     @Override

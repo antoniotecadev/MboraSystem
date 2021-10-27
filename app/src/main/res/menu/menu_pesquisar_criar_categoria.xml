@@ -15,6 +15,7 @@
       app:showAsAction="ifRoom|collapseActionView" />
 
   <item
+      android:id="@+id/exinpProduto"
       android:title="@string/exportar_importar_produto"
       app:showAsAction="never">
     <menu>
@@ -30,6 +31,7 @@
   </item>
 
   <item
+      android:id="@+id/exinpCategoria"
       android:title="@string/exportar_importar_categoria"
       app:showAsAction="never">
     <menu>

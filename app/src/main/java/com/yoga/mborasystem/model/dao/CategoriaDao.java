@@ -28,7 +28,16 @@ public interface CategoriaDao {
     @Query("SELECT * FROM categorias WHERE estado != 3 ORDER BY id DESC")
     Flowable<List<Categoria>> getCategorias();
 
+    @Query("SELECT * FROM categorias WHERE estado = 3 ORDER BY id DESC")
+    Flowable<List<Categoria>> getCategoriasLixeira();
+
     @Query("SELECT * FROM categorias WHERE estado != 3 AND categoria LIKE '%' || :search || '%'")
     Flowable<List<Categoria>> searchCategorias(String search);
+
+    @Query("SELECT * FROM categorias WHERE estado = 3 AND categoria LIKE '%' || :search || '%'")
+    Flowable<List<Categoria>> searchCategoriasLixeira(String search);
+
+    @Query("UPDATE categorias SET estado = :est WHERE id = :id")
+    void restaurarCategoria(int est, long id);
 
 }

@@ -44,12 +44,24 @@ public class CategoriaRepository {
         }
     }
 
-    public Flowable<List<Categoria>> getCategorias() {
-        return categoriaDao.getCategorias();
+    public void restaurarCategoria(int estado, long idcategoria){
+        categoriaDao.restaurarCategoria(estado, idcategoria);
     }
 
-    public Flowable<List<Categoria>> searchCategorias(String categoria) {
-        return categoriaDao.searchCategorias(categoria);
+    public Flowable<List<Categoria>> getCategorias(boolean isLixeira) {
+        if (isLixeira) {
+            return categoriaDao.getCategoriasLixeira();
+        } else {
+            return categoriaDao.getCategorias();
+        }
+    }
+
+    public Flowable<List<Categoria>> searchCategorias(String categoria, boolean isLixeira) {
+        if (isLixeira) {
+            return categoriaDao.searchCategoriasLixeira(categoria);
+        } else {
+            return categoriaDao.searchCategorias(categoria);
+        }
     }
 
     public void importarCategorias(Map<String, String> categorias, Context context) {

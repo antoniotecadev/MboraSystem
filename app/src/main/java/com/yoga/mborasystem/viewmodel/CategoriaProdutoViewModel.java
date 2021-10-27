@@ -40,7 +40,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         disposable = new CompositeDisposable();
         compositeDisposable = new CompositeDisposable();
         categoriaRepository = new CategoriaRepository(application);
-        consultarCategorias(null);
     }
 
     private boolean isCampoVazio(String valor) {
@@ -113,8 +112,8 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void consultarCategorias(SwipeRefreshLayout mySwipeRefreshLayout) {
-        compositeDisposable.add(categoriaRepository.getCategorias()
+    public void consultarCategorias(SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
+        compositeDisposable.add(categoriaRepository.getCategorias(isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categorias -> {
@@ -129,8 +128,8 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 }));
     }
 
-    public void searchCategoria(String categoria) {
-        compositeDisposable.add(categoriaRepository.searchCategorias(categoria)
+    public void searchCategoria(String categoria, boolean isLixeira) {
+        compositeDisposable.add(categoriaRepository.searchCategorias(categoria, isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categorias -> {
@@ -170,6 +169,30 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
+    public void restaurarCategoria(int estado, long idcategoria) {
+        Completable.fromAction(() -> categoriaRepository.restaurarCategoria(estado, idcategoria))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_rest), R.drawable.ic_toast_feito);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cat_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
+    }
+
     public void eliminarCategoria(Categoria cat, boolean lx) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> categoriaRepository.delete(cat, lx))
@@ -185,12 +208,18 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
+                        if (!lx) {
+                            consultarCategorias(null, true);
+                        }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_eliminada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        if (!lx) {
+                            consultarCategorias(null, true);
+                        }
                     }
                 });
     }

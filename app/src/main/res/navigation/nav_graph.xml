@@ -183,6 +183,10 @@
             <action
                 android:id="@+id/action_categoriaProdutoFragment_to_dialogExportarImportar"
                 app:destination="@id/dialogExportarImportar" />
+            <argument
+                android:name="isLixeira"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </fragment>
         <fragment
             android:id="@+id/listProdutoFragment"
