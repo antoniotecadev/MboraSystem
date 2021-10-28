@@ -291,6 +291,10 @@
                 android:name="nomeCliente"
                 app:argType="string"
                 android:defaultValue="Vendas(Cli)" />
+            <argument
+                android:name="isLixeira"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </fragment>
         <dialog
             android:id="@+id/datePickerFragment"

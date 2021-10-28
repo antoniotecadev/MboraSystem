@@ -29,16 +29,24 @@ public class VendaRepository {
         vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
     }
 
-    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario) {
-        return vendaDao.getVendas(idcliente, isdivida, idusuario);
+    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario, boolean isLixeira) {
+        if (isLixeira) {
+            return vendaDao.getVendasLixeira();
+        } else {
+            return vendaDao.getVendas(idcliente, isdivida, idusuario);
+        }
     }
 
     public Flowable<List<Venda>> getVendasPorData(String data, long idcliente, boolean isDivida, long idusuario) {
         return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario) {
-        return vendaDao.getSearchVendas(codQr, idcliente, isDivida, idusuario);
+    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
+        if (isLixeira) {
+            return vendaDao.searchVendasLixeira(codQr);
+        } else {
+            return vendaDao.getSearchVendas(codQr, idcliente, isDivida, idusuario);
+        }
     }
 
     public void importarVendas(List<String> vendas) {
@@ -53,8 +61,16 @@ public class VendaRepository {
         vendaDao.liquidardivida(divida, idivida);
     }
 
-    public void eliminarVendaLixeira(int estado, String data, long idvenda){
-        vendaDao.deleteLixeira(estado, data, idvenda);
+    public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira) {
+        if (isLixeira) {
+            vendaDao.deleteVendas(venda);
+        } else {
+            vendaDao.deleteLixeira(estado, data, venda.getId());
+        }
+    }
+
+    public void restaurarVenda(int estado, long idvenda) {
+        vendaDao.restaurarVenda(estado, idvenda);
     }
 
 }

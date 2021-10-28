@@ -68,8 +68,14 @@ public abstract class VendaDao {
     @Query("UPDATE vendas SET divida = :divida WHERE id = :idvenda")
     abstract void setDivida(int divida, long idvenda);
 
+    @Query("SELECT * FROM vendas WHERE estado = 3 ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaLixeira();
+
+    @Query("SELECT * FROM vendas WHERE estado = 3 AND codigo_qr LIKE '%' || :codQr || '%'")
+    abstract Flowable<List<Venda>> searchVendaLixeira(String codQr);
+
     @Delete
-    abstract void delete(Venda venda);
+    abstract void deleteVenda(Venda venda);
 
     @Query("UPDATE vendas SET estado = :est, data_elimina = :data WHERE id = :id")
     public abstract void deleteLixeira(int est, String data, long id);
@@ -91,6 +97,9 @@ public abstract class VendaDao {
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%' ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaDivUsuario(String codQr, long idusuario);
+
+    @Query("UPDATE vendas SET estado = :est WHERE id = :id")
+    public abstract void restaurarVendas(int est, long id);
 
 
     @Transaction
@@ -164,6 +173,22 @@ public abstract class VendaDao {
             return getVendaUsuario(codQr, idusuario);
         }
         return getVendaVazia();
+    }
+
+    public Flowable<List<Venda>> getVendasLixeira() {
+        return getVendaLixeira();
+    }
+
+    public Flowable<List<Venda>> searchVendasLixeira(String codQr) {
+        return searchVendaLixeira(codQr);
+    }
+
+    public void deleteVendas(Venda venda) {
+        deleteVenda(venda);
+    }
+
+    public void restaurarVenda(int estado, long idvenda) {
+        restaurarVendas(estado, idvenda);
     }
 
     @Transaction
