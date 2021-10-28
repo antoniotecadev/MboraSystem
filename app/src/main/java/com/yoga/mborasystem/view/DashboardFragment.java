@@ -56,7 +56,7 @@ public class DashboardFragment extends Fragment {
         binding.vendMes.setText(getString(R.string.vd_ms) + " - " + dataActual[2]);
         binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1]);
 
-        vendaViewModel.consultarVendas(null,0, false,0);
+        vendaViewModel.consultarVendas(null, 0, false, 0);
         vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
             if (vendas.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.venda_nao_encontrada), Toast.LENGTH_LONG).show();
@@ -227,7 +227,7 @@ public class DashboardFragment extends Fragment {
         });
 
         produtoViewModel.getPrecoFornecedor().observe(getViewLifecycleOwner(), custos -> {
-            totalPrecoFornecedor = custos;
+            totalPrecoFornecedor = custos == null ? 0 : custos;
             binding.valCusto.setText(getString(R.string.cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
             mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
 
