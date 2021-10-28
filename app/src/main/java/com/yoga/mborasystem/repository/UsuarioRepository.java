@@ -27,8 +27,16 @@ public class UsuarioRepository {
         usuarioDao.insert(us);
     }
 
-    public Flowable<List<Usuario>> getUsuarios() {
-        return usuarioDao.getUsuarios();
+    public Flowable<List<Usuario>> getUsuarios(boolean isLixeira) {
+        if (isLixeira) {
+            return usuarioDao.getUsuariosLixeira();
+        } else {
+            return usuarioDao.getUsuarios();
+        }
+    }
+
+    public void restaurarUsuario(int estado, long idusuario){
+        usuarioDao.restaurarUsuario(estado, idusuario);
     }
 
     public void update(Usuario us, boolean isCodigoPin) {
@@ -41,7 +49,7 @@ public class UsuarioRepository {
 
     public void delete(Usuario us, boolean lx) {
         if (lx && (us != null)) {
-            usuarioDao.deleteLixeira(us.getEstado(), us.getData_elimina(),us.getId());
+            usuarioDao.deleteLixeira(us.getEstado(), us.getData_elimina(), us.getId());
         } else if (us != null) {
             usuarioDao.delete(us);
         }

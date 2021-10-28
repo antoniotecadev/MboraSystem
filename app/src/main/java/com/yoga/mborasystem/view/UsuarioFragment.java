@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 public class UsuarioFragment extends Fragment {
 
     private Bundle bundle;
+    private boolean isLixeira;
     private GroupAdapter adapter;
     private UsuarioViewModel usuarioViewModel;
     private FragmentUsuarioListBinding binding;
@@ -40,15 +41,19 @@ public class UsuarioFragment extends Fragment {
         super.onCreate(savedInstanceState);
         adapter = new GroupAdapter();
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
 
         binding = FragmentUsuarioListBinding.inflate(inflater, container, false);
 
+        isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+        if (isLixeira) {
+            binding.criarUsuarioFragment.setVisibility(View.INVISIBLE);
+        }
         binding.recyclerViewListaUsuario.setAdapter(adapter);
         binding.recyclerViewListaUsuario.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -56,9 +61,13 @@ public class UsuarioFragment extends Fragment {
             MainActivity.getProgressBar();
             Navigation.findNavController(v).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario);
         });
-
+        usuarioViewModel.consultarUsuarios(isLixeira);
         usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> {
-            getActivity().setTitle(getString(R.string.usuarios) + " = " + usuarios.size());
+            if (isLixeira) {
+                getActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.usuario) + ") " + usuarios.size());
+            } else {
+                getActivity().setTitle(getString(R.string.usuarios) + " = " + usuarios.size());
+            }
             adapter.clear();
             for (Usuario usuario : usuarios)
                 adapter.add(new ItemUsuario(usuario));
@@ -105,7 +114,7 @@ public class UsuarioFragment extends Fragment {
 
             if (getArguments() != null) {
                 if (!getArguments().getBoolean("master")) {
-                    viewHolder.itemView.findViewById(R.id.btnEntrar).setEnabled(false);
+//                    viewHolder.itemView.findViewById(R.id.btnEntrar).setEnabled(false);
                     viewHolder.itemView.findViewById(R.id.btnEliminar).setVisibility(View.GONE);
                 }
             }
@@ -114,25 +123,37 @@ public class UsuarioFragment extends Fragment {
             tel.setText(usuario.getTelefone() + " / MS" + usuario.getId());
             end.setText(usuario.getEndereco());
             estado.setText(usuario.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
-
-            viewHolder.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> {
-                UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment().setIdusuario(usuario.getId()).setNomeUsuario(usuario.getNome());
-                Navigation.findNavController(getView()).navigate(direction);
-            });
+            if (!isLixeira) {
+                viewHolder.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> {
+                    UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment().setIdusuario(usuario.getId()).setNomeUsuario(usuario.getNome());
+                    Navigation.findNavController(getView()).navigate(direction);
+                });
+            }
 
             viewHolder.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                 menu.setHeaderTitle(usuario.getNome());
-                menu.add(R.string.editar).setOnMenuItemClickListener(item -> {
-                    verDadosUsuario();
-                    return false;
-                });//groupId, itemId, order, title
-                menu.add(R.string.eliminar_usuario).setOnMenuItemClickListener(item -> {
-                    deleteUser();
-                    return false;
-                });
+                if (!isLixeira) {
+                    menu.add(R.string.editar).setOnMenuItemClickListener(item -> {
+                        verDadosUsuario();
+                        return false;
+                    });//groupId, itemId, order, title
+                    menu.add(R.string.eliminar_usuario).setOnMenuItemClickListener(item -> {
+                        deleteUser(getString(R.string.env_usu_lix));
+                        return false;
+                    });
+                } else {
+                    menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                        restaurarUsuario();
+                        return false;
+                    });
+                    menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                        deleteUser(getString(R.string.tem_certeza_eliminar_usuario));
+                        return false;
+                    });
+                }
             });
 
-            viewHolder.itemView.findViewById(R.id.btnEliminar).setOnClickListener(v -> deleteUser());
+            viewHolder.itemView.findViewById(R.id.btnEliminar).setOnClickListener(v -> deleteUser(getString(R.string.env_usu_lix)));
 
         }
 
@@ -150,16 +171,32 @@ public class UsuarioFragment extends Fragment {
             Navigation.findNavController(getView()).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario, bundle);
         }
 
-        private void deleteUser() {
+        private void deleteUser(String msg) {
             usuario.setId(usuario.getId());
             usuario.setEstado(3);
             usuario.setData_elimina(Ultilitario.getDateCurrent());
-            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-            alert.setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")");
-            alert.setMessage(getString(R.string.tem_certeza_eliminar_usuario));
-            alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
-            alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> usuarioViewModel.eliminarUsuario(usuario, true, null));
-            alert.show();
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")")
+                    .setMessage(msg)
+                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        if (isLixeira) {
+                            usuarioViewModel.eliminarUsuario(usuario, false, null);
+                        } else {
+                            usuarioViewModel.eliminarUsuario(usuario, true, null);
+                        }
+                    })
+                    .show();
+        }
+
+        private void restaurarUsuario() {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.rest) + " (" + usuario.getNome() + ")")
+                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        usuarioViewModel.restaurarUsuario(Ultilitario.UM, usuario.getId());
+                    })
+                    .show();
         }
     }
 

@@ -43,7 +43,6 @@ public class UsuarioViewModel extends AndroidViewModel {
         disposable = new CompositeDisposable();
         compositeDisposable = new CompositeDisposable();
         usuarioRepository = new UsuarioRepository(getApplication());
-        consultarUsuarios();
     }
 
     private boolean isCampoVazio(String valor) {
@@ -209,18 +208,28 @@ public class UsuarioViewModel extends AndroidViewModel {
                             dg.dismiss();
                         }
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.usuario_eliminado), R.drawable.ic_toast_feito);
+                        if (lx) {
+                            consultarUsuarios(false);
+                        } else {
+                            consultarUsuarios(true);
+                        }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.usuario_nao_eliminado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        if (lx) {
+                            consultarUsuarios(false);
+                        } else {
+                            consultarUsuarios(true);
+                        }
                     }
                 });
     }
 
-    public void consultarUsuarios() {
-        compositeDisposable.add(usuarioRepository.getUsuarios()
+    public void consultarUsuarios(boolean isLixeira) {
+        compositeDisposable.add(usuarioRepository.getUsuarios(isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(usuarios -> {
@@ -228,6 +237,33 @@ public class UsuarioViewModel extends AndroidViewModel {
                 }, e -> {
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                 }));
+    }
+
+    public void restaurarUsuario(int estado, long idusuario) {
+        MainActivity.getProgressBar();
+        Completable.fromAction(() -> usuarioRepository.restaurarUsuario(estado, idusuario))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.usu_rest), R.drawable.ic_toast_feito);
+                        consultarUsuarios(true);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.usu_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        consultarUsuarios(true);
+                    }
+                });
     }
 
     @Override

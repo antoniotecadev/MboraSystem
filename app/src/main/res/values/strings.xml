@@ -418,6 +418,10 @@
     <string name="prod_rest">Produto restaurado.</string>
     <string name="prod_n_rest">Produto não restaurado.</string>
     <string name="env_prod_lix">Este produto será enviado para lixeira.</string>
+    <string name="env_usu_lix">Este usuário será enviado para lixeira.</string>
+    <string name="usu_rest">Usuário restaurado</string>
+    <string name="usu_n_rest">Usuário não restaurado.</string>
+    <string name="eli_td">Eliminar tudo</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

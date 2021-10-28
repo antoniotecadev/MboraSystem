@@ -20,11 +20,17 @@ public interface UsuarioDao {
     @Query("SELECT * FROM usuarios WHERE estado != 3 ORDER BY id DESC")
     Flowable<List<Usuario>> getUsuarios();
 
+    @Query("SELECT * FROM usuarios WHERE estado = 3 ORDER BY id DESC")
+    Flowable<List<Usuario>> getUsuariosLixeira();
+
     @Query("UPDATE usuarios SET nome = :nome, telefone = :tel, endereco = :end, estado = :est, data_modifica = :data WHERE id = :id")
     void update(String nome, String tel, String end, int est, String data, long id);
 
     @Query("UPDATE usuarios SET codigo_pin = :cp WHERE id = :id")
     void update(String cp, long id);
+
+    @Query("UPDATE usuarios SET estado = :est WHERE id = :id")
+    void restaurarUsuario(int est, long id);
 
     @Delete
     void delete(Usuario usuario);

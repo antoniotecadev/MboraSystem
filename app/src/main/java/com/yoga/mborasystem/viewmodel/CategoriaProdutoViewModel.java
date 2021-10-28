@@ -170,6 +170,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     public void restaurarCategoria(int estado, long idcategoria) {
+        MainActivity.getProgressBar();
         Completable.fromAction(() -> categoriaRepository.restaurarCategoria(estado, idcategoria))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
