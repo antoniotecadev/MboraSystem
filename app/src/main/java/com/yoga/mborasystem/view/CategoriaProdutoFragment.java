@@ -132,7 +132,6 @@ public class CategoriaProdutoFragment extends Fragment {
             }
         }));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-            MainActivity.getProgressBar();
             if (isLixeira) {
                 categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout, true);
             } else {

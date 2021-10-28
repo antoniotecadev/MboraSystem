@@ -113,6 +113,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     public void consultarCategorias(SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
+        MainActivity.getProgressBar();
         compositeDisposable.add(categoriaRepository.getCategorias(isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -184,12 +185,14 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_rest), R.drawable.ic_toast_feito);
+                        consultarCategorias(null, true);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cat_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        consultarCategorias(null, true);
                     }
                 });
     }
