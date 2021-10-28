@@ -171,8 +171,8 @@
     <string name="categoria_renomeada">Categoria renomeada</string>
     <string name="categoria_eliminada">Categoria eliminada</string>
     <string name="categoria_nao_eliminada">" Categoria não eliminada"</string>
-    <string name="tem_certeza_eliminar_produto">Tem a certeza que quer eliminar este produto ?</string>
-    <string name="tem_certeza_eliminar_categoria">Todas as actividades e produtos relacionados(as) a esta categoria também serão eliminados(as)\nTem a certeza que quer eliminar esta categoria ?</string>
+    <string name="tem_certeza_eliminar_produto">Todas as actividades relacionados(as) a este produto também serão eliminados(as).\nTem a certeza que quer eliminar este produto ?</string>
+    <string name="tem_certeza_eliminar_categoria">Todas as actividades e produtos relacionados(as) a esta categoria também serão eliminados(as).\nTem a certeza que quer eliminar esta categoria ?</string>
     <string name="pesquisar_produto">Pesquisar produto</string>
     <string name="pesquisar_categoria">Pesquisar categoria</string>
     <string name="fechar">Fechar</string>
@@ -412,10 +412,12 @@
     <string name="rvr_car">Remover</string>
     <string name="lix">Lixeira</string>
     <string name="env_cat_lix">Esta categoria será enviada para lixeira.</string>
-    <string name="elim_cat_perm">Eliminar</string>
-    <string name="rest_cat">"Restaurar "</string>
+    <string name="rest">"Restaurar "</string>
     <string name="cat_rest">Categoria restaurada.</string>
     <string name="cat_n_rest">Categoria não restaurada</string>
+    <string name="prod_rest">Produto restaurado.</string>
+    <string name="prod_n_rest">Produto não restaurado.</string>
+    <string name="env_prod_lix">Este produto será enviado para lixeira.</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

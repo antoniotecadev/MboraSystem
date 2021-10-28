@@ -127,7 +127,7 @@ public class DialogExportarImportar extends DialogFragment {
                     String[] idcategoria = TextUtils.split(binding.spinnerCategoria.getSelectedItem().toString(), "-");
                     Ultilitario.isLocal = isLocal ? true : false;
                     Ultilitario.categoria = idcategoria[1].trim();
-                    produtoViewModel.consultarProdutos(Long.parseLong(idcategoria[0].trim()), true, null);
+                    produtoViewModel.consultarProdutos(Long.parseLong(idcategoria[0].trim()), true, null, false);
                     dialog.dismiss();
                     break;
                 case Ultilitario.IMPORTAR_PRODUTO:

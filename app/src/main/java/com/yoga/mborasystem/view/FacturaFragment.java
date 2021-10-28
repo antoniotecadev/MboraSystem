@@ -111,7 +111,7 @@ public class FacturaFragment extends Fragment {
                 resultCodeBar = result.getText();
                 barcodeView.setStatusText(result.getText());
                 beepManager.playBeepSoundAndVibrate();
-                produtoViewModel.searchProduto(resultCodeBar);
+                produtoViewModel.searchProduto(resultCodeBar, false);
             }
             //Added preview of scanned barcode
 //            ImageView imageView = findViewById(R.id.barcodePreview);
@@ -249,7 +249,7 @@ public class FacturaFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] idcategoria = TextUtils.split(parent.getItemAtPosition(position).toString(), "-");
                 idc = Long.parseLong(idcategoria[0].trim());
-                produtoViewModel.consultarProdutos(idc, false, null);
+                produtoViewModel.consultarProdutos(idc, false, null, false);
             }
 
             @Override
@@ -532,7 +532,7 @@ public class FacturaFragment extends Fragment {
                 Ultilitario.zerarPreco(binding.cartaoValorPago);
                 Ultilitario.zerarPreco(binding.depValorPago);
                 Ultilitario.zerarPreco(binding.transfValorPago);
-                produtoViewModel.consultarProdutos(idc, false, null);
+                produtoViewModel.consultarProdutos(idc, false, null, false);
                 alertDialog.dismiss();
             }
         });
@@ -862,7 +862,7 @@ public class FacturaFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                produtoViewModel.consultarProdutos(idc, false, null);
+                produtoViewModel.consultarProdutos(idc, false, null, false);
                 return true;
             }
         });
@@ -875,9 +875,9 @@ public class FacturaFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    produtoViewModel.consultarProdutos(idc, false, null);
+                    produtoViewModel.consultarProdutos(idc, false, null, false);
                 } else {
-                    produtoViewModel.searchProduto(newText);
+                    produtoViewModel.searchProduto(newText, false);
                 }
                 return false;
             }

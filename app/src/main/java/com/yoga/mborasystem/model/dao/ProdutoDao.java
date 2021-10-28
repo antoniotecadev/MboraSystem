@@ -29,6 +29,9 @@ public interface ProdutoDao {
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getProdutos(long idcat);
 
+    @Query("SELECT * FROM produtos WHERE estado = 3 ORDER BY produtos.id DESC")
+    Flowable<List<Produto>> getProdutosLixeira();
+
     @Query("SELECT count(id) FROM produtos WHERE estado != 3")
     LiveData<Long> getProdutos();
 
@@ -40,6 +43,12 @@ public interface ProdutoDao {
 
     @Query("SELECT * FROM produtos WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
     Flowable<List<Produto>> searchProdutos(String search);
+
+    @Query("SELECT * FROM produtos WHERE estado = 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
+    Flowable<List<Produto>> searchProdutosLixeira(String search);
+
+    @Query("UPDATE produtos SET estado = :est WHERE id = :id")
+    void restaurarCategoria(int est, long id);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd);

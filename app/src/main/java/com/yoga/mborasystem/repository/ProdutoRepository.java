@@ -43,8 +43,12 @@ public class ProdutoRepository {
         }
     }
 
-    public Flowable<List<Produto>> getProdutos(long idcat) {
-        return produtoDao.getProdutos(idcat);
+    public Flowable<List<Produto>> getProdutos(long idcat, boolean isLixeira) {
+        if (isLixeira) {
+            return produtoDao.getProdutosLixeira();
+        } else {
+            return produtoDao.getProdutos(idcat);
+        }
     }
 
     public LiveData<Long> getProdutos() {
@@ -55,8 +59,16 @@ public class ProdutoRepository {
         return produtoDao.getPrecoFornecedor();
     }
 
-    public Flowable<List<Produto>> searchProdutos(String produto) {
-        return produtoDao.searchProdutos(produto);
+    public Flowable<List<Produto>> searchProdutos(String produto, boolean isLixeira) {
+        if (isLixeira) {
+            return produtoDao.searchProdutosLixeira(produto);
+        } else {
+            return produtoDao.searchProdutos(produto);
+        }
+    }
+
+    public void restaurarCategoria(int estado, long idproduto) {
+        produtoDao.restaurarCategoria(estado, idproduto);
     }
 
     public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd) {

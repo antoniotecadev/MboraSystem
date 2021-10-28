@@ -67,13 +67,20 @@ public class HomeFragment extends Fragment {
         });
 
         binding.floatingActionButtonCategoria.setOnClickListener(v -> {
-            entrarCategoria(true);
+            entrarCategorias(true);
+        });
+
+        binding.floatingActionButtonProduto.setOnClickListener(v -> {
+            entrarProdutos(true);
         });
 
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.categoriaProdutoFragment1:
-                    entrarCategoria(true);
+                    entrarCategorias(true);
+                    break;
+                case R.id.produtoFragment:
+                    entrarProdutos(true);
                     break;
                 default:
                     break;
@@ -201,9 +208,15 @@ public class HomeFragment extends Fragment {
                 .show();
     }
 
-    private void entrarCategoria(boolean isLixeira) {
+    private void entrarCategorias(boolean isLixeira) {
         MainActivity.getProgressBar();
         HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(isLixeira);
+        Navigation.findNavController(getView()).navigate(direction);
+    }
+
+    private void entrarProdutos(boolean isLixeira) {
+        MainActivity.getProgressBar();
+        HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(isLixeira);
         Navigation.findNavController(getView()).navigate(direction);
     }
 

@@ -33,6 +33,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
@@ -44,25 +45,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 public class ListProdutoFragment extends Fragment {
 
     private Bundle bundle;
+    private Long idcategoria;
+    private String categoria;
+    private boolean isLixeira;
     private GroupAdapter adapter;
     private ProdutoViewModel produtoViewModel;
     private FragmentProdutoListBinding binding;
-    private Long idcategoria;
-    private String categoria;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         bundle = new Bundle();
+
         adapter = new GroupAdapter();
+        produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProdutoListBinding.inflate(inflater, container, false);
-        produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
+
+        isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+
         binding.recyclerViewListaProduto.setAdapter(adapter);
         binding.recyclerViewListaProduto.setHasFixedSize(true);
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -71,6 +77,7 @@ public class ListProdutoFragment extends Fragment {
 //        Sprite fadingCircle = new FadingCircle();
 //        progressBar.setIndeterminateDrawable(fadingCircle);
 
+
         if (getArguments() != null) {
             long idcategoria = getArguments().getLong("idcategoria");
             String categoria = getArguments().getString("categoria");
@@ -78,7 +85,14 @@ public class ListProdutoFragment extends Fragment {
             this.categoria = categoria;
             getActivity().setTitle(this.categoria);
         }
-        produtoViewModel.consultarProdutos(this.idcategoria, false, null);
+
+        if (isLixeira) {
+            getActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.prod) + ")");
+            binding.btnCriarProdutoFragment.setVisibility(View.INVISIBLE);
+        }
+
+
+        produtoViewModel.consultarProdutos(this.idcategoria, false, null, isLixeira);
         produtoViewModel.getListaProdutos().observe(getViewLifecycleOwner(), new Observer<List<Produto>>() {
             @Override
             public void onChanged(List<Produto> produtos) {
@@ -107,7 +121,7 @@ public class ListProdutoFragment extends Fragment {
         });
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
                     MainActivity.getProgressBar();
-                    produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
+                    produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira);
                 }
         );
 
@@ -147,6 +161,11 @@ public class ListProdutoFragment extends Fragment {
                 binding.btnCriarProdutoFragment.setVisibility(View.GONE);
             }
         }
+        if (isLixeira) {
+            menu.findItem(R.id.dialogCriarProduto).setVisible(false);
+            menu.findItem(R.id.dialogFiltrarProduto).setVisible(false);
+            menu.findItem(R.id.btnScannerBack).setVisible(false);
+        }
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
@@ -161,7 +180,7 @@ public class ListProdutoFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
+                produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira);
                 return true;
             }
         });
@@ -174,9 +193,9 @@ public class ListProdutoFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout);
+                    produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira);
                 } else {
-                    produtoViewModel.searchProduto(newText);
+                    produtoViewModel.searchProduto(newText, isLixeira);
                 }
                 return false;
             }
@@ -243,19 +262,54 @@ public class ListProdutoFragment extends Fragment {
                 estadoProduto.setTextColor(Color.RED);
                 estadoProduto.setText(context.getString(R.string.estado_bloqueado));
             }
-            entrarProduto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    entrarProduto();
-                }
+            if (isLixeira) {
+                entrarProduto.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                    menu.setHeaderTitle(produto.getNome());
+                    menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                        restaurarProduto();
+                        return false;
+                    });
+                    menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                        dialogEliminarProduto();
+                        return false;
+                    });
+                });
+            } else {
+                entrarProduto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        entrarProduto();
+                    }
 
-                private void entrarProduto() {
-                    bundle.clear();
-                    bundle.putParcelable("produto", produto);
-                    bundle.putBoolean("master", getArguments().getBoolean("master"));
-                    Navigation.findNavController(getView()).navigate(R.id.action_listProdutoFragment_to_dialogCriarProduto, bundle);
-                }
-            });
+                    private void entrarProduto() {
+                        bundle.clear();
+                        bundle.putParcelable("produto", produto);
+                        bundle.putBoolean("master", getArguments().getBoolean("master"));
+                        Navigation.findNavController(getView()).navigate(R.id.action_listProdutoFragment_to_dialogCriarProduto, bundle);
+                    }
+                });
+            }
+        }
+
+        private void restaurarProduto() {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.rest) + " (" + produto.getNome() + ")")
+                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        produtoViewModel.restaurarProduto(Ultilitario.UM, produto.getId());
+                    })
+                    .show();
+        }
+
+        private void dialogEliminarProduto() {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.eliminar) + " (" + produto.getNome() + ")")
+                    .setMessage(getString(R.string.tem_certeza_eliminar_produto))
+                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        produtoViewModel.eliminarProduto(produto, false, null);
+                    })
+                    .show();
         }
 
         @Override
@@ -273,7 +327,7 @@ public class ListProdutoFragment extends Fragment {
                 if (result.getContents() == null) {
                     Toast.makeText(getContext(), R.string.scaner_cod_bar_cancel, Toast.LENGTH_LONG).show();
                 } else {
-                    produtoViewModel.searchProduto(result.getContents());
+                    produtoViewModel.searchProduto(result.getContents(), isLixeira);
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, resultData);

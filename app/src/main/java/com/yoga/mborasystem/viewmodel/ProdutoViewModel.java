@@ -203,19 +203,27 @@ public class ProdutoViewModel extends AndroidViewModel {
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
-                        dialog.dismiss();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                        if (lx) {
+                            consultarProdutos(produto.getIdcategoria(), false, null, false);
+                        }
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_eliminado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        if (lx) {
+                            consultarProdutos(produto.getIdcategoria(), false, null, false);
+                        }
                     }
                 });
     }
 
-    public void consultarProdutos(long idcategoria, boolean isImport, SwipeRefreshLayout mySwipeRefreshLayout) {
-        compositeDisposable.add(produtoRepository.getProdutos(idcategoria)
+    public void consultarProdutos(long idcategoria, boolean isImport, SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
+        compositeDisposable.add(produtoRepository.getProdutos(idcategoria, isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Produto>>() {
@@ -240,7 +248,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public LiveData<Long> getPrecoFornecedor() {
-       return produtoRepository.getPrecoFornecedor();
+        return produtoRepository.getPrecoFornecedor();
     }
 
     public LiveData<Long> consultarProdutos() {
@@ -533,8 +541,8 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void searchProduto(String produto) {
-        compositeDisposable.add(produtoRepository.searchProdutos(produto)
+    public void searchProduto(String produto, boolean isLixeira) {
+        compositeDisposable.add(produtoRepository.searchProdutos(produto, isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(produtos -> {
@@ -542,6 +550,30 @@ public class ProdutoViewModel extends AndroidViewModel {
                 }, throwable -> {
                     Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
                 }));
+    }
+
+    public void restaurarProduto(int estado, long idproduto) {
+        Completable.fromAction(() -> produtoRepository.restaurarCategoria(estado, idproduto))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_rest), R.drawable.ic_toast_feito);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.prod_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
     }
 
     public void importarProdutos(List<String> produtos) {

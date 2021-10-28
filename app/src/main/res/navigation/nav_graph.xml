@@ -152,6 +152,9 @@
             <action
                 android:id="@+id/action_homeFragment_to_dashboardFragment"
                 app:destination="@id/dashboardFragment" />
+            <action
+                android:id="@+id/action_homeFragment_to_listProdutoFragment"
+                app:destination="@id/listProdutoFragment" />
         </fragment>
         <fragment
             android:id="@+id/usuarioFragment"
@@ -200,6 +203,10 @@
             <action
                 android:id="@+id/action_listProdutoFragment_to_dialogFiltrarProduto2"
                 app:destination="@id/dialogFiltrarProduto" />
+            <argument
+                android:name="isLixeira"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </fragment>
         <dialog
             android:id="@+id/dialogSenha"

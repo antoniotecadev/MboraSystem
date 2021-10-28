@@ -324,11 +324,11 @@ public class CategoriaProdutoFragment extends Fragment {
                             }
                         });
                     } else {
-                        menu.add(getString(R.string.rest_cat)).setOnMenuItemClickListener(item -> {
+                        menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
                             restaurarCategoria();
                             return false;
                         });
-                        menu.add(getString(R.string.elim_cat_perm)).setOnMenuItemClickListener(item -> {
+                        menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
                             dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria));
                             return false;
                         });
@@ -366,7 +366,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
         private void restaurarCategoria() {
             new AlertDialog.Builder(getContext())
-                    .setTitle(getString(R.string.rest_cat) + " (" + categoria.getCategoria() + ")")
+                    .setTitle(getString(R.string.rest) + " (" + categoria.getCategoria() + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                         categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, categoria.getId());

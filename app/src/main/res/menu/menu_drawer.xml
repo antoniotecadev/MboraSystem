@@ -38,7 +38,7 @@
                 android:icon="@android:drawable/ic_menu_delete"
                 android:title="@string/cat" />
             <item
-                android:id="@+id/ProdutoFragment"
+                android:id="@+id/produtoFragment"
                 android:icon="@android:drawable/ic_menu_delete"
                 android:title="@string/prod" />
             <item
