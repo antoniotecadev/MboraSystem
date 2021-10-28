@@ -275,20 +275,27 @@ public class ListProdutoFragment extends Fragment {
                     });
                 });
             } else {
+                entrarProduto.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                    menu.setHeaderTitle(produto.getNome());
+                    menu.add(getString(R.string.editar)).setOnMenuItemClickListener(item -> {
+                        entrarProduto();
+                        return false;
+                    });
+                });
                 entrarProduto.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         entrarProduto();
                     }
-
-                    private void entrarProduto() {
-                        bundle.clear();
-                        bundle.putParcelable("produto", produto);
-                        bundle.putBoolean("master", getArguments().getBoolean("master"));
-                        Navigation.findNavController(getView()).navigate(R.id.action_listProdutoFragment_to_dialogCriarProduto, bundle);
-                    }
                 });
             }
+        }
+
+        private void entrarProduto() {
+            bundle.clear();
+            bundle.putParcelable("produto", produto);
+            bundle.putBoolean("master", getArguments().getBoolean("master"));
+            Navigation.findNavController(getView()).navigate(R.id.action_listProdutoFragment_to_dialogCriarProduto, bundle);
         }
 
         private void restaurarProduto() {
