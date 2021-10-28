@@ -223,6 +223,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public void consultarProdutos(long idcategoria, boolean isImport, SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
+        MainActivity.getProgressBar();
         compositeDisposable.add(produtoRepository.getProdutos(idcategoria, isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -553,6 +554,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public void restaurarProduto(int estado, long idproduto) {
+        MainActivity.dismissProgressBar();
         Completable.fromAction(() -> produtoRepository.restaurarCategoria(estado, idproduto))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -566,12 +568,14 @@ public class ProdutoViewModel extends AndroidViewModel {
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_rest), R.drawable.ic_toast_feito);
+                        consultarProdutos(0, false, null, true);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.prod_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        consultarProdutos(0, false, null, true);
                     }
                 });
     }

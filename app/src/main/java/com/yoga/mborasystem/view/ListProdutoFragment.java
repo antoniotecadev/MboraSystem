@@ -120,7 +120,6 @@ public class ListProdutoFragment extends Fragment {
             }
         });
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-                    MainActivity.getProgressBar();
                     produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira);
                 }
         );
