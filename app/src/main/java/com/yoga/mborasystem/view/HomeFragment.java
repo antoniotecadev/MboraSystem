@@ -79,6 +79,7 @@ public class HomeFragment extends Fragment {
         });
 
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
+            NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
             switch (item.getItemId()) {
                 case R.id.categoriaProdutoFragment1:
                     entrarCategorias(true);
@@ -93,7 +94,8 @@ public class HomeFragment extends Fragment {
                     break;
             }
             MainActivity.drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
+            return NavigationUI.onNavDestinationSelected(item, navController)
+                    || super.onOptionsItemSelected(item);
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
