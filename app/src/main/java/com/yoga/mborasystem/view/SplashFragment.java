@@ -17,13 +17,18 @@ import androidx.navigation.Navigation;
 
 public class SplashFragment extends Fragment {
 
-    ClienteViewModel clienteViewModel;
+    private ClienteViewModel clienteViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
             Ultilitario.getExisteMutableLiveData().observe(getViewLifecycleOwner(), existe -> {
                 switch (existe) {
                     case SIM:
@@ -35,11 +40,6 @@ public class SplashFragment extends Fragment {
                 }
             });
         }, 5000);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }
 }

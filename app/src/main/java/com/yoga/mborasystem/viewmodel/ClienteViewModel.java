@@ -148,7 +148,8 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     public void clienteExiste(boolean limitCadastro, Cliente c) {
-        clienteRepository.clienteExiste().subscribeOn(Schedulers.io())
+        clienteRepository.clienteExiste()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<Cliente>() {
                     @Override
