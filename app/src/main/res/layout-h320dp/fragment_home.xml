@@ -162,6 +162,7 @@
                 android:gravity="center">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btnVenda"
                     android:layout_width="130dp"
                     android:layout_height="140dp"
                     android:layout_margin="12dp"
@@ -214,6 +215,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btnCliente"
                     android:layout_width="130dp"
                     android:layout_height="140dp"
                     android:layout_margin="12dp"
@@ -272,6 +274,7 @@
                 android:gravity="center">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btnDashboard"
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
                     android:layout_margin="12dp"
@@ -337,8 +340,6 @@
                     android:layout_marginBottom="30dp"
                     android:src="@drawable/ic_logotipo_yoga_original" />
             </androidx.appcompat.widget.LinearLayoutCompat>
-
-
         </androidx.gridlayout.widget.GridLayout>
     </androidx.core.widget.NestedScrollView>
 
