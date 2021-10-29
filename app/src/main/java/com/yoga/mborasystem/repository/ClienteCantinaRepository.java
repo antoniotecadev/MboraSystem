@@ -38,10 +38,8 @@ public class ClienteCantinaRepository {
         clienteCantinaDao.update(nome, telefone, estado, dataModif, id);
     }
 
-    public void delete(ClienteCantina clienteCantina, boolean lx) {
-        if (lx && (clienteCantina != null)) {
-            clienteCantinaDao.deleteLixeira(clienteCantina.getEstado(), clienteCantina.getData_elimina(), clienteCantina.getId());
-        } else if (clienteCantina != null) {
+    public void delete(ClienteCantina clienteCantina) {
+        if (clienteCantina != null) {
             clienteCantinaDao.delete(clienteCantina);
         }
     }

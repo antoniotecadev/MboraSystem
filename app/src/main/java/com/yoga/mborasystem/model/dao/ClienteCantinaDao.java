@@ -28,7 +28,4 @@ public interface ClienteCantinaDao {
     @Delete
     void delete(ClienteCantina clienteCantina);
 
-    @Query("UPDATE clientecantina SET estado = :estado, data_elimina = :data WHERE id = :id")
-    void deleteLixeira(int estado, String data, long id);
-
 }

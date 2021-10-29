@@ -77,12 +77,11 @@ public class DialogCriarClienteCantina extends DialogFragment {
     private void deleteClient(long idcliente, String nome) {
         clienteCantina.setId(idcliente);
         clienteCantina.setEstado(Ultilitario.TRES);
-        clienteCantina.setData_elimina(Ultilitario.getDateCurrent());
         new AlertDialog.Builder(getContext())
                 .setTitle(getString(R.string.eliminar) + " (" + nome + ")")
                 .setMessage(getString(R.string.tem_cert_elim_cli))
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, true, dialog))
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, dialog))
                 .show();
     }
 

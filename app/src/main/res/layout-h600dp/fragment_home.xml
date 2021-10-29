@@ -359,30 +359,6 @@
         android:backgroundTint="#EBF31A"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonCliente"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_marginBottom="275dp"
-        android:layout_marginLeft="16dp"
-        app:pressedTranslationZ="12dp"
-        android:visibility="invisible"
-        android:src="@drawable/ic_cliente_60"
-        android:backgroundTint="#E53935"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonUsuario"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_marginBottom="210dp"
-        android:layout_marginLeft="16dp"
-        app:pressedTranslationZ="12dp"
-        android:visibility="invisible"
-        android:src="@drawable/ic_usario_60"
-        android:backgroundTint="#81F309"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonProduto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

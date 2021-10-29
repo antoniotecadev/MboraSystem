@@ -21,7 +21,6 @@ public class ClienteCantina {
 
     private String data_cria;
     private String data_modifica;
-    private String data_elimina;
 
     public ClienteCantina() { }
 
@@ -73,11 +72,4 @@ public class ClienteCantina {
         this.data_modifica = data_modifica;
     }
 
-    public String getData_elimina() {
-        return data_elimina;
-    }
-
-    public void setData_elimina(String data_elimina) {
-        this.data_elimina = data_elimina;
-    }
 }

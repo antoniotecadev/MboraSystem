@@ -132,12 +132,11 @@ public class ListaClienteFragment extends Fragment {
                                     menu.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
                                         clienteCantina.setId(cliente.getId());
                                         clienteCantina.setEstado(Ultilitario.TRES);
-                                        clienteCantina.setData_elimina(Ultilitario.getDateCurrent());
                                         new AlertDialog.Builder(getContext())
                                                 .setTitle(getString(R.string.eliminar) + " (" + cliente.getNome() + ")")
                                                 .setMessage(getString(R.string.tem_cert_elim_cli))
                                                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                                                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, true, null))
+                                                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
                                                 .show();
                                         return false;
                                     });

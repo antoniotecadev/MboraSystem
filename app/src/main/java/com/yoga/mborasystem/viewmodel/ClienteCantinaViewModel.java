@@ -169,9 +169,9 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 });
     }
 
-    public void eliminarCliente(ClienteCantina clienteCantina, boolean lx, Dialog dg) {
+    public void eliminarCliente(ClienteCantina clienteCantina, Dialog dg) {
         MainActivity.getProgressBar();
-        Completable.fromAction(() -> clienteCantinaRepository.delete(clienteCantina, lx))
+        Completable.fromAction(() -> clienteCantinaRepository.delete(clienteCantina))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {

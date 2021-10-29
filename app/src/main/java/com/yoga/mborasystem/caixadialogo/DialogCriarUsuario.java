@@ -114,13 +114,11 @@ public class DialogCriarUsuario extends DialogFragment {
 
     private void deleteUser() {
         usuario.setId(usuario.getId());
-        usuario.setEstado(Ultilitario.TRES);
-        usuario.setData_elimina(Ultilitario.getDateCurrent());
         new AlertDialog.Builder(getContext())
                 .setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")")
                 .setMessage(getString(R.string.tem_certeza_eliminar_usuario))
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> usuarioViewModel.eliminarUsuario(usuario, true, dialog))
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> usuarioViewModel.eliminarUsuario(usuario, dialog))
                 .show();
     }
 

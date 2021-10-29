@@ -74,10 +74,6 @@ public class HomeFragment extends Fragment {
             entrarProdutos(true);
         });
 
-        binding.floatingActionButtonUsuario.setOnClickListener(v -> {
-            entrarUsuarios(true);
-        });
-
         binding.floatingActionButtonVendaLixo.setOnClickListener(v -> {
             entrarVendas(true);
         });
@@ -89,9 +85,6 @@ public class HomeFragment extends Fragment {
                     break;
                 case R.id.produtoFragment:
                     entrarProdutos(true);
-                    break;
-                case R.id.usuarioFragment1:
-                    entrarUsuarios(true);
                     break;
                 case R.id.vendaFragment1:
                     entrarVendas(true);
@@ -145,16 +138,12 @@ public class HomeFragment extends Fragment {
     private void animationLixeira(Animation animation, Animation animationLixo, boolean isOpen) {
         binding.floatingActionButtonCategoria.startAnimation(animation);
         binding.floatingActionButtonProduto.startAnimation(animation);
-        binding.floatingActionButtonUsuario.startAnimation(animation);
-        binding.floatingActionButtonCliente.startAnimation(animation);
         binding.floatingActionButtonVendaLixo.startAnimation(animation);
 
         binding.floatingActionButtonLixo.startAnimation(animationLixo);
 
         binding.floatingActionButtonCategoria.setClickable(isOpen);
         binding.floatingActionButtonProduto.setClickable(isOpen);
-        binding.floatingActionButtonUsuario.setClickable(isOpen);
-        binding.floatingActionButtonCliente.setClickable(isOpen);
         binding.floatingActionButtonVendaLixo.setClickable(isOpen);
         this.isOpen = isOpen;
     }
@@ -231,12 +220,6 @@ public class HomeFragment extends Fragment {
     private void entrarProdutos(boolean isLixeira) {
         MainActivity.getProgressBar();
         HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(isLixeira);
-        Navigation.findNavController(getView()).navigate(direction);
-    }
-
-    private void entrarUsuarios(boolean isLixeira) {
-        MainActivity.getProgressBar();
-        HomeFragmentDirections.ActionHomeFragmentToUsuarioFragment direction = HomeFragmentDirections.actionHomeFragmentToUsuarioFragment().setIsLixeira(isLixeira);
         Navigation.findNavController(getView()).navigate(direction);
     }
 
