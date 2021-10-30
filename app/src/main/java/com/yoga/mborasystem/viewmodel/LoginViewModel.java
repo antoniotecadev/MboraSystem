@@ -2,6 +2,7 @@ package com.yoga.mborasystem.viewmodel;
 
 import android.app.Application;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Usuario;
 import com.yoga.mborasystem.repository.UsuarioRepository;
@@ -75,12 +76,14 @@ public class LoginViewModel extends AndroidViewModel {
                         } else {
                             getUsuarioMutableLiveData().setValue(usuario);
                         }
+                        MainActivity.dismissProgressBar();
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         infoPin.setValue(getApplication().getString(R.string.infoPinIncorreto));
                         contarIntroducaoPin();
+                        MainActivity.dismissProgressBar();
                     }
                 });
     }
