@@ -53,7 +53,6 @@ public class ListaProdutoVendaFragment extends Fragment {
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.chipQuantidadeProduto.setText(quant + "");
 
-        Toast.makeText(getContext(), codQr, Toast.LENGTH_SHORT).show();
         vendaViewModel.getProdutosVenda(idvenda, codQr);
         vendaViewModel.getProdutosVendaLiveDta().observe(getViewLifecycleOwner(), produtos -> {
             adapter.clear();
