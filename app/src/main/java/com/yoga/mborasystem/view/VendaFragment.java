@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +22,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -47,8 +48,8 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -81,23 +82,25 @@ public class VendaFragment extends Fragment {
         nomeCliente = VendaFragmentArgs.fromBundle(getArguments()).getNomeCliente();
 
         if (idcliente > 0) {
-            getActivity().setTitle(nomeCliente);
+            requireActivity().setTitle(nomeCliente);
         } else if (idusuario > 0) {
-            getActivity().setTitle(nomeUsuario);
+            requireActivity().setTitle(nomeUsuario);
         } else {
-            getActivity().setTitle(getString(R.string.vds));
+            requireActivity().setTitle(getString(R.string.vds));
         }
         setHasOptionsMenu(true);
     }
 
+    @SuppressLint("NonConstantResourceId")
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentVendaListBinding.inflate(inflater, container, false);
 
         isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
         if (isLixeira) {
-            getActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.venda) + ")");
+            requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.venda) + ")");
             binding.bottomNav.setVisibility(View.INVISIBLE);
         }
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
@@ -105,37 +108,34 @@ public class VendaFragment extends Fragment {
             vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida, idusuario, isLixeira);
         });
 
-        binding.bottomNav.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
-            @Override
-            public void onNavigationItemReselected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.tdsVd:
-                        isDivida = false;
-                        if (idcliente > 0) {
-                            getActivity().setTitle(nomeCliente);
-                        } else if (idusuario > 0) {
-                            getActivity().setTitle(nomeUsuario);
-                        } else {
-                            getActivity().setTitle(getString(R.string.vds));
-                        }
-                        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.tds_vd), R.drawable.ic_toast_feito);
-                        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false, idusuario, isLixeira);
-                        break;
-                    case R.id.vdDvd:
-                        isDivida = true;
-                        if (idcliente > 0) {
-                            getActivity().setTitle(nomeCliente);
-                        } else if (idusuario > 0) {
-                            getActivity().setTitle(nomeUsuario);
-                        } else {
-                            getActivity().setTitle(getString(R.string.dvd));
-                        }
-                        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vd_dvd), R.drawable.ic_toast_feito);
-                        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, true, idusuario, isLixeira);
-                        break;
-                    default:
-                        break;
-                }
+        binding.bottomNav.setOnNavigationItemReselectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.tdsVd:
+                    isDivida = false;
+                    if (idcliente > 0) {
+                        requireActivity().setTitle(nomeCliente);
+                    } else if (idusuario > 0) {
+                        requireActivity().setTitle(nomeUsuario);
+                    } else {
+                        requireActivity().setTitle(getString(R.string.vds));
+                    }
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.tds_vd), R.drawable.ic_toast_feito);
+                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false, idusuario, isLixeira);
+                    break;
+                case R.id.vdDvd:
+                    isDivida = true;
+                    if (idcliente > 0) {
+                        requireActivity().setTitle(nomeCliente);
+                    } else if (idusuario > 0) {
+                        requireActivity().setTitle(nomeUsuario);
+                    } else {
+                        requireActivity().setTitle(getString(R.string.dvd));
+                    }
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vd_dvd), R.drawable.ic_toast_feito);
+                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, true, idusuario, isLixeira);
+                    break;
+                default:
+                    break;
             }
         });
 
@@ -156,7 +156,7 @@ public class VendaFragment extends Fragment {
         vendaViewModel.getSelectedDataMutableLiveData().setValue(false);
         vendaViewModel.getSelectedDataMutableLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean) {
-                Navigation.findNavController(getView()).navigate(R.id.action_dialogExportarImportarVenda_to_datePickerExpImp2);
+                Navigation.findNavController(requireView()).navigate(R.id.action_dialogExportarImportarVenda_to_datePickerExpImp2);
             }
         });
 
@@ -165,23 +165,15 @@ public class VendaFragment extends Fragment {
             new AlertDialog.Builder(getContext())
                     .setTitle(getString(R.string.dat_sel))
                     .setMessage(getString(R.string.exp_v) + " " + data)
-                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                        dialog.dismiss();
-                    }).show();
+                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> dialog.dismiss()).show();
         }));
 
         vendaViewModel.getExportarLocalLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(aBoolean -> {
             if (this.data.isEmpty()) {
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.selec_data), R.drawable.ic_toast_erro);
             } else {
-                if (aBoolean) {
-                    isLocal = true;
-                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida, idusuario);
-                } else if (!aBoolean) {
-                    isLocal = false;
-                    vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida, idusuario);
-                }
-
+                isLocal = aBoolean;
+                vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida, idusuario);
             }
         }));
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
@@ -190,7 +182,7 @@ public class VendaFragment extends Fragment {
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.nao_tem_venda), R.drawable.ic_toast_erro);
             } else {
                 for (Venda venda : vendas) {
-                    dt.append(venda.getNome_cliente() + "," + venda.getCodigo_qr() + "," + venda.getQuantidade() + "," + venda.getTotal_venda() + "," + venda.getDesconto() + "," + venda.getTotal_desconto() + "," + venda.getValor_pago() + "," + venda.getDivida() + "," + venda.getValor_base() + "," + venda.getValor_iva() + "," + venda.getPagamento() + "," + venda.getData_cria() + "," + venda.getIdoperador() + "," + venda.getIdclicant() + "," + venda.getData_elimina() + "," + venda.getEstado() + "\n");
+                    dt.append(venda.getNome_cliente()).append(",").append(venda.getCodigo_qr()).append(",").append(venda.getQuantidade()).append(",").append(venda.getTotal_venda()).append(",").append(venda.getDesconto()).append(",").append(venda.getTotal_desconto()).append(",").append(venda.getValor_pago()).append(",").append(venda.getDivida()).append(",").append(venda.getValor_base()).append(",").append(venda.getValor_iva()).append(",").append(venda.getPagamento()).append(",").append(venda.getData_cria()).append(",").append(venda.getIdoperador()).append(",").append(venda.getIdclicant()).append(",").append(venda.getData_elimina()).append(",").append(venda.getEstado()).append("\n");
                 }
                 dataBuilder = dt;
                 if (isLocal) {
@@ -205,19 +197,18 @@ public class VendaFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void scanearCodigoQr(int camera) {
+    private void scanearCodigoQr() {
         new IntentIntegrator(getActivity())
                 .setPrompt(getString(R.string.alinhar_codigo_qr))
                 .setOrientationLocked(false)
-                .setCameraId(camera)
+                .setCameraId(0)
                 .initiateScan();
     }
 
     class ItemVenda extends Item<GroupieViewHolder> {
 
-        private Venda venda;
-        private CardView btnEntrar;
-        private TextView nomeCliente, codigoQr, quantidade, total, desconto, totalDesc, valorPago, divida, valorBase, iva, forPag, dataVenda, operador;
+        private final Venda venda;
+        private TextView divida;
 
         public ItemVenda(Venda venda) {
             this.venda = venda;
@@ -225,21 +216,21 @@ public class VendaFragment extends Fragment {
 
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            nomeCliente = viewHolder.itemView.findViewById(R.id.textCliente);
-            codigoQr = viewHolder.itemView.findViewById(R.id.textCodBar);
-            quantidade = viewHolder.itemView.findViewById(R.id.textQtProd);
-            total = viewHolder.itemView.findViewById(R.id.textTotVend);
-            desconto = viewHolder.itemView.findViewById(R.id.textDesc);
-            totalDesc = viewHolder.itemView.findViewById(R.id.textTotDesc);
-            valorPago = viewHolder.itemView.findViewById(R.id.textPago);
+            TextView nomeCliente = viewHolder.itemView.findViewById(R.id.textCliente);
+            TextView codigoQr = viewHolder.itemView.findViewById(R.id.textCodBar);
+            TextView quantidade = viewHolder.itemView.findViewById(R.id.textQtProd);
+            TextView total = viewHolder.itemView.findViewById(R.id.textTotVend);
+            TextView desconto = viewHolder.itemView.findViewById(R.id.textDesc);
+            TextView totalDesc = viewHolder.itemView.findViewById(R.id.textTotDesc);
+            TextView valorPago = viewHolder.itemView.findViewById(R.id.textPago);
             divida = viewHolder.itemView.findViewById(R.id.textDivida);
-            valorBase = viewHolder.itemView.findViewById(R.id.textValBas);
-            iva = viewHolder.itemView.findViewById(R.id.textVaIva);
-            forPag = viewHolder.itemView.findViewById(R.id.textForPag);
-            dataVenda = viewHolder.itemView.findViewById(R.id.textDatVen);
-            operador = viewHolder.itemView.findViewById(R.id.textOper);
+            TextView valorBase = viewHolder.itemView.findViewById(R.id.textValBas);
+            TextView iva = viewHolder.itemView.findViewById(R.id.textVaIva);
+            TextView forPag = viewHolder.itemView.findViewById(R.id.textForPag);
+            TextView dataVenda = viewHolder.itemView.findViewById(R.id.textDatVen);
+            TextView operador = viewHolder.itemView.findViewById(R.id.textOper);
 
-            btnEntrar = viewHolder.itemView.findViewById(R.id.btnEntrar);
+            CardView btnEntrar = viewHolder.itemView.findViewById(R.id.btnEntrar);
 
             if (venda.getDivida() > 0) {
                 divida.setBackgroundColor(Color.RED);
@@ -262,7 +253,7 @@ public class VendaFragment extends Fragment {
             btnEntrar.setOnClickListener(v -> {
                 MainActivity.getProgressBar();
                 VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
-                Navigation.findNavController(getView()).navigate(directions);
+                Navigation.findNavController(requireView()).navigate(directions);
             });
 
             btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
@@ -271,12 +262,12 @@ public class VendaFragment extends Fragment {
                     menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
                         MainActivity.getProgressBar();
                         VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
-                        Navigation.findNavController(getView()).navigate(directions);
+                        Navigation.findNavController(requireView()).navigate(directions);
                         return false;
                     });//groupId, itemId, order, title
                     menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
                         if (venda.getDivida() == Ultilitario.ZERO)
-                            Snackbar.make(getView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
                         else
                             caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true);
                         return false;
@@ -299,23 +290,19 @@ public class VendaFragment extends Fragment {
         }
 
         private void dialogEliminarVenda(String msg) {
-            new androidx.appcompat.app.AlertDialog.Builder(getContext())
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
-                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, true);
-                    })
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, true))
                     .show();
         }
 
         private void restaurarVenda() {
-            new androidx.appcompat.app.AlertDialog.Builder(getContext())
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.rest) + " (" + venda.getCodigo_qr() + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
-                        vendaViewModel.restaurarVenda(Ultilitario.UM, venda.getId());
-                    })
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.restaurarVenda(Ultilitario.UM, venda.getId()))
                     .show();
         }
 
@@ -332,7 +319,7 @@ public class VendaFragment extends Fragment {
 
             FrameLayout layout = new FrameLayout(getContext());
             layout.setPadding(45, 0, 45, 0);
-            final TextInputEditText editText = new TextInputEditText(getContext());
+            final TextInputEditText editText = new TextInputEditText(requireContext());
             editText.setHint(getString(R.string.valor_kwanza));
             editText.setMaxLines(1);
             Ultilitario.precoFormat(getContext(), editText);
@@ -378,13 +365,13 @@ public class VendaFragment extends Fragment {
             menu.findItem(R.id.importarvenda).setVisible(false);
         }
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint(getString(R.string.cod_qr));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.onActionViewExpanded();
-        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
@@ -415,23 +402,25 @@ public class VendaFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         switch (item.getItemId()) {
             case R.id.btnScannerBack:
-                scanearCodigoQr(0);
+                scanearCodigoQr();
                 break;
             case R.id.btnData:
                 VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
-                Navigation.findNavController(getView()).navigate(direction);
+                Navigation.findNavController(requireView()).navigate(direction);
                 break;
             case R.id.exportarvenda:
                 exportarVenda();
                 break;
             case R.id.importarvenda:
                 //Importa as vendas
-                Ultilitario.importarCategoriasProdutos(getActivity(), Ultilitario.QUATRO);
+                Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
                 break;
             default:
                 break;
@@ -442,7 +431,7 @@ public class VendaFragment extends Fragment {
 
     private void exportarVenda() {
         VendaFragmentDirections.ActionVendaFragmentToDialogExportarImportarVenda direction = VendaFragmentDirections.actionVendaFragmentToDialogExportarImportarVenda().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
-        Navigation.findNavController(getView()).navigate(direction);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
     @Override
@@ -450,14 +439,14 @@ public class VendaFragment extends Fragment {
                                  @Nullable Intent resultData) {
 
         if (requestCode == Ultilitario.CREATE_FILE_PRODUTO && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
+            Uri uri;
             if (resultData != null) {
                 uri = resultData.getData();
-                Ultilitario.alterDocument(uri, dataBuilder, getActivity());
+                Ultilitario.alterDocument(uri, dataBuilder, requireActivity());
                 dataBuilder.delete(0, data.length());
             }
         } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
+            Uri uri;
             if (resultData != null) {
                 uri = resultData.getData();
                 try {
@@ -482,6 +471,7 @@ public class VendaFragment extends Fragment {
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void readTextFromUri(Uri uri) throws IOException {
         new AsyncTask<Void, Void, List<String>>() {
 
@@ -489,7 +479,7 @@ public class VendaFragment extends Fragment {
             protected List<String> doInBackground(Void... voids) {
                 List<String> vendas = new ArrayList<>();
 
-                try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
                      BufferedReader reader = new BufferedReader(
                              new InputStreamReader(Objects.requireNonNull(inputStream)))) {
                     String line;
