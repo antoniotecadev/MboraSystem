@@ -12,6 +12,9 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -20,11 +23,11 @@ import androidx.lifecycle.ViewModelProvider;
 public class DialogCriarClienteCantina extends DialogFragment {
 
     private AlertDialog dialog;
-    private AlertDialog.Builder builder;
     private ClienteCantina clienteCantina;
     private DialogCriarClienteCantinaBinding binding;
     private ClienteCantinaViewModel clienteCantinaViewModel;
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
@@ -33,7 +36,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
         binding = DialogCriarClienteCantinaBinding.inflate(LayoutInflater.from(getContext()));
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
 
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(getString(R.string.criar_cliente));
 
         String nome = DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getNomeCliente();
@@ -52,17 +55,11 @@ public class DialogCriarClienteCantina extends DialogFragment {
             binding.buttonCriarCliente.setVisibility(View.GONE);
             binding.buttonEliminarCliente.setVisibility(View.VISIBLE);
         }
-        binding.buttonCriarCliente.setOnClickListener(v -> {
-            clienteCantinaViewModel.criarCliente(binding.editTextNome, binding.editTextNumeroTelefone, dialog);
-        });
+        binding.buttonCriarCliente.setOnClickListener(v -> clienteCantinaViewModel.criarCliente(binding.editTextNome, binding.editTextNumeroTelefone, dialog));
 
-        binding.buttonGuardar.setOnClickListener(v -> {
-            clienteCantinaViewModel.actualizarCliente(idcliente, binding.editTextNome, binding.editTextNumeroTelefone, dialog);
-        });
+        binding.buttonGuardar.setOnClickListener(v -> clienteCantinaViewModel.actualizarCliente(idcliente, binding.editTextNome, binding.editTextNumeroTelefone, dialog));
 
-        binding.buttonEliminarCliente.setOnClickListener(v -> {
-            deleteClient(idcliente, binding.editTextNome.getText().toString());
-        });
+        binding.buttonEliminarCliente.setOnClickListener(v -> deleteClient(idcliente, Objects.requireNonNull(binding.editTextNome.getText()).toString()));
 
 
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());
@@ -77,7 +74,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
     private void deleteClient(long idcliente, String nome) {
         clienteCantina.setId(idcliente);
         clienteCantina.setEstado(Ultilitario.TRES);
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.eliminar) + " (" + nome + ")")
                 .setMessage(getString(R.string.tem_cert_elim_cli))
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
