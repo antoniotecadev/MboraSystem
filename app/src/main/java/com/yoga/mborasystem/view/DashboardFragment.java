@@ -117,31 +117,33 @@ public class DashboardFragment extends Fragment {
 
                     if (data[1].trim().equals(dataActual[1].trim())) {
 
-                        if (data[0].trim().equals("1")) {
+                        Toast.makeText(getContext(), data[0], Toast.LENGTH_SHORT).show();
+
+                        if (data[0].trim().equals("01")) {
                             v1 += venda.getTotal_venda();
                             ++cv1;
-                        } else if (data[0].trim().equals("2")) {
+                        } else if (data[0].trim().equals("02")) {
                             v2 += venda.getTotal_venda();
                             ++cv2;
-                        } else if (data[0].trim().equals("3")) {
+                        } else if (data[0].trim().equals("03")) {
                             v3 += venda.getTotal_venda();
                             ++cv3;
-                        } else if (data[0].trim().equals("4")) {
+                        } else if (data[0].trim().equals("04")) {
                             v4 += venda.getTotal_venda();
                             ++cv4;
-                        } else if (data[0].trim().equals("5")) {
+                        } else if (data[0].trim().equals("05")) {
                             v5 += venda.getTotal_venda();
                             ++cv5;
-                        } else if (data[0].trim().equals("6")) {
+                        } else if (data[0].trim().equals("06")) {
                             v6 += venda.getTotal_venda();
                             ++cv6;
-                        } else if (data[0].trim().equals("7")) {
+                        } else if (data[0].trim().equals("07")) {
                             v7 += venda.getTotal_venda();
                             ++cv7;
-                        } else if (data[0].trim().equals("8")) {
+                        } else if (data[0].trim().equals("08")) {
                             v8 += venda.getTotal_venda();
                             ++cv8;
-                        } else if (data[0].trim().equals("9")) {
+                        } else if (data[0].trim().equals("09")) {
                             v9 += venda.getTotal_venda();
                             ++cv9;
                         } else if (data[0].trim().equals("10")) {
