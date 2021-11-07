@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,7 @@ import androidx.annotation.Nullable;
 
 public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCantina> {
 
-    private ClienteAutocompleteRowBinding binding;
-    private List<ClienteCantina> clienteCantinaList;
+    private final List<ClienteCantina> clienteCantinaList;
 
     public AutoCompleteClienteCantinaAdapter(@NonNull Context context, @NonNull List<ClienteCantina> objects) {
         super(context, 0, objects);
@@ -32,10 +32,11 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
         return clienteCantinaFilter;
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        binding = ClienteAutocompleteRowBinding.inflate(LayoutInflater.from(getContext()));
+        @SuppressLint("ViewHolder") com.yoga.mborasystem.databinding.ClienteAutocompleteRowBinding binding = ClienteAutocompleteRowBinding.inflate(LayoutInflater.from(getContext()));
 
         ClienteCantina clienteCantina = getItem(position);
 
@@ -48,7 +49,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
         return binding.getRoot();
     }
 
-    private Filter clienteCantinaFilter = new Filter() {
+    private final Filter clienteCantinaFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
@@ -77,8 +78,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
 
         @Override
         public CharSequence convertResultToString(Object resultValue) {
-            CharSequence cliente = ((ClienteCantina) resultValue).getNome() + " - " + ((ClienteCantina) resultValue).getId();
-            return cliente;
+            return ((ClienteCantina) resultValue).getNome() + " - " + ((ClienteCantina) resultValue).getId();
         }
     };
 
