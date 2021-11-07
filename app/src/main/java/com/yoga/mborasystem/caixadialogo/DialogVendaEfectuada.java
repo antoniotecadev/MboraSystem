@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.caixadialogo;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogVendaEfectuadaBinding;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
+
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,10 +21,10 @@ import androidx.lifecycle.ViewModelProvider;
 public class DialogVendaEfectuada extends DialogFragment {
 
   private AlertDialog dialog;
-  private AlertDialog.Builder builder;
   private VendaViewModel vendaViewModel;
   private DialogVendaEfectuadaBinding binding;
 
+  @SuppressLint("SetTextI18n")
   @NonNull
   @Override
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -30,23 +33,19 @@ public class DialogVendaEfectuada extends DialogFragment {
 
     binding = DialogVendaEfectuadaBinding.inflate(LayoutInflater.from(getContext()));
 
-    builder = new AlertDialog.Builder(getContext());
+    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
     builder.setView(binding.getRoot());
     dialog = builder.create();
     dialog.setCanceledOnTouchOutside(false);
     int total = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getPrecoTotal();
     binding.textViewTotal.setText(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
 
-    binding.btnGuardar.setOnClickListener(v -> {
-      vendaViewModel.getGuardarPdfLiveData().setValue(true);
-    });
+    binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(true));
 
-    binding.btnImprimir.setOnClickListener(v -> {
-      vendaViewModel.getPrintLiveData().setValue(true);
-    });
+    binding.btnImprimir.setOnClickListener(v -> vendaViewModel.getPrintLiveData().setValue(true));
 
     binding.btnAbrirWhatsApp.setOnClickListener(v -> {
-      String numeroWhatsApp = binding.numeroWhatsApp.getText().toString();
+      String numeroWhatsApp = Objects.requireNonNull(binding.numeroWhatsApp.getText()).toString();
       if (numeroWhatsApp.isEmpty()) {
         binding.numeroWhatsApp.requestFocus();
         binding.inputLayoutNumeroWhatsapp.setError(getString(R.string.digite_numero_w));
