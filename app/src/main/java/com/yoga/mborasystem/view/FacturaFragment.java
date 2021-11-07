@@ -62,13 +62,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -105,7 +105,6 @@ public class FacturaFragment extends Fragment {
         public void barcodeResult(BarcodeResult result) {
             if (result.getText().equals(resultCodeBar)) {
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.ja_scaneado), R.drawable.ic_toast_erro);
-                return;
             } else {
                 addScaner = true;
                 resultCodeBar = result.getText();
@@ -183,7 +182,7 @@ public class FacturaFragment extends Fragment {
         }
 
         binding.switchFlashlightButton.setOnClickListener(v -> {
-            if (getString(R.string.turn_on_flashlight).equals(binding.switchFlashlightButton.getText())) {
+            if (getString(R.string.turn_on_flashlight).contentEquals(binding.switchFlashlightButton.getText())) {
                 barcodeView.setTorchOn();
             } else {
                 barcodeView.setTorchOff();
@@ -200,7 +199,7 @@ public class FacturaFragment extends Fragment {
 
         binding.btnCriarCliente.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(getView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0));
+            Navigation.findNavController(requireView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0));
             binding.txtNomeCliente.setText("");
         });
 
@@ -210,15 +209,13 @@ public class FacturaFragment extends Fragment {
             binding.txtNomeCliente.requestFocus();
         });
 
-        binding.txtNomeCliente.setOnItemClickListener((parent, view, position, id) -> {
-            binding.txtNomeCliente.setEnabled(false);
-        });
+        binding.txtNomeCliente.setOnItemClickListener((parent, view, position, id) -> binding.txtNomeCliente.setEnabled(false));
         binding.btnScannerBack.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(getActivity(),
+            if (ContextCompat.checkSelfPermission(requireActivity(),
                     Manifest.permission.READ_CONTACTS)
                     != PackageManager.PERMISSION_GRANTED) {
 
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             }
             visibityButton();
@@ -228,9 +225,7 @@ public class FacturaFragment extends Fragment {
             binding.viewStub.setVisibility(View.GONE);
             barcodeView.pause();
         });
-        binding.btnScannerFront.setOnClickListener(v -> {
-            openCamera();
-        });
+        binding.btnScannerFront.setOnClickListener(v -> openCamera());
         binding.recyclerViewFacturaProduto.setAdapter(adapter);
         binding.recyclerViewFacturaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewFactura.setAdapter(adapterFactura);
@@ -449,16 +444,14 @@ public class FacturaFragment extends Fragment {
         });
 
         vendaViewModel.getDataAdminMaster();
-        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> {
-            this.cliente = cliente;
-        });
+        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente);
 
         vendaViewModel.getGuardarPdfLiveData().setValue(false);
         vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean) {
                 if (!codigoQr.isEmpty()) {
                     facturaPath = "venda" + codigoQr + "_" + Ultilitario.getDateCurrent() + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, getArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
+                    CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
@@ -473,7 +466,7 @@ public class FacturaFragment extends Fragment {
                         Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.guardar_primeiro), R.drawable.ic_toast_erro);
                     } else {
                         MainActivity.getProgressBar();
-                        CriarFactura.printPDF(getActivity(), getContext(), facturaPath);
+                        CriarFactura.printPDF(requireActivity(), getContext(), facturaPath);
                     }
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
@@ -541,7 +534,7 @@ public class FacturaFragment extends Fragment {
     }
 
     private boolean hasFlash() {
-        return getActivity().getApplicationContext().getPackageManager()
+        return requireActivity().getApplicationContext().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
@@ -573,12 +566,12 @@ public class FacturaFragment extends Fragment {
             idcliente = 0;
         }
         if (somatorioValorFormaPagamento() == valorPago) {
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.confirmar_venda)
                     .setMessage(getString(R.string.cliente) + ": " + nomeIDcliente[0] + "\n" +
                             getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
                             + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
-                            + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(binding.textDesconto.getText().toString()) + "\n"
+                            + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(Objects.requireNonNull(binding.textDesconto.getText()).toString()) + "\n"
                             + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
                             + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
                             + getString(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)) + "\n"
@@ -589,7 +582,7 @@ public class FacturaFragment extends Fragment {
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, getArguments().getLong("idoperador", 0), idcliente, getView());
+                        vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());
                     })
                     .setNegativeButton(R.string.cancelar, (dialog, which) -> {
                         facturaPath = "";
@@ -608,7 +601,7 @@ public class FacturaFragment extends Fragment {
             for (ClienteCantina cliente : clientesCantina) {
                 clienteCantina.add(new ClienteCantina(cliente.getId(), cliente.getNome(), cliente.getTelefone()));
             }
-            AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(getContext(), clienteCantina);
+            AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(requireContext(), clienteCantina);
             binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);
         });
     }
@@ -645,8 +638,7 @@ public class FacturaFragment extends Fragment {
 
     public class ItemProduto extends Item<GroupieViewHolder> {
         private final Produto produto;
-        private Button btnRemover;
-        private TextView nome, precorefcod, prod, ref, pr, totaluni;
+        private TextView totaluni;
 
         public ItemProduto(Produto produto) {
             this.produto = produto;
@@ -655,8 +647,8 @@ public class FacturaFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            nome = viewHolder.itemView.findViewById(R.id.txtProduto);
-            precorefcod = viewHolder.itemView.findViewById(R.id.txtPreco);
+            TextView nome = viewHolder.itemView.findViewById(R.id.txtProduto);
+            TextView precorefcod = viewHolder.itemView.findViewById(R.id.txtPreco);
             nome.setText(produto.getNome());
             precorefcod.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " - MS" + produto.getId() + " - " + produto.getCodigoBarra());
             itemView.put(produto.getId(), viewHolder.itemView);
@@ -665,9 +657,7 @@ public class FacturaFragment extends Fragment {
             } else {
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }
-            viewHolder.itemView.setOnClickListener(v -> {
-                addProduto(v);
-            });
+            viewHolder.itemView.setOnClickListener(this::addProduto);
             if (addScaner) {
                 addScaner = false;
                 adicionarProduto(produto.getId(), produto, viewHolder.itemView, true);
@@ -732,7 +722,7 @@ public class FacturaFragment extends Fragment {
             adapterFactura.removeGroupAtAdapterPosition(posicao.get(id));
             adapterFactura.notifyItemRangeRemoved(posicao.get(id), produtos.size());
             precoTotal.remove(id);
-            somarPreco(precoTotal, id, produto.isIva(), Ultilitario.UM, true);
+            somarPreco(precoTotal, id, Objects.requireNonNull(produto).isIva(), Ultilitario.UM, true);
             if (b) {
                 desfazer(nome + " " + getString(R.string.produto_removido), id, view, produto);
             }
@@ -774,7 +764,6 @@ public class FacturaFragment extends Fragment {
         }
 
         private class ItemFactura extends Item<GroupieViewHolder> {
-            private Spinner qt;
             private int totalUnit, quantidade;
             private final Produto produto;
 
@@ -786,12 +775,12 @@ public class FacturaFragment extends Fragment {
             @Override
             public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
                 posicao.put(produto.getId(), position);
-                prod = viewHolder.itemView.findViewById(R.id.textProd);
-                ref = viewHolder.itemView.findViewById(R.id.txtRefProd);
-                pr = viewHolder.itemView.findViewById(R.id.textPreco);
-                qt = viewHolder.itemView.findViewById(R.id.spinnerQt);
+                TextView prod = viewHolder.itemView.findViewById(R.id.textProd);
+                TextView ref = viewHolder.itemView.findViewById(R.id.txtRefProd);
+                TextView pr = viewHolder.itemView.findViewById(R.id.textPreco);
+                Spinner qt = viewHolder.itemView.findViewById(R.id.spinnerQt);
                 totaluni = viewHolder.itemView.findViewById(R.id.textTotalUnit);
-                btnRemover = viewHolder.itemView.findViewById(R.id.btnRemover);
+                Button btnRemover = viewHolder.itemView.findViewById(R.id.btnRemover);
                 Ultilitario.addItemOnSpinner(qt, getContext());
                 prod.setText(produto.getNome());
                 ref.setText("MS" + produto.getId() + " " + (produto.isIva() ? "IVA(14%)" : ""));
@@ -823,7 +812,7 @@ public class FacturaFragment extends Fragment {
                         bundle.clear();
                         bundle.putParcelable("produto", produto);
                         bundle.putBoolean("master", true);
-                        Navigation.findNavController(getView()).navigate(R.id.action_facturaFragment_to_dialogCriarProduto, bundle);
+                        Navigation.findNavController(requireView()).navigate(R.id.action_facturaFragment_to_dialogCriarProduto, bundle);
                         return false;
                     });
 
@@ -848,13 +837,13 @@ public class FacturaFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_factura, menu);
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint(getString(R.string.prod) + " " + getString(R.string.ou) + " " + getString(R.string.codigo_bar));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.onActionViewExpanded();
-        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
@@ -916,16 +905,12 @@ public class FacturaFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
-                if ((grantResults != null && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    openCamera();
-                } else {
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.noa_scan_codbar), R.drawable.ic_toast_erro);
-                }
-                break;
-            default:
-                break;
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.noa_scan_codbar), R.drawable.ic_toast_erro);
+            }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
