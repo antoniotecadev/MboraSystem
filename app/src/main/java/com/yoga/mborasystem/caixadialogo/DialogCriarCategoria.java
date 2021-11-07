@@ -1,10 +1,10 @@
 package com.yoga.mborasystem.caixadialogo;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -23,17 +23,17 @@ public class DialogCriarCategoria extends DialogFragment {
 
     private AlertDialog dialog;
     private Categoria categoria;
-    private AlertDialog.Builder builder;
     private DialogCriarCategoriaBinding binding;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
         binding = DialogCriarCategoriaBinding.inflate(LayoutInflater.from(getContext()));
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         if (getArguments() != null) {
             categoria = getArguments().getParcelable("categoria");
@@ -42,7 +42,7 @@ public class DialogCriarCategoria extends DialogFragment {
                 binding.btnCriarCategoria.setText(getString(R.string.salvar));
                 binding.nomeCategoria.setText(categoria.getCategoria());
                 binding.descricao.setText(categoria.getDescricao());
-                binding.switchEstado.setChecked(categoria.getEstado() == 1 ? false : true);
+                binding.switchEstado.setChecked(categoria.getEstado() != 1);
                 binding.switchEstado.setText(categoria.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
                 if (categoria.getData_cria() != null) {
                     binding.textDataCria.setVisibility(View.VISIBLE);
@@ -63,14 +63,11 @@ public class DialogCriarCategoria extends DialogFragment {
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
 
-        binding.switchEstado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    buttonView.setText(getString(R.string.estado_bloqueado));
-                } else {
-                    buttonView.setText(getString(R.string.estado_desbloqueado));
-                }
+        binding.switchEstado.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                buttonView.setText(getString(R.string.estado_bloqueado));
+            } else {
+                buttonView.setText(getString(R.string.estado_desbloqueado));
             }
         });
 
