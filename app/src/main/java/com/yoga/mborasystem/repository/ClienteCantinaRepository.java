@@ -13,11 +13,10 @@ import io.reactivex.Flowable;
 
 public class ClienteCantinaRepository {
 
-    private ClienteCantinaDao clienteCantinaDao;
-    private WeakReference<Context> cwr;
+    private final ClienteCantinaDao clienteCantinaDao;
 
     public ClienteCantinaRepository(Context c) {
-        cwr = new WeakReference<>(c);
+        WeakReference<Context> cwr = new WeakReference<>(c);
         AppDataBase adb = AppDataBase.getAppDataBase(cwr.get());
         clienteCantinaDao = adb.clienteCantinaDao();
     }
