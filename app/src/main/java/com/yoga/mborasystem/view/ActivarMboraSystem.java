@@ -9,6 +9,7 @@ import com.yoga.mborasystem.databinding.FragmentActivarMborasytemBinding;
 import com.yoga.mborasystem.util.MaskEditUtil;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 
@@ -23,7 +24,7 @@ public class ActivarMboraSystem extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentActivarMborasytemBinding.inflate(inflater, container, false);
 
