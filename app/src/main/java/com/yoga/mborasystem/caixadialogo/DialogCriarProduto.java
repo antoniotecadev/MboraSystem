@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.caixadialogo;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -22,7 +22,7 @@ import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 
-import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +33,6 @@ import androidx.lifecycle.ViewModelProvider;
 public class DialogCriarProduto extends DialogFragment {
 
     private AlertDialog dialog;
-    private AlertDialog.Builder builder;
     private ProdutoViewModel produtoViewModel;
     private DialogCriarProdutoBinding binding;
 
@@ -41,16 +40,14 @@ public class DialogCriarProduto extends DialogFragment {
     private String categoria;
     private Produto produto;
     private long idproduto;
-    private Locale pt_AO;
 
-    private float montanteIVA;
-    private int preco, quantidade, precoFornecedor, lucro, receita;
+    private int preco;
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        pt_AO = new Locale("pt", "AO");
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         binding = DialogCriarProdutoBinding.inflate(LayoutInflater.from(getContext()));
 
@@ -68,9 +65,9 @@ public class DialogCriarProduto extends DialogFragment {
                 binding.txtNomeProduto.setText(produto.getNome());
                 binding.txtPrecoProduto.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 binding.txtPrecoProdutoFornecedor.setText(Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
-                binding.checkIva.setChecked(produto.isIva() ? true : false);
+                binding.checkIva.setChecked(produto.isIva());
                 binding.txtCodigoBar.setText(produto.getCodigoBarra());
-                binding.switchEstado.setChecked(produto.getEstado() == 1 ? false : true);
+                binding.switchEstado.setChecked(produto.getEstado() != 1);
                 binding.switchEstado.setText(produto.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
 
                 if (produto.isIva()) {
@@ -116,12 +113,7 @@ public class DialogCriarProduto extends DialogFragment {
             }
         }
 
-        binding.checkIva.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                calcularIVA(binding, isChecked);
-            }
-        });
+        binding.checkIva.setOnCheckedChangeListener((buttonView, isChecked) -> calcularIVA(binding, isChecked));
         setPreco(binding.txtPrecoProduto);
         setPreco(binding.txtPrecoProdutoFornecedor);
         binding.txtQuantidadeProduto.addTextChangedListener(new TextWatcher() {
@@ -141,7 +133,7 @@ public class DialogCriarProduto extends DialogFragment {
             }
         });
 
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(this.categoria);
         builder.setView(binding.getRoot());
         dialog = builder.create();
@@ -200,11 +192,7 @@ public class DialogCriarProduto extends DialogFragment {
     }
 
     private void createProduto(long idcategoria) {
-        if (binding.switchContinuar.isChecked()) {
-            produtoViewModel.criarProduto(binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, binding.switchEstado, dialog, false, idcategoria);
-        } else {
-            produtoViewModel.criarProduto(binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, binding.switchEstado, dialog, true, idcategoria);
-        }
+        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, binding.switchEstado, dialog, !binding.switchContinuar.isChecked(), idcategoria);
     }
 
     private void updateProduto(long idproduto, long idcategoria) {
@@ -215,7 +203,7 @@ public class DialogCriarProduto extends DialogFragment {
         produto.setId(produto.getId());
         produto.setEstado(Ultilitario.TRES);
         produto.setData_elimina(Ultilitario.getDateCurrent());
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
         alert.setTitle(getString(R.string.eliminar_produto) + " (" + produto.getNome() + ")");
         alert.setMessage(getString(R.string.env_prod_lix));
         alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
@@ -225,10 +213,10 @@ public class DialogCriarProduto extends DialogFragment {
 
     private void calularMargemLucro(DialogCriarProdutoBinding b) {
         preco = Ultilitario.removerKZ(b.txtPrecoProduto);
-        quantidade = Integer.parseInt(b.txtQuantidadeProduto.getText().toString());
-        precoFornecedor = Ultilitario.removerKZ(b.txtPrecoProdutoFornecedor);
-        receita = preco * quantidade;
-        lucro = receita - precoFornecedor;
+        int quantidade = Integer.parseInt(Objects.requireNonNull(b.txtQuantidadeProduto.getText()).toString());
+        int precoFornecedor = Ultilitario.removerKZ(b.txtPrecoProdutoFornecedor);
+        int receita = preco * quantidade;
+        int lucro = receita - precoFornecedor;
         float percentagem = receita == 0 ? 0 : (float) lucro / (float) receita * 100;
         b.textPossivelReceita.setText(Ultilitario.formatPreco(String.valueOf(receita)));
         if (lucro >= Ultilitario.ZERO) {
@@ -247,7 +235,7 @@ public class DialogCriarProduto extends DialogFragment {
     private void calcularIVA(DialogCriarProdutoBinding b, boolean isChecked) {
         if (isChecked) {
             preco = Ultilitario.removerKZ(b.txtPrecoProduto);
-            montanteIVA = (float) (preco * 0.14);
+            float montanteIVA = (float) (preco * 0.14);
             b.txtPrecoProduto.setText(String.valueOf(preco + montanteIVA));
             b.textMontanteIva.setText(Ultilitario.formatPreco(String.valueOf((int) montanteIVA)));
             binding.txtPrecoProduto.setEnabled(false);
