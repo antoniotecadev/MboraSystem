@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -42,21 +43,20 @@ public class HomeFragment extends Fragment {
         FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         Toolbar toolbar = binding.toolbar;
         toolbar.inflateMenu(R.menu.menu_bloquear);
         toolbar.setOnMenuItemClickListener(item -> {
-            Navigation.findNavController(getView()).navigate(R.id.action_global_bloquearFragment);
+            Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
             return false;
         });
 
-        binding.floatingActionButton.setOnClickListener(v -> {
-            acercaMboraSystem();
-        });
+        binding.floatingActionButton.setOnClickListener(v -> acercaMboraSystem());
 
         binding.floatingActionButtonLixo.setOnClickListener(v -> {
             if (isOpen) {
@@ -66,29 +66,23 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        binding.floatingActionButtonCategoria.setOnClickListener(v -> {
-            entrarCategorias(true);
-        });
+        binding.floatingActionButtonCategoria.setOnClickListener(v -> entrarCategorias());
 
-        binding.floatingActionButtonProduto.setOnClickListener(v -> {
-            entrarProdutos(true);
-        });
+        binding.floatingActionButtonProduto.setOnClickListener(v -> entrarProdutos());
 
-        binding.floatingActionButtonVendaLixo.setOnClickListener(v -> {
-            entrarVendas(true);
-        });
+        binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendas());
 
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
-            NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
             switch (item.getItemId()) {
                 case R.id.categoriaProdutoFragment1:
-                    entrarCategorias(true);
+                    entrarCategorias();
                     break;
                 case R.id.produtoFragment:
-                    entrarProdutos(true);
+                    entrarProdutos();
                     break;
                 case R.id.vendaFragment1:
-                    entrarVendas(true);
+                    entrarVendas();
                     break;
                 default:
                     break;
@@ -100,8 +94,8 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            bundle.putLong("idoperador", getArguments().getLong("idusuario", 0));
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
+            bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
 
         binding.btnUsuario.setOnClickListener(v -> {
@@ -109,7 +103,7 @@ public class HomeFragment extends Fragment {
                 MainActivity.getProgressBar();
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_usuarioFragment, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, bundle);
         });
 
         binding.btnProduto.setOnClickListener(v -> {
@@ -117,21 +111,21 @@ public class HomeFragment extends Fragment {
                 MainActivity.getProgressBar();
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
         });
 
         binding.btnVenda.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_vendaFragment);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment);
         });
 
         binding.btnCliente.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_listaClienteFragment);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment);
         });
         binding.btnDashboard.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
@@ -154,7 +148,7 @@ public class HomeFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_home_ferramenta, menu);
-        menu.findItem(R.id.dialogAlterarCliente).setTitle(getArguments().getString("nome", ""));
+        menu.findItem(R.id.dialogAlterarCliente).setTitle(requireArguments().getString("nome", ""));
         if (getArguments() != null) {
             if (!getArguments().getBoolean("master")) {
                 binding.btnUsuario.setEnabled(false);
@@ -167,20 +161,21 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         switch (item.getItemId()) {
             case R.id.dialogAlterarCliente:
                 if (getArguments() != null) {
                     bundle.putParcelable("cliente", getArguments().getParcelable("cliente"));
-                    Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
                 }
                 break;
             case R.id.dialogAlterarCodigoPin:
                 if (getArguments() != null) {
                     bundle.putLong("idusuario", getArguments().getLong("idusuario"));
-                    Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
                 }
                 break;
             case R.id.acercaMborasytem:
@@ -200,7 +195,7 @@ public class HomeFragment extends Fragment {
                 .setTitle(getString(R.string.sair))
                 .setMessage(getString(R.string.tem_certeza_sair_app))
                 .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.sim), (dialog, which) -> getActivity().finish())
+                .setPositiveButton(getString(R.string.sim), (dialog, which) -> requireActivity().finish())
                 .show();
     }
 
@@ -213,22 +208,22 @@ public class HomeFragment extends Fragment {
                 .show();
     }
 
-    private void entrarCategorias(boolean isLixeira) {
+    private void entrarCategorias() {
         MainActivity.getProgressBar();
-        HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(isLixeira);
-        Navigation.findNavController(getView()).navigate(direction);
+        HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
-    private void entrarProdutos(boolean isLixeira) {
+    private void entrarProdutos() {
         MainActivity.getProgressBar();
-        HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(isLixeira);
-        Navigation.findNavController(getView()).navigate(direction);
+        HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
-    private void entrarVendas(boolean isLixeira) {
+    private void entrarVendas() {
         MainActivity.getProgressBar();
-        HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(isLixeira);
-        Navigation.findNavController(getView()).navigate(direction);
+        HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
     @Override
