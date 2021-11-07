@@ -15,8 +15,8 @@ import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -32,7 +32,7 @@ public class CadastrarClienteFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return criarCliente(inflater, container);
     }
@@ -57,21 +57,15 @@ public class CadastrarClienteFragment extends Fragment {
                 Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                binding.buttonCriarConta.setEnabled(true);
-            } else {
-                binding.buttonCriarConta.setEnabled(false);
-            }
-        });
+        binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
-        binding.buttonEntrarConta.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(R.id.action_cadastrarClienteFragment_to_activarMbora));
+        binding.buttonEntrarConta.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_activarMbora));
 
         Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao ->  {
                 switch (operacao) {
                     case CRIAR:
                         Ultilitario.dialogConta(getString(R.string.conta_criada), getContext());
-                        Navigation.findNavController(getView()).navigate(R.id.action_cadastrarClienteFragment_to_activarMbora);
+                        Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_activarMbora);
                         break;
                     case NENHUMA:
                         Ultilitario.dialogConta(getString(R.string.conta_nao_criada), getContext());
