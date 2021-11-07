@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentLoginBinding;
-import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 import com.yoga.mborasystem.viewmodel.LoginViewModel;
@@ -27,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment {
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
 
         final Observer<String> infoPinObserver = s -> {
-            if (s == "4") {
+            if (s.equals("4")) {
                 desabilitarTecladoPersonalisado();
                 contarTempoDeEspera();
             } else {
@@ -70,7 +70,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
@@ -88,20 +88,17 @@ public class LoginFragment extends Fragment {
         binding.btnApagar.setOnClickListener(v -> limparCodigoPin());
         binding.btnMenu.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
+            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
         });
 
-        clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Cliente>() {
-            @Override
-            public void onChanged(Cliente cliente) {
-                bundle.putString("nome", cliente.getNome() + " " + cliente.getSobrenome());
-                bundle.putBoolean("master", cliente.isMaster());
-                bundle.putParcelable("cliente", cliente);
-                try {
-                    Navigation.findNavController(getView()).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), cliente -> {
+            bundle.putString("nome", cliente.getNome() + " " + cliente.getSobrenome());
+            bundle.putBoolean("master", cliente.isMaster());
+            bundle.putParcelable("cliente", cliente);
+            try {
+                Navigation.findNavController(requireView()).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
@@ -109,7 +106,7 @@ public class LoginFragment extends Fragment {
             bundle.putString("nome", usuario.getNome());
             bundle.putBoolean("master", false);
             bundle.putLong("idusuario", usuario.getId());
-            Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
         });
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
@@ -177,15 +174,15 @@ public class LoginFragment extends Fragment {
     }
 
     private void logarComTecladoPersonalizado() throws NoSuchAlgorithmException {
-        String codigoPin = "";
+        StringBuilder codigoPin = new StringBuilder();
         for (String pin : digitos) {
-            codigoPin += pin;
+            codigoPin.append(pin);
         }
-        if (codigoPin.length() > 6 || codigoPin.length() < 6) {
+        if (codigoPin.length() != 6) {
             binding.tvinfoCodigoPin.setError(getString(R.string.infoPinIncorreto));
         } else {
             MainActivity.getProgressBar();
-            loginViewModel.logar(codigoPin);
+            loginViewModel.logar(codigoPin.toString());
         }
     }
 
@@ -207,12 +204,7 @@ public class LoginFragment extends Fragment {
         retirarBolinhasDeDigitos(binding.d2, 650);
         retirarBolinhasDeDigitos(binding.d1, 750);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                desabilitarHabilitarButton(true);
-            }
-        }, 850);
+        handler.postDelayed(() -> desabilitarHabilitarButton(true), 850);
     }
 
     private void retirarBolinhasDeDigitos(TextView bolinha, int tempo) {
