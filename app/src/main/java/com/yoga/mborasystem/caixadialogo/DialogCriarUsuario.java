@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.caixadialogo;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
 
 import java.security.NoSuchAlgorithmException;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -25,17 +27,18 @@ public class DialogCriarUsuario extends DialogFragment {
 
     private Usuario usuario;
     private AlertDialog dialog;
-    private AlertDialog.Builder builder;
     private UsuarioViewModel usuarioViewModel;
     private DialogCriarUsuarioBinding binding;
 
+    @SuppressLint("SetTextI18n")
+    @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         binding = DialogCriarUsuarioBinding.inflate(LayoutInflater.from(getContext()));
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(getString(R.string.criar_usuario));
 
         if (getArguments() != null) {
@@ -45,7 +48,7 @@ public class DialogCriarUsuario extends DialogFragment {
                 binding.editTextNome.setText(usuario.getNome());
                 binding.editTextNumeroTelefone.setText(usuario.getTelefone());
                 binding.editTextEndereco.setText(usuario.getEndereco());
-                binding.switchEstado.setChecked(usuario.getEstado() == 1 ? false : true);
+                binding.switchEstado.setChecked(usuario.getEstado() != 1);
                 binding.switchEstado.setText(usuario.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
 
                 if (usuario.getData_cria() != null) {
@@ -114,7 +117,7 @@ public class DialogCriarUsuario extends DialogFragment {
 
     private void deleteUser() {
         usuario.setId(usuario.getId());
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")")
                 .setMessage(getString(R.string.tem_certeza_eliminar_usuario))
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
