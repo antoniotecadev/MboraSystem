@@ -2,7 +2,7 @@ package com.yoga.mborasystem.util;
 
 public class Event<T> {
     private boolean hasBeenHandled = false;
-    private T content;
+    private final T content;
 
     public Event(T content) {
         this.content = content;
@@ -15,9 +15,5 @@ public class Event<T> {
             hasBeenHandled = true;
             return content;
         }
-    }
-
-    public boolean isHandled() {
-        return hasBeenHandled;
     }
 }
