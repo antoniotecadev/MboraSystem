@@ -458,7 +458,7 @@ public class FacturaFragment extends Fragment {
             if (aBoolean) {
                 if (!codigoQr.isEmpty()) {
                     facturaPath = "venda" + codigoQr + "_" + Ultilitario.getDateCurrent() + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, getArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
+                    CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, getArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
