@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.repository;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
@@ -18,11 +19,10 @@ import androidx.lifecycle.LiveData;
 import io.reactivex.Flowable;
 
 public class ProdutoRepository {
-    private ProdutoDao produtoDao;
-    private WeakReference<Context> contextWeakReference;
+    private final ProdutoDao produtoDao;
 
     public ProdutoRepository(Context context) {
-        contextWeakReference = new WeakReference<>(context);
+        WeakReference<Context> contextWeakReference = new WeakReference<>(context);
         AppDataBase appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
         produtoDao = appDataBase.produtoDao();
     }
@@ -135,9 +135,10 @@ public class ProdutoRepository {
         new ProdutoIm(produtos, application).execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     class ProdutoIm extends AsyncTask<Void, Void, Void> {
-        private Context context;
-        private List<String> produtos;
+        private final Context context;
+        private final List<String> produtos;
         private boolean isErro;
 
         ProdutoIm(List<String> produtos, Context context) {
