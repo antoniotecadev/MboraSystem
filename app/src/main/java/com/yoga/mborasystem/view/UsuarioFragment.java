@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +17,6 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentUsuarioListBinding;
 import com.yoga.mborasystem.model.entidade.Usuario;
-import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
 
 import androidx.annotation.NonNull;
@@ -44,7 +44,7 @@ public class UsuarioFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentUsuarioListBinding.inflate(inflater, container, false);
@@ -58,7 +58,7 @@ public class UsuarioFragment extends Fragment {
         });
         usuarioViewModel.consultarUsuarios();
         usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> {
-            getActivity().setTitle(getString(R.string.usuarios) + " = " + usuarios.size());
+            requireActivity().setTitle(getString(R.string.usuarios) + " = " + usuarios.size());
             adapter.clear();
             for (Usuario usuario : usuarios)
                 adapter.add(new ItemUsuario(usuario));
@@ -79,20 +79,21 @@ public class UsuarioFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
     }
 
     class ItemUsuario extends Item<GroupieViewHolder> {
 
-        private Usuario usuario;
+        private final Usuario usuario;
 
         public ItemUsuario(Usuario usuarios) {
             this.usuario = usuarios;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
 
@@ -116,7 +117,7 @@ public class UsuarioFragment extends Fragment {
             estado.setText(usuario.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
             viewHolder.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> {
                 UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment().setIdusuario(usuario.getId()).setNomeUsuario(usuario.getNome());
-                Navigation.findNavController(getView()).navigate(direction);
+                Navigation.findNavController(requireView()).navigate(direction);
             });
 
             viewHolder.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener((menu, v, menuInfo) -> {
@@ -146,18 +147,16 @@ public class UsuarioFragment extends Fragment {
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             }
             bundle.putParcelable("usuario", usuario);
-            Navigation.findNavController(getView()).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario, bundle);
         }
 
         private void deleteUser(String msg) {
             usuario.setId(usuario.getId());
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
-                        usuarioViewModel.eliminarUsuario(usuario, null);
-                    })
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> usuarioViewModel.eliminarUsuario(usuario, null))
                     .show();
         }
 
