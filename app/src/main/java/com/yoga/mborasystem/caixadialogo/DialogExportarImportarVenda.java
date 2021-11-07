@@ -18,21 +18,19 @@ import androidx.lifecycle.ViewModelProvider;
 public class DialogExportarImportarVenda extends DialogFragment {
 
     private AlertDialog dialog;
-    private AlertDialog.Builder builder;
     private VendaViewModel vendaViewModel;
-    private DialogExportarImportarVendaBinding binding;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
-        binding = DialogExportarImportarVendaBinding.inflate(LayoutInflater.from(getContext()));
+        com.yoga.mborasystem.databinding.DialogExportarImportarVendaBinding binding = DialogExportarImportarVendaBinding.inflate(LayoutInflater.from(getContext()));
 
         long idcliente = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIdcliente();
         long idusuario = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIdusuario();
         boolean isDivida = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIsDivida();
 
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         if (idusuario == 0) {
             if (idcliente == 0 && !isDivida) {
