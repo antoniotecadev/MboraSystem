@@ -1,12 +1,12 @@
 package com.yoga.mborasystem.view;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +32,6 @@ import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -55,8 +54,9 @@ public class ListaClienteFragment extends Fragment {
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
@@ -65,9 +65,7 @@ public class ListaClienteFragment extends Fragment {
         binding.recyclerViewListaCliente.setAdapter(adapter);
         binding.recyclerViewListaCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        binding.btnCriarCliente.setOnClickListener(v -> {
-            criarCliente();
-        });
+        binding.btnCriarCliente.setOnClickListener(v -> criarCliente());
 
         clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout);
         clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientes -> {
@@ -79,17 +77,16 @@ public class ListaClienteFragment extends Fragment {
                 Random random = new Random();
                 for (ClienteCantina cliente : clientes)
                     adapter.add(new Item<GroupieViewHolder>() {
-                        private TextView nomeCliente, telefoneCliente, dataCira, dataModifica;
 
                         @Override
                         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
                             ImageView i = viewHolder.itemView.findViewById(R.id.imgCliente);
                             Ultilitario.colorRandomImage(i, random);
 
-                            nomeCliente = viewHolder.itemView.findViewById(R.id.txtNomeCliente);
-                            telefoneCliente = viewHolder.itemView.findViewById(R.id.txtTelefone);
-                            dataCira = viewHolder.itemView.findViewById(R.id.textDataCriacao);
-                            dataModifica = viewHolder.itemView.findViewById(R.id.textDataModificacao);
+                            TextView nomeCliente = viewHolder.itemView.findViewById(R.id.txtNomeCliente);
+                            TextView telefoneCliente = viewHolder.itemView.findViewById(R.id.txtTelefone);
+                            TextView dataCira = viewHolder.itemView.findViewById(R.id.textDataCriacao);
+                            TextView dataModifica = viewHolder.itemView.findViewById(R.id.textDataModificacao);
                             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
 
                             viewHolder.itemView.setOnClickListener(v -> {
@@ -97,11 +94,9 @@ public class ListaClienteFragment extends Fragment {
                                 v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
 
                                 ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
-                                Navigation.findNavController(getView()).navigate(direction);
+                                Navigation.findNavController(requireView()).navigate(direction);
 
-                                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                                    v.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                                }, 1000);
+                                new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.parseColor("#FFFFFF")), 1000);
                             });
 
                             nomeCliente.setText(cliente.getNome());
@@ -113,35 +108,32 @@ public class ListaClienteFragment extends Fragment {
                             }
 
                             registerForContextMenu(menu);
-                            menu.setOnClickListener(v -> v.showContextMenu());
-                            viewHolder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-                                @Override
-                                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                                    menu.setHeaderTitle(cliente.getNome());
-                                    menu.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
-                                        ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
-                                        Navigation.findNavController(getView()).navigate(direction);
-                                        return false;
-                                    });//groupId, itemId, order, title
-                                    menu.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
-                                        MainActivity.getProgressBar();
-                                        ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
-                                        Navigation.findNavController(getView()).navigate(direction);
-                                        return false;
-                                    });
-                                    menu.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
-                                        clienteCantina.setId(cliente.getId());
-                                        clienteCantina.setEstado(Ultilitario.TRES);
-                                        new AlertDialog.Builder(getContext())
-                                                .setTitle(getString(R.string.eliminar) + " (" + cliente.getNome() + ")")
-                                                .setMessage(getString(R.string.tem_cert_elim_cli))
-                                                .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                                                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
-                                                .show();
-                                        return false;
-                                    });
+                            menu.setOnClickListener(View::showContextMenu);
+                            viewHolder.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
+                                menu1.setHeaderTitle(cliente.getNome());
+                                menu1.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
+                                    ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
+                                    Navigation.findNavController(requireView()).navigate(direction);
+                                    return false;
+                                });//groupId, itemId, order, title
+                                menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
+                                    MainActivity.getProgressBar();
+                                    ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
+                                    Navigation.findNavController(requireView()).navigate(direction);
+                                    return false;
+                                });
+                                menu1.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
+                                    clienteCantina.setId(cliente.getId());
+                                    clienteCantina.setEstado(Ultilitario.TRES);
+                                    new AlertDialog.Builder(requireContext())
+                                            .setTitle(getString(R.string.eliminar) + " (" + cliente.getNome() + ")")
+                                            .setMessage(getString(R.string.tem_cert_elim_cli))
+                                            .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                                            .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
+                                            .show();
+                                    return false;
+                                });
 
-                                }
                             });
                         }
 
@@ -154,9 +146,7 @@ public class ListaClienteFragment extends Fragment {
 
         });
 
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-            clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout);
-        });
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout));
 
         return binding.getRoot();
     }
@@ -166,13 +156,13 @@ public class ListaClienteFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_cliente, menu);
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint(getString(R.string.nome) + " " + getString(R.string.ou) + " " + getString(R.string.telefone));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.onActionViewExpanded();
-        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
@@ -204,13 +194,9 @@ public class ListaClienteFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(getActivity(), R.id.fragment);
-        switch (item.getItemId()) {
-            case R.id.criarClienteCantina:
-                criarCliente();
-                break;
-            default:
-                break;
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+        if (item.getItemId() == R.id.criarClienteCantina) {
+            criarCliente();
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
@@ -219,7 +205,7 @@ public class ListaClienteFragment extends Fragment {
     private void criarCliente() {
         MainActivity.getProgressBar();
         ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0);
-        Navigation.findNavController(getView()).navigate(direction);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
     @Override
