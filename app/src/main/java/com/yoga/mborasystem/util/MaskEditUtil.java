@@ -7,7 +7,6 @@ import android.widget.EditText;
 public abstract class MaskEditUtil {
 
     public static final String FORMAT_KEY = "#####-#####-#####-#####";
-    public static final String FORMAT_DATE = "##/##/####";
 
     public static TextWatcher mask(final EditText editText, final String mask) {
         return new TextWatcher() {
