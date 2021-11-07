@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.model.datapopulate;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -16,8 +17,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 public class CategoriaData extends AsyncTask<Void, Void, Void> {
 
 
-    private Context context;
-    private SupportSQLiteDatabase db;
+    @SuppressLint("StaticFieldLeak")
+    private final Context context;
+    private final SupportSQLiteDatabase db;
 
     public CategoriaData(Context context, SupportSQLiteDatabase db) {
         this.db = db;
