@@ -14,11 +14,10 @@ import io.reactivex.Single;
 
 public class UsuarioRepository {
 
-    private UsuarioDao usuarioDao;
-    private WeakReference<Context> cwr;
+    private final UsuarioDao usuarioDao;
 
     public UsuarioRepository(Context c) {
-        cwr = new WeakReference<>(c);
+        WeakReference<Context> cwr = new WeakReference<>(c);
         AppDataBase adb = AppDataBase.getAppDataBase(cwr.get());
         usuarioDao = adb.usuarioDao();
     }
