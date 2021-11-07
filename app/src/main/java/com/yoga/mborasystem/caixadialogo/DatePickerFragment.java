@@ -12,6 +12,7 @@ import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import java.util.Calendar;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,10 +21,9 @@ public class DatePickerFragment extends DialogFragment
 
     private VendaViewModel vendaViewModel;
 
-    public DatePickerFragment() {
+    public DatePickerFragment() { }
 
-    }
-
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -39,8 +39,6 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//        Log.i("Picker", ((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + ((month < 10 ? "0" : "") + (month + 1)) + "-" + year);
-
         long idcliente = DatePickerFragmentArgs.fromBundle(getArguments()).getIdcliente();
         boolean isDivida = DatePickerFragmentArgs.fromBundle(getArguments()).getIsDivida();
         long idusuario = DatePickerFragmentArgs.fromBundle(getArguments()).getIdusuario();
