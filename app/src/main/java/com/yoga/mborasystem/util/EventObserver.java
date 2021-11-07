@@ -8,7 +8,7 @@ public class EventObserver<T> implements Observer<Event<? extends T>> {
         void onEventUnhandledContent(T t);
     }
 
-    private EventUnhandledContent<T> content;
+    private final EventUnhandledContent<T> content;
 
     public EventObserver(EventUnhandledContent<T> content) {
         this.content = content;
