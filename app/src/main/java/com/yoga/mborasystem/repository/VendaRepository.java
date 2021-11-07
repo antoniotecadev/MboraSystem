@@ -16,11 +16,10 @@ import io.reactivex.Flowable;
 
 public class VendaRepository {
 
-    private VendaDao vendaDao;
-    private WeakReference<Context> contextWeakReference;
+    private final VendaDao vendaDao;
 
     public VendaRepository(Context context) {
-        contextWeakReference = new WeakReference<>(context);
+        WeakReference<Context> contextWeakReference = new WeakReference<>(context);
         AppDataBase appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
         vendaDao = appDataBase.vendaDao();
     }
