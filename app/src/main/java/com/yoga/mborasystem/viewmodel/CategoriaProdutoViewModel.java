@@ -156,7 +156,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.categoria_renomeada), R.drawable.ic_toast_feito);
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_alter), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 

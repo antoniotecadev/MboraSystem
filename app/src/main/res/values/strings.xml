@@ -168,7 +168,7 @@
     <string name="entrar">Entrar</string>
     <string name="tem_certeza_eliminar_usuario">Tem a certeza que quer eliminar este usuário ?</string>
     <string name="categoria_nao_renomeada">Categoria não renomeada</string>
-    <string name="categoria_renomeada">Categoria renomeada</string>
+    <string name="cat_alter">Alteração feita</string>
     <string name="categoria_eliminada">Categoria eliminada</string>
     <string name="categoria_nao_eliminada">" Categoria não eliminada"</string>
     <string name="tem_certeza_eliminar_produto">Todas as actividades relacionados(as) a este produto também serão eliminados(as).\nTem a certeza que quer eliminar este produto ?</string>
