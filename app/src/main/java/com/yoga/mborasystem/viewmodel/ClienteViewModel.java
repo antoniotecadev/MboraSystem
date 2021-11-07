@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -13,6 +14,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
@@ -29,9 +31,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ClienteViewModel extends AndroidViewModel {
 
-    private Cliente cliente;
+    private final Cliente cliente;
     private Disposable disposable;
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
     public ClienteViewModel(@NonNull Application application) {
         super(application);
@@ -50,9 +52,9 @@ public class ClienteViewModel extends AndroidViewModel {
         return clienteMutableLiveData;
     }
 
-    private Pattern letrasNIFBI = Pattern.compile("[^a-zA-Z0-9 ]");
-    private Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û ]");
-    private Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9 ]");
+    private final Pattern letrasNIFBI = Pattern.compile("[^a-zA-Z0-9 ]");
+    private final Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û ]");
+    private final Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9 ]");
 
     private boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
@@ -67,58 +69,58 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, TextInputEditText municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        if (isCampoVazio(nome.getText().toString()) || letras.matcher(nome.getText().toString()).find()) {
+        if (isCampoVazio(Objects.requireNonNull(nome.getText()).toString()) || letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
         } else if (nome.length() < 3) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_curto));
-        } else if (isCampoVazio(sobreNome.getText().toString()) || letras.matcher(sobreNome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(sobreNome.getText()).toString()) || letras.matcher(sobreNome.getText().toString()).find()) {
             sobreNome.requestFocus();
             sobreNome.setError(getApplication().getString(R.string.sobrenome_invalido));
         } else if (sobreNome.length() < 3) {
             sobreNome.requestFocus();
             sobreNome.setError(getApplication().getString(R.string.sobrenome_curto));
-        } else if (isCampoVazio(nif.getText().toString()) || letrasNIFBI.matcher(nif.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) || letrasNIFBI.matcher(nif.getText().toString()).find()) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_invalido));
         } else if (nif.length() < 14) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_incompleto));
-        } else if (isNumeroValido(telefone.getText().toString())) {
+        } else if (isNumeroValido(Objects.requireNonNull(telefone.getText()).toString())) {
             telefone.requestFocus();
             telefone.setError(getApplication().getString(R.string.numero_invalido));
         } else if (telefone.length() < 9) {
             telefone.requestFocus();
             telefone.setError(getApplication().getString(R.string.numero_incompleto));
-        } else if (isNumeroValido(telefoneAlternativo.getText().toString())) {
+        } else if (isNumeroValido(Objects.requireNonNull(telefoneAlternativo.getText()).toString())) {
             telefoneAlternativo.requestFocus();
             telefoneAlternativo.setError(getApplication().getString(R.string.numero_invalido));
         } else if (telefoneAlternativo.length() < 9) {
             telefoneAlternativo.requestFocus();
             telefoneAlternativo.setError(getApplication().getString(R.string.numero_incompleto));
-        } else if (isEmailValido(email.getText().toString())) {
+        } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
             email.requestFocus();
             email.setError(getApplication().getString(R.string.email_invalido));
-        } else if (isCampoVazio(nomeEmpresa.getText().toString()) || letras.matcher(nomeEmpresa.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(nomeEmpresa.getText()).toString()) || letras.matcher(nomeEmpresa.getText().toString()).find()) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_invalido));
         } else if (nomeEmpresa.length() < 5) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_curto));
-        } else if (isCampoVazio(municipio.getText().toString()) || letraNumero.matcher(municipio.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(municipio.getText()).toString()) || letraNumero.matcher(municipio.getText().toString()).find()) {
             municipio.requestFocus();
             municipio.setError(getApplication().getString(R.string.municipio_invalido));
-        } else if (isCampoVazio(bairro.getText().toString()) || letraNumero.matcher(bairro.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(bairro.getText()).toString()) || letraNumero.matcher(bairro.getText().toString()).find()) {
             bairro.requestFocus();
             bairro.setError(getApplication().getString(R.string.bairro_invalido));
-        } else if (isCampoVazio(rua.getText().toString()) || letraNumero.matcher(rua.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(rua.getText()).toString()) || letraNumero.matcher(rua.getText().toString()).find()) {
             rua.requestFocus();
             rua.setError(getApplication().getString(R.string.rua_invalida));
-        } else if (isCampoVazio(senha.getText().toString()) || letraNumero.matcher(senha.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(senha.getText()).toString()) || letraNumero.matcher(senha.getText().toString()).find()) {
             senha.requestFocus();
             senha.setError(getApplication().getString(R.string.senha_invalida));
-        } else if (isCampoVazio(senhaNovamente.getText().toString()) || letraNumero.matcher(senhaNovamente.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(senhaNovamente.getText()).toString()) || letraNumero.matcher(senhaNovamente.getText().toString()).find()) {
             senhaNovamente.requestFocus();
             senhaNovamente.setError(getApplication().getString(R.string.senha_invalida));
         } else if (!senha.getText().toString().equalsIgnoreCase(senhaNovamente.getText().toString())) {
@@ -147,6 +149,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     }
 
+    @SuppressLint("CheckResult")
     public void clienteExiste(boolean limitCadastro, Cliente c) {
         clienteRepository.clienteExiste()
                 .subscribeOn(Schedulers.io())
@@ -177,6 +180,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void cadastrarCliente(Cliente cliente) {
         Completable.fromAction(() -> clienteRepository.insert(cliente))
                 .subscribeOn(Schedulers.io())
@@ -200,6 +204,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void logar(TextInputEditText senha) {
         clienteRepository.clienteExiste()
                 .subscribeOn(Schedulers.io())
@@ -213,7 +218,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     @Override
                     public void onSuccess(@io.reactivex.annotations.NonNull Cliente cliente) {
                         try {
-                            if (Ultilitario.validateSenhaPin(senha.getText().toString(), cliente.getSenha())) {
+                            if (Ultilitario.validateSenhaPin(Objects.requireNonNull(senha.getText()).toString(), cliente.getSenha())) {
                                 getClienteMutableLiveData().setValue(cliente);
                             } else {
                                 MainActivity.dismissProgressBar();
@@ -241,7 +246,7 @@ public class ClienteViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
+        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
     }
