@@ -16,8 +16,10 @@ import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -26,20 +28,20 @@ import androidx.lifecycle.ViewModelProvider;
 public class DialogSenha extends DialogFragment {
 
     private AlertDialog dialog;
-    private AlertDialog.Builder builder;
     private DialogSenhaBinding binding;
     private ClienteViewModel clienteViewModel;
     private UsuarioViewModel usuarioViewModel;
 
     private Usuario us;
 
-    private Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9 ]");
-    private Pattern numero = Pattern.compile("[^0-9]");
+    private final Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9 ]");
+    private final Pattern numero = Pattern.compile("[^0-9]");
 
     private boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         us = new Usuario();
@@ -47,7 +49,7 @@ public class DialogSenha extends DialogFragment {
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         if (getArguments() != null) {
             us.setId(getArguments().getLong("idusuario"));
@@ -64,7 +66,7 @@ public class DialogSenha extends DialogFragment {
 
 
         binding.btnEntrar.setOnClickListener(v -> {
-            if (isCampoVazio(binding.senha.getText().toString()) || letraNumero.matcher(binding.senha.getText().toString()).find()) {
+            if (isCampoVazio(Objects.requireNonNull(binding.senha.getText()).toString()) || letraNumero.matcher(binding.senha.getText().toString()).find()) {
                 binding.senha.requestFocus();
                 binding.senha.setError(getString(R.string.senha_invalida));
             } else {
@@ -88,10 +90,10 @@ public class DialogSenha extends DialogFragment {
     }
 
     private void alterarCodigoPin(AlertDialog ad) throws NoSuchAlgorithmException {
-        if (isCampoVazio(binding.senha.getText().toString()) || numero.matcher(binding.senha.getText().toString()).find()) {
+        if (isCampoVazio(Objects.requireNonNull(binding.senha.getText()).toString()) || numero.matcher(binding.senha.getText().toString()).find()) {
             binding.senha.requestFocus();
             binding.senha.setError(getString(R.string.senha_invalida));
-        } else if (isCampoVazio(binding.senhaRepete.getText().toString()) || numero.matcher(binding.senhaRepete.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(binding.senhaRepete.getText()).toString()) || numero.matcher(binding.senhaRepete.getText().toString()).find()) {
             binding.senha.requestFocus();
             binding.senha.setError(getString(R.string.senha_invalida));
         } else if (binding.senha.length() > 6 || binding.senha.length() < 6) {
