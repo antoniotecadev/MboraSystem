@@ -17,14 +17,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 import androidx.annotation.RequiresApi;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PdfDocumentAdapter extends PrintDocumentAdapter {
 
-  private Context context;
-  private String path;
+  private final Context context;
+  private final String path;
 
   public PdfDocumentAdapter(Context context, String path) {
     this.context = context;
@@ -70,8 +71,8 @@ public class PdfDocumentAdapter extends PrintDocumentAdapter {
       e.printStackTrace();
     } finally {
       try {
-        in.close();
-        out.close();
+        Objects.requireNonNull(in).close();
+        Objects.requireNonNull(out).close();
       } catch (IOException e) {
         Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
       }
