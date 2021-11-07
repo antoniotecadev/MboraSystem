@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import com.yoga.mborasystem.repository.ClienteCantinaRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -30,9 +32,9 @@ import io.reactivex.schedulers.Schedulers;
 public class ClienteCantinaViewModel extends AndroidViewModel {
 
     private Disposable disposable;
-    private ClienteCantina clienteCantina;
-    private CompositeDisposable compositeDisposable;
-    private ClienteCantinaRepository clienteCantinaRepository;
+    private final ClienteCantina clienteCantina;
+    private final CompositeDisposable compositeDisposable;
+    private final ClienteCantinaRepository clienteCantinaRepository;
 
     public ClienteCantinaViewModel(Application application) {
         super(application);
@@ -68,10 +70,10 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     }
 
     private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
-        if (isCampoVazio(nomeCliente.getText().toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
+        if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
             nomeCliente.requestFocus();
             nomeCliente.setError(getApplication().getString(R.string.nome_invalido));
-        } else if ((!isCampoVazio(telefone.getText().toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
+        } else if ((!isCampoVazio(Objects.requireNonNull(telefone.getText()).toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
             telefone.requestFocus();
             telefone.setError(getApplication().getString(R.string.numero_invalido));
         } else {
@@ -94,6 +96,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         }
     }
 
+    @SuppressLint("CheckResult")
     private void criarClienteCantina(ClienteCantina clienteCantina, AlertDialog dialog) {
         Completable.fromAction(() -> clienteCantinaRepository.insert(clienteCantina))
                 .subscribeOn(Schedulers.io())
@@ -127,9 +130,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     getListaClientesCantina().setValue(clientesCantina);
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                }, throwable -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void searchCliente(String cliente) {
@@ -139,11 +140,10 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 .subscribe(clientes -> {
                     getListaClientesCantina().setValue(clientes);
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, e -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    @SuppressLint("CheckResult")
     public void actualizarCliente(ClienteCantina clienteCantina, AlertDialog dialog) {
         Completable.fromAction(() -> clienteCantinaRepository.update(clienteCantina.getNome(), clienteCantina.getTelefone(), clienteCantina.getEstado(), clienteCantina.getData_modifica(), clienteCantina.getId()))
                 .subscribeOn(Schedulers.io())
@@ -169,6 +169,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void eliminarCliente(ClienteCantina clienteCantina, Dialog dg) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> clienteCantinaRepository.delete(clienteCantina))
@@ -200,10 +201,10 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
+        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !compositeDisposable.isDisposed()) {
+        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
             compositeDisposable.clear();
         }
     }
