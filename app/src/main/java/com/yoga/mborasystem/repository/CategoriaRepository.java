@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.repository;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -18,13 +19,11 @@ import io.reactivex.Flowable;
 
 public class CategoriaRepository {
 
-    private AppDataBase appDataBase;
-    private CategoriaDao categoriaDao;
-    private WeakReference<Context> contextWeakReference;
+    private final CategoriaDao categoriaDao;
 
     public CategoriaRepository(Context context) {
-        contextWeakReference = new WeakReference<>(context);
-        appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
+        WeakReference<Context> contextWeakReference = new WeakReference<>(context);
+        AppDataBase appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
         categoriaDao = appDataBase.categoriaDao();
     }
 
@@ -68,6 +67,7 @@ public class CategoriaRepository {
         new CategoriaIm(categorias, context).execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     class CategoriaIm extends AsyncTask<Void, Void, Void> {
 
         Context context;
