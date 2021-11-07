@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 
 import com.yoga.mborasystem.MainActivity;
@@ -9,6 +10,7 @@ import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -24,7 +26,7 @@ public class LoginViewModel extends AndroidViewModel {
     private int contar = 0;
     private Disposable disposable;
     private MutableLiveData<String> infoPin;
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
@@ -59,6 +61,7 @@ public class LoginViewModel extends AndroidViewModel {
         }
     }
 
+    @SuppressLint("CheckResult")
     public void logar(String cp) throws NoSuchAlgorithmException {
         usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(cp))
                 .subscribeOn(Schedulers.io())
@@ -91,7 +94,7 @@ public class LoginViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
+        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
     }
