@@ -1,6 +1,7 @@
 
 package com.yoga.mborasystem.caixadialogo;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -38,10 +39,8 @@ import androidx.lifecycle.ViewModelProvider;
 public class DialogExportarImportar extends DialogFragment {
 
     private AlertDialog dialog;
-    private AlertDialog.Builder builder;
     private ProdutoViewModel produtoViewModel;
     private DialogExportarImportarBinding binding;
-    private ArrayAdapter<String> adapterCategorias;
     private ArrayList<String> categorias, descricoes;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
     private StringBuilder data;
@@ -53,10 +52,10 @@ public class DialogExportarImportar extends DialogFragment {
         binding = DialogExportarImportarBinding.inflate(LayoutInflater.from(getContext()));
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         if (getArguments() != null) {
             categorias = getArguments().getStringArrayList("categorias");
-            adapterCategorias = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, categorias);
+            ArrayAdapter<String> adapterCategorias = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, categorias);
             binding.spinnerCategoria.setAdapter(adapterCategorias);
             switch (getArguments().getInt("typeoperation")) {
                 case Ultilitario.EXPORTAR_PRODUTO:
@@ -125,7 +124,7 @@ public class DialogExportarImportar extends DialogFragment {
             switch (getArguments().getInt("typeoperation")) {
                 case Ultilitario.EXPORTAR_PRODUTO:
                     String[] idcategoria = TextUtils.split(binding.spinnerCategoria.getSelectedItem().toString(), "-");
-                    Ultilitario.isLocal = isLocal ? true : false;
+                    Ultilitario.isLocal = isLocal;
                     Ultilitario.categoria = idcategoria[1].trim();
                     produtoViewModel.consultarProdutos(Long.parseLong(idcategoria[0].trim()), true, null, false);
                     dialog.dismiss();
@@ -135,7 +134,7 @@ public class DialogExportarImportar extends DialogFragment {
                     dialog.dismiss();
                     break;
                 case Ultilitario.EXPORTAR_CATEGORIA:
-                    exportarCategorias("categorias.csv", "categorias", isLocal);
+                    exportarCategorias(isLocal);
                     break;
                 case Ultilitario.IMPORTAR_CATEGORIA:
                     importarCategorias();
@@ -146,27 +145,28 @@ public class DialogExportarImportar extends DialogFragment {
         }
     }
 
-    private void exportarCategorias(String ficheiro, String nomeFicheiro, boolean isLocal) {
+    private void exportarCategorias(boolean isLocal) {
         StringBuilder data = new StringBuilder();
         for (int i = 0; i < categorias.size(); i++) {
-            data.append(categorias.get(i).split("-")[1] + "," + descricoes.get(i) + "\n");
+            data.append(categorias.get(i).split("-")[1]).append(",").append(descricoes.get(i)).append("\n");
         }
         this.data = data;
         if (isLocal) {
-            Ultilitario.exportarLocal(getActivity(), data, ficheiro, nomeFicheiro, Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_CATEGORIA);
+            Ultilitario.exportarLocal(getActivity(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_CATEGORIA);
         } else {
-            Ultilitario.exportarNuvem(getContext(), data, ficheiro, nomeFicheiro, Ultilitario.getDateCurrent());
+            Ultilitario.exportarNuvem(getContext(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
         }
     }
 
     private void importarProdutos() {
-        Ultilitario.importarCategoriasProdutos(getActivity(), Ultilitario.QUATRO);
+        Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
     }
 
     private void importarCategorias() {
-        Ultilitario.importarCategoriasProdutos(getActivity(), Ultilitario.SINCO);
+        Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.SINCO);
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void readTextFromUri(Uri uri) throws IOException {
 
         new AsyncTask<Void, Void, Map<String, String>>() {
@@ -174,7 +174,7 @@ public class DialogExportarImportar extends DialogFragment {
             @Override
             protected Map<String, String> doInBackground(Void... voids) {
                 Map<String, String> categorias = new HashMap<>();
-                try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
                      BufferedReader reader = new BufferedReader(
                              new InputStreamReader(Objects.requireNonNull(inputStream)))) {
                     String line;
@@ -206,14 +206,14 @@ public class DialogExportarImportar extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
         if (requestCode == Ultilitario.CREATE_FILE_CATEGORIA && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
+            Uri uri;
             if (resultData != null) {
                 uri = resultData.getData();
-                Ultilitario.alterDocument(uri, data, getActivity());
+                Ultilitario.alterDocument(uri, data, requireActivity());
                 data.delete(0, data.length());
             }
         } else if (requestCode == Ultilitario.SINCO && resultCode == Activity.RESULT_OK) {
-            Uri uri = null;
+            Uri uri;
             if (resultData != null) {
                 uri = resultData.getData();
                 try {
