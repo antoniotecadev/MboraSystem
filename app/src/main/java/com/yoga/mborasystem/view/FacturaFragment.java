@@ -905,12 +905,16 @@ public class FacturaFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
-            } else {
-                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.noa_scan_codbar), R.drawable.ic_toast_erro);
-            }
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
+                if ((grantResults != null && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    openCamera();
+                } else {
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.noa_scan_codbar), R.drawable.ic_toast_erro);
+                }
+                break;
+            default:
+                break;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
