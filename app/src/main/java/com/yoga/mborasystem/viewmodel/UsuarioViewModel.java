@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
@@ -32,10 +34,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class UsuarioViewModel extends AndroidViewModel {
 
-    private Usuario usuario;
+    private final Usuario usuario;
     private Disposable disposable;
-    private UsuarioRepository usuarioRepository;
-    private CompositeDisposable compositeDisposable;
+    private final UsuarioRepository usuarioRepository;
+    private final CompositeDisposable compositeDisposable;
 
     public UsuarioViewModel(Application application) {
         super(application);
@@ -53,11 +55,11 @@ public class UsuarioViewModel extends AndroidViewModel {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
-    public void criarUsuario(EditText nome, TextInputEditText telefone, TextInputEditText endereco, Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void criarUsuario(EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
         validarUsuario(Ultilitario.Operacao.CRIAR, 0, nome, telefone, endereco, estado, codigoPin, codigoPinNovamente, dialog);
     }
 
-    public void actualizarUsuario(long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void actualizarUsuario(long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
         validarUsuario(Ultilitario.Operacao.ACTUALIZAR, id, nome, telefone, endereco, estado, codigoPin, codigoPinNovamente, dialog);
     }
 
@@ -70,17 +72,17 @@ public class UsuarioViewModel extends AndroidViewModel {
         return listaUsuarios;
     }
 
-    public void validarUsuario(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void validarUsuario(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
         if (isCampoVazio(nome.getText().toString()) || Ultilitario.letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
         } else if (nome.length() < 5) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_curto));
-        } else if ((!isCampoVazio(telefone.getText().toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
+        } else if ((!isCampoVazio(Objects.requireNonNull(telefone.getText()).toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
             telefone.requestFocus();
             telefone.setError(getApplication().getString(R.string.numero_invalido));
-        } else if (!isCampoVazio(endereco.getText().toString()) && Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
+        } else if (!isCampoVazio(Objects.requireNonNull(endereco.getText()).toString()) && Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
             endereco.requestFocus();
             endereco.setError(getApplication().getString(R.string.endereco_invalido));
         } else if (isCampoVazio(codigoPin.getText().toString())) {
@@ -117,6 +119,7 @@ public class UsuarioViewModel extends AndroidViewModel {
         }
     }
 
+    @SuppressLint("CheckResult")
     private void criarUsuario(Usuario us, AlertDialog dialog) {
         Completable.fromAction(() -> usuarioRepository.insert(us))
                 .subscribeOn(Schedulers.io())
@@ -142,6 +145,7 @@ public class UsuarioViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void actualizarUsuario(Usuario usuario, boolean isCodigoPin, AlertDialog dialog) {
         Completable.fromAction(() -> usuarioRepository.update(usuario, isCodigoPin))
                 .subscribeOn(Schedulers.io())
@@ -167,6 +171,7 @@ public class UsuarioViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void verificarCodigoPin(Usuario us, AlertDialog dg) {
         usuarioRepository.confirmarCodigoPin(us.getCodigoPin())
                 .subscribeOn(Schedulers.io())
@@ -190,6 +195,7 @@ public class UsuarioViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void eliminarUsuario(Usuario usuario, Dialog dg) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> usuarioRepository.delete(usuario))
@@ -222,20 +228,16 @@ public class UsuarioViewModel extends AndroidViewModel {
         compositeDisposable.add(usuarioRepository.getUsuarios()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(usuarios -> {
-                    getListaUsuarios().setValue(usuarios);
-                }, e -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                .subscribe(usuarios -> getListaUsuarios().setValue(usuarios), e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
+        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !compositeDisposable.isDisposed()) {
+        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
             compositeDisposable.clear();
         }
     }
