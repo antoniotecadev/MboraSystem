@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -39,11 +40,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class VendaViewModel extends AndroidViewModel {
 
-    private Venda venda;
+    private final Venda venda;
     private Disposable disposable;
-    private VendaRepository vendaRepository;
-    private ClienteRepository clienteRepository;
-    private CompositeDisposable compositeDisposable;
+    private final VendaRepository vendaRepository;
+    private final ClienteRepository clienteRepository;
+    private final CompositeDisposable compositeDisposable;
 
 
     public VendaViewModel(@NonNull Application application) {
@@ -187,6 +188,7 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void getDataAdminMaster() {
         clienteRepository.clienteExiste().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -229,9 +231,7 @@ public class VendaViewModel extends AndroidViewModel {
                 .subscribe(vendas -> {
                     getListaVendasLiveData().setValue(vendas);
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, throwable -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida, long idusuario) {
@@ -245,9 +245,7 @@ public class VendaViewModel extends AndroidViewModel {
                         getListaVendasLiveData().setValue(vendas);
                     }
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, throwable -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void importarVenda(List<String> vendas) {
@@ -276,13 +274,10 @@ public class VendaViewModel extends AndroidViewModel {
         compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda, codQr)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> {
-                    getProdutosVendaLiveDta().setValue(produtos);
-                }, throwable -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                .subscribe(produtos -> getProdutosVendaLiveDta().setValue(produtos), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    @SuppressLint("CheckResult")
     public void liquidarDivida(int divida, long idivida) {
         Completable.fromAction(() -> vendaRepository.liquidarDivida(divida, idivida))
                 .subscribeOn(Schedulers.io())
@@ -307,6 +302,7 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira) {
         Completable.fromAction(() -> vendaRepository.eliminarVendaLixeira(estado, data, venda, isLixeira))
                 .subscribeOn(Schedulers.io())
@@ -331,6 +327,7 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void restaurarVenda(int estado, long idvenda) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> vendaRepository.restaurarVenda(estado, idvenda))
@@ -361,10 +358,10 @@ public class VendaViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
+        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !compositeDisposable.isDisposed()) {
+        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
             compositeDisposable.clear();
         }
     }
