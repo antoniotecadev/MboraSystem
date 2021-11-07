@@ -259,7 +259,8 @@ public class FacturaFragment extends Fragment {
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.produto_nao_encontrada), R.drawable.ic_toast_erro);
             } else {
                 for (Produto produto : produtos) {
-                    adapter.add(new ItemProduto(produto));
+                    if (produto.getEstado() != Ultilitario.DOIS)
+                        adapter.add(new ItemProduto(produto));
                 }
             }
         });
