@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.telephony.PhoneNumberUtils;
@@ -52,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -60,6 +62,7 @@ import javax.crypto.spec.PBEKeySpec;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -71,11 +74,9 @@ public class Ultilitario {
     public static String categoria = "";
     public static boolean isLocal = true;
     private static String formatted, current = "";
-    private static ArrayAdapter<Integer> itemAdapter;
-    private static ArrayList<Integer> listaQuantidade;
     public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");
     public static Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç0-9\n ]");
-    public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4, EXPORTAR_VENDA = 5, IMPORTAR_VENDA = 6;
+    public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4;
     public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, SINCO = 5, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 10;
 
     public Ultilitario() {
@@ -84,7 +85,7 @@ public class Ultilitario {
     @SuppressLint("WrongConstant")
     public static void showToast(Context context, int color, String s, int imagem) {
         Toast toast = new Toast(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
         TextView text = view.findViewById(R.id.toast_text);
         ImageView img = view.findViewById(R.id.toast_image);
         text.setText(s);
@@ -107,13 +108,9 @@ public class Ultilitario {
         NAO
     }
 
-    public static void onClickColorRecyclerView(View viewHolder) {
-        viewHolder.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-    }
-
     public static String formatPreco(String preco) {
         pt_AO = new Locale("pt", "AO");
-        Float parsed;
+        float parsed;
         String formatted;
         String cleanSting = preco.replaceAll("[^\\d.]", "");
         if (cleanSting.isEmpty()) {
@@ -206,7 +203,7 @@ public class Ultilitario {
         final int ITERACAO = 1000;
         final int OUT_PUT_KEY_LENGTH = 64 * 8;
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte salt[] = new byte[16];
+        byte[] salt = new byte[16];
         sr.nextBytes(salt);
         KeySpec ks = new PBEKeySpec(senhaPin, salt, ITERACAO, OUT_PUT_KEY_LENGTH);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -257,9 +254,9 @@ public class Ultilitario {
     }
 
     private static String bytesToHexString(byte[] digest) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < digest.length; i++) {
-            String hex = Integer.toHexString(0xFF & digest[i]);
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) {
+            String hex = Integer.toHexString(0xFF & b);
             if (hex.length() == 1) {
                 sb.append(0);
             }
@@ -269,7 +266,7 @@ public class Ultilitario {
     }
 
     public static OnBackPressedCallback sairApp(Activity activity, Context context) {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+        return new OnBackPressedCallback(true) {
             private long backPressedTime;
 
             @Override
@@ -283,7 +280,6 @@ public class Ultilitario {
                 backPressedTime = System.currentTimeMillis();
             }
         };
-        return callback;
     }
 
     public static void fullScreenDialog(Dialog dialog) {
@@ -294,9 +290,8 @@ public class Ultilitario {
         }
     }
 
-    private static String dt = null;
-
     public static String getDateCurrent() {
+        String dt;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDateTime date = LocalDateTime.now(ZoneId.systemDefault());
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MMMM-yyyy-HH:mm:ss", Locale.getDefault());
@@ -310,18 +305,19 @@ public class Ultilitario {
     }
 
     public static int removerKZ(TextInputEditText editText) {
-        return Integer.parseInt(editText.getText().toString().replaceAll(",", "").replaceAll("Kz", "").replaceAll("\\s+", ""));
+        return Integer.parseInt(Objects.requireNonNull(editText.getText()).toString().replaceAll(",", "").replaceAll("Kz", "").replaceAll("\\s+", ""));
     }
 
     public static void addItemOnSpinner(Spinner spinner, Context context) {
-        listaQuantidade = new ArrayList<>();
+        ArrayList<Integer> listaQuantidade = new ArrayList<>();
         for (int i = 1; i <= 255; ++i) {
             listaQuantidade.add(i);
         }
-        itemAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listaQuantidade);
+        ArrayAdapter<Integer> itemAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listaQuantidade);
         spinner.setAdapter(itemAdapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void exportarLocal(Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data, int CREATE_FILE) {
         try {
             FileOutputStream out = activity.openFileOutput(ficheiro, Context.MODE_PRIVATE);
@@ -349,9 +345,9 @@ public class Ultilitario {
             e.printStackTrace();
             Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        FileOutputStream fileOutputStream = new FileOutputStream(csv.getFileDescriptor());
+        FileOutputStream fileOutputStream = new FileOutputStream(Objects.requireNonNull(csv).getFileDescriptor());
 
-        new ExportarAsyncTask(csv, fileOutputStream, uri, activity).execute(data.toString());
+        new ExportarAsyncTask(csv, fileOutputStream, uri, activity, data).execute(data.toString());
 
     }
 
@@ -376,6 +372,7 @@ public class Ultilitario {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void importarCategoriasProdutos(Activity activity, int PICK_CSV_FILE) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -398,7 +395,7 @@ public class Ultilitario {
     }
 
     public static void openWhatsApp(Activity activity, String numero) {
-        boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp", activity);
+        boolean isWhatsappInstalled = whatsappInstalledOrNot(activity);
         if (isWhatsappInstalled) {
             Intent sendIntent = new Intent("android.intent.action.MAIN");
             sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
@@ -413,11 +410,11 @@ public class Ultilitario {
         }
     }
 
-    private static boolean whatsappInstalledOrNot(String uri, Activity activity) {
+    private static boolean whatsappInstalledOrNot(Activity activity) {
         PackageManager pm = activity.getPackageManager();
-        boolean app_installed = false;
+        boolean app_installed;
         try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
             app_installed = true;
         } catch (PackageManager.NameNotFoundException e) {
             app_installed = false;
@@ -447,13 +444,13 @@ public class Ultilitario {
 
     private static class ExportarAsyncTask extends AsyncTask<String, Void, String> {
 
-        private Uri uri;
-        private Activity activity;
-        private StringBuilder data;
-        private ParcelFileDescriptor csv;
-        private FileOutputStream fileOutputStream;
+        private final Uri uri;
+        @SuppressLint("StaticFieldLeak")
+        private final Activity activity;
+        private final ParcelFileDescriptor csv;
+        private final FileOutputStream fileOutputStream;
 
-        public ExportarAsyncTask(ParcelFileDescriptor csv, FileOutputStream fileOutputStream, Uri uri, Activity activity) {
+        public ExportarAsyncTask(ParcelFileDescriptor csv, FileOutputStream fileOutputStream, Uri uri, Activity activity, StringBuilder data) {
             this.uri = uri;
             this.csv = csv;
             this.activity = activity;
