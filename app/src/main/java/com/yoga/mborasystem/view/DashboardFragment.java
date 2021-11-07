@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,8 +42,9 @@ public class DashboardFragment extends Fragment {
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
 
@@ -222,9 +225,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        produtoViewModel.consultarProdutos().observe(getViewLifecycleOwner(), quantProd -> {
-            binding.qtdProd.setText(getString(R.string.qtd_pd) + ": " + quantProd);
-        });
+        produtoViewModel.consultarProdutos().observe(getViewLifecycleOwner(), quantProd -> binding.qtdProd.setText(getString(R.string.qtd_pd) + ": " + quantProd));
 
         produtoViewModel.getPrecoFornecedor().observe(getViewLifecycleOwner(), custos -> {
             totalPrecoFornecedor = custos == null ? 0 : custos;
