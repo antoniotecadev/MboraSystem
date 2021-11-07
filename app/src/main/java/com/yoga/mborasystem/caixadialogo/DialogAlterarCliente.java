@@ -9,6 +9,7 @@ import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -16,14 +17,14 @@ import androidx.fragment.app.DialogFragment;
 public class DialogAlterarCliente extends DialogFragment {
 
     private AlertDialog dialog;
-    private AlertDialog.Builder builder;
     private FragmentCadastrarClienteBinding binding;
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         binding = FragmentCadastrarClienteBinding.inflate(LayoutInflater.from(getContext()));
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setView(binding.getRoot());
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
