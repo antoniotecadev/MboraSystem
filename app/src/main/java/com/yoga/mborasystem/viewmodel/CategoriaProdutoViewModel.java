@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
@@ -29,10 +31,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CategoriaProdutoViewModel extends AndroidViewModel {
 
-    private Categoria categoria;
+    private final Categoria categoria;
     private Disposable disposable;
-    private CompositeDisposable compositeDisposable;
-    private CategoriaRepository categoriaRepository;
+    private final CompositeDisposable compositeDisposable;
+    private final CategoriaRepository categoriaRepository;
 
     public CategoriaProdutoViewModel(Application application) {
         super(application);
@@ -46,7 +48,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
 
-    public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, Switch estado, AlertDialog dialog, long idcategoria) {
+    public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || Ultilitario.letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -83,6 +85,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         return listaCategorias;
     }
 
+    @SuppressLint("CheckResult")
     private void criarCategoria(Categoria categoria, AlertDialog dialog) {
         Completable.fromAction(() -> categoriaRepository.insert(categoria))
                 .subscribeOn(Schedulers.io())
@@ -103,7 +106,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        if (e.getMessage().contains("UNIQUE")) {
+                        if (Objects.requireNonNull(e.getMessage()).contains("UNIQUE")) {
                             Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.categoria_existe), R.drawable.ic_toast_erro);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_criada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
@@ -136,11 +139,10 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 .subscribe(categorias -> {
                     getListaCategorias().setValue(categorias);
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, e -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    @SuppressLint("CheckResult")
     public void renomearCategoria(Categoria categoria, AlertDialog dialog) {
         Completable.fromAction(() -> categoriaRepository.update(categoria))
                 .subscribeOn(Schedulers.io())
@@ -161,7 +163,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        if (e.getMessage().contains("UNIQUE")) {
+                        if (Objects.requireNonNull(e.getMessage()).contains("UNIQUE")) {
                             Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.categoria_existe), R.drawable.ic_toast_erro);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_renomeada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
@@ -170,6 +172,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void restaurarCategoria(int estado, long idcategoria) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> categoriaRepository.restaurarCategoria(estado, idcategoria))
@@ -197,6 +200,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void eliminarCategoria(Categoria cat, boolean lx) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> categoriaRepository.delete(cat, lx))
@@ -235,10 +239,10 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
+        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !compositeDisposable.isDisposed()) {
+        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
             compositeDisposable.clear();
         }
     }
