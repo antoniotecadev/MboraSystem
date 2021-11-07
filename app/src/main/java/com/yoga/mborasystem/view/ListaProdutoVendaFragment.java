@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,8 +37,9 @@ public class ListaProdutoVendaFragment extends Fragment {
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentListaProdutoVendaBinding.inflate(inflater, container, false);
 
@@ -46,7 +48,7 @@ public class ListaProdutoVendaFragment extends Fragment {
         int quant = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getQuant();
         String codQr = ListaProdutoVendaFragmentArgs.fromBundle(getArguments()).getCodQr();
 
-        getActivity().setTitle(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(vendaTotal)));
+        requireActivity().setTitle(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(vendaTotal)));
 
         binding.recyclerViewListaProduto.setAdapter(adapter);
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -61,18 +63,18 @@ public class ListaProdutoVendaFragment extends Fragment {
                 for (ProdutoVenda produto : produtos)
                     adapter.add(new Item<GroupieViewHolder>() {
 
+                        @SuppressLint("UseSwitchCompatOrMaterialCode")
                         private Switch estadoProduto;
-                        private TextView nomeProduto, precoProduto, quantidadeProduto, referenciaProduto, codigoQr, precoProdutoFronecedor;
 
                         @Override
                         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-                            nomeProduto = viewHolder.itemView.findViewById(R.id.txtNomeProduto);
-                            precoProduto = viewHolder.itemView.findViewById(R.id.txtPrecoProduto);
-                            precoProdutoFronecedor = viewHolder.itemView.findViewById(R.id.txtPrecoProdutoFornecedor);
-                            quantidadeProduto = viewHolder.itemView.findViewById(R.id.txtQuantidadeProduto);
-                            referenciaProduto = viewHolder.itemView.findViewById(R.id.txtCodigoBarProduto);
+                            TextView nomeProduto = viewHolder.itemView.findViewById(R.id.txtNomeProduto);
+                            TextView precoProduto = viewHolder.itemView.findViewById(R.id.txtPrecoProduto);
+                            TextView precoProdutoFronecedor = viewHolder.itemView.findViewById(R.id.txtPrecoProdutoFornecedor);
+                            TextView quantidadeProduto = viewHolder.itemView.findViewById(R.id.txtQuantidadeProduto);
+                            TextView referenciaProduto = viewHolder.itemView.findViewById(R.id.txtCodigoBarProduto);
                             estadoProduto = viewHolder.itemView.findViewById(R.id.estado_produto);
-                            codigoQr = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
+                            TextView codigoQr = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
 
                             nomeProduto.setText(produto.getNome_produto());
                             precoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())));
