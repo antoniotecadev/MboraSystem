@@ -6,6 +6,7 @@ import com.yoga.mborasystem.model.entidade.Venda;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -108,8 +109,8 @@ public abstract class VendaDao {
         long idvenda = insert(venda);
         for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
             produtoVenda.setNome_produto(produto.getValue().getNome());
-            produtoVenda.setQuantidade(precoTotalUnit.get(produto.getKey()).intValue() / produto.getValue().getPreco());
-            produtoVenda.setPreco_total(precoTotalUnit.get(produto.getKey()).intValue());
+            produtoVenda.setQuantidade(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco());
+            produtoVenda.setPreco_total(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())));
             produtoVenda.setCodigo_Barra(venda.getCodigo_qr());
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
             produtoVenda.setIva(produto.getValue().isIva());
@@ -124,9 +125,9 @@ public abstract class VendaDao {
                 return getVenda();
             } else if (idcliente > 0 && !isdivida) {
                 return getVenda(idcliente);
-            } else if (idcliente == 0 && isdivida) {
+            } else if (idcliente == 0) {
                 return getVendaDiv();
-            } else if (idcliente > 0 && isdivida) {
+            } else if (idcliente > 0) {
                 return getVendaCliDiv(idcliente);
             }
         } else if (isdivida) {
@@ -143,9 +144,9 @@ public abstract class VendaDao {
                 return getVenda(data);
             } else if (idcliente > 0 && !isDivida) {
                 return getVenda(data, idcliente);
-            } else if (idcliente == 0 && isDivida) {
+            } else if (idcliente == 0) {
                 return getVendaDataDiv(data);
-            } else if (idcliente > 0 && isDivida) {
+            } else if (idcliente > 0) {
                 return getVendaDataCliDiv(data, idcliente);
             }
         } else if (isDivida) {
@@ -162,9 +163,9 @@ public abstract class VendaDao {
                 return searchVenda(codQr);
             } else if (idcliente > 0 && !isDivida) {
                 return searchVenda(codQr, idcliente);
-            } else if (idcliente == 0 && isDivida) {
+            } else if (idcliente == 0) {
                 return searchVendaDiv(codQr);
-            } else if (idcliente > 0 && isDivida) {
+            } else if (idcliente > 0) {
                 return searchVendaCliDiv(codQr, idcliente);
             }
         } else if (isDivida) {
@@ -224,7 +225,4 @@ public abstract class VendaDao {
         setDivida(divida, idvenda);
     }
 
-    public void eliminarVendaLixeira(int estado, String data, long idvenda) {
-        deleteLixeira(estado, data, idvenda);
-    }
 }
