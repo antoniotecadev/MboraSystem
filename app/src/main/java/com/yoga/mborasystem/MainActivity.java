@@ -9,6 +9,8 @@ import android.view.View;
 import com.google.android.material.navigation.NavigationView;
 import com.yoga.mborasystem.view.FacturaFragment;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +18,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -25,10 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     public static DrawerLayout drawerLayout;
-    private NavController navController;
     public static ProgressDialog progressDialog;
     public static NavigationView navigationView;
-    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,35 +44,32 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        navController = Navigation.findNavController(this, R.id.fragment);
-        appBarConfiguration = new AppBarConfiguration.Builder(R.id.splashFragment, R.id.homeFragment, R.id.dialogAlterarCliente, R.id.bloquearFragment, R.id.activarMbora, R.id.cadastrarClienteFragment)
-                .setDrawerLayout(drawerLayout)
+        NavController navController = Navigation.findNavController(this, R.id.fragment);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.splashFragment, R.id.homeFragment, R.id.dialogAlterarCliente, R.id.bloquearFragment, R.id.activarMbora, R.id.cadastrarClienteFragment)
+                .setOpenableLayout(drawerLayout)
                 .build();
 
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
-        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-            @Override
-            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                if (destination.getId() == R.id.splashFragment) {
-                    toolbar.setVisibility(View.GONE);
-                    navigationView.getMenu().clear();
-                } else if (destination.getId() == R.id.bloquearFragment) {
-                    toolbar.setVisibility(View.GONE);
-                    navigationView.getMenu().clear();
-                } else if (destination.getId() == R.id.dialogCodigoPin) {
-                    toolbar.setVisibility(View.GONE);
-                    navigationView.getMenu().clear();
-                } else if (destination.getId() == R.id.activarMbora) {
-                    toolbar.setVisibility(View.GONE);
-                    navigationView.getMenu().clear();
-                } else if (destination.getId() == R.id.homeFragment) {
-                    toolbar.setVisibility(View.VISIBLE);
-                    navigationView.inflateMenu(R.menu.menu_drawer);
-                } else {
-                    toolbar.setVisibility(View.VISIBLE);
-                    navigationView.getMenu().clear();
-                }
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.splashFragment) {
+                toolbar.setVisibility(View.GONE);
+                navigationView.getMenu().clear();
+            } else if (destination.getId() == R.id.bloquearFragment) {
+                toolbar.setVisibility(View.GONE);
+                navigationView.getMenu().clear();
+            } else if (destination.getId() == R.id.dialogCodigoPin) {
+                toolbar.setVisibility(View.GONE);
+                navigationView.getMenu().clear();
+            } else if (destination.getId() == R.id.activarMbora) {
+                toolbar.setVisibility(View.GONE);
+                navigationView.getMenu().clear();
+            } else if (destination.getId() == R.id.homeFragment) {
+                toolbar.setVisibility(View.VISIBLE);
+                navigationView.inflateMenu(R.menu.menu_drawer);
+            } else {
+                toolbar.setVisibility(View.VISIBLE);
+                navigationView.getMenu().clear();
             }
         });
     }
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        for (Fragment fragment : getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getFragments()) {
+        for (Fragment fragment : Objects.requireNonNull(getSupportFragmentManager().getPrimaryNavigationFragment()).getChildFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -107,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (Fragment fragment : getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager().getFragments()) {
+        for (Fragment fragment : Objects.requireNonNull(getSupportFragmentManager().getPrimaryNavigationFragment()).getChildFragmentManager().getFragments()) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
