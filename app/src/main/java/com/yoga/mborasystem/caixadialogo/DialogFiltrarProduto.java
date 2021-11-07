@@ -26,7 +26,6 @@ public class DialogFiltrarProduto extends DialogFragment {
     private Bundle bundle;
     private AlertDialog dialog;
     private String formatted;
-    private AlertDialog.Builder builder;
     private ProdutoViewModel produtoViewModel;
     private DialogFiltrarProdutoBinding binding;
 
@@ -47,7 +46,7 @@ public class DialogFiltrarProduto extends DialogFragment {
 
         formatted = NumberFormat.getCurrencyInstance(new Locale("pt", "AO")).format((0));
 
-        builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(getString(R.string.filtrar_produto));
         builder.setView(binding.getRoot());
         dialog = builder.create();
