@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
@@ -19,7 +20,7 @@ import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
@@ -34,15 +35,14 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProdutoViewModel extends AndroidViewModel {
 
-    private Produto produto;
+    private final Produto produto;
     private Disposable disposable;
-    private ProdutoRepository produtoRepository;
-    private CompositeDisposable compositeDisposable;
+    private final ProdutoRepository produtoRepository;
+    private final CompositeDisposable compositeDisposable;
 
     public ProdutoViewModel(@NonNull Application application) {
         super(application);
@@ -61,7 +61,6 @@ public class ProdutoViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<Produto>> listaProdutos;
     private MutableLiveData<Event<List<Produto>>> listaProdutosImport;
-    private MutableLiveData<Map<Long, Produto>> listaProdutosFactura;
 
     public MutableLiveData<List<Produto>> getListaProdutos() {
         if (listaProdutos == null) {
@@ -77,14 +76,14 @@ public class ProdutoViewModel extends AndroidViewModel {
         return listaProdutosImport;
     }
 
-    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Switch estado, AlertDialog dialog, Boolean continuar, long idcategoria) {
+    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, Boolean continuar, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
-        } else if (isCampoVazio(precofornecedor.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precofornecedor.getText()).toString())) {
             precofornecedor.requestFocus();
             precofornecedor.setError(getApplication().getString(R.string.preco_invalido));
-        } else if (isCampoVazio(preco.getText().toString()) || Ultilitario.removerKZ(preco) <= 0) {
+        } else if (isCampoVazio(Objects.requireNonNull(preco.getText()).toString()) || Ultilitario.removerKZ(preco) <= 0) {
             preco.requestFocus();
             preco.setError(getApplication().getString(R.string.dig_preco));
         } else if (isCampoVazio(quantidade.getText().toString()) || numero.matcher(quantidade.getText().toString()).find() || quantidade.length() > 4) {
@@ -102,7 +101,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             produto.setPrecofornecedor(Ultilitario.removerKZ(precofornecedor));
             produto.setQuantidade(Integer.parseInt(quantidade.getText().toString()));
             produto.setCodigoBarra(codigoBarra.getText().toString());
-            produto.setIva(checkIva.isChecked() ? true : false);
+            produto.setIva(checkIva.isChecked());
             produto.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 produto.setIdcategoria(idcategoria);
@@ -122,16 +121,17 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void criarProduto(EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Switch estado, AlertDialog dialog, boolean c, long idcategoria) {
+    public void criarProduto(EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, boolean c, long idcategoria) {
         validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, estado, dialog, c, idcategoria);
     }
 
-    public void actualizarProduto(long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Switch estado, long idcategoria, AlertDialog dialog) {
+    public void actualizarProduto(long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, long idcategoria, AlertDialog dialog) {
         validarProduto(Ultilitario.Operacao.ACTUALIZAR, id, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, estado, dialog, false, idcategoria);
     }
 
     private int contar = 0;
 
+    @SuppressLint("CheckResult")
     private void criarProduto(Produto produto, AlertDialog dialog, Boolean continuar) {
         Completable.fromAction(() -> produtoRepository.insert(produto))
                 .subscribeOn(Schedulers.io())
@@ -159,6 +159,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     private void actualizarProduto(Produto produto, AlertDialog dialog) {
         Completable.fromAction(() -> produtoRepository.update(produto))
                 .subscribeOn(Schedulers.io())
@@ -176,10 +177,11 @@ public class ProdutoViewModel extends AndroidViewModel {
                         dialog.dismiss();
                     }
 
+                    @SuppressLint("CheckResult")
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        if (e.getMessage().contains("UNIQUE")) {
+                        if (Objects.requireNonNull(e.getMessage()).contains("UNIQUE")) {
                             Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.produto_existe) + " ou " + getApplication().getString(R.string.codigobarra_existe), R.drawable.ic_toast_erro);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_criado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
@@ -188,6 +190,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void eliminarProduto(Produto produto, boolean lx, Dialog dialog) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> produtoRepository.delete(produto, lx))
@@ -227,24 +230,18 @@ public class ProdutoViewModel extends AndroidViewModel {
         compositeDisposable.add(produtoRepository.getProdutos(idcategoria, isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Produto>>() {
-                    @Override
-                    public void accept(List<Produto> produtos) throws Exception {
-                        if (isImport) {
-                            getListaProdutosImport().setValue(new Event<>(produtos));
-                        } else {
-                            getListaProdutos().setValue(produtos);
-                        }
-                        Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                        MainActivity.dismissProgressBar();
+                .subscribe(produtos -> {
+                    if (isImport) {
+                        getListaProdutosImport().setValue(new Event<>(produtos));
+                    } else {
+                        getListaProdutos().setValue(produtos);
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                        Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                    }
+                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
+                    MainActivity.dismissProgressBar();
+                }, throwable -> {
+                    MainActivity.dismissProgressBar();
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
+                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                 }));
     }
 
@@ -256,19 +253,19 @@ public class ProdutoViewModel extends AndroidViewModel {
         return produtoRepository.getProdutos();
     }
 
-    public void validarProdutoFiltro(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoFiltro(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -284,7 +281,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNome(long idcat, TextInputEditText idprodnome, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else {
@@ -296,10 +293,10 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoPreco(long idcat, TextInputEditText precoMin, TextInputEditText precoMax, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -312,7 +309,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoCodBar(long idcat, TextInputEditText codigoBar, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
         } else {
@@ -321,7 +318,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoEstado(long idcat, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoEstado(long idcat, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else {
@@ -333,16 +330,16 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomeCodBarPreco(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -354,16 +351,16 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoNomePrecoEstado(long idcat, TextInputEditText idprodnome, TextInputEditText precoMin, TextInputEditText precoMax, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoNomePrecoEstado(long idcat, TextInputEditText idprodnome, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -375,13 +372,13 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoNomeCodBarEstado(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoNomeCodBarEstado(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
         } else {
@@ -392,16 +389,16 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoCodBarPrecoEstado(long idcat, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoCodBarPrecoEstado(long idcat, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -416,13 +413,13 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomePreco(long idcat, TextInputEditText idprodnome, TextInputEditText precoMin, TextInputEditText precoMax, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -436,10 +433,10 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomeCodBar(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
         } else {
@@ -449,10 +446,10 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoNomeEstado(long idcat, TextInputEditText idprodnome, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoNomeEstado(long idcat, TextInputEditText idprodnome, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(idprodnome.getText().toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else {
@@ -465,13 +462,13 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoCodBarPreco(long idcat, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -482,13 +479,13 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoPrecoEstado(long idcat, TextInputEditText precoMin, TextInputEditText precoMax, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoPrecoEstado(long idcat, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(precoMin.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
             precoMin.requestFocus();
             precoMin.setError(getApplication().getString(R.string.preco_min_invalido));
-        } else if (isCampoVazio(precoMax.getText().toString())) {
+        } else if (isCampoVazio(Objects.requireNonNull(precoMax.getText()).toString())) {
             precoMax.requestFocus();
             precoMax.setError(getApplication().getString(R.string.preco_max_invalido));
         } else {
@@ -499,10 +496,10 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoCodBarEstado(long idcat, TextInputEditText codigoBar, Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoCodBarEstado(long idcat, TextInputEditText codigoBar, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        } else if (isCampoVazio(codigoBar.getText().toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
             codigoBar.requestFocus();
             codigoBar.setError(getApplication().getString(R.string.codigobarra_invalido));
         } else {
@@ -533,6 +530,7 @@ public class ProdutoViewModel extends AndroidViewModel {
 //        return produtoRepository.getQuantidadeProduto(idcategoria);
 //    }
 
+    @SuppressLint("SetTextI18n")
     public void codigoBarra(IntentResult result, TextInputEditText codigoBarra) {
         if (result.getContents() == null) {
             Toast.makeText(getApplication(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
@@ -546,13 +544,10 @@ public class ProdutoViewModel extends AndroidViewModel {
         compositeDisposable.add(produtoRepository.searchProdutos(produto, isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> {
-                    getListaProdutos().setValue(produtos);
-                }, throwable -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                .subscribe(produtos -> getListaProdutos().setValue(produtos), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    @SuppressLint("CheckResult")
     public void restaurarProduto(int estado, long idproduto) {
         MainActivity.dismissProgressBar();
         Completable.fromAction(() -> produtoRepository.restaurarCategoria(estado, idproduto))
@@ -587,10 +582,10 @@ public class ProdutoViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !disposable.isDisposed()) {
+        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !compositeDisposable.isDisposed()) {
+        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
             compositeDisposable.clear();
         }
     }
