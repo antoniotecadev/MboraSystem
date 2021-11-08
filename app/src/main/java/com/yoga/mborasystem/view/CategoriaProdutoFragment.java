@@ -157,6 +157,8 @@ public class CategoriaProdutoFragment extends Fragment {
                 bundle.putBoolean("master", getArguments().getBoolean("master"));
             } else {
                 menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
+                menu.findItem(R.id.exinpCategoria).setVisible(false);
+                menu.findItem(R.id.exinpProduto).setVisible(false);
                 binding.btncriarCategoriaDialog.setVisibility(View.GONE);
             }
         }
