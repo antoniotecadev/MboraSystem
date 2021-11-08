@@ -75,6 +75,8 @@ public class UsuarioFragment extends Fragment {
             } else {
                 binding.criarUsuarioFragment.setVisibility(View.GONE);
             }
+        } else {
+            binding.criarUsuarioFragment.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -109,6 +111,9 @@ public class UsuarioFragment extends Fragment {
                     viewHolder.itemView.findViewById(R.id.btnEntrar).setEnabled(false);
                     viewHolder.itemView.findViewById(R.id.btnEliminar).setVisibility(View.GONE);
                 }
+            } else {
+                viewHolder.itemView.findViewById(R.id.btnEntrar).setEnabled(false);
+                viewHolder.itemView.findViewById(R.id.btnEliminar).setVisibility(View.GONE);
             }
 
             nome.setText(usuario.getNome());
