@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -107,11 +108,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnProduto.setOnClickListener(v -> {
-            if (getArguments() != null) {
-                MainActivity.getProgressBar();
-                bundle.putBoolean("master", getArguments().getBoolean("master"));
-            }
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
         });
 
         binding.btnVenda.setOnClickListener(v -> {
@@ -121,7 +118,7 @@ public class HomeFragment extends Fragment {
 
         binding.btnCliente.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
         });
         binding.btnDashboard.setOnClickListener(v -> {
             MainActivity.getProgressBar();
@@ -142,6 +139,16 @@ public class HomeFragment extends Fragment {
         binding.floatingActionButtonProduto.setClickable(isOpen);
         binding.floatingActionButtonVendaLixo.setClickable(isOpen);
         this.isOpen = isOpen;
+    }
+
+    private Bundle isUserMaster() {
+        if (getArguments() != null) {
+            MainActivity.getProgressBar();
+            bundle.putBoolean("master", getArguments().getBoolean("master"));
+        } else {
+            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+        }
+        return bundle;
     }
 
     @Override

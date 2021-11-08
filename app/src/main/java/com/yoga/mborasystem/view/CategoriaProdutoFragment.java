@@ -161,6 +161,8 @@ public class CategoriaProdutoFragment extends Fragment {
                 menu.findItem(R.id.exinpProduto).setVisible(false);
                 binding.btncriarCategoriaDialog.setVisibility(View.GONE);
             }
+        } else {
+            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
         }
         if (isLixeira) {
             menu.findItem(R.id.exinpProduto).setVisible(false);

@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -116,23 +117,29 @@ public class ListaClienteFragment extends Fragment {
                                     Navigation.findNavController(requireView()).navigate(direction);
                                     return false;
                                 });//groupId, itemId, order, title
-                                menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
-                                    MainActivity.getProgressBar();
-                                    ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
-                                    Navigation.findNavController(requireView()).navigate(direction);
-                                    return false;
-                                });
-                                menu1.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
-                                    clienteCantina.setId(cliente.getId());
-                                    clienteCantina.setEstado(Ultilitario.TRES);
-                                    new AlertDialog.Builder(requireContext())
-                                            .setTitle(getString(R.string.eliminar) + " (" + cliente.getNome() + ")")
-                                            .setMessage(getString(R.string.tem_cert_elim_cli))
-                                            .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                                            .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
-                                            .show();
-                                    return false;
-                                });
+                                if (getArguments() != null) {
+                                    if (getArguments().getBoolean("master")) {
+                                        menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
+                                            MainActivity.getProgressBar();
+                                            ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
+                                            Navigation.findNavController(requireView()).navigate(direction);
+                                            return false;
+                                        });
+                                        menu1.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
+                                            clienteCantina.setId(cliente.getId());
+                                            clienteCantina.setEstado(Ultilitario.TRES);
+                                            new AlertDialog.Builder(requireContext())
+                                                    .setTitle(getString(R.string.eliminar) + " (" + cliente.getNome() + ")")
+                                                    .setMessage(getString(R.string.tem_cert_elim_cli))
+                                                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                                                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
+                                                    .show();
+                                            return false;
+                                        });
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                                }
 
                             });
                         }

@@ -425,6 +425,7 @@
     <string name="vend_rest">Venda restaurada.</string>
     <string name="vend_n_rest">Venda não restaurada.</string>
     <string name="ano">Ano</string>
+    <string name="arg_null">Argumento nulo</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
