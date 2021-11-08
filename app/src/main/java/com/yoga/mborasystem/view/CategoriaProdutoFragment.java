@@ -272,27 +272,25 @@ public class CategoriaProdutoFragment extends Fragment {
                         listaProdutos(categoria.getId(), categoria.getCategoria());
                         return false;
                     });//groupId, itemId, order, title
-                    menu1.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(item -> {
-                        if (getArguments() != null) {
-                            if (getArguments().getBoolean("master")) {
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master")) {
+                            menu1.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(item -> {
                                 MainActivity.getProgressBar();
                                 bundle.putParcelable("categoria", categoria);
                                 Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
-                            }
-                        }
-                        return false;
-                    });
-                    menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
-                        if (getArguments() != null) {
-                            if (getArguments().getBoolean("master", false)) {
+                                return false;
+                            });
+                            menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
                                 categoria.setId(categoria.getId());
                                 categoria.setEstado(Ultilitario.TRES);
                                 categoria.setData_elimina(Ultilitario.getDateCurrent());
                                 dialogEliminarCategoria(getString(R.string.env_cat_lix));
-                            }
+                                return false;
+                            });
                         }
-                        return false;
-                    });
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     menu1.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
                         restaurarCategoria();
