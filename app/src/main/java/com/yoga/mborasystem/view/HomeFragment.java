@@ -95,6 +95,7 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
             MainActivity.getProgressBar();
+            bundle.putBoolean("master", getArguments().getBoolean("master"));
             bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
