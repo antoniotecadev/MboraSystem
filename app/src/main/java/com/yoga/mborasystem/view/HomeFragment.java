@@ -217,7 +217,7 @@ public class HomeFragment extends Fragment {
 
     private void entrarProdutos() {
         MainActivity.getProgressBar();
-        HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true);
+        HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
         Navigation.findNavController(requireView()).navigate(direction);
     }
 

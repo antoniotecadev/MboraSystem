@@ -207,6 +207,10 @@
                 android:name="isLixeira"
                 app:argType="boolean"
                 android:defaultValue="false" />
+            <argument
+                android:name="isMaster"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </fragment>
         <dialog
             android:id="@+id/dialogSenha"

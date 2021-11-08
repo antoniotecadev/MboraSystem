@@ -44,7 +44,7 @@ public class ListProdutoFragment extends Fragment {
     private Bundle bundle;
     private Long idcategoria;
     private String categoria;
-    private boolean isLixeira;
+    private boolean isLixeira, isMaster;
     private GroupAdapter adapter;
     private ProdutoViewModel produtoViewModel;
     private FragmentProdutoListBinding binding;
@@ -66,6 +66,7 @@ public class ListProdutoFragment extends Fragment {
         binding = FragmentProdutoListBinding.inflate(inflater, container, false);
 
         isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+        isMaster = ListProdutoFragmentArgs.fromBundle(getArguments()).getIsMaster();
 
         binding.recyclerViewListaProduto.setAdapter(adapter);
         binding.recyclerViewListaProduto.setHasFixedSize(true);
@@ -251,14 +252,20 @@ public class ListProdutoFragment extends Fragment {
             if (isLixeira) {
                 entrarProduto.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                     menu.setHeaderTitle(produto.getNome());
-                    menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                        restaurarProduto();
-                        return false;
-                    });
-                    menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                        dialogEliminarProduto();
-                        return false;
-                    });
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master") || isMaster) {
+                            menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                                restaurarProduto();
+                                return false;
+                            });
+                            menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                                dialogEliminarProduto();
+                                return false;
+                            });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    }
                 });
             } else {
                 entrarProduto.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
