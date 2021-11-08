@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -137,10 +136,7 @@ public class ListaClienteFragment extends Fragment {
                                             return false;
                                         });
                                     }
-                                } else {
-                                    Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
                                 }
-
                             });
                         }
 
