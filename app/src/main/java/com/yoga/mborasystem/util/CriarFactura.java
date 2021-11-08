@@ -3,6 +3,7 @@ package com.yoga.mborasystem.util;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
@@ -44,18 +45,18 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(Common.getAppPath(context) + facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
+                        createPdfFile(isGuardar, Common.getAppPath(context) + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(Common.getAppPath(context) + facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
+                        createPdfFile(isGuardar, Common.getAppPath(context) + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
                     }
 
                     @Override
@@ -65,7 +66,8 @@ public class CriarFactura {
                 }).check();
     }
 
-    private static void createPdfFile(String path, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+        MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
         try {
@@ -116,12 +118,20 @@ public class CriarFactura {
             addNewItem(document, codigoQr, Element.ALIGN_CENTER, font);
             document.close();
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
+            if (!isGuardar)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    CriarFactura.printPDF(activity, activity.getBaseContext(), facturaPath);
+                } else {
+                    Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
+                }
         } catch (FileNotFoundException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (DocumentException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            MainActivity.dismissProgressBar();
         }
     }
 

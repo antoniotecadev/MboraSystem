@@ -6,7 +6,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -454,7 +453,7 @@ public class FacturaFragment extends Fragment {
             if (aBoolean) {
                 if (!codigoQr.isEmpty()) {
                     facturaPath = "venda" + codigoQr + "_" + Ultilitario.getDateCurrent() + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
+                    CriarFactura.getPemissionAcessStoregeExternal(true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
@@ -464,15 +463,11 @@ public class FacturaFragment extends Fragment {
         vendaViewModel.getPrintLiveData().setValue(false);
         vendaViewModel.getPrintLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    if (facturaPath.isEmpty()) {
-                        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.guardar_primeiro), R.drawable.ic_toast_erro);
-                    } else {
-                        MainActivity.getProgressBar();
-                        CriarFactura.printPDF(requireActivity(), getContext(), facturaPath);
-                    }
+                if (!codigoQr.isEmpty()) {
+                    facturaPath = "venda" + codigoQr + "_" + Ultilitario.getDateCurrent() + ".pdf";
+                    CriarFactura.getPemissionAcessStoregeExternal(false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
                 } else {
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
+                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
             }
         });

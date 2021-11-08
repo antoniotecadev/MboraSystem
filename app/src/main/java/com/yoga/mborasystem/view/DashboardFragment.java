@@ -117,8 +117,6 @@ public class DashboardFragment extends Fragment {
 
                     if (data[1].trim().equals(dataActual[1].trim())) {
 
-                        Toast.makeText(getContext(), data[0], Toast.LENGTH_SHORT).show();
-
                         if (data[0].trim().equals("01")) {
                             v1 += venda.getTotal_venda();
                             ++cv1;
