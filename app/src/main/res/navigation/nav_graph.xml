@@ -190,6 +190,10 @@
                 android:name="isLixeira"
                 app:argType="boolean"
                 android:defaultValue="false" />
+            <argument
+                android:name="isMaster"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </fragment>
         <fragment
             android:id="@+id/listProdutoFragment"

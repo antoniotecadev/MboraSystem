@@ -59,9 +59,9 @@ public class CategoriaProdutoFragment extends Fragment {
 
     private Random random;
     private Bundle bundle;
-    private boolean isLixeira;
     private StringBuilder data;
     private GroupAdapter adapter;
+    private boolean isLixeira, isMaster;
     private ProdutoViewModel produtoViewModel;
     private FragmentCategoriaProdutoBinding binding;
     private ArrayList<String> stringList, stringListDesc;
@@ -87,6 +87,7 @@ public class CategoriaProdutoFragment extends Fragment {
         binding = FragmentCategoriaProdutoBinding.inflate(inflater, container, false);
 
         isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+        isMaster = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsMaster();
 
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.cat) + ")");
@@ -292,14 +293,20 @@ public class CategoriaProdutoFragment extends Fragment {
                         Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    menu1.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                        restaurarCategoria();
-                        return false;
-                    });
-                    menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                        dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria));
-                        return false;
-                    });
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master") || isMaster) {
+                            menu1.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                                restaurarCategoria();
+                                return false;
+                            });
+                            menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                                dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria));
+                                return false;
+                            });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    }
                 }
 
             });
