@@ -108,12 +108,10 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnVenda.setOnClickListener(v -> {
-            MainActivity.getProgressBar();
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
         });
 
         binding.btnCliente.setOnClickListener(v -> {
-            MainActivity.getProgressBar();
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
         });
         binding.btnDashboard.setOnClickListener(v -> {
@@ -225,7 +223,7 @@ public class HomeFragment extends Fragment {
 
     private void entrarVendas() {
         MainActivity.getProgressBar();
-        HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true);
+        HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
         Navigation.findNavController(requireView()).navigate(direction);
     }
 

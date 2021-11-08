@@ -60,14 +60,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 public class VendaFragment extends Fragment {
 
     private String data = "";
-    private boolean isLixeira;
     private GroupAdapter adapter;
     private StringBuilder dataBuilder;
     private long idcliente, idusuario;
-    private boolean isLocal, isDivida;
     private VendaViewModel vendaViewModel;
     private String nomeUsuario, nomeCliente;
     private FragmentVendaListBinding binding;
+    private boolean isLocal, isDivida, isLixeira, isMaster;
 
 
     @Override
@@ -99,6 +98,8 @@ public class VendaFragment extends Fragment {
         binding = FragmentVendaListBinding.inflate(inflater, container, false);
 
         isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+        isMaster = VendaFragmentArgs.fromBundle(getArguments()).getIsMaster();
+
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.venda) + ")");
             binding.bottomNav.setVisibility(View.INVISIBLE);
@@ -265,26 +266,38 @@ public class VendaFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(directions);
                         return false;
                     });//groupId, itemId, order, title
-                    menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
-                        if (venda.getDivida() == Ultilitario.ZERO)
-                            Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
-                        else
-                            caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true);
-                        return false;
-                    });
-                    menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                        caixaDialogo(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_lix, false);
-                        return false;
-                    });
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master")) {
+                            menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
+                                if (venda.getDivida() == Ultilitario.ZERO)
+                                    Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
+                                else
+                                    caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true);
+                                return false;
+                            });
+                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_lix, false);
+                                return false;
+                            });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                        restaurarVenda();
-                        return false;
-                    });
-                    menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                        dialogEliminarVenda(getString(R.string.cert_elim_vend));
-                        return false;
-                    });
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master") || isMaster) {
+                            menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                                restaurarVenda();
+                                return false;
+                            });
+                            menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                                dialogEliminarVenda(getString(R.string.cert_elim_vend));
+                                return false;
+                            });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -363,6 +376,15 @@ public class VendaFragment extends Fragment {
             menu.findItem(R.id.btnData).setVisible(false);
             menu.findItem(R.id.exportarvenda).setVisible(false);
             menu.findItem(R.id.importarvenda).setVisible(false);
+        }
+
+        if (getArguments() != null) {
+            if (!getArguments().getBoolean("master")) {
+                menu.findItem(R.id.exportarvenda).setVisible(false);
+                menu.findItem(R.id.importarvenda).setVisible(false);
+            }
+        } else {
+            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
         }
 
         SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
