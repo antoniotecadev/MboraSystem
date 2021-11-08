@@ -100,11 +100,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnUsuario.setOnClickListener(v -> {
-            if (getArguments() != null) {
-                MainActivity.getProgressBar();
-                bundle.putBoolean("master", getArguments().getBoolean("master"));
-            }
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
         });
 
         binding.btnProduto.setOnClickListener(v -> {
