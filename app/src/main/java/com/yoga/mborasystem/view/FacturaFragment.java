@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -65,6 +66,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -121,6 +123,7 @@ public class FacturaFragment extends Fragment {
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -781,7 +784,7 @@ public class FacturaFragment extends Fragment {
                 Button btnRemover = viewHolder.itemView.findViewById(R.id.btnRemover);
                 Ultilitario.addItemOnSpinner(qt, getContext());
                 prod.setText(produto.getNome());
-                ref.setText("MS" + produto.getId() + " " + (produto.isIva() ? "IVA(14%)" : ""));
+                ref.setText("MS" + produto.getId() + " " + (produto.isIva() ? getString(R.string.iva) : ""));
                 pr.setText(getText(R.string.preco) + " " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 qt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override

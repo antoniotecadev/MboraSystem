@@ -131,7 +131,7 @@
     <string name="talho_congelados">Talho e Congelados</string>
     <string name="maquina_electrodomestico">Máquina Electrodoméstico etc</string>
     <string name="agua_gasosa_sumo">Água Gasosa Sumo etc</string>
-    <string name="chourico_queijo_leite_yogurte">Chouriço Queijo Leite Yogurte etc</string>
+    <string name="chourico_queijo_leite_yogurte">Chouriço Queijo Leite Iogurte etc</string>
     <string name="tomate_maca_laranja">Tomate Maçã Laranja etc</string>
     <string name="papelhigienico_detergente_pastadedente_batom">Papel higiênico Detergente Pasta de dente Batom etc</string>
     <string name="arroz_fuba_bolacha_cereais_cha_oleo">Arroz Fuba Bolacha Cereais Chá Óleo etc</string>
@@ -440,5 +440,4 @@
         <item>Bloquados(as)</item>
         <item>Desbloqueados(as)</item>
     </string-array>
-
 </resources>
