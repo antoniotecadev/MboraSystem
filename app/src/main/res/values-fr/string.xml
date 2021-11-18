@@ -266,7 +266,7 @@
     <string name="zero">0</string>
     <string name="desconto">Remise</string>
     <string name="percentagem">%</string>
-    <string name="valor_kwanza">Valeur en Kwanza</string>
+    <string name="valor_kwanza">Valeur en kwanza</string>
     <string name="forma_pagamento">Forme de payement:</string>
     <string name="cartao_multicaixa">Carte bancaire</string>
     <string name="dinheiro">De l\'argent</string>

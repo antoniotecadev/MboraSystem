@@ -9,5 +9,5 @@
   <color name="white">#FFFFFFFF</color>
   <color name="cor_fundo_tela_inicial">#000000</color>
   <color name="cor_castanha">#795548</color>
-  <string name="cor_click_recyclerview">#6BD3D8D7</string>
+  <string name="cor_click_recyclerview" translatable="false">#6BD3D8D7</string>
 </resources>
