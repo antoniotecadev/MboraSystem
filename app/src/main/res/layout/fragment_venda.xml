@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/btnEntrar"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="330dp"
         android:layout_marginLeft="@dimen/margem_card_view"
         android:layout_marginTop="@dimen/margem_card_view"
         android:layout_marginRight="@dimen/margem_card_view"
