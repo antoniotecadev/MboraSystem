@@ -29,4 +29,8 @@
       android:id="@+id/itemSair"
       android:icon="@drawable/ic_baseline_close_24"
       android:title="@string/sair" />
+  <item
+      android:id="@+id/idioma"
+      android:title="@string/idm"
+      app:showAsAction="ifRoom|collapseActionView"/>
 </menu>

@@ -19,6 +19,8 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -160,6 +162,14 @@ public class HomeFragment extends Fragment {
             } else {
                 menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
             }
+        }
+        Locale primaryLocale = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            primaryLocale = getResources().getConfiguration().getLocales().get(0);
+            String locale = primaryLocale.getDisplayName();
+            menu.findItem(R.id.idioma).setTitle(locale);
+        } else {
+            menu.findItem(R.id.idioma).setTitle("");
         }
     }
 
