@@ -29,18 +29,22 @@ public class SplashFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> clienteViewModel.clienteExiste(false, null), 5000);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            clienteViewModel.clienteExiste(false, null);
 
-        Ultilitario.getExisteMutableLiveData().observe(getViewLifecycleOwner(), existe -> {
-            switch (existe) {
-                case SIM:
-                    Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_loginFragment);
-                    break;
-                case NAO:
-                    Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_cadastrarClienteFragment);
-                    break;
-            }
-        });
+            Ultilitario.getExisteMutableLiveData().observe(getViewLifecycleOwner(), existe -> {
+                switch (existe) {
+                    case SIM:
+                        Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_loginFragment);
+                        break;
+                    case NAO:
+                        Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_cadastrarClienteFragment);
+                        break;
+                }
+            });
+
+
+        }, 5000);
 
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }

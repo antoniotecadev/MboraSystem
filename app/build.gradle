@@ -3,6 +3,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\repositoriochave\\keystoreyoga.keystore')
+            keyAlias 'keystoreyoga'
+            storePassword 'delfiaimetro1997'
+            keyPassword 'engenheiro19teca97'
+        }
+    }
     compileSdkVersion 30
 
     defaultConfig {
@@ -33,7 +41,17 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            // Ativa a redução, ofuscação e otimização de código apenas para
+            // o tipo de compilação de lançamento do seu projeto.
+//            minifyEnabled true
+
+            // Ativa a redução de recursos, que é realizada pelo
+            // Plug-in do Android para Gradle.
+//            shrinkResources true
+
+            // Inclui os arquivos de regras ProGuard padrão que são empacotados com
+            // o plugin Android Gradle. Para saber mais, vá para a seção sobre
+            // Arquivos de configuração R8.
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
