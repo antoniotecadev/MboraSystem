@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.snackbar.Snackbar;
@@ -62,7 +61,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -236,7 +234,7 @@ public class FacturaFragment extends Fragment {
         binding.recyclerViewFactura.setLayoutManager(new LinearLayoutManager(getContext()));
         categoriaProdutoViewModel.consultarCategorias(null, false);
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
-            if (!categorias.isEmpty()) {
+            if (!categorias.isEmpty() && listaCategoria.isEmpty()) {
                 for (Categoria categoria : categorias) {
                     if (categoria.getEstado() != Ultilitario.DOIS)
                         listaCategoria.add(categoria.getId() + " - " + categoria.getCategoria());
