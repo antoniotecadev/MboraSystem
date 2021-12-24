@@ -370,14 +370,6 @@
                 app:backgroundTint="@android:color/holo_green_light" />
 
             <Button
-                android:id="@+id/buttonEntrarConta"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="@string/entrar_conta"
-                android:layout_marginLeft="@dimen/margem_lateral_formulario"
-                android:layout_marginRight="@dimen/margem_lateral_formulario"/>
-
-            <Button
                 android:id="@+id/buttonCancelar"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
