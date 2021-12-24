@@ -427,6 +427,7 @@
     <string name="ano">Ano</string>
     <string name="arg_null">Argumento nulo</string>
     <string name="idm">Idioma</string>
+    <string name="config_red">Configuração de rede</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>

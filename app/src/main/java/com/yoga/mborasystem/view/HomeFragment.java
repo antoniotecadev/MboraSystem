@@ -14,6 +14,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
@@ -50,6 +54,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+//        listarParceiros();
         setHasOptionsMenu(true);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         Toolbar toolbar = binding.toolbar;
@@ -236,6 +241,26 @@ public class HomeFragment extends Fragment {
         MainActivity.getProgressBar();
         HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
         Navigation.findNavController(requireView()).navigate(direction);
+    }
+
+    private void listarParceiros() {
+        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts";
+        Ion.with(requireActivity())
+                .load(URL)
+                .asJsonArray()
+                .setCallback(new FutureCallback<JsonArray>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonArray jsonElements) {
+                        try {
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
+//                                Log.i("Parceiro", parceiro.get("first_name").getAsString());
+                            }
+                        } catch (Exception ex) {
+                            Toast.makeText(requireContext(), "Erro" + ex.getMessage() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override

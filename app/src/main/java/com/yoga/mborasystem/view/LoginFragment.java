@@ -250,4 +250,10 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainActivity.dismissProgressBar();
+    }
+
 }

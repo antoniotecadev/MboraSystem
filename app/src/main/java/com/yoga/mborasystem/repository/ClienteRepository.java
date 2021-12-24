@@ -12,6 +12,7 @@ import io.reactivex.Single;
 
 public class ClienteRepository {
 
+    Context context;
     ClienteDao clienteDao;
     WeakReference<Context> contextWeakReference;
 
@@ -19,6 +20,7 @@ public class ClienteRepository {
         contextWeakReference = new WeakReference<>(context);
         AppDataBase appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
         clienteDao = appDataBase.clienteDao();
+        this.context = context;
     }
 
     public void insert(Cliente cliente) {

@@ -2,6 +2,9 @@ package com.yoga.mborasystem.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -18,7 +21,9 @@ import java.security.spec.InvalidKeySpecException;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 public class CadastrarClienteFragment extends Fragment {
 
@@ -34,6 +39,7 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return criarCliente(inflater, container);
     }
 
@@ -59,23 +65,41 @@ public class CadastrarClienteFragment extends Fragment {
         });
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
-        binding.buttonEntrarConta.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_activarMbora));
-
-        Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao ->  {
-                switch (operacao) {
-                    case CRIAR:
-                        Ultilitario.dialogConta(getString(R.string.conta_criada), getContext());
-                        Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_activarMbora);
-                        break;
-                    case NENHUMA:
-                        Ultilitario.dialogConta(getString(R.string.conta_nao_criada), getContext());
-                        break;
-                    default:
-                        break;
-                }
+        Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao -> {
+            switch (operacao) {
+                case CRIAR:
+                    Ultilitario.dialogConta(getString(R.string.conta_criada), getContext()).show();
+                    Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_bloquearFragment);
+                    break;
+                case NENHUMA:
+                    Ultilitario.dialogConta(getString(R.string.conta_nao_criada), getContext()).show();
+                    break;
+                default:
+                    break;
+            }
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_configuracao, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+        switch (item.getItemId()) {
+            case R.id.configRede:
+                Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoRedeFragment);
+                break;
+            default:
+                break;
+        }
+        return NavigationUI.onNavDestinationSelected(item, navController)
+                || super.onOptionsItemSelected(item);
     }
 
     @Override

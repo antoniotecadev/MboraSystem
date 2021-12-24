@@ -9,6 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -140,12 +143,11 @@ public class Ultilitario {
         return valido;
     }
 
-    public static void dialogConta(String message, Context context) {
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.conta)
-                .setMessage(message)
-                .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
-                .show();
+    public static AlertDialog.Builder dialogConta(String message, Context context) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setMessage(message);
+        alert.setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss());
+        return alert;
     }
 
     public static void precoFormat(Context context, TextInputEditText preco) {
@@ -489,6 +491,27 @@ public class Ultilitario {
         g = rand.nextInt();
         b = rand.nextInt();
         i.setColorFilter(Color.rgb(r, g, b));
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        // For 29 api or above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+        } else return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static boolean internetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 

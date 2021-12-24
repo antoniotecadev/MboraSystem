@@ -43,12 +43,11 @@
         android:label="@string/criar_conta"
         tools:layout="@layout/fragment_cadastrar_cliente">
         <action
-            android:id="@+id/action_cadastrarClienteFragment_to_activarMbora"
-            app:destination="@id/activarMbora"
-            app:enterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/cadastrarClienteFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_cadastrarClienteFragment_to_bloquearFragment"
+            app:destination="@id/bloquearFragment" />
+        <action
+            android:id="@+id/action_cadastrarClienteFragment_to_configuracaoRedeFragment"
+            app:destination="@id/configuracaoRedeFragment" />
     </fragment>
     <fragment
         android:id="@+id/activarMbora"
@@ -387,5 +386,9 @@
             tools:layout="@layout/fragment_dashboard" />
 
     </navigation>
+    <fragment
+        android:id="@+id/configuracaoRedeFragment"
+        android:name="com.yoga.mborasystem.view.ConfiguracaoRedeFragment"
+        android:label="@string/config_red" />
 
 </navigation>

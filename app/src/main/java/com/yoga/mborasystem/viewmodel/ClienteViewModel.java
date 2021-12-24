@@ -2,10 +2,12 @@ package com.yoga.mborasystem.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Patterns;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -28,6 +30,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 public class ClienteViewModel extends AndroidViewModel {
 
@@ -127,6 +132,7 @@ public class ClienteViewModel extends AndroidViewModel {
             senhaNovamente.requestFocus();
             senhaNovamente.setError(getApplication().getString(R.string.pin_diferente));
         } else {
+            MainActivity.getProgressBar();
             cliente.setNome(nome.getText().toString());
             cliente.setSobrenome(sobreNome.getText().toString());
             cliente.setNifbi(nif.getText().toString());
@@ -163,18 +169,30 @@ public class ClienteViewModel extends AndroidViewModel {
                     @Override
                     public void onSuccess(@io.reactivex.annotations.NonNull Cliente cliente) {
                         if (limitCadastro) {
-                            Ultilitario.dialogConta(getApplication().getString(R.string.conta_cliente_ja_existe), getApplication());
+                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_cliente_ja_existe), R.drawable.ic_toast_erro);
                         } else {
                             Ultilitario.getExisteMutableLiveData().setValue(Ultilitario.Existe.SIM);
                         }
+                        MainActivity.dismissProgressBar();
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         if (limitCadastro) {
-                            cadastrarCliente(c);
+                            if (isNetworkConnected(getApplication())) {
+                                if (internetIsConnected()) {
+                                    cadastrarCliente(c);
+                                } else {
+                                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Sem internet", R.drawable.ic_toast_erro);
+                                    MainActivity.dismissProgressBar();
+                                }
+                            } else {
+                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Conecta - se a uma rede: Dados móveis ou Wi-Fi", R.drawable.ic_toast_erro);
+                                MainActivity.dismissProgressBar();
+                            }
                         } else {
                             Ultilitario.getExisteMutableLiveData().setValue(Ultilitario.Existe.NAO);
+                            MainActivity.dismissProgressBar();
                         }
                     }
                 });
@@ -194,12 +212,45 @@ public class ClienteViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         Ultilitario.getValido().setValue(Ultilitario.Operacao.CRIAR);
+                        salvarParceiro(cliente);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
-//                        Toast.makeText(getApplication(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        MainActivity.dismissProgressBar();
+                    }
+                });
+    }
+
+    private void salvarParceiro(Cliente cliente) {
+        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts";
+        Ion.with(getApplication().getApplicationContext())
+                .load("POST", URL)
+                .setBodyParameter("account_id", "1")
+                .setBodyParameter("first_name", cliente.getNome())
+                .setBodyParameter("last_name", cliente.getSobrenome())
+                .setBodyParameter("nif_bi", cliente.getNifbi())
+                .setBodyParameter("email", cliente.getEmail())
+                .setBodyParameter("phone", cliente.getTelefone())
+                .setBodyParameter("alternative_phone", cliente.getTelefonealternativo())
+                .setBodyParameter("cantina", cliente.getNomeEmpresa())
+                .setBodyParameter("municipality", cliente.getMunicipio())
+                .setBodyParameter("district", cliente.getBairro())
+                .setBodyParameter("street", cliente.getRua())
+                .asJsonObject()
+                .setCallback((e, jsonObject) -> {
+                    try {
+                        String retorno = jsonObject.get("insert").getAsString();
+                        if (retorno.equals("ok")) {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), "Parceiro salvo", R.drawable.ic_toast_feito);
+                        } else if (retorno.equals("erro")) {
+                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Parceiro não salvo", R.drawable.ic_toast_erro);
+                        }
+                    } catch (Exception ex) {
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Erro:" + ex.getMessage(), R.drawable.ic_toast_erro);
+                    } finally {
+                        MainActivity.dismissProgressBar();
                     }
                 });
     }
