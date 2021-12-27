@@ -30,6 +30,7 @@ public class Cliente implements Parcelable {
     @Ignore private String municipio;
     private String bairro;
     private String rua;
+    private String imei;
 
     protected Cliente(Parcel in) {
         id = in.readLong();
@@ -170,6 +171,14 @@ public class Cliente implements Parcelable {
 
     public void setNomeEmpresa(String nomeEmpresa) {
         this.nomeEmpresa = nomeEmpresa;
+    }
+
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei;
     }
 
     @Override

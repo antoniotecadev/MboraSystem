@@ -17,6 +17,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Objects;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
@@ -146,6 +147,7 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setBairro(bairro.getText().toString());
             cliente.setRua(rua.getText().toString());
             cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
+            cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 clienteExiste(true, cliente);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
@@ -238,6 +240,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 .setBodyParameter("municipality", cliente.getMunicipio())
                 .setBodyParameter("district", cliente.getBairro())
                 .setBodyParameter("street", cliente.getRua())
+                .setBodyParameter("imei", cliente.getImei())
                 .asJsonObject()
                 .setCallback((e, jsonObject) -> {
                     try {
