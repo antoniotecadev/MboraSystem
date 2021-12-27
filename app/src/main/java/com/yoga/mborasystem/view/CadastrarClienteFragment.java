@@ -49,12 +49,19 @@ public class CadastrarClienteFragment extends Fragment {
         binding.spinnerProvincias.setAdapter(adapter);
     }
 
+    private void spinnerMunicipios() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.municipios, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerMunicipios.setAdapter(adapter);
+    }
+
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         spinnerProvincias();
+        spinnerMunicipios();
         binding.buttonCriarConta.setOnClickListener(v -> {
             try {
-                clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeLoja, binding.spinnerProvincias, binding.editTextMunicipio, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente);
+                clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeLoja, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente);
             } catch (InvalidKeySpecException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();

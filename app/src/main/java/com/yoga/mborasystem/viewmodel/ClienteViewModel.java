@@ -74,7 +74,7 @@ public class ClienteViewModel extends AndroidViewModel {
         return (isCampoVazio(numero) || !Patterns.PHONE.matcher(numero).matches());
     }
 
-    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, TextInputEditText municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (isCampoVazio(Objects.requireNonNull(nome.getText()).toString()) || letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -114,9 +114,8 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (nomeEmpresa.length() < 5) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_curto));
-        } else if (isCampoVazio(Objects.requireNonNull(municipio.getText()).toString()) || letraNumero.matcher(municipio.getText().toString()).find()) {
-            municipio.requestFocus();
-            municipio.setError(getApplication().getString(R.string.municipio_invalido));
+        } else if (isCampoVazio(Objects.requireNonNull(municipio.getSelectedItem().toString()))) {
+            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.municipio_invalido), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(bairro.getText()).toString()) || letraNumero.matcher(bairro.getText().toString()).find()) {
             bairro.requestFocus();
             bairro.setError(getApplication().getString(R.string.bairro_invalido));
@@ -143,7 +142,7 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setEmail(email.getText().toString());
             cliente.setNomeEmpresa(nomeEmpresa.getText().toString());
             cliente.setProvincia(provincia.getSelectedItem().toString());
-            cliente.setMunicipio(municipio.getText().toString());
+            cliente.setMunicipio(municipio.getSelectedItem().toString());
             cliente.setBairro(bairro.getText().toString());
             cliente.setRua(rua.getText().toString());
             cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
@@ -221,6 +220,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                         MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Erro:" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }

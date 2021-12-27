@@ -431,6 +431,17 @@
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
+    <string-array name="municipios">
+        <item></item>
+        <item>Luanda</item>
+        <item>Belas</item>
+        <item>Cazenga</item>
+        <item>Cacuaco</item>
+        <item>Icolo e Bengo</item>
+        <item>Quissama</item>
+        <item>Talatona</item>
+        <item>Quilamba Quiaxi</item>
+    </string-array>
     <string-array name="quantidade">
         <item>1</item>
         <item>2</item>
