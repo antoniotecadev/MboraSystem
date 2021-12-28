@@ -47,6 +47,7 @@ public class Cliente implements Parcelable {
         bairro = in.readString();
         rua = in.readString();
         nomeEmpresa = in.readString();
+        imei = in.readString();
     }
 
     public static final Creator<Cliente> CREATOR = new Creator<Cliente>() {
@@ -202,5 +203,6 @@ public class Cliente implements Parcelable {
         dest.writeString(bairro);
         dest.writeString(rua);
         dest.writeString(nomeEmpresa);
+        dest.writeString(imei);
     }
 }

@@ -279,6 +279,7 @@
                 android:background="?android:attr/listDivider" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputSenha"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
@@ -302,6 +303,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputSenhaNovamente"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
@@ -321,6 +323,27 @@
                     android:hint="@string/repetir_senha"
                     android:inputType="textPersonName|text|textPassword"
                     android:text="123456" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextIMEI"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:ems="10"
+                    android:hint="IMEI"
+                    android:inputType="textPersonName"
+                    android:visibility="gone"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -33,6 +33,9 @@ public class DialogAlterarCliente extends DialogFragment {
         binding.checkTermoCondicao.setVisibility(View.GONE);
         binding.buttonCriarConta.setVisibility(View.GONE);
         binding.buttonCancelar.setVisibility(View.VISIBLE);
+        binding.editTextIMEI.setVisibility(View.VISIBLE);
+        binding.textInputSenha.setVisibility(View.GONE);
+        binding.textInputSenhaNovamente.setVisibility(View.GONE);
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());
 
         if (getArguments() != null) {
@@ -44,8 +47,7 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextNif.setText(cliente.getNifbi());
             binding.editTextNumeroTelefone.setText(cliente.getTelefone());
             binding.editTextEmail.setText(cliente.getEmail());
-            binding.editTextSenha.setText(String.valueOf(cliente.getSenha()));
-            binding.editTextSenhaNovamente.setText(String.valueOf(cliente.getSenha()));
+            binding.editTextIMEI.setText(cliente.getImei());
         }
 
         return dialog;
