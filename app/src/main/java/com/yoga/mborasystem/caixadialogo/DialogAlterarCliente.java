@@ -49,6 +49,8 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextNumeroTelefoneAlternativo.setText(cliente.getTelefonealternativo());
             binding.editTextEmail.setText(cliente.getEmail());
             binding.editTextNomeLoja.setText(cliente.getNomeEmpresa());
+            binding.textProvincia.setText("");
+            binding.textMunicipio.setText("");
             binding.editTextBairro.setText(cliente.getBairro());
             binding.editTextRua.setText(cliente.getRua());
             binding.editTextIMEI.setText(cliente.getImei());
