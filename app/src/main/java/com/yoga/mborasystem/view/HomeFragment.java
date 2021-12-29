@@ -2,7 +2,9 @@ package com.yoga.mborasystem.view;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -163,7 +165,6 @@ public class HomeFragment extends Fragment {
                 binding.btnUsuario.setEnabled(false);
                 binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
                 menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
-                menu.findItem(R.id.dialogPlanoPacote).setVisible(false);
             } else {
                 menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
             }
@@ -188,6 +189,12 @@ public class HomeFragment extends Fragment {
                     bundle.putParcelable("cliente", getArguments().getParcelable("cliente"));
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
                 }
+                break;
+            case R.id.termosCondicoes:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/termoscondicoes")));
+                break;
+            case R.id.politicaPrivacidade:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/politicaprivacidade")));
                 break;
             case R.id.dialogAlterarCodigoPin:
                 if (getArguments() != null) {
