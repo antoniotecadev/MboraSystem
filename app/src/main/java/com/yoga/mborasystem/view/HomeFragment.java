@@ -160,6 +160,7 @@ public class HomeFragment extends Fragment {
                 binding.btnUsuario.setEnabled(false);
                 binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
                 menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
+                menu.findItem(R.id.estadoCliente).setEnabled(false);
             } else {
                 menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
             }
