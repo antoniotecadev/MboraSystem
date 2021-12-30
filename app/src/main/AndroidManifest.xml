@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yoga.mborasystem">
     <application
+        android:manageSpaceActivity="com.yoga.mborasystem.MainActivity"
         android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
