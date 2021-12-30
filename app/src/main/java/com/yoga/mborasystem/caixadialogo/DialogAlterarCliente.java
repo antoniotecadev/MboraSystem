@@ -51,9 +51,22 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextNomeLoja.setText(cliente.getNomeEmpresa());
             binding.textProvincia.setText("");
             binding.textMunicipio.setText("");
+            binding.spinnerProvincias.setVisibility(View.GONE);
+            binding.spinnerMunicipios.setVisibility(View.GONE);
             binding.editTextBairro.setText(cliente.getBairro());
             binding.editTextRua.setText(cliente.getRua());
             binding.editTextIMEI.setText(cliente.getImei());
+
+            //Desabilitar campos
+            binding.editTextNome.setEnabled(false);
+            binding.editTextSobreNome.setEnabled(false);
+            binding.editTextNif.setEnabled(false);
+            binding.editTextNumeroTelefone.setEnabled(false);
+            binding.editTextNumeroTelefoneAlternativo.setEnabled(false);
+            binding.textMunicipio.setEnabled(false);
+            binding.editTextBairro.setEnabled(false);
+            binding.editTextRua.setEnabled(false);
+            binding.editTextIMEI.setEnabled(false);
         }
 
         return dialog;
