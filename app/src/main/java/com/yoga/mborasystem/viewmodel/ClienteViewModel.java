@@ -184,11 +184,11 @@ public class ClienteViewModel extends AndroidViewModel {
                                 if (internetIsConnected()) {
                                     cadastrarCliente(c);
                                 } else {
-                                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Sem internet", R.drawable.ic_toast_erro);
+                                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.sm_int), R.drawable.ic_toast_erro);
                                     MainActivity.dismissProgressBar();
                                 }
                             } else {
-                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Conecta - se a uma rede: Dados móveis ou Wi-Fi", R.drawable.ic_toast_erro);
+                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
                                 MainActivity.dismissProgressBar();
                             }
                         } else {

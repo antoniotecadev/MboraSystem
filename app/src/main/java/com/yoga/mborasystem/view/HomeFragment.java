@@ -34,6 +34,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
@@ -185,8 +188,18 @@ public class HomeFragment extends Fragment {
             case R.id.estadoCliente:
                 if (getArguments() != null) {
                     MainActivity.getProgressBar();
-                    Cliente cliente = getArguments().getParcelable("cliente");
-                    estadoConta(cliente.getImei());
+                    if (isNetworkConnected(requireContext())) {
+                        if (internetIsConnected()) {
+                            Cliente cliente = getArguments().getParcelable("cliente");
+                            estadoConta(cliente.getImei());
+                        } else {
+                            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                            MainActivity.dismissProgressBar();
+                        }
+                    } else {
+                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+                        MainActivity.dismissProgressBar();
+                    }
                 }
                 break;
             case R.id.termosCondicoes:
