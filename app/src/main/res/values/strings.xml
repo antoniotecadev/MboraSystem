@@ -428,6 +428,15 @@
     <string name="arg_null">Argumento nulo</string>
     <string name="idm">Idioma</string>
     <string name="config_red">Configuração de rede</string>
+    <string name="estd_cont">Estado de conta</string>
+    <string name="des">Desactivada</string>
+    <string name="act">Activada</string>
+    <string name="pac">Pacote</string>
+    <string name="ini">Início</string>
+    <string name="term">Termina</string>
+    <string name="brz">Bronze</string>
+    <string name="alm">Alumínio</string>
+    <string name="oro">Ouro</string>
     <string-array name="provincias">
         <item>Luanda</item>
     </string-array>
@@ -453,4 +462,8 @@
         <item>Bloquados(as)</item>
         <item>Desbloqueados(as)</item>
     </string-array>
+    <string name="prazterm">
+        O prazo de utilização do serviço MboraSystem terminou.\n
+        Activa já a sua conta para voltar a utiliza - lo.\n
+    </string>
 </resources>

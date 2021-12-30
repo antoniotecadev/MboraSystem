@@ -16,13 +16,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
+import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.Locale;
@@ -66,7 +65,7 @@ public class HomeFragment extends Fragment {
             return false;
         });
 
-        binding.floatingActionButton.setOnClickListener(v -> acercaMboraSystem());
+        binding.floatingActionButton.setOnClickListener(v -> alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca)));
 
         binding.floatingActionButtonLixo.setOnClickListener(v -> {
             if (isOpen) {
@@ -104,26 +103,19 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
             MainActivity.getProgressBar();
+            assert getArguments() != null;
             bundle.putBoolean("master", getArguments().getBoolean("master"));
             bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
 
-        binding.btnUsuario.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
-        });
+        binding.btnUsuario.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster()));
 
-        binding.btnProduto.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
-        });
+        binding.btnProduto.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster()));
 
-        binding.btnVenda.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
-        });
+        binding.btnVenda.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster()));
 
-        binding.btnCliente.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
-        });
+        binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster()));
         binding.btnDashboard.setOnClickListener(v -> {
             MainActivity.getProgressBar();
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
@@ -169,7 +161,7 @@ public class HomeFragment extends Fragment {
                 menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
             }
         }
-        Locale primaryLocale = null;
+        Locale primaryLocale;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             primaryLocale = getResources().getConfiguration().getLocales().get(0);
             String locale = primaryLocale.getDisplayName();
@@ -190,6 +182,13 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
                 }
                 break;
+            case R.id.estadoCliente:
+                if (getArguments() != null) {
+                    MainActivity.getProgressBar();
+                    Cliente cliente = getArguments().getParcelable("cliente");
+                    estadoConta(cliente.getImei());
+                }
+                break;
             case R.id.termosCondicoes:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/termoscondicoes")));
                 break;
@@ -203,7 +202,7 @@ public class HomeFragment extends Fragment {
                 }
                 break;
             case R.id.acercaMborasytem:
-                acercaMboraSystem();
+                alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca));
                 break;
             case R.id.itemSair:
                 sairApp();
@@ -223,49 +222,72 @@ public class HomeFragment extends Fragment {
                 .show();
     }
 
-    public void acercaMboraSystem() {
+    public void alertDialog(String titulo, String mensagem) {
+        MainActivity.dismissProgressBar();
         new AlertDialog.Builder(getContext())
                 .setIcon(R.drawable.ic_logotipo_yoga_original)
-                .setTitle(getString(R.string.nome_sistema))
-                .setMessage(R.string.acerca)
+                .setTitle(titulo)
+                .setMessage(mensagem)
                 .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
     private void entrarCategorias() {
         MainActivity.getProgressBar();
+        assert getArguments() != null;
         HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
         Navigation.findNavController(requireView()).navigate(direction);
     }
 
     private void entrarProdutos() {
         MainActivity.getProgressBar();
+        assert getArguments() != null;
         HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
         Navigation.findNavController(requireView()).navigate(direction);
     }
 
     private void entrarVendas() {
         MainActivity.getProgressBar();
+        assert getArguments() != null;
         HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
         Navigation.findNavController(requireView()).navigate(direction);
     }
 
-    private void listarParceiros() {
-        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts";
+    private String estado;
+    private byte estadoTitulo;
+
+    private void estadoConta(String imei) {
+        String pacote[] = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro)};
+        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
                 .asJsonArray()
-                .setCallback(new FutureCallback<JsonArray>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonArray jsonElements) {
-                        try {
-                            for (int i = 0; i < jsonElements.size(); i++) {
-                                JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
-//                                Log.i("Parceiro", parceiro.get("first_name").getAsString());
-                            }
-                        } catch (Exception ex) {
-                            Toast.makeText(requireContext(), "Erro" + ex.getMessage() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                .setCallback((e, jsonElements) -> {
+                    try {
+                        for (int i = 0; i < jsonElements.size(); i++) {
+                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
+                            estadoTitulo = Byte.parseByte(parceiro.get("estado").getAsString());
+                            estado = (estadoTitulo == 0 ? getString(R.string.prazterm) : "") + "\n" +
+                                    getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
+                                    getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
+                                    getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
+                                    getString(R.string.nome) + ": " + parceiro.get("first_name").getAsString() + "\n" +
+                                    getString(R.string.Sobre_Nome) + ": " + parceiro.get("last_name").getAsString() + "\n" +
+                                    getString(R.string.nifbi) + ": " + parceiro.get("nif_bi").getAsString() + "\n" +
+                                    getString(R.string.Numero_Telefone) + ": " + parceiro.get("phone").getAsString() + "\n" +
+                                    getString(R.string.Numero_Telefone_Alternativo) + ": " + parceiro.get("alternative_phone").getAsString() + "\n" +
+                                    getString(R.string.Email) + ": " + parceiro.get("email").getAsString() + "\n" +
+                                    getString(R.string.nome_loja) + ": " + parceiro.get("cantina").getAsString() + "\n" +
+                                    getString(R.string.municipio) + ": " + parceiro.get("municipality").getAsString() + "\n" +
+                                    getString(R.string.bairro) + ": " + parceiro.get("district").getAsString() + "\n" +
+                                    getString(R.string.rua) + ": " + parceiro.get("street").getAsString() + "\n" +
+                                    "IMEI: " + parceiro.get("imei").getAsString();
+
                         }
+                        alertDialog(estadoTitulo == 0 ? getString(R.string.des) : getString(R.string.act), estado);
+                    } catch (Exception ex) {
+                        MainActivity.dismissProgressBar();
+                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
