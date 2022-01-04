@@ -268,7 +268,7 @@ public class HomeFragment extends Fragment {
     }
 
     private String estado;
-    private byte estadoTitulo;
+    private byte estadoTitulo, termina;
 
     private void estadoConta(String imei) {
         String pacote[] = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro)};
@@ -281,7 +281,8 @@ public class HomeFragment extends Fragment {
                         for (int i = 0; i < jsonElements.size(); i++) {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
                             estadoTitulo = Byte.parseByte(parceiro.get("estado").getAsString());
-                            estado = (estadoTitulo == 0 ? getString(R.string.prazterm) : "") + "\n" +
+                            termina = parceiro.get("termina").getAsByte();
+                            estado = (estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
@@ -298,7 +299,7 @@ public class HomeFragment extends Fragment {
                                     "IMEI: " + parceiro.get("imei").getAsString();
 
                         }
-                        alertDialog(estadoTitulo == 0 ? getString(R.string.des) : getString(R.string.act), estado);
+                        alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado);
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
                         Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
