@@ -58,7 +58,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        listarParceiros();
         setHasOptionsMenu(true);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         Toolbar toolbar = binding.toolbar;
@@ -179,10 +178,11 @@ public class HomeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+        Cliente cliente = getArguments().getParcelable("cliente");
         switch (item.getItemId()) {
             case R.id.dialogAlterarCliente:
                 if (getArguments() != null) {
-                    bundle.putParcelable("cliente", getArguments().getParcelable("cliente"));
+                    bundle.putParcelable("cliente", cliente);
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
                 }
                 break;
@@ -191,7 +191,6 @@ public class HomeFragment extends Fragment {
                     MainActivity.getProgressBar();
                     if (isNetworkConnected(requireContext())) {
                         if (internetIsConnected()) {
-                            Cliente cliente = getArguments().getParcelable("cliente");
                             estadoConta(cliente.getImei());
                         } else {
                             Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
