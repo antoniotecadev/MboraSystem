@@ -462,7 +462,10 @@
         <item>Bloquados(as)</item>
         <item>Desbloqueados(as)</item>
     </string-array>
-    <string name="prazterm">"O prazo de utilização do serviço MboraSystem terminou.          Activa já a sua conta para voltar a utiliza - lo.      "</string>
+    <string name="prazterm">
+        O prazo de utilização do serviço MboraSystem terminou.\n
+        Activa já a sua conta para voltar a utiliza - lo.\n
+    </string>
     <string name="sm_int">Sem internet</string>
     <string name="conec_wif_dad">Conecta - se a uma rede: Dados móveis ou Wi-Fi</string>
 </resources>
