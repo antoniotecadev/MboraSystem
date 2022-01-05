@@ -24,10 +24,12 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
@@ -36,6 +38,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
+import com.koushikdutta.ion.Ion;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -74,6 +77,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 public class FacturaFragment extends Fragment {
 
@@ -583,7 +589,17 @@ public class FacturaFragment extends Fragment {
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());
+                        if (isNetworkConnected(requireContext())) {
+                            if (internetIsConnected()) {
+                                estadoConta(cliente.getImei(), nomeIDcliente[0].trim());
+                            } else {
+                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                                MainActivity.dismissProgressBar();
+                            }
+                        } else {
+                            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+                            MainActivity.dismissProgressBar();
+                        }
                     })
                     .setNegativeButton(R.string.cancelar, (dialog, which) -> {
                         facturaPath = "";
@@ -876,6 +892,34 @@ public class FacturaFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private String mensagem;
+    private byte estadoConta, termina;
+
+    private void estadoConta(String imei, String nomeIDcliente) {
+        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts/" + imei + "/estado";
+        Ion.with(requireActivity())
+                .load(URL)
+                .asJsonArray()
+                .setCallback((e, jsonElements) -> {
+                    try {
+                        for (int i = 0; i < jsonElements.size(); i++) {
+                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
+                            estadoConta = Byte.parseByte(parceiro.get("estado").getAsString());
+                            termina = parceiro.get("termina").getAsByte();
+                            mensagem = (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n";
+                        }
+                        if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM) {
+                            Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext());
+                        } else if (estadoConta == Ultilitario.UM || termina == Ultilitario.ZERO) {
+                            vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());
+                        }
+                    } catch (Exception ex) {
+                        MainActivity.dismissProgressBar();
+                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

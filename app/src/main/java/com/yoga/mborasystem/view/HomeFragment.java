@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
             return false;
         });
 
-        binding.floatingActionButton.setOnClickListener(v -> alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca)));
+        binding.floatingActionButton.setOnClickListener(v -> Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext()));
 
         binding.floatingActionButtonLixo.setOnClickListener(v -> {
             if (isOpen) {
@@ -215,7 +215,7 @@ public class HomeFragment extends Fragment {
                 }
                 break;
             case R.id.acercaMborasytem:
-                alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca));
+                Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext());
                 break;
             case R.id.itemSair:
                 sairApp();
@@ -232,16 +232,6 @@ public class HomeFragment extends Fragment {
                 .setMessage(getString(R.string.tem_certeza_sair_app))
                 .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(getString(R.string.sim), (dialog, which) -> requireActivity().finish())
-                .show();
-    }
-
-    public void alertDialog(String titulo, String mensagem) {
-        MainActivity.dismissProgressBar();
-        new AlertDialog.Builder(getContext())
-                .setIcon(R.drawable.ic_logotipo_yoga_original)
-                .setTitle(titulo)
-                .setMessage(mensagem)
-                .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -298,7 +288,7 @@ public class HomeFragment extends Fragment {
                                     "IMEI: " + parceiro.get("imei").getAsString();
 
                         }
-                        alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado);
+                        Ultilitario.alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext());
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
                         Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();

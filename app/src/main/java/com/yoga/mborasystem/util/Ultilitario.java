@@ -34,6 +34,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 
 import java.io.File;
@@ -512,6 +513,16 @@ public class Ultilitario {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static void alertDialog(String titulo, String mensagem, Context context) {
+        MainActivity.dismissProgressBar();
+        new AlertDialog.Builder(context)
+                .setIcon(R.drawable.ic_logotipo_yoga_original)
+                .setTitle(titulo)
+                .setMessage(mensagem)
+                .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
 

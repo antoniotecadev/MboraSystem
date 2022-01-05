@@ -155,7 +155,7 @@
     <string name="termo_politica_privacidade">Aceito os termos e política de privacidade</string>
     <string name="conta_criada">Conta criada</string>
     <string name="conta_nao_criada">Conta não criada</string>
-    <string name="mascara_chave_app">#####-#####-#####-#####</string>
+    <string name="mascara_chave_app" translatable="false">#####-#####-#####-#####</string>
     <string name="chave_app_parece">A chave do app (app key) parece esta: #####-#####-#####-#####</string>
     <string name="termo_condicao">Termos e condições</string>
     <string name="aceito_termo_condicao">Aceito</string>
@@ -468,4 +468,5 @@
     </string>
     <string name="sm_int">Sem internet</string>
     <string name="conec_wif_dad">Conecta - se a uma rede: Dados móveis ou Wi-Fi</string>
+    <string name="cont_des">Conta desactiva</string>
 </resources>
