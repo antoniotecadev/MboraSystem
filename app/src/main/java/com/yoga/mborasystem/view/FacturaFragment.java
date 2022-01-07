@@ -911,6 +911,7 @@ public class FacturaFragment extends Fragment {
                             mensagem = (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n";
                         }
                         if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM) {
+                            MainActivity.dismissProgressBar();
                             Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext());
                         } else if (estadoConta == Ultilitario.UM || termina == Ultilitario.ZERO) {
                             vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());
