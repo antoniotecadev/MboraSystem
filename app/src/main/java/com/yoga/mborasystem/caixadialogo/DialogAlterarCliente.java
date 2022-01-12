@@ -63,6 +63,8 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextNif.setEnabled(false);
             binding.editTextNumeroTelefone.setEnabled(false);
             binding.editTextNumeroTelefoneAlternativo.setEnabled(false);
+            binding.editTextEmail.setEnabled(false);
+            binding.editTextNomeLoja.setEnabled(false);
             binding.textMunicipio.setEnabled(false);
             binding.editTextBairro.setEnabled(false);
             binding.editTextRua.setEnabled(false);
