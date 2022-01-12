@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.view;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -69,10 +70,51 @@ public class LoginFragment extends Fragment {
         loginViewModel.getinfoPin().observe(this, infoPinObserver);
     }
 
+//    @SuppressLint("MissingPermission")
+//    public Task<Location> getLastLocationIfApiAvailable(FragmentActivity context) {
+//        FusedLocationProviderClient client =
+//                getFusedLocationProviderClient(context);
+//
+//        return GoogleApiAvailability.getInstance()
+//                .checkApiAvailability(client)
+//                .onSuccessTask(unused -> client.getLastLocation().addOnSuccessListener(context, location -> {
+//                    if (location != null) {
+//                        Log.d("localização", ""+location.getLatitude()+" - "+location.getLongitude());
+//                        try {
+//                            Geocoder geo = new Geocoder(getActivity(), Locale.getDefault());
+//                            List<Address> addresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+//                            if (addresses.isEmpty()) {
+//                                Log.d("localização", "Endereço vazio");
+//                            } else {
+//                                if (addresses.size() > 0) {
+//                                    Log.d("localização",addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality() +", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
+//                                }
+//                            }
+//                        }
+//                        catch (Exception e) {
+//                            e.printStackTrace(); // getFromLocation() may sometimes fail
+//                            Log.d("localização", "Erro: " + e.getMessage());
+//                        }
+//                    }
+//                })).addOnFailureListener(e -> Log.d("localização", "Location unavailable."));
+//    }
+
+    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+//        if (ContextCompat.checkSelfPermission(getActivity(),
+//                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+//                    Manifest.permission.ACCESS_FINE_LOCATION)){
+//                ActivityCompat.requestPermissions(getActivity(),
+//                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//            }else{
+//                ActivityCompat.requestPermissions(getActivity(),
+//                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//            }
+//        }
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
         binding.btn1.setOnClickListener(v -> digitarCodigoPin(1));
@@ -231,6 +273,7 @@ public class LoginFragment extends Fragment {
         binding.btnApagar.setEnabled(estado);
     }
 
+    @SuppressLint("MissingPermission")
     public void vibrarTelefone(Context context) {
 
         if (Build.VERSION.SDK_INT >= 26) {
@@ -255,5 +298,23 @@ public class LoginFragment extends Fragment {
         super.onStart();
         MainActivity.dismissProgressBar();
     }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+//        switch (requestCode){
+//            case 1: {
+//                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+//                    if (ContextCompat.checkSelfPermission(getActivity(),
+//                            Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+//                        getLastLocationIfApiAvailable(requireActivity());
+//
+//                    }
+//                }else{
+//                    Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+//                }
+//                return;
+//            }
+//        }
+//    }
 
 }

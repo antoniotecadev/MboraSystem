@@ -149,5 +149,7 @@ dependencies {
     //Configuração
     implementation 'androidx.preference:preference:1.1.0-alpha04'
 
+    //Localização do dispositivo
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 
 }
