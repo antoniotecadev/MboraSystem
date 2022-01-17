@@ -44,7 +44,7 @@
     <string name="numero_invalido">Número não é válido</string>
     <string name="email_invalido">Email não é válido</string>
     <string name="municipio_invalido">Município não é válido</string>
-    <string name="bairro_invalido">Bairro não é válida</string>
+    <string name="bairro_invalido">Bairro não é válido</string>
     <string name="rua_invalida">Rua não é válida</string>
     <string name="nome_curto">"Nome muito curto "</string>
     <string name="sobrenome_curto">Sobrenome muito curto</string>

@@ -205,10 +205,11 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerProvincias"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:background="@android:color/darker_gray"
                 android:spinnerMode="dialog" />
 
             <TextView
@@ -223,10 +224,30 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerMunicipios"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:background="@android:color/darker_gray"
+                android:spinnerMode="dialog" />
+
+            <TextView
+                android:id="@+id/textBairros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margin_top"
+                android:text="@string/bairro"
+                android:textColor="@color/black" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerBairros"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margin_top"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:background="@android:color/darker_gray"
                 android:spinnerMode="dialog" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -246,6 +267,7 @@
                     android:ems="10"
                     android:hint="@string/bairro"
                     android:inputType="text"
+                    android:enabled="false"
                     android:text="Morro Bento" />
 
             </com.google.android.material.textfield.TextInputLayout>

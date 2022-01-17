@@ -119,6 +119,7 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (isCampoVazio(Objects.requireNonNull(bairro.getText()).toString()) || letraNumero.matcher(bairro.getText().toString()).find()) {
             bairro.requestFocus();
             bairro.setError(getApplication().getString(R.string.bairro_invalido));
+            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.bairro_invalido), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(rua.getText()).toString()) || letraNumero.matcher(rua.getText().toString()).find()) {
             rua.requestFocus();
             rua.setError(getApplication().getString(R.string.rua_invalida));
