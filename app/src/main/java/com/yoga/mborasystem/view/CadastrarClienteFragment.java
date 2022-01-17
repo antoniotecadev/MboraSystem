@@ -65,8 +65,6 @@ public class CadastrarClienteFragment extends Fragment {
         binding.spinnerMunicipios.setAdapter(adapter);
     }
 
-    String[] municipio, bairro;
-
     private void spinnerBairros() {
         MainActivity.getProgressBar();
         String URL = "http://192.168.18.3/mborasystem-admin/public/api/bairros";
