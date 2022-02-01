@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -91,6 +92,7 @@ public class FacturaFragment extends Fragment {
     private Map<Long, View> itemView;
     private Map<Long, Boolean> estado;
     private Map<Long, Produto> produtos;
+    private SharedPreferences sharedPref;
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private VendaViewModel vendaViewModel;
     private FragmentFacturaBinding binding;
@@ -585,20 +587,25 @@ public class FacturaFragment extends Fragment {
                             + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
                             + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
-                            + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
+                            + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + " dataPreference: " + getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(getActivity())) + " dataCurrent: " + getDataSplitDispositivo(Ultilitario.getDateCurrent()) +"\n"
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        if (isNetworkConnected(requireContext())) {
-                            if (internetIsConnected()) {
-                                estadoConta(cliente.getImei(), nomeIDcliente[0].trim());
+                        if (getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(getActivity())).equals(getDataSplitDispositivo(Ultilitario.getDateCurrent()))) {
+                            vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());
+                        } else {
+                            if (isNetworkConnected(requireContext())) {
+                                if (internetIsConnected()) {
+                                    Ultilitario.setSharedPreferencesDataDispositivo(getActivity());
+                                    estadoConta(cliente.getImei(), nomeIDcliente[0].trim());
+                                } else {
+                                    Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                                    MainActivity.dismissProgressBar();
+                                }
                             } else {
-                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
                                 MainActivity.dismissProgressBar();
                             }
-                        } else {
-                            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
-                            MainActivity.dismissProgressBar();
                         }
                     })
                     .setNegativeButton(R.string.cancelar, (dialog, which) -> {
@@ -609,6 +616,11 @@ public class FacturaFragment extends Fragment {
         } else {
             Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.smt_siff), R.drawable.ic_toast_erro);
         }
+    }
+
+    private String getDataSplitDispositivo(String dataSplit) {
+        String[] dataDavice = TextUtils.split(dataSplit, "-");
+        return dataDavice[0].trim() + '-' + dataDavice[1].trim() + '-' + dataDavice[2].trim();
     }
 
     private void getListClientesCantina() {

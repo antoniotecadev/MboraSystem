@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -523,6 +524,18 @@ public class Ultilitario {
                 .setMessage(mensagem)
                 .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    public static void setSharedPreferencesDataDispositivo(Activity activity){
+        SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("data", Ultilitario.getDateCurrent());
+        editor.apply();
+    }
+
+    public static String getSharedPreferencesDataDispositivo(Activity activity){
+        SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
+        return sharedPref.getString("data","00-00-0000");
     }
 
 
