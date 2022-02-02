@@ -469,4 +469,16 @@
     <string name="sm_int">Sem internet</string>
     <string name="conec_wif_dad">Conecta - se a uma rede: Dados móveis ou Wi-Fi</string>
     <string name="cont_des">Conta desactiva</string>
+    <string name="jan">janeiro</string>
+    <string name="fev">fevereiro</string>
+    <string name="marc">março</string>
+    <string name="abr">abril</string>
+    <string name="mai">maio</string>
+    <string name="jun">junho</string>
+    <string name="jul">julho</string>
+    <string name="ago">agosto</string>
+    <string name="set">setembro</string>
+    <string name="out">outubro</string>
+    <string name="nov">novembro</string>
+    <string name="dez">dezembro</string>
 </resources>
