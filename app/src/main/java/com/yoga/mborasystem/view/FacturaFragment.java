@@ -587,7 +587,8 @@ public class FacturaFragment extends Fragment {
                             + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
                             + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
-                            + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + " dataPreference: " + getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(getActivity())) + " dataCurrent: " + getDataSplitDispositivo(Ultilitario.getDateCurrent()) +"\n"
+                            + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
+                            + " dataPreference: " + getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(getActivity())) + "\ndataCurrent: " + getDataSplitDispositivo(Ultilitario.getDateCurrent()) +"\n"
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
@@ -930,7 +931,7 @@ public class FacturaFragment extends Fragment {
                         }
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
-                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
