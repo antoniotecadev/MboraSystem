@@ -22,6 +22,9 @@ import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,6 +34,7 @@ public class DashboardFragment extends Fragment {
     private long totalVenda = 0;
     private long totalPrecoFornecedor = 0;
     private VendaViewModel vendaViewModel;
+    private Map<String, String> listMonth;
     private FragmentDashboardBinding binding;
     private ProdutoViewModel produtoViewModel;
 
@@ -40,6 +44,19 @@ public class DashboardFragment extends Fragment {
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
 
+        listMonth = new HashMap<>();
+        listMonth.put("janeiro", "january-janvier");
+        listMonth.put("fevereiro", "february-février");
+        listMonth.put("março", "march-mars");
+        listMonth.put("abril", "april-avril");
+        listMonth.put("maio", "may-mai");
+        listMonth.put("junho", "june-juin");
+        listMonth.put("julho", "july-juillet");
+        listMonth.put("agosto", "august-août");
+        listMonth.put("setembro", "september-septembre");
+        listMonth.put("outubro", "october-octobre");
+        listMonth.put("novembro", "november-novembre");
+        listMonth.put("dezembro", "december-décembre");
     }
 
     @SuppressLint("SetTextI18n")
@@ -47,7 +64,6 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
-
         PieChart mPieChart = binding.start;
         BarChart mBarChart = binding.barchart;
         BarChart mBarChartD = binding.barchart2;
@@ -72,142 +88,142 @@ public class DashboardFragment extends Fragment {
 
                 for (Venda venda : vendas) {
                     String[] data = TextUtils.split(venda.getData_cria(), "-");
-                    if (data[2].trim().equals(dataActual[2].trim())) {
+                    if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
 
                         binding.qtdVenda.setText(getString(R.string.qtd_vd) + ": " + ++qtv);
 
-                        if (data[1].trim().equals("janeiro")) {
+                        if (data[1].trim().equalsIgnoreCase("janeiro") || data[1].trim().equalsIgnoreCase("january") || data[1].trim().equalsIgnoreCase("janvier")) {
                             jan += venda.getTotal_venda();
                             ++janc;
-                        } else if (data[1].trim().equals("fevereiro")) {
+                        } else if (data[1].trim().equalsIgnoreCase("fevereiro") || data[1].trim().equalsIgnoreCase("february") || data[1].trim().equalsIgnoreCase("février")) {
                             fev += venda.getTotal_venda();
                             ++fevc;
-                        } else if (data[1].trim().equals("março")) {
+                        } else if (data[1].trim().equalsIgnoreCase("março") || data[1].trim().equalsIgnoreCase("march") || data[1].trim().equalsIgnoreCase("mars")) {
                             mar += venda.getTotal_venda();
                             ++marc;
-                        } else if (data[1].trim().equals("abril")) {
+                        } else if (data[1].trim().equalsIgnoreCase("abril") || data[1].trim().equalsIgnoreCase("april") || data[1].trim().equalsIgnoreCase("avril")) {
                             abr += venda.getTotal_venda();
                             ++abrc;
-                        } else if (data[1].trim().equals("maio")) {
+                        } else if (data[1].trim().equalsIgnoreCase("maio") || data[1].trim().equalsIgnoreCase("may") || data[1].trim().equalsIgnoreCase("mai")) {
                             mai += venda.getTotal_venda();
                             ++maic;
-                        } else if (data[1].trim().equals("junho")) {
+                        } else if (data[1].trim().equalsIgnoreCase("junho") || data[1].trim().equalsIgnoreCase("june") || data[1].trim().equalsIgnoreCase("juin")) {
                             jun += venda.getTotal_venda();
                             ++junc;
-                        } else if (data[1].trim().equals("julho")) {
+                        } else if (data[1].trim().equalsIgnoreCase("julho") || data[1].trim().equalsIgnoreCase("july") || data[1].trim().equalsIgnoreCase("juillet")) {
                             jul += venda.getTotal_venda();
                             ++julc;
-                        } else if (data[1].trim().equals("agosto")) {
+                        } else if (data[1].trim().equalsIgnoreCase("agosto") || data[1].trim().equalsIgnoreCase("august") || data[1].trim().equalsIgnoreCase("août")) {
                             ago += venda.getTotal_venda();
                             ++agoc;
-                        } else if (data[1].trim().equals("setembro")) {
+                        } else if (data[1].trim().equalsIgnoreCase("setembro") || data[1].trim().equalsIgnoreCase("september") || data[1].trim().equalsIgnoreCase("septembre")) {
                             set += venda.getTotal_venda();
                             ++setc;
-                        } else if (data[1].trim().equals("outubro")) {
+                        } else if (data[1].trim().equalsIgnoreCase("outubro") || data[1].trim().equalsIgnoreCase("october") || data[1].trim().equalsIgnoreCase("octobre")) {
                             out += venda.getTotal_venda();
                             ++outc;
-                        } else if (data[1].trim().equals("novembro")) {
+                        } else if (data[1].trim().equalsIgnoreCase("novembro") || data[1].trim().equalsIgnoreCase("november") || data[1].trim().equalsIgnoreCase("novembre")) {
                             nov += venda.getTotal_venda();
                             ++novc;
-                        } else if (data[1].trim().equals("dezembro")) {
+                        } else if (data[1].trim().equalsIgnoreCase("dezembro") || data[1].trim().equalsIgnoreCase("december") || data[1].trim().equalsIgnoreCase("décembre")) {
                             dez += venda.getTotal_venda();
                             ++dezc;
                         }
                     }
 
-                    if (data[1].trim().equals(dataActual[1].trim())) {
+                    if (data[1].trim().equalsIgnoreCase(dataActual[1].trim()) || data[1].trim().equalsIgnoreCase(monthInglesFrances(listMonth, dataActual[1], 0)) || data[1].trim().equalsIgnoreCase(monthInglesFrances(listMonth, dataActual[1], 1))) {
 
-                        if (data[0].trim().equals("01")) {
+                        if (data[0].trim().equalsIgnoreCase("01")) {
                             v1 += venda.getTotal_venda();
                             ++cv1;
-                        } else if (data[0].trim().equals("02")) {
+                        } else if (data[0].trim().equalsIgnoreCase("02")) {
                             v2 += venda.getTotal_venda();
                             ++cv2;
-                        } else if (data[0].trim().equals("03")) {
+                        } else if (data[0].trim().equalsIgnoreCase("03")) {
                             v3 += venda.getTotal_venda();
                             ++cv3;
-                        } else if (data[0].trim().equals("04")) {
+                        } else if (data[0].trim().equalsIgnoreCase("04")) {
                             v4 += venda.getTotal_venda();
                             ++cv4;
-                        } else if (data[0].trim().equals("05")) {
+                        } else if (data[0].trim().equalsIgnoreCase("05")) {
                             v5 += venda.getTotal_venda();
                             ++cv5;
-                        } else if (data[0].trim().equals("06")) {
+                        } else if (data[0].trim().equalsIgnoreCase("06")) {
                             v6 += venda.getTotal_venda();
                             ++cv6;
-                        } else if (data[0].trim().equals("07")) {
+                        } else if (data[0].trim().equalsIgnoreCase("07")) {
                             v7 += venda.getTotal_venda();
                             ++cv7;
-                        } else if (data[0].trim().equals("08")) {
+                        } else if (data[0].trim().equalsIgnoreCase("08")) {
                             v8 += venda.getTotal_venda();
                             ++cv8;
-                        } else if (data[0].trim().equals("09")) {
+                        } else if (data[0].trim().equalsIgnoreCase("09")) {
                             v9 += venda.getTotal_venda();
                             ++cv9;
-                        } else if (data[0].trim().equals("10")) {
+                        } else if (data[0].trim().equalsIgnoreCase("10")) {
                             v10 += venda.getTotal_venda();
                             ++cv10;
-                        } else if (data[0].trim().equals("11")) {
+                        } else if (data[0].trim().equalsIgnoreCase("11")) {
                             v11 += venda.getTotal_venda();
                             ++cv11;
-                        } else if (data[0].trim().equals("12")) {
+                        } else if (data[0].trim().equalsIgnoreCase("12")) {
                             v12 += venda.getTotal_venda();
                             ++cv12;
-                        } else if (data[0].trim().equals("13")) {
+                        } else if (data[0].trim().equalsIgnoreCase("13")) {
                             v13 += venda.getTotal_venda();
                             ++cv13;
-                        } else if (data[0].trim().equals("14")) {
+                        } else if (data[0].trim().equalsIgnoreCase("14")) {
                             v14 += venda.getTotal_venda();
                             ++cv14;
-                        } else if (data[0].trim().equals("15")) {
+                        } else if (data[0].trim().equalsIgnoreCase("15")) {
                             v15 += venda.getTotal_venda();
                             ++cv15;
-                        } else if (data[0].trim().equals("16")) {
+                        } else if (data[0].trim().equalsIgnoreCase("16")) {
                             v16 += venda.getTotal_venda();
                             ++cv16;
-                        } else if (data[0].trim().equals("17")) {
+                        } else if (data[0].trim().equalsIgnoreCase("17")) {
                             v17 += venda.getTotal_venda();
                             ++cv17;
-                        } else if (data[0].trim().equals("18")) {
+                        } else if (data[0].trim().equalsIgnoreCase("18")) {
                             v18 += venda.getTotal_venda();
                             ++cv18;
-                        } else if (data[0].trim().equals("19")) {
+                        } else if (data[0].trim().equalsIgnoreCase("19")) {
                             v19 += venda.getTotal_venda();
                             ++cv19;
-                        } else if (data[0].trim().equals("20")) {
+                        } else if (data[0].trim().equalsIgnoreCase("20")) {
                             v20 += venda.getTotal_venda();
                             ++cv20;
-                        } else if (data[0].trim().equals("21")) {
+                        } else if (data[0].trim().equalsIgnoreCase("21")) {
                             v21 += venda.getTotal_venda();
                             ++cv21;
-                        } else if (data[0].trim().equals("22")) {
+                        } else if (data[0].trim().equalsIgnoreCase("22")) {
                             v22 += venda.getTotal_venda();
                             ++cv22;
-                        } else if (data[0].trim().equals("23")) {
+                        } else if (data[0].trim().equalsIgnoreCase("23")) {
                             v23 += venda.getTotal_venda();
                             ++cv23;
-                        } else if (data[0].trim().equals("24")) {
+                        } else if (data[0].trim().equalsIgnoreCase("24")) {
                             v24 += venda.getTotal_venda();
                             ++cv24;
-                        } else if (data[0].trim().equals("25")) {
+                        } else if (data[0].trim().equalsIgnoreCase("25")) {
                             v25 += venda.getTotal_venda();
                             ++cv25;
-                        } else if (data[0].trim().equals("26")) {
+                        } else if (data[0].trim().equalsIgnoreCase("26")) {
                             v26 += venda.getTotal_venda();
                             ++cv26;
-                        } else if (data[0].trim().equals("27")) {
+                        } else if (data[0].trim().equalsIgnoreCase("27")) {
                             v27 += venda.getTotal_venda();
                             ++cv27;
-                        } else if (data[0].trim().equals("28")) {
+                        } else if (data[0].trim().equalsIgnoreCase("28")) {
                             v28 += venda.getTotal_venda();
                             ++cv28;
-                        } else if (data[0].trim().equals("29")) {
+                        } else if (data[0].trim().equalsIgnoreCase("29")) {
                             v29 += venda.getTotal_venda();
                             ++cv29;
-                        } else if (data[0].trim().equals("30")) {
+                        } else if (data[0].trim().equalsIgnoreCase("30")) {
                             v30 += venda.getTotal_venda();
                             ++cv30;
-                        } else if (data[0].trim().equals("31")) {
+                        } else if (data[0].trim().equalsIgnoreCase("31")) {
                             v31 += venda.getTotal_venda();
                             ++cv31;
                         }
@@ -296,6 +312,11 @@ public class DashboardFragment extends Fragment {
         mBarChart.addBar(new BarModel("29 (" + cv29 + ")", (v29 / 100), 0xFF665478));
         mBarChart.addBar(new BarModel("30 (" + cv30 + ")", (v30 / 100), 0xFF996547));
         mBarChart.addBar(new BarModel("31 (" + cv31 + ")", (v31 / 100), 0xFF258796));
+    }
+
+    private String monthInglesFrances(Map<String, String> listMonth, String month, int language) {
+        String[] mes = TextUtils.split(listMonth.get(month).trim(), "-");
+        return mes[language].trim();
     }
 
     @Override
