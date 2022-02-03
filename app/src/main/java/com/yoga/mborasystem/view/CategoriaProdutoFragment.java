@@ -251,7 +251,7 @@ public class CategoriaProdutoFragment extends Fragment {
             Ultilitario.colorRandomImage(img, random);
 
             nome.setText(categoria.getCategoria() + " | " + categoria.getId());
-            descricao.setText(categoria.getDescricao());
+            descricao.setText(categoria.getDescricao() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + categoria.getData_elimina() : ""));
             if (categoria.getEstado() == Ultilitario.DOIS) {
                 descricao.setTextColor(Color.RED);
                 descricao.setText(getString(R.string.desactivado));

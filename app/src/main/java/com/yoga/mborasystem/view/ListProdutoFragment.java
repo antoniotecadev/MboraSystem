@@ -238,7 +238,7 @@ public class ListProdutoFragment extends Fragment {
             precoProduto.setText(context.getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
             precoProdutoFronecedor.setText(context.getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
             quantidadeProduto.setText(context.getText(R.string.quantidade) + ": " + produto.getQuantidade());
-            codigoBarraProduto.setText(context.getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra());
+            codigoBarraProduto.setText(context.getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + produto.getData_elimina() : ""));
             referenciaProduto.setText(context.getText(R.string.referencia) + ": MSP" + produto.getId());
             if (produto.getEstado() == Ultilitario.UM) {
                 estadoProduto.setChecked(true);

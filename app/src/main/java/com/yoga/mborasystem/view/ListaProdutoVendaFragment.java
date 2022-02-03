@@ -100,21 +100,16 @@ public class ListaProdutoVendaFragment extends Fragment {
                     });
             }
         });
-
-
         return binding.getRoot();
     }
-
     @Override
     public void onStart() {
         super.onStart();
         MainActivity.dismissProgressBar();
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
 }

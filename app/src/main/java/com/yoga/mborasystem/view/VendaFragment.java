@@ -294,6 +294,9 @@ public class VendaFragment extends Fragment {
                                 dialogEliminarVenda(getString(R.string.cert_elim_vend));
                                 return false;
                             });
+                            menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> {
+                                return false;
+                            });
                         }
                     } else {
                         Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
