@@ -22,9 +22,6 @@ import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,7 +31,6 @@ public class DashboardFragment extends Fragment {
     private long totalVenda = 0;
     private long totalPrecoFornecedor = 0;
     private VendaViewModel vendaViewModel;
-    private Map<String, String> listMonth;
     private FragmentDashboardBinding binding;
     private ProdutoViewModel produtoViewModel;
 
@@ -43,20 +39,6 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
-
-        listMonth = new HashMap<>();
-        listMonth.put("janeiro", "january-janvier");
-        listMonth.put("fevereiro", "february-février");
-        listMonth.put("março", "march-mars");
-        listMonth.put("abril", "april-avril");
-        listMonth.put("maio", "may-mai");
-        listMonth.put("junho", "june-juin");
-        listMonth.put("julho", "july-juillet");
-        listMonth.put("agosto", "august-août");
-        listMonth.put("setembro", "september-septembre");
-        listMonth.put("outubro", "october-octobre");
-        listMonth.put("novembro", "november-novembre");
-        listMonth.put("dezembro", "december-décembre");
     }
 
     @SuppressLint("SetTextI18n")
@@ -92,46 +74,46 @@ public class DashboardFragment extends Fragment {
 
                         binding.qtdVenda.setText(getString(R.string.qtd_vd) + ": " + ++qtv);
 
-                        if (data[1].trim().equalsIgnoreCase("janeiro") || data[1].trim().equalsIgnoreCase("january") || data[1].trim().equalsIgnoreCase("janvier")) {
+                        if (data[1].trim().equalsIgnoreCase("janeiro")) {
                             jan += venda.getTotal_venda();
                             ++janc;
-                        } else if (data[1].trim().equalsIgnoreCase("fevereiro") || data[1].trim().equalsIgnoreCase("february") || data[1].trim().equalsIgnoreCase("février")) {
+                        } else if (data[1].trim().equalsIgnoreCase("fevereiro")) {
                             fev += venda.getTotal_venda();
                             ++fevc;
-                        } else if (data[1].trim().equalsIgnoreCase("março") || data[1].trim().equalsIgnoreCase("march") || data[1].trim().equalsIgnoreCase("mars")) {
+                        } else if (data[1].trim().equalsIgnoreCase("março")) {
                             mar += venda.getTotal_venda();
                             ++marc;
-                        } else if (data[1].trim().equalsIgnoreCase("abril") || data[1].trim().equalsIgnoreCase("april") || data[1].trim().equalsIgnoreCase("avril")) {
+                        } else if (data[1].trim().equalsIgnoreCase("abril")) {
                             abr += venda.getTotal_venda();
                             ++abrc;
-                        } else if (data[1].trim().equalsIgnoreCase("maio") || data[1].trim().equalsIgnoreCase("may") || data[1].trim().equalsIgnoreCase("mai")) {
+                        } else if (data[1].trim().equalsIgnoreCase("maio")) {
                             mai += venda.getTotal_venda();
                             ++maic;
-                        } else if (data[1].trim().equalsIgnoreCase("junho") || data[1].trim().equalsIgnoreCase("june") || data[1].trim().equalsIgnoreCase("juin")) {
+                        } else if (data[1].trim().equalsIgnoreCase("junho")) {
                             jun += venda.getTotal_venda();
                             ++junc;
-                        } else if (data[1].trim().equalsIgnoreCase("julho") || data[1].trim().equalsIgnoreCase("july") || data[1].trim().equalsIgnoreCase("juillet")) {
+                        } else if (data[1].trim().equalsIgnoreCase("julho")) {
                             jul += venda.getTotal_venda();
                             ++julc;
-                        } else if (data[1].trim().equalsIgnoreCase("agosto") || data[1].trim().equalsIgnoreCase("august") || data[1].trim().equalsIgnoreCase("août")) {
+                        } else if (data[1].trim().equalsIgnoreCase("agosto")) {
                             ago += venda.getTotal_venda();
                             ++agoc;
-                        } else if (data[1].trim().equalsIgnoreCase("setembro") || data[1].trim().equalsIgnoreCase("september") || data[1].trim().equalsIgnoreCase("septembre")) {
+                        } else if (data[1].trim().equalsIgnoreCase("setembro")) {
                             set += venda.getTotal_venda();
                             ++setc;
-                        } else if (data[1].trim().equalsIgnoreCase("outubro") || data[1].trim().equalsIgnoreCase("october") || data[1].trim().equalsIgnoreCase("octobre")) {
+                        } else if (data[1].trim().equalsIgnoreCase("outubro")) {
                             out += venda.getTotal_venda();
                             ++outc;
-                        } else if (data[1].trim().equalsIgnoreCase("novembro") || data[1].trim().equalsIgnoreCase("november") || data[1].trim().equalsIgnoreCase("novembre")) {
+                        } else if (data[1].trim().equalsIgnoreCase("novembro")) {
                             nov += venda.getTotal_venda();
                             ++novc;
-                        } else if (data[1].trim().equalsIgnoreCase("dezembro") || data[1].trim().equalsIgnoreCase("december") || data[1].trim().equalsIgnoreCase("décembre")) {
+                        } else if (data[1].trim().equalsIgnoreCase("dezembro")) {
                             dez += venda.getTotal_venda();
                             ++dezc;
                         }
                     }
 
-                    if (data[1].trim().equalsIgnoreCase(dataActual[1].trim()) || data[1].trim().equalsIgnoreCase(monthInglesFrances(listMonth, dataActual[1], 0)) || data[1].trim().equalsIgnoreCase(monthInglesFrances(listMonth, dataActual[1], 1))) {
+                    if (data[1].trim().equalsIgnoreCase(dataActual[1].trim())) {
 
                         if (data[0].trim().equalsIgnoreCase("01")) {
                             v1 += venda.getTotal_venda();
@@ -312,11 +294,6 @@ public class DashboardFragment extends Fragment {
         mBarChart.addBar(new BarModel("29 (" + cv29 + ")", (v29 / 100), 0xFF665478));
         mBarChart.addBar(new BarModel("30 (" + cv30 + ")", (v30 / 100), 0xFF996547));
         mBarChart.addBar(new BarModel("31 (" + cv31 + ")", (v31 / 100), 0xFF258796));
-    }
-
-    private String monthInglesFrances(Map<String, String> listMonth, String month, int language) {
-        String[] mes = TextUtils.split(listMonth.get(month).trim(), "-");
-        return mes[language].trim();
     }
 
     @Override
