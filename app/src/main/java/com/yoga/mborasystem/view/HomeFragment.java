@@ -260,7 +260,7 @@ public class HomeFragment extends Fragment {
     private byte estadoTitulo, termina;
 
     private void estadoConta(String imei) {
-        String pacote[] = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro)};
+        String pacote[] = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
         String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
