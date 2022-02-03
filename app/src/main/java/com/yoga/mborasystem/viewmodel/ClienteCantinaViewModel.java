@@ -83,14 +83,14 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 clienteCantina.setId(Ultilitario.ZERO);
                 clienteCantina.setEstado(Ultilitario.UM);
-                clienteCantina.setData_cria(Ultilitario.getDateCurrent());
+                clienteCantina.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 criarClienteCantina(clienteCantina, dialog);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
                 clienteCantina.setId(idcliente);
                 clienteCantina.setEstado(Ultilitario.DOIS);
                 clienteCantina.setNome(nomeCliente.getText().toString());
                 clienteCantina.setTelefone(telefone.getText().toString());
-                clienteCantina.setData_modifica(Ultilitario.getDateCurrent());
+                clienteCantina.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 actualizarCliente(clienteCantina, dialog);
             }
         }

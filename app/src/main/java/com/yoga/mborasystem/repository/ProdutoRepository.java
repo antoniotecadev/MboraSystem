@@ -37,7 +37,7 @@ public class ProdutoRepository {
 
     public void delete(Produto pd, boolean lx) {
         if (lx && (pd != null)) {
-            produtoDao.deleteLixeira(pd.getEstado(), pd.getData_elimina(), pd.getId());
+            produtoDao.deleteLixeira(pd.getEstado(), Ultilitario.monthInglesFrances(pd.getData_elimina()), pd.getId());
         } else {
             produtoDao.delete(pd);
         }
@@ -161,7 +161,7 @@ public class ProdutoRepository {
                     produto.setIva(Boolean.parseBoolean(prod[5]));
                     produto.setEstado(Integer.parseInt(prod[6]));
                     produto.setIdcategoria(Long.parseLong(prod[7]));
-                    produto.setData_cria(Ultilitario.getDateCurrent());
+                    produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                     produtoDao.insert(produto);
                 } catch (Exception e) {
                     isErro = true;

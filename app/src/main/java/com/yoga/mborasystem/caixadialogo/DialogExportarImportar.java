@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -45,6 +47,7 @@ public class DialogExportarImportar extends DialogFragment {
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
     private StringBuilder data;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -117,6 +120,7 @@ public class DialogExportarImportar extends DialogFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarExportar(boolean isLocal) {
         if (getArguments() != null) {
             categorias = getArguments().getStringArrayList("categorias");
@@ -145,6 +149,7 @@ public class DialogExportarImportar extends DialogFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void exportarCategorias(boolean isLocal) {
         StringBuilder data = new StringBuilder();
         for (int i = 0; i < categorias.size(); i++) {
@@ -158,10 +163,12 @@ public class DialogExportarImportar extends DialogFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarProdutos() {
         Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarCategorias() {
         Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.SINCO);
     }

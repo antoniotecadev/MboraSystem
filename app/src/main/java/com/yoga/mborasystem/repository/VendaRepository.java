@@ -7,6 +7,7 @@ import com.yoga.mborasystem.model.dao.VendaDao;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
+import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -64,7 +65,7 @@ public class VendaRepository {
         if (isLixeira) {
             vendaDao.deleteVendas(venda);
         } else {
-            vendaDao.deleteLixeira(estado, data, venda.getId());
+            vendaDao.deleteLixeira(estado, Ultilitario.monthInglesFrances(data), venda.getId());
         }
     }
 

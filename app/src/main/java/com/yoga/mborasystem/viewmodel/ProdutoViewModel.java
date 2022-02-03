@@ -105,7 +105,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             produto.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 produto.setIdcategoria(idcategoria);
-                produto.setData_cria(Ultilitario.getDateCurrent());
+                produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 criarProduto(produto, dialog, continuar);
                 nome.setText("");
                 preco.setText(getApplication().getText(R.string.preco_zero));
@@ -115,7 +115,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 nome.requestFocus();
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
                 produto.setId(id);
-                produto.setData_modifica(Ultilitario.getDateCurrent());
+                produto.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 actualizarProduto(produto, dialog);
             }
         }

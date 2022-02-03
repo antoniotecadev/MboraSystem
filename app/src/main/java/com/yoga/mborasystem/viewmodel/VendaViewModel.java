@@ -161,7 +161,7 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setDivida(valorDivida);
         venda.setValor_pago(valorPago);
         venda.setEstado(Ultilitario.UM);
-        venda.setData_cria(Ultilitario.getDateCurrent());
+        venda.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
         Completable.fromAction(() -> vendaRepository.insert(venda, produtos, precoTotalUnit))

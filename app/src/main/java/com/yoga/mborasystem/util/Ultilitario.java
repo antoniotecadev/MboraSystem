@@ -20,6 +20,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -495,6 +496,7 @@ public class Ultilitario {
         i.setColorFilter(Color.rgb(r, g, b));
     }
 
+    @SuppressLint("MissingPermission")
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
@@ -526,17 +528,51 @@ public class Ultilitario {
                 .show();
     }
 
-    public static void setSharedPreferencesDataDispositivo(Activity activity){
+    public static void setSharedPreferencesDataDispositivo(Activity activity) {
         SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("data", Ultilitario.getDateCurrent());
         editor.apply();
     }
 
-    public static String getSharedPreferencesDataDispositivo(Activity activity){
+    public static String getSharedPreferencesDataDispositivo(Activity activity) {
         SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
-        return sharedPref.getString("data","00-00-0000");
+        return sharedPref.getString("data", "00-00-0000");
     }
 
+    public static String monthInglesFrances(String month) {
+        Map<String, String> listMonth = new HashMap<>();
+        listMonth.put("january", "janeiro");
+        listMonth.put("february", "fevereiro");
+        listMonth.put("march", "março");
+        listMonth.put("april", "abril");
+        listMonth.put("may", "maio");
+        listMonth.put("june", "junho");
+        listMonth.put("july", "julho");
+        listMonth.put("august", "agosto");
+        listMonth.put("september", "setembro");
+        listMonth.put("october", "outubro");
+        listMonth.put("november", "novembro");
+        listMonth.put("december", "dezembro");
+        listMonth.put("janvier", "janeiro");
+        listMonth.put("février", "fevereiro");
+        listMonth.put("mars", "março");
+        listMonth.put("avril", "abril");
+        listMonth.put("mai", "maio");
+        listMonth.put("juin", "junho");
+        listMonth.put("juillet", "julho");
+        listMonth.put("août", "agosto");
+        listMonth.put("septembre", "setembro");
+        listMonth.put("octobre", "outubro");
+        listMonth.put("novembre", "novembro");
+        listMonth.put("décembre", "dezembro");
+
+        String[] data = TextUtils.split(month.trim(), "-");
+
+        if (listMonth.get(data[1]) == null)
+            return month;
+        else
+            return data[0] + "-" + listMonth.get(data[1]) + "-" + data[2] + "-" + data[3];
+    }
 
 }
