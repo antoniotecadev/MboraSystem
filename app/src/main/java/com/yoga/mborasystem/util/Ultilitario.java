@@ -531,7 +531,7 @@ public class Ultilitario {
     public static void setSharedPreferencesDataDispositivo(Activity activity) {
         SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("data", Ultilitario.getDateCurrent());
+        editor.putString("data", monthInglesFrances(Ultilitario.getDateCurrent()));
         editor.apply();
     }
 
