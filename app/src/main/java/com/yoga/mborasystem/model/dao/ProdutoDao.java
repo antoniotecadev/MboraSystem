@@ -94,6 +94,4 @@ public interface ProdutoDao {
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND codigoBarra = :codigoBar AND estado = :estadoProd ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd);
-
-
 }

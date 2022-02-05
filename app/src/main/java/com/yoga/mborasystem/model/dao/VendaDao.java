@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -102,6 +103,9 @@ public abstract class VendaDao {
     @Query("UPDATE vendas SET estado = :est WHERE id = :id")
     public abstract void restaurarVendas(int est, long id);
 
+    @Query("SELECT id, sum(preco_total) AS preco_total" +
+            ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas GROUP BY nome_produto ORDER BY sum(quantidade) DESC LIMIT 3")
+    public abstract LiveData<List<ProdutoVenda>> getProdutoMaisVendido();
 
     @Transaction
     public void insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
@@ -115,6 +119,7 @@ public abstract class VendaDao {
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
             produtoVenda.setIva(produto.getValue().isIva());
             produtoVenda.setIdvenda(idvenda);
+            produtoVenda.setData_cria(venda.getData_cria());
             insert(produtoVenda);
         }
     }

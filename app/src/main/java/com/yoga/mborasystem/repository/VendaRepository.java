@@ -13,6 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 
+import androidx.lifecycle.LiveData;
 import io.reactivex.Flowable;
 
 public class VendaRepository {
@@ -71,6 +72,10 @@ public class VendaRepository {
 
     public void restaurarVenda(int estado, long idvenda) {
         vendaDao.restaurarVenda(estado, idvenda);
+    }
+
+    public LiveData<List<ProdutoVenda>> produtoMaisVendido(){
+        return vendaDao.getProdutoMaisVendido();
     }
 
 }

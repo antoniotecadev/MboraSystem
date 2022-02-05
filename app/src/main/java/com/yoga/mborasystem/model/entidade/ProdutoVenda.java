@@ -20,6 +20,7 @@ public class ProdutoVenda {
     private int preco_fornecedor;
     private boolean iva;
     private long idvenda;
+    private String data_cria;
 
 
     public long getId() {
@@ -79,5 +80,13 @@ public class ProdutoVenda {
 
     public void setPreco_fornecedor(int preco_fornecedor) {
         this.preco_fornecedor = preco_fornecedor;
+    }
+
+    public String getData_cria() {
+        return data_cria;
+    }
+
+    public void setData_cria(String data_cria) {
+        this.data_cria = data_cria;
     }
 }

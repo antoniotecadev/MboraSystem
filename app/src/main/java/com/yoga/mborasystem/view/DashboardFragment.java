@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDashboardBinding;
+import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
@@ -49,6 +50,7 @@ public class DashboardFragment extends Fragment {
         PieChart mPieChart = binding.start;
         BarChart mBarChart = binding.barchart;
         BarChart mBarChartD = binding.barchart2;
+        BarChart mBarChartm = binding.barchartm;
 
         String[] dataActual = TextUtils.split(Ultilitario.getDateCurrent(), "-");
 
@@ -56,6 +58,17 @@ public class DashboardFragment extends Fragment {
         binding.vend.setText(getString(R.string.vendas) + " - " + dataActual[2]);
         binding.vendMes.setText(getString(R.string.vd_ms) + " - " + dataActual[2]);
         binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1]);
+        binding.prodMaisVend.setText("(3)" + getString(R.string.pd_ms_vd) + " - " + dataActual[1]);
+
+        vendaViewModel.getProdutoMaisVendido().observe(getViewLifecycleOwner(), produtoVendas -> {
+            if (!produtoVendas.isEmpty())
+                for (ProdutoVenda pdVd : produtoVendas) {
+                    String[] data = TextUtils.split(pdVd.getData_cria(), "-");
+                    if (data[1].trim().equalsIgnoreCase(dataActual[1].trim())) {
+                        produtosMaisVendidos(mBarChartm, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
+                    }
+                }
+        });
 
         vendaViewModel.consultarVendas(null, 0, false, 0, false);
         vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
@@ -241,8 +254,13 @@ public class DashboardFragment extends Fragment {
         mPieChart.startAnimation();
         mBarChart.startAnimation();
         mBarChartD.startAnimation();
+        mBarChartm.startAnimation();
 
         return binding.getRoot();
+    }
+
+    private void produtosMaisVendidos(BarChart mBarChartm, String produto, int preco, int quant) {
+        mBarChartm.addBar(new BarModel(produto + " " + (preco / 100), quant, 0xFF4554E6));
     }
 
     private void vendasMensais(BarChart mBarChart, long jan, long fev, long mar, long abr, long mai, long jun, long jul, long ago, long set, long out, long nov, long dez

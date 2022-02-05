@@ -27,6 +27,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -353,6 +354,10 @@ public class VendaViewModel extends AndroidViewModel {
                         MainActivity.dismissProgressBar();
                     }
                 });
+    }
+
+    public LiveData<List<ProdutoVenda>> getProdutoMaisVendido(){
+        return vendaRepository.produtoMaisVendido();
     }
 
     @Override
