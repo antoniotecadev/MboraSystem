@@ -74,12 +74,12 @@ public class VendaRepository {
         vendaDao.restaurarVenda(estado, idvenda);
     }
 
-    public LiveData<List<ProdutoVenda>> produtoMaisVendido(){
-        return vendaDao.getProdutoMaisVendido();
+    public LiveData<List<ProdutoVenda>> produtoMaisVendido(String data){
+        return vendaDao.getProdutoMaisVendido(data);
     }
 
-    public LiveData<List<ProdutoVenda>> produtoMenosVendido(){
-        return vendaDao.getProdutoMenosVendido();
+    public LiveData<List<ProdutoVenda>> produtoMenosVendido(String data){
+        return vendaDao.getProdutoMenosVendido(data);
     }
 
 }

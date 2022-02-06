@@ -481,6 +481,6 @@
     <string name="out">outubro</string>
     <string name="nov">novembro</string>
     <string name="dez">dezembro</string>
-    <string name="pd_ms_vd">Produtos mais vendidos</string>
-    <string name="pd_me_vd">Produtos menos vendidos</string>
+    <string name="pd_ms_vdh">Produtos mais vendidos Hoje</string>
+    <string name="pd_me_vdh">Produtos menos vendidos Hoje</string>
 </resources>

@@ -356,11 +356,11 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    public LiveData<List<ProdutoVenda>> getProdutoMaisVendido(){
-        return vendaRepository.produtoMaisVendido();
+    public LiveData<List<ProdutoVenda>> getProdutoMaisVendido(String data){
+        return vendaRepository.produtoMaisVendido(data);
     }
-    public LiveData<List<ProdutoVenda>> getProdutoMenosVendido(){
-        return vendaRepository.produtoMenosVendido();
+    public LiveData<List<ProdutoVenda>> getProdutoMenosVendido(String data){
+        return vendaRepository.produtoMenosVendido(data);
     }
 
     @Override

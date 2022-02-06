@@ -181,13 +181,13 @@
                 android:background="?android:attr/listDivider" />
 
             <TextView
-                android:id="@+id/prodMaisVend"
+                android:id="@+id/prodMaisVendh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margem_lateral_formulario"
                 android:layout_marginBottom="@dimen/margem_lateral_formulario"
-                android:text="@string/pd_ms_vd"
+                android:text="@string/pd_ms_vdh"
                 android:textSize="16sp" />
 
             <org.eazegraph.lib.charts.BarChart
@@ -206,13 +206,13 @@
                 android:background="?android:attr/listDivider" />
 
             <TextView
-                android:id="@+id/prodMenosVend"
+                android:id="@+id/prodMenosVendh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margem_lateral_formulario"
                 android:layout_marginBottom="@dimen/margem_lateral_formulario"
-                android:text="@string/pd_me_vd"
+                android:text="@string/pd_me_vdh"
                 android:textSize="16sp" />
 
             <org.eazegraph.lib.charts.BarChart

@@ -540,7 +540,7 @@ public class Ultilitario {
         return sharedPref.getString("data", "00-00-0000");
     }
 
-    public static String monthInglesFrances(String month) {
+    public static String monthInglesFrances(String data) {
         Map<String, String> listMonth = new HashMap<>();
         listMonth.put("january", "janeiro");
         listMonth.put("february", "fevereiro");
@@ -567,12 +567,12 @@ public class Ultilitario {
         listMonth.put("novembre", "novembro");
         listMonth.put("décembre", "dezembro");
 
-        String[] data = TextUtils.split(month.trim(), "-");
+        String[] date = TextUtils.split(data.trim(), "-");
 
-        if (listMonth.get(data[1]) == null)
-            return month;
+        if (listMonth.get(date[1]) == null)
+            return date[0] + "-" + date[1] + "-" + date[2];
         else
-            return data[0] + "-" + listMonth.get(data[1]) + "-" + data[2] + "-" + data[3];
+            return date[0] + "-" + listMonth.get(date[1]) + "-" + date[2];
     }
 
 }

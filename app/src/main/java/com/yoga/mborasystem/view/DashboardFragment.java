@@ -59,26 +59,20 @@ public class DashboardFragment extends Fragment {
         binding.vend.setText(getString(R.string.vendas) + " - " + dataActual[2]);
         binding.vendMes.setText(getString(R.string.vd_ms) + " - " + dataActual[2]);
         binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1]);
-        binding.prodMaisVend.setText("(3)" + getString(R.string.pd_ms_vd) + " - " + dataActual[1]);
-        binding.prodMenosVend.setText("(3)" + getString(R.string.pd_me_vd) + " - " + dataActual[1]);
+        binding.prodMaisVendh.setText("(3)" + getString(R.string.pd_ms_vdh));
+        binding.prodMenosVendh.setText("(3)" + getString(R.string.pd_me_vdh));
 
-        vendaViewModel.getProdutoMaisVendido().observe(getViewLifecycleOwner(), produtoVendas -> {
+        vendaViewModel.getProdutoMaisVendido(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
                 for (ProdutoVenda pdVd : produtoVendas) {
-                    String[] data = TextUtils.split(pdVd.getData_cria(), "-");
-                    if (data[1].trim().equalsIgnoreCase(dataActual[1].trim())) {
-                        produtosMaisVendidos(mBarChartm, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
-                    }
+                    produtosMaisVendidos(mBarChartm, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
                 }
         });
 
-        vendaViewModel.getProdutoMenosVendido().observe(getViewLifecycleOwner(), produtoVendas -> {
+        vendaViewModel.getProdutoMenosVendido(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
                 for (ProdutoVenda pdVd : produtoVendas) {
-                    String[] data = TextUtils.split(pdVd.getData_cria(), "-");
-                    if (data[1].trim().equalsIgnoreCase(dataActual[1].trim())) {
-                        produtosMenosVendidos(mBarChartme, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
-                    }
+                    produtosMenosVendidos(mBarChartme, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
                 }
         });
 
