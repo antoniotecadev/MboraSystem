@@ -359,6 +359,9 @@ public class VendaViewModel extends AndroidViewModel {
     public LiveData<List<ProdutoVenda>> getProdutoMaisVendido(){
         return vendaRepository.produtoMaisVendido();
     }
+    public LiveData<List<ProdutoVenda>> getProdutoMenosVendido(){
+        return vendaRepository.produtoMenosVendido();
+    }
 
     @Override
     protected void onCleared() {

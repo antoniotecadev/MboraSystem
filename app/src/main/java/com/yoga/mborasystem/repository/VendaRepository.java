@@ -78,4 +78,8 @@ public class VendaRepository {
         return vendaDao.getProdutoMaisVendido();
     }
 
+    public LiveData<List<ProdutoVenda>> produtoMenosVendido(){
+        return vendaDao.getProdutoMenosVendido();
+    }
+
 }

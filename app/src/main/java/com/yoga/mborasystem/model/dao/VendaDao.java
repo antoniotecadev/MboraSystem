@@ -107,6 +107,10 @@ public abstract class VendaDao {
             ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas GROUP BY nome_produto ORDER BY sum(quantidade) DESC LIMIT 3")
     public abstract LiveData<List<ProdutoVenda>> getProdutoMaisVendido();
 
+    @Query("SELECT id, sum(preco_total) AS preco_total" +
+            ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas GROUP BY nome_produto ORDER BY sum(quantidade) ASC LIMIT 3")
+    public abstract LiveData<List<ProdutoVenda>> getProdutoMenosVendido();
+
     @Transaction
     public void insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();

@@ -51,6 +51,7 @@ public class DashboardFragment extends Fragment {
         BarChart mBarChart = binding.barchart;
         BarChart mBarChartD = binding.barchart2;
         BarChart mBarChartm = binding.barchartm;
+        BarChart mBarChartme = binding.barchartme;
 
         String[] dataActual = TextUtils.split(Ultilitario.getDateCurrent(), "-");
 
@@ -59,6 +60,7 @@ public class DashboardFragment extends Fragment {
         binding.vendMes.setText(getString(R.string.vd_ms) + " - " + dataActual[2]);
         binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1]);
         binding.prodMaisVend.setText("(3)" + getString(R.string.pd_ms_vd) + " - " + dataActual[1]);
+        binding.prodMenosVend.setText("(3)" + getString(R.string.pd_me_vd) + " - " + dataActual[1]);
 
         vendaViewModel.getProdutoMaisVendido().observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
@@ -66,6 +68,16 @@ public class DashboardFragment extends Fragment {
                     String[] data = TextUtils.split(pdVd.getData_cria(), "-");
                     if (data[1].trim().equalsIgnoreCase(dataActual[1].trim())) {
                         produtosMaisVendidos(mBarChartm, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
+                    }
+                }
+        });
+
+        vendaViewModel.getProdutoMenosVendido().observe(getViewLifecycleOwner(), produtoVendas -> {
+            if (!produtoVendas.isEmpty())
+                for (ProdutoVenda pdVd : produtoVendas) {
+                    String[] data = TextUtils.split(pdVd.getData_cria(), "-");
+                    if (data[1].trim().equalsIgnoreCase(dataActual[1].trim())) {
+                        produtosMenosVendidos(mBarChartme, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
                     }
                 }
         });
@@ -255,11 +267,16 @@ public class DashboardFragment extends Fragment {
         mBarChart.startAnimation();
         mBarChartD.startAnimation();
         mBarChartm.startAnimation();
+        mBarChartme.startAnimation();
 
         return binding.getRoot();
     }
 
     private void produtosMaisVendidos(BarChart mBarChartm, String produto, int preco, int quant) {
+        mBarChartm.addBar(new BarModel(produto + " " + (preco / 100), quant, 0xFF4554E6));
+    }
+
+    private void produtosMenosVendidos(BarChart mBarChartm, String produto, int preco, int quant) {
         mBarChartm.addBar(new BarModel(produto + " " + (preco / 100), quant, 0xFF4554E6));
     }
 

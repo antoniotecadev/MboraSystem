@@ -131,6 +131,31 @@
                 android:background="?android:attr/listDivider" />
 
             <TextView
+                android:id="@+id/vendDiaMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:text="@string/vd_dr_ms"
+                android:textSize="16sp" />
+
+            <org.eazegraph.lib.charts.BarChart
+                android:id="@+id/barchart2"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:background="#201F1F"
+                android:padding="10dp"
+                app:egBarWidth="20dp"
+                app:egFixedBarWidth="true"
+                app:egLegendHeight="40dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
                 android:id="@+id/vendMes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -181,17 +206,17 @@
                 android:background="?android:attr/listDivider" />
 
             <TextView
-                android:id="@+id/vendDiaMes"
+                android:id="@+id/prodMenosVend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margem_lateral_formulario"
                 android:layout_marginBottom="@dimen/margem_lateral_formulario"
-                android:text="@string/vd_dr_ms"
+                android:text="@string/pd_me_vd"
                 android:textSize="16sp" />
 
             <org.eazegraph.lib.charts.BarChart
-                android:id="@+id/barchart2"
+                android:id="@+id/barchartme"
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
                 android:background="#201F1F"
