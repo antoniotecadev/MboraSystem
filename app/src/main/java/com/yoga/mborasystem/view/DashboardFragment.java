@@ -53,7 +53,7 @@ public class DashboardFragment extends Fragment {
         BarChart mBarChartm = binding.barchartm;
         BarChart mBarChartme = binding.barchartme;
 
-        String[] dataActual = TextUtils.split(Ultilitario.getDateCurrent(), "-");
+        String[] dataActual = TextUtils.split(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), "-");
 
         binding.ano.setText(dataActual[2]);
         binding.vend.setText(getString(R.string.vendas) + " - " + dataActual[2]);
@@ -62,14 +62,14 @@ public class DashboardFragment extends Fragment {
         binding.prodMaisVendh.setText("(3)" + getString(R.string.pd_ms_vdh));
         binding.prodMenosVendh.setText("(3)" + getString(R.string.pd_me_vdh));
 
-        vendaViewModel.getProdutoMaisVendido(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())).observe(getViewLifecycleOwner(), produtoVendas -> {
+        vendaViewModel.getProdutoMaisVendido(dataActual[0] + "-" + dataActual[1] + "-" + dataActual[2]).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
                 for (ProdutoVenda pdVd : produtoVendas) {
                     produtosMaisVendidos(mBarChartm, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
                 }
         });
 
-        vendaViewModel.getProdutoMenosVendido(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())).observe(getViewLifecycleOwner(), produtoVendas -> {
+        vendaViewModel.getProdutoMenosVendido(dataActual[0] + "-" + dataActual[1] + "-" + dataActual[2]).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
                 for (ProdutoVenda pdVd : produtoVendas) {
                     produtosMenosVendidos(mBarChartme, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
