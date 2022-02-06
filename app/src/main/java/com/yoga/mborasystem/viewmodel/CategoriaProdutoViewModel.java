@@ -62,12 +62,12 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
             categoria.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
             switch (operacao) {
                 case CRIAR:
-                    categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                    categoria.setData_cria(Ultilitario.getDateCurrent());
                     criarCategoria(categoria, dialog);
                     break;
                 case ACTUALIZAR:
                     categoria.setId(idcategoria);
-                    categoria.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                    categoria.setData_modifica(Ultilitario.getDateCurrent());
                     renomearCategoria(categoria, dialog);
                     break;
                 default:

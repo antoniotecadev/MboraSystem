@@ -42,7 +42,7 @@ public class CategoriaData extends AsyncTask<Void, Void, Void> {
         categorias.put(context.getString(R.string.talho_congelados), context.getString(R.string.carne_frango_salsicha));
 
         ContentValues contentValues = new ContentValues();
-        String dataCria = Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent());
+        String dataCria = Ultilitario.getDateCurrent();
         for (String ct : categorias.keySet()) {
             contentValues.put("categoria", ct);
             contentValues.put("descricao", categorias.get(ct));

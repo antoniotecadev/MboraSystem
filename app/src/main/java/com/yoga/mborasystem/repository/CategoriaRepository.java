@@ -37,7 +37,7 @@ public class CategoriaRepository {
 
     public void delete(Categoria cat, boolean lx) {
         if (lx && (cat != null)) {
-            categoriaDao.deleteLixeira(cat.getEstado(), Ultilitario.monthInglesFrances(cat.getData_elimina()), cat.getId());
+            categoriaDao.deleteLixeira(cat.getEstado(), cat.getData_elimina(), cat.getId());
         } else {
             categoriaDao.delete(cat);
         }
@@ -87,7 +87,7 @@ public class CategoriaRepository {
                 categoria.setCategoria(ct);
                 categoria.setDescricao(categorias.get(ct));
                 categoria.setEstado(1);
-                categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                categoria.setData_cria(Ultilitario.getDateCurrent());
                 categoriaDao.insert(categoria);
             }
             return null;
