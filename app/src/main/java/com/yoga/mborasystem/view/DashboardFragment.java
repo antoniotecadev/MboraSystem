@@ -59,7 +59,7 @@ public class DashboardFragment extends Fragment {
         binding.ano.setText(dataActual[2]);
         binding.vend.setText(getString(R.string.vendas) + " - " + dataActual[2]);
         binding.vendMes.setText(getString(R.string.vd_ms) + " - " + dataActual[2]);
-        binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1]);
+        binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1] + " - " + dataActual[2]);
         binding.prodMaisVendh.setText("(3)" + getString(R.string.pd_ms_vdh));
         binding.prodMenosVendh.setText("(3)" + getString(R.string.pd_me_vdh));
 
@@ -246,7 +246,7 @@ public class DashboardFragment extends Fragment {
         produtoViewModel.consultarProdutos().observe(getViewLifecycleOwner(), quantProd -> binding.qtdProd.setText(getString(R.string.qtd_pd) + ": " + quantProd));
 
         produtoViewModel.getPrecoFornecedor().observe(getViewLifecycleOwner(), produtos -> {
-            if (!produtos.isEmpty()){
+            if (!produtos.isEmpty()) {
                 for (Produto prod : produtos) {
                     String[] data = TextUtils.split(prod.getData_cria(), "-");
                     if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
