@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDashboardBinding;
+import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.util.Ultilitario;
@@ -244,16 +245,23 @@ public class DashboardFragment extends Fragment {
 
         produtoViewModel.consultarProdutos().observe(getViewLifecycleOwner(), quantProd -> binding.qtdProd.setText(getString(R.string.qtd_pd) + ": " + quantProd));
 
-        produtoViewModel.getPrecoFornecedor().observe(getViewLifecycleOwner(), custos -> {
-            totalPrecoFornecedor = custos == null ? 0 : custos;
-            binding.valCusto.setText(getString(R.string.cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
-            mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
+        produtoViewModel.getPrecoFornecedor().observe(getViewLifecycleOwner(), produtos -> {
+            if (!produtos.isEmpty()){
+                for (Produto prod : produtos) {
+                    String[] data = TextUtils.split(prod.getData_cria(), "-");
+                    if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
+                        totalPrecoFornecedor += prod.getPrecofornecedor();
+                    }
+                }
+                binding.valCusto.setText(getString(R.string.cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
+                mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
 
-            if (totalVenda > totalPrecoFornecedor) {
-                binding.valLucro.setText(getString(R.string.lc) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda - totalPrecoFornecedor)));
-                mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (totalVenda - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
-            } else {
-                binding.valLucro.setText(getString(R.string.lc) + ": " + (totalVenda - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
+                if (totalVenda > totalPrecoFornecedor) {
+                    binding.valLucro.setText(getString(R.string.lc) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda - totalPrecoFornecedor)));
+                    mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (totalVenda - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
+                } else {
+                    binding.valLucro.setText(getString(R.string.lc) + ": " + (totalVenda - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
+                }
             }
         });
 

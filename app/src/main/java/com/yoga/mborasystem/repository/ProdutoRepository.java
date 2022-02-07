@@ -55,7 +55,7 @@ public class ProdutoRepository {
         return produtoDao.getProdutos();
     }
 
-    public LiveData<Long> getPrecoFornecedor() {
+    public LiveData<List<Produto>> getPrecoFornecedor() {
         return produtoDao.getPrecoFornecedor();
     }
 

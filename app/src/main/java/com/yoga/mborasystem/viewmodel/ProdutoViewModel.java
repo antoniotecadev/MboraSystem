@@ -245,7 +245,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 }));
     }
 
-    public LiveData<Long> getPrecoFornecedor() {
+    public LiveData<List<Produto>> getPrecoFornecedor() {
         return produtoRepository.getPrecoFornecedor();
     }
 

@@ -35,8 +35,8 @@ public interface ProdutoDao {
     @Query("SELECT count(id) FROM produtos WHERE estado != 3")
     LiveData<Long> getProdutos();
 
-    @Query("SELECT sum(precofornecedor) FROM produtos WHERE estado != 3")
-    LiveData<Long> getPrecoFornecedor();
+    @Query("SELECT * FROM produtos WHERE estado != 3")
+    LiveData<List<Produto>> getPrecoFornecedor();
 
 //    @Query("SELECT COUNT(id) FROM produtos  WHERE idcategoria = :idcategoria AND estado = 1")
 //    LiveData<Long> getQuantidadeProduto(long idcategoria);
