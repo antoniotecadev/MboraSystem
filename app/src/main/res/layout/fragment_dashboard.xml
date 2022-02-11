@@ -225,6 +225,63 @@
                 app:egFixedBarWidth="true"
                 app:egLegendHeight="40dp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/nivelVendaQuantidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:text="@string/nv_vd_ms"
+                android:textSize="16sp" />
+
+            <org.eazegraph.lib.charts.ValueLineChart
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cubiclinechartQuant"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#201F1F"
+                app:egIndicatorTextColor="@color/white"
+                app:egUseCubic="true"
+                app:egUseOverlapFill="true"
+                app:egCurveSmoothness="0.4"
+                app:egIndicatorLineColor="#FE6DA8"
+                app:egLegendHeight="40dp"
+                app:egShowStandardValue="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/nivelVendaValor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:text="@string/nv_vd_vl"
+                android:textSize="16sp" />
+
+            <org.eazegraph.lib.charts.ValueLineChart
+                android:id="@+id/cubiclinechartVal"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#201F1F"
+                app:egIndicatorTextColor="@color/white"
+                app:egUseCubic="true"
+                app:egUseOverlapFill="true"
+                app:egCurveSmoothness="0.4"
+                app:egIndicatorLineColor="#FE6DA8"
+                app:egLegendHeight="40dp"
+                app:egShowStandardValue="true"/>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

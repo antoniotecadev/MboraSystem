@@ -21,8 +21,11 @@ import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.charts.ValueLineChart;
 import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
+import org.eazegraph.lib.models.ValueLinePoint;
+import org.eazegraph.lib.models.ValueLineSeries;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -53,6 +56,8 @@ public class DashboardFragment extends Fragment {
         BarChart mBarChartD = binding.barchart2;
         BarChart mBarChartm = binding.barchartm;
         BarChart mBarChartme = binding.barchartme;
+        ValueLineChart mCubicValueLineChartQuant = binding.cubiclinechartQuant;
+        ValueLineChart mCubicValueLineChartVal = binding.cubiclinechartVal;
 
         String[] dataActual = TextUtils.split(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), "-");
 
@@ -62,6 +67,8 @@ public class DashboardFragment extends Fragment {
         binding.vendDiaMes.setText(getString(R.string.vd_dr_ms) + " - " + dataActual[1] + " - " + dataActual[2]);
         binding.prodMaisVendh.setText("(3)" + getString(R.string.pd_ms_vdh));
         binding.prodMenosVendh.setText("(3)" + getString(R.string.pd_me_vdh));
+        binding.nivelVendaQuantidade.setText(getString(R.string.nv_vd_ms) + " - " + dataActual[2]);
+        binding.nivelVendaValor.setText(getString(R.string.nv_vd_vl) + " - " + dataActual[2]);
 
         vendaViewModel.getProdutoMaisVendido(dataActual[0] + "-" + dataActual[1] + "-" + dataActual[2]).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
@@ -237,6 +244,8 @@ public class DashboardFragment extends Fragment {
 
                 binding.valTotVd.setText(getString(R.string.vendas) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda)));
 
+                nivelVendasMensais(mCubicValueLineChartQuant, true, janc, fevc, marc, abrc, maic, junc, julc, agoc, setc, outc, novc, dezc);
+                nivelVendasMensais(mCubicValueLineChartVal, false, jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez);
                 vendasMensais(mBarChart, jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez, janc, fevc, marc, abrc, maic, junc, julc, agoc, setc, outc, novc, dezc);
                 vendasDiariasMensais(mBarChartD, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31
                         , cv1, cv2, cv3, cv4, cv5, cv6, cv7, cv8, cv9, cv10, cv11, cv12, cv13, cv14, cv15, cv16, cv17, cv18, cv19, cv20, cv21, cv22, cv23, cv24, cv25, cv26, cv27, cv28, cv29, cv30, cv31);
@@ -270,6 +279,8 @@ public class DashboardFragment extends Fragment {
         mBarChartD.startAnimation();
         mBarChartm.startAnimation();
         mBarChartme.startAnimation();
+        mCubicValueLineChartQuant.startAnimation();
+        mCubicValueLineChartVal.startAnimation();
 
         return binding.getRoot();
     }
@@ -331,6 +342,24 @@ public class DashboardFragment extends Fragment {
         mBarChart.addBar(new BarModel("29 (" + cv29 + ")", (v29 / 100), 0xFF665478));
         mBarChart.addBar(new BarModel("30 (" + cv30 + ")", (v30 / 100), 0xFF996547));
         mBarChart.addBar(new BarModel("31 (" + cv31 + ")", (v31 / 100), 0xFF258796));
+    }
+
+    private void nivelVendasMensais(ValueLineChart mCubicValueLineChart, boolean isQuant, long jan, long fev, long mar, long abr, long mai, long jun, long jul, long ago, long set, long out, long nov, long dez) {
+        ValueLineSeries series = new ValueLineSeries();
+        series.setColor(0xFF56B7F1);
+        series.addPoint(new ValueLinePoint("Jan", isQuant ? jan : (jan / 100)));
+        series.addPoint(new ValueLinePoint("Feb", isQuant ? fev : (fev / 100)));
+        series.addPoint(new ValueLinePoint("Mar", isQuant ? mar : (mar / 100)));
+        series.addPoint(new ValueLinePoint("Apr", isQuant ? abr : (abr / 100)));
+        series.addPoint(new ValueLinePoint("Mai", isQuant ? mai : (mai / 100)));
+        series.addPoint(new ValueLinePoint("Jun", isQuant ? jun : (jun / 100)));
+        series.addPoint(new ValueLinePoint("Jul", isQuant ? jul : (jul / 100)));
+        series.addPoint(new ValueLinePoint("Aug", isQuant ? ago : (ago / 100)));
+        series.addPoint(new ValueLinePoint("Sep", isQuant ? set : (set / 100)));
+        series.addPoint(new ValueLinePoint("Oct", isQuant ? out : (out / 100)));
+        series.addPoint(new ValueLinePoint("Nov", isQuant ? nov : (nov / 100)));
+        series.addPoint(new ValueLinePoint("Dec", isQuant ? dez : (dez / 100)));
+        mCubicValueLineChart.addSeries(series);
     }
 
     @Override

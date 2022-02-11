@@ -483,4 +483,6 @@
     <string name="dez">dezembro</string>
     <string name="pd_ms_vdh">Produtos mais vendidos Hoje</string>
     <string name="pd_me_vdh">Produtos menos vendidos Hoje</string>
+    <string name="nv_vd_ms">Nível de venda mensal (Quantidade)</string>
+    <string name="nv_vd_vl">Nível de venda mensal (Valor)</string>
 </resources>
