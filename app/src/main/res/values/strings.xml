@@ -485,4 +485,6 @@
     <string name="pd_me_vdh">Produtos menos vendidos Hoje</string>
     <string name="nv_vd_ms">Nível de venda mensal (Quantidade)</string>
     <string name="nv_vd_vl">Nível de venda mensal (Valor)</string>
+    <string name="equipa">Equipa</string>
+    <string name="cdg_equipa">Código YOGA</string>
 </resources>
