@@ -31,6 +31,7 @@ public class Cliente implements Parcelable {
     private String bairro;
     private String rua;
     private String imei;
+    @Ignore private String codigoEquipa;
 
     protected Cliente(Parcel in) {
         id = in.readLong();
@@ -180,6 +181,14 @@ public class Cliente implements Parcelable {
 
     public void setImei(String imei) {
         this.imei = imei;
+    }
+
+    public String getCodigoEquipa() {
+        return codigoEquipa;
+    }
+
+    public void setCodigoEquipa(String codigoEquipa) {
+        this.codigoEquipa = codigoEquipa;
     }
 
     @Override

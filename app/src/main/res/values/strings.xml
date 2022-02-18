@@ -487,4 +487,6 @@
     <string name="nv_vd_vl">Nível de venda mensal (Valor)</string>
     <string name="equipa">Equipa</string>
     <string name="cdg_equipa">Código YOGA</string>
+    <string name="cod_eqp_inv">Código YOGA inválido</string>
+    <string name="eqp_n_enc">Equipa não encontrada</string>
 </resources>

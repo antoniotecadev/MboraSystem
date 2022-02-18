@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -37,6 +38,7 @@ import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 public class ClienteViewModel extends AndroidViewModel {
 
+    private String codigo;
     private final Cliente cliente;
     private Disposable disposable;
     private final ClienteRepository clienteRepository;
@@ -58,6 +60,7 @@ public class ClienteViewModel extends AndroidViewModel {
         return clienteMutableLiveData;
     }
 
+    private final Pattern numero = Pattern.compile("[^0-9 ]");
     private final Pattern letrasNIFBI = Pattern.compile("[^a-zA-Z0-9 ]");
     private final Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û ]");
     private final Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9 ]");
@@ -74,7 +77,7 @@ public class ClienteViewModel extends AndroidViewModel {
         return (isCampoVazio(numero) || !Patterns.PHONE.matcher(numero).matches());
     }
 
-    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (isCampoVazio(Objects.requireNonNull(nome.getText()).toString()) || letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -132,6 +135,9 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (!senha.getText().toString().equalsIgnoreCase(senhaNovamente.getText().toString())) {
             senhaNovamente.requestFocus();
             senhaNovamente.setError(getApplication().getString(R.string.pin_diferente));
+        } else if (isCampoVazio(Objects.requireNonNull(codigoEquipa.getText()).toString()) || numero.matcher(codigoEquipa.getText().toString()).find()) {
+            codigoEquipa.requestFocus();
+            codigoEquipa.setError(getApplication().getString(R.string.cod_eqp_inv));
         } else {
             MainActivity.getProgressBar();
             cliente.setNome(nome.getText().toString());
@@ -148,8 +154,11 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setRua(rua.getText().toString());
             cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
             cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
+            cliente.setCodigoEquipa(codigoEquipa.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
-                clienteExiste(true, cliente);
+                if (verificarCodigoEquipa(codigoEquipa.getText().toString())) {
+                    clienteExiste(true, cliente);
+                }
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
 
             }
@@ -231,6 +240,7 @@ public class ClienteViewModel extends AndroidViewModel {
         Ion.with(getApplication().getApplicationContext())
                 .load("POST", URL)
                 .setBodyParameter("account_id", "1")
+                .setBodyParameter("codigo_equipa", cliente.getCodigoEquipa())
                 .setBodyParameter("first_name", cliente.getNome())
                 .setBodyParameter("last_name", cliente.getSobrenome())
                 .setBodyParameter("nif_bi", cliente.getNifbi())
@@ -296,6 +306,43 @@ public class ClienteViewModel extends AndroidViewModel {
                         senha.setError("Erro: " + e.getMessage());
                     }
                 });
+    }
+
+    boolean isVereficado = false;
+
+    public boolean verificarCodigoEquipa(String codigoEquipa) {
+        if (isNetworkConnected(getApplication().getApplicationContext())) {
+            if (internetIsConnected()) {
+                String URL = "http://192.168.18.3/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
+                Ion.with(getApplication().getApplicationContext())
+                        .load(URL)
+                        .asJsonArray()
+                        .setCallback((e, jsonElements) -> {
+                            try {
+                                for (int i = 0; i < jsonElements.size(); i++) {
+                                    JsonObject equipa = jsonElements.get(i).getAsJsonObject();
+                                    codigo = equipa.get("codigo").getAsString();
+                                }
+                                if (codigo.isEmpty()) {
+                                    Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
+                                } else {
+                                    isVereficado = true;
+                                }
+                            } catch (Exception ex) {
+                                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Erro:" + ex.getMessage(), R.drawable.ic_toast_erro);
+                            } finally {
+                                MainActivity.dismissProgressBar();
+                            }
+                        });
+            } else {
+                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                MainActivity.dismissProgressBar();
+            }
+        } else {
+            Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+            MainActivity.dismissProgressBar();
+        }
+        return isVereficado;
     }
 
     @Override
