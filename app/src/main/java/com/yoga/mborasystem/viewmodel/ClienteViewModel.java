@@ -38,6 +38,7 @@ import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 public class ClienteViewModel extends AndroidViewModel {
 
+    private byte estado;
     private String codigo;
     private final Cliente cliente;
     private Disposable disposable;
@@ -322,8 +323,9 @@ public class ClienteViewModel extends AndroidViewModel {
                                 for (int i = 0; i < jsonElements.size(); i++) {
                                     JsonObject equipa = jsonElements.get(i).getAsJsonObject();
                                     codigo = equipa.get("codigo").getAsString();
+                                    estado = Byte.parseByte(equipa.get("estado").getAsString());
                                 }
-                                if (codigo.isEmpty()) {
+                                if (codigo.isEmpty() || estado == Ultilitario.ZERO) {
                                     Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
                                 } else {
                                     isVereficado = true;
