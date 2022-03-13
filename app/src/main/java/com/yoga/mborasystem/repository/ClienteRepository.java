@@ -31,4 +31,7 @@ public class ClienteRepository {
         return clienteDao.clienteExiste();
     }
 
+    public void delete(Cliente cliente) {
+        clienteDao.delete(cliente);
+    }
 }

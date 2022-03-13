@@ -3,6 +3,7 @@ package com.yoga.mborasystem.model.dao;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import io.reactivex.Single;
@@ -15,5 +16,8 @@ public interface ClienteDao {
 
     @Query("SELECT * FROM cliente")
     Single<Cliente> clienteExiste();
+
+    @Delete
+    void delete(Cliente cliente);
 
 }

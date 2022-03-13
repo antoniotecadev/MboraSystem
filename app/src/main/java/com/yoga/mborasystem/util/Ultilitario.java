@@ -148,6 +148,7 @@ public class Ultilitario {
 
     public static AlertDialog.Builder dialogConta(String message, Context context) {
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setTitle(context.getString(R.string.conta));
         alert.setMessage(message);
         alert.setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         return alert;

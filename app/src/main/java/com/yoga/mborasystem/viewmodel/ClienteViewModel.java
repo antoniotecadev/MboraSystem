@@ -5,6 +5,7 @@ import android.app.Application;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonObject;
@@ -223,7 +224,6 @@ public class ClienteViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        Ultilitario.getValido().setValue(Ultilitario.Operacao.CRIAR);
                         salvarParceiro(cliente);
                     }
 
@@ -231,7 +231,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Erro:" + e.getMessage(), R.drawable.ic_toast_erro);
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Local Storege:\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
@@ -258,12 +258,17 @@ public class ClienteViewModel extends AndroidViewModel {
                     try {
                         String retorno = jsonObject.get("insert").getAsString();
                         if (retorno.equals("ok")) {
-                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), "Parceiro salvo", R.drawable.ic_toast_feito);
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
+                            Ultilitario.getValido().setValue(Ultilitario.Operacao.CRIAR);
                         } else if (retorno.equals("erro")) {
-                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Parceiro não salvo", R.drawable.ic_toast_erro);
+                            Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.parc_n_sv), R.drawable.ic_toast_erro);
+                            eliminarParceiro(cliente);
                         }
                     } catch (Exception ex) {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Erro:" + ex.getMessage(), R.drawable.ic_toast_erro);
+                        Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Online Storege:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
+                        eliminarParceiro(cliente);
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
@@ -304,7 +309,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        senha.setError("Erro: " + e.getMessage());
+                        senha.setError("Login\n: " + e.getMessage());
                     }
                 });
     }
@@ -331,7 +336,7 @@ public class ClienteViewModel extends AndroidViewModel {
                                     isVereficado = true;
                                 }
                             } catch (Exception ex) {
-                                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Erro:" + ex.getMessage(), R.drawable.ic_toast_erro);
+                                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
                             } finally {
                                 MainActivity.dismissProgressBar();
                             }
@@ -345,6 +350,28 @@ public class ClienteViewModel extends AndroidViewModel {
             MainActivity.dismissProgressBar();
         }
         return isVereficado;
+    }
+
+    private void eliminarParceiro(Cliente cliente) {
+        Completable.fromAction(() -> clienteRepository.delete(cliente))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Toast.makeText(getApplication(), getApplication().getString(R.string.dds_elim), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        Toast.makeText(getApplication(), getApplication().getString(R.string.dds_n_elim), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
