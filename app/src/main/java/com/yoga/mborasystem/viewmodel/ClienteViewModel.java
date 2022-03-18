@@ -1,11 +1,19 @@
 package com.yoga.mborasystem.viewmodel;
 
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonObject;
@@ -22,10 +30,6 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -33,9 +37,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 public class ClienteViewModel extends AndroidViewModel {
 
@@ -142,6 +143,7 @@ public class ClienteViewModel extends AndroidViewModel {
             codigoEquipa.setError(getApplication().getString(R.string.cod_eqp_inv));
         } else {
             MainActivity.getProgressBar();
+            cliente.setId(1);
             cliente.setNome(nome.getText().toString());
             cliente.setSobrenome(sobreNome.getText().toString());
             cliente.setNifbi(nif.getText().toString());
@@ -158,9 +160,7 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
             cliente.setCodigoEquipa(codigoEquipa.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
-                if (verificarCodigoEquipa(codigoEquipa.getText().toString())) {
-                    clienteExiste(true, cliente);
-                }
+                verificarCodigoEquipa(codigoEquipa.getText().toString(), cliente);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
 
             }
@@ -192,17 +192,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         if (limitCadastro) {
-                            if (isNetworkConnected(getApplication())) {
-                                if (internetIsConnected()) {
-                                    cadastrarCliente(c);
-                                } else {
-                                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.sm_int), R.drawable.ic_toast_erro);
-                                    MainActivity.dismissProgressBar();
-                                }
-                            } else {
-                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
-                                MainActivity.dismissProgressBar();
-                            }
+                            cadastrarCliente(c);
                         } else {
                             Ultilitario.getExisteMutableLiveData().setValue(Ultilitario.Existe.NAO);
                             MainActivity.dismissProgressBar();
@@ -314,9 +304,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
     }
 
-    boolean isVereficado = false;
-
-    public boolean verificarCodigoEquipa(String codigoEquipa) {
+    public void verificarCodigoEquipa(String codigoEquipa, Cliente cliente) {
         if (isNetworkConnected(getApplication().getApplicationContext())) {
             if (internetIsConnected()) {
                 String URL = "http://192.168.18.3/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
@@ -331,28 +319,27 @@ public class ClienteViewModel extends AndroidViewModel {
                                     estado = Byte.parseByte(equipa.get("estado").getAsString());
                                 }
                                 if (codigo.isEmpty() || estado == Ultilitario.ZERO) {
+                                    MainActivity.dismissProgressBar();
                                     Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
                                 } else {
-                                    isVereficado = true;
+                                    clienteExiste(true, cliente);
                                 }
                             } catch (Exception ex) {
-                                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
-                            } finally {
                                 MainActivity.dismissProgressBar();
+                                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
                             }
                         });
             } else {
-                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.sm_int), R.drawable.ic_toast_erro);
                 MainActivity.dismissProgressBar();
+                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.sm_int), R.drawable.ic_toast_erro);
             }
         } else {
-            Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
             MainActivity.dismissProgressBar();
+            Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
         }
-        return isVereficado;
     }
 
-    private void eliminarParceiro(Cliente cliente) {
+    private void  eliminarParceiro(Cliente cliente) {
         Completable.fromAction(() -> clienteRepository.delete(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

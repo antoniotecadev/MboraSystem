@@ -13,7 +13,7 @@ public class Cliente implements Parcelable {
     public Cliente() {
     }
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private long id;
 
     private String nome;
