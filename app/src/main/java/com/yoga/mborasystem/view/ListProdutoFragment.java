@@ -288,6 +288,14 @@ public class ListProdutoFragment extends Fragment {
                         entrarProduto();
                         return false;
                     });
+                    menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+                        caixaDialogo(produto,getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
+                        return false;
+                    });
+                    menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                        caixaDialogo(produto,getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
+                        return false;
+                    });
                 });
                 entrarProduto.setOnClickListener(v -> entrarProduto());
             }
@@ -316,6 +324,26 @@ public class ListProdutoFragment extends Fragment {
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                         produtoViewModel.eliminarProduto(produto, false, null, false);
                     })
+                    .show();
+        }
+
+        private void caixaDialogo(Produto produto, String titulo, int mensagem, boolean permanente) {
+            produto.setId(produto.getId());
+            produto.setEstado(Ultilitario.TRES);
+            produto.setData_elimina(Ultilitario.getDateCurrent());
+            android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
+            alert.setTitle(titulo);
+            alert.setMessage(getString(mensagem));
+
+            alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        MainActivity.getProgressBar();
+                        if (permanente) {
+                            produtoViewModel.eliminarProduto(produto, false, null, false);
+                        } else {
+                            produtoViewModel.eliminarProduto(produto, true, null, false);
+                        }
+                    }
+            ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
         }
 
