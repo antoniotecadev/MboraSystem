@@ -350,10 +350,12 @@
     <string name="ver_prod">Ver produto(s)</string>
     <string name="liq_div">Liquidar dívida</string>
     <string name="elim_vend">Eliminar venda</string>
+    <string name="elim_vends">Eliminar vendas</string>
     <string name="enc_div_vend">Com quanto deseja liquidar a dívida ?</string>
     <string name="cert_elim_vend">Esta venda está associada a um usuário e a um cliente.\nTem a certeza que quer eliminar esta venda?</string>
     <string name="div_n_liq">Dívida não liquidada</string>
     <string name="div_liq">Dívida liquidada</string>
+    <string name="vends_elims">Vendas eliminadas</string>
     <string name="vend_elim">Venda eliminada</string>
     <string name="vend_n_elim">Venda não eliminada</string>
     <string name="cli_nao_enc">Clientes não encontrado</string>

@@ -466,7 +466,7 @@ public class VendaFragment extends Fragment {
 
     private void dialogEliminarTodasVendasLixeira(String msg) {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.elim_vend))
+                .setTitle(getString(R.string.elim_vends))
                 .setMessage(msg)
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(0, null, null, false, true))
