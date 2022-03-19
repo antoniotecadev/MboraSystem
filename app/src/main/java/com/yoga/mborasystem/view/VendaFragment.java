@@ -450,7 +450,7 @@ public class VendaFragment extends Fragment {
                 Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
                 break;
             case R.id.btnEliminarTodosLixo:
-                dialogEliminarTodasVendaLixeira(getString(R.string.tem_cert_elim_vds));
+                dialogEliminarTodasVendasLixeira(getString(R.string.tem_cert_elim_vds));
                 break;
             default:
                 break;
@@ -464,7 +464,7 @@ public class VendaFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(direction);
     }
 
-    private void dialogEliminarTodasVendaLixeira(String msg) {
+    private void dialogEliminarTodasVendasLixeira(String msg) {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.elim_vend))
                 .setMessage(msg)
