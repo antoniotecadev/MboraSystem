@@ -2,6 +2,8 @@ package com.yoga.mborasystem.repository;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.VendaDao;
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -13,7 +15,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 
-import androidx.lifecycle.LiveData;
 import io.reactivex.Flowable;
 
 public class VendaRepository {
@@ -62,11 +63,15 @@ public class VendaRepository {
         vendaDao.liquidardivida(divida, idivida);
     }
 
-    public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira) {
-        if (isLixeira) {
-            vendaDao.deleteVendas(venda);
+    public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
+        if (eliminarTodasLixeira) {
+                vendaDao.deleteAllVendaLixeira(3);
         } else {
-            vendaDao.deleteLixeira(estado, Ultilitario.monthInglesFrances(data), venda.getId());
+            if (isLixeira) {
+                vendaDao.deleteVendas(venda);
+            } else {
+                vendaDao.deleteLixeira(estado, Ultilitario.monthInglesFrances(data), venda.getId());
+            }
         }
     }
 
@@ -74,11 +79,11 @@ public class VendaRepository {
         vendaDao.restaurarVenda(estado, idvenda);
     }
 
-    public LiveData<List<ProdutoVenda>> produtoMaisVendido(String data){
+    public LiveData<List<ProdutoVenda>> produtoMaisVendido(String data) {
         return vendaDao.getProdutoMaisVendido(data);
     }
 
-    public LiveData<List<ProdutoVenda>> produtoMenosVendido(String data){
+    public LiveData<List<ProdutoVenda>> produtoMenosVendido(String data) {
         return vendaDao.getProdutoMenosVendido(data);
     }
 

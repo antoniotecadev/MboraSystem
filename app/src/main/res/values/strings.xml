@@ -493,4 +493,6 @@
     <string name="dds_n_elim">Dados de parceiro não eliminados</string>
     <string name="parc_sv">Parceiro salvo</string>
     <string name="parc_n_sv">Parceiro não salvo</string>
+    <string name="elim_tds">Eliminar Todos(as)</string>
+    <string name="tem_cert_elim_vds">Tem certeza que quer eliminar permanentemente  todas as vendas da lixeira?</string>
 </resources>

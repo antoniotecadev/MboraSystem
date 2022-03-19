@@ -23,13 +23,17 @@
     <item
         android:id="@+id/exportarvenda"
         android:title="@string/exp_venda"
-        app:showAsAction="never">
-    </item>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/importarvenda"
         android:title="@string/imp_venda"
-        app:showAsAction="never">
-    </item>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/btnEliminarTodosLixo"
+        android:icon="@drawable/ic_eliminar"
+        android:title="@string/elim_tds"
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

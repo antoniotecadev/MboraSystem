@@ -1,5 +1,12 @@
 package com.yoga.mborasystem.model.dao;
 
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Transaction;
+
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
@@ -8,12 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Transaction;
 import io.reactivex.Flowable;
 
 @Dao
@@ -81,6 +82,9 @@ public abstract class VendaDao {
 
     @Query("UPDATE vendas SET estado = :est, data_elimina = :data WHERE id = :id")
     public abstract void deleteLixeira(int est, String data, long id);
+
+    @Query("DELETE FROM vendas WHERE estado = :estado")
+    public abstract void deleteAllVendaLixeira(int estado);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaUsuario(long idusuario);

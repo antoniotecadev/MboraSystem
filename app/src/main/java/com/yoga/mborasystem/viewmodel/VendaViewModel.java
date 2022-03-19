@@ -5,6 +5,14 @@ import android.app.Application;
 import android.graphics.Color;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -24,13 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.navigation.Navigation;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -304,8 +305,8 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira) {
-        Completable.fromAction(() -> vendaRepository.eliminarVendaLixeira(estado, data, venda, isLixeira))
+    public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
+        Completable.fromAction(() -> vendaRepository.eliminarVendaLixeira(estado, data, venda, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {

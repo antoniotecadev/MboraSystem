@@ -22,6 +22,17 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -45,17 +56,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class VendaFragment extends Fragment {
 
@@ -310,7 +310,7 @@ public class VendaFragment extends Fragment {
                     .setTitle(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, true))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, true, false))
                     .show();
         }
 
@@ -362,7 +362,7 @@ public class VendaFragment extends Fragment {
                         MainActivity.dismissProgressBar();
                     }
                 } else {
-                    vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, false);
+                    vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, false, false);
                 }
             }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
@@ -379,6 +379,8 @@ public class VendaFragment extends Fragment {
             menu.findItem(R.id.btnData).setVisible(false);
             menu.findItem(R.id.exportarvenda).setVisible(false);
             menu.findItem(R.id.importarvenda).setVisible(false);
+        } else {
+            menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
         }
 
         if (getArguments() != null) {
@@ -447,6 +449,9 @@ public class VendaFragment extends Fragment {
                 //Importa as vendas
                 Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
                 break;
+            case R.id.btnEliminarTodosLixo:
+                dialogEliminarTodasVendaLixeira(getString(R.string.tem_cert_elim_vds));
+                break;
             default:
                 break;
         }
@@ -457,6 +462,15 @@ public class VendaFragment extends Fragment {
     private void exportarVenda() {
         VendaFragmentDirections.ActionVendaFragmentToDialogExportarImportarVenda direction = VendaFragmentDirections.actionVendaFragmentToDialogExportarImportarVenda().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
         Navigation.findNavController(requireView()).navigate(direction);
+    }
+
+    private void dialogEliminarTodasVendaLixeira(String msg) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.elim_vend))
+                .setMessage(msg)
+                .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(0, null, null, false, true))
+                .show();
     }
 
     @Override
