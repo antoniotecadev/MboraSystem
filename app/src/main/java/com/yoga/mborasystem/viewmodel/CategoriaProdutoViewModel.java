@@ -7,6 +7,11 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Categoria;
@@ -17,10 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -201,9 +202,9 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarCategoria(Categoria cat, boolean lx) {
+    public void eliminarCategoria(Categoria cat, boolean lx, boolean eliminarTodasLixeira) {
         MainActivity.getProgressBar();
-        Completable.fromAction(() -> categoriaRepository.delete(cat, lx))
+        Completable.fromAction(() -> categoriaRepository.delete(cat, lx, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -215,7 +216,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.cts_elims) : getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
                         if (!lx) {
                             consultarCategorias(null, true);
                         }

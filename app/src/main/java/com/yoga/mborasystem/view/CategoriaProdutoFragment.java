@@ -22,6 +22,16 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -44,16 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class CategoriaProdutoFragment extends Fragment {
 
@@ -168,6 +168,8 @@ public class CategoriaProdutoFragment extends Fragment {
         if (isLixeira) {
             menu.findItem(R.id.exinpProduto).setVisible(false);
             menu.findItem(R.id.exinpCategoria).setVisible(false);
+        } else {
+            menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
         }
         SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
@@ -226,11 +228,23 @@ public class CategoriaProdutoFragment extends Fragment {
             case R.id.importarcategoria:
                 exportarImportar(Ultilitario.IMPORTAR_CATEGORIA);
                 break;
+            case R.id.btnEliminarTodosLixo:
+                dialogEliminarTodasCategoriasLixeira(getString(R.string.tem_cert_elim_cts));
+                break;
             default:
                 break;
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
+    }
+
+    private void dialogEliminarTodasCategoriasLixeira(String msg) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.elim_cts))
+                .setMessage(msg)
+                .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(null, false, true))
+                .show();
     }
 
     class ItemCategoria extends Item<GroupieViewHolder> {
@@ -328,7 +342,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     .setTitle(getString(R.string.eliminar_categoria) + " (" + categoria.getCategoria() + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(categoria, !isLixeira))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(categoria, !isLixeira, false))
                     .show();
         }
 

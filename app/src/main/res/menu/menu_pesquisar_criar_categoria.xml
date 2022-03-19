@@ -46,4 +46,10 @@
     </menu>
   </item>
 
+  <item
+      android:id="@+id/btnEliminarTodosLixo"
+      android:icon="@drawable/ic_eliminar"
+      android:title="@string/elim_tdas"
+      app:showAsAction="ifRoom|collapseActionView" />
+
 </menu>

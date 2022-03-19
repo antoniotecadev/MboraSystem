@@ -35,15 +35,19 @@ public class CategoriaRepository {
         categoriaDao.update(cat.getCategoria(), cat.getDescricao(), cat.getEstado(), cat.getData_modifica(), cat.getId());
     }
 
-    public void delete(Categoria cat, boolean lx) {
-        if (lx && (cat != null)) {
-            categoriaDao.deleteLixeira(cat.getEstado(), cat.getData_elimina(), cat.getId());
+    public void delete(Categoria cat, boolean lx, boolean eliminarTodasLixeira) {
+        if (eliminarTodasLixeira) {
+            categoriaDao.deleteAllCategoriaLixeira(3);
         } else {
-            categoriaDao.delete(cat);
+            if (lx && (cat != null)) {
+                categoriaDao.deleteLixeira(cat.getEstado(), cat.getData_elimina(), cat.getId());
+            } else {
+                categoriaDao.delete(cat);
+            }
         }
     }
 
-    public void restaurarCategoria(int estado, long idcategoria){
+    public void restaurarCategoria(int estado, long idcategoria) {
         categoriaDao.restaurarCategoria(estado, idcategoria);
     }
 
