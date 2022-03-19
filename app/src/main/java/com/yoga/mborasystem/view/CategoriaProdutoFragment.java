@@ -295,11 +295,12 @@ public class CategoriaProdutoFragment extends Fragment {
                                 Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
                                 return false;
                             });
+                            menu1.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(categoria, getString(R.string.env_lx) + " (" + categoria.getCategoria() + ")", R.string.env_cat_lixe, false);
+                                return false;
+                            });
                             menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
-                                categoria.setId(categoria.getId());
-                                categoria.setEstado(Ultilitario.TRES);
-                                categoria.setData_elimina(Ultilitario.getDateCurrent());
-                                dialogEliminarCategoria(getString(R.string.env_cat_lix));
+                                caixaDialogo(categoria, getString(R.string.elim_cat_perm) + " (" + categoria.getCategoria() + ")", R.string.env_cat_n_lix, true);
                                 return false;
                             });
                         }
@@ -324,6 +325,27 @@ public class CategoriaProdutoFragment extends Fragment {
                 }
 
             });
+        }
+
+        private void caixaDialogo(Categoria categoria, String titulo, int mensagem, boolean permanente) {
+            categoria.setId(categoria.getId());
+            categoria.setEstado(Ultilitario.TRES);
+            categoria.setData_elimina(Ultilitario.getDateCurrent());
+            android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
+            alert.setTitle(titulo);
+            alert.setMessage(getString(mensagem));
+
+            alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        MainActivity.getProgressBar();
+                        if (permanente) {
+                            categoriaProdutoViewModel.eliminarCategoria(categoria, false, false);
+                        } else {
+                            categoriaProdutoViewModel.eliminarCategoria(categoria, true, false);
+                        }
+                        categoriaProdutoViewModel.consultarCategorias(null, isLixeira);
+                    }
+            ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .show();
         }
 
         @Override

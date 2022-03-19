@@ -355,6 +355,7 @@
     <string name="env_lx">Enviar (Lixeira)</string>
     <string name="elim_prod_perm">Eliminar produto permanentemente</string>
     <string name="elim_vend_perm">Eliminar venda permanentemente</string>
+    <string name="elim_cat_perm">Eliminar categoria permanentemente</string>
     <string name="elim_vends">Eliminar vendas</string>
     <string name="enc_div_vend">Com quanto deseja liquidar a dívida ?</string>
     <string name="cert_elim_vend">Esta venda está associada a um usuário e a um cliente.\nTem a certeza que quer eliminar esta venda?</string>
@@ -432,8 +433,10 @@
     <string name="eli_td">Eliminar tudo</string>
     <string name="env_prod_p_lix">Enviar este produto para lixeira.</string>
     <string name="env_prod_n_lix">Este produto não será enviado para lixeira.</string>
+    <string name="env_cat_lixe">Enviar esta categoria para lixeira.</string>
     <string name="env_vend_lix">Enviar esta venda para lixeira.</string>
     <string name="env_vend_n_lix">Esta venda não será enviada para lixeira.</string>
+    <string name="env_cat_n_lix">Esta categoria não será enviada para lixeira.</string>
     <string name="vend_rest">Venda restaurada.</string>
     <string name="vend_n_rest">Venda não restaurada.</string>
     <string name="ano">Ano</string>
