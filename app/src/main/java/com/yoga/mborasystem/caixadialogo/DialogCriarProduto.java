@@ -204,7 +204,7 @@ public class DialogCriarProduto extends DialogFragment {
         produto.setEstado(Ultilitario.TRES);
         produto.setData_elimina(Ultilitario.getDateCurrent());
         AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
-        alert.setTitle(getString(R.string.eliminar_produto) + " (" + produto.getNome() + ")");
+        alert.setTitle(getString(R.string.env_lx) + " (" + produto.getNome() + ")");
         alert.setMessage(getString(R.string.env_prod_lix));
         alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
         alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, true, dialog, false));
