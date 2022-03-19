@@ -25,4 +25,10 @@
         android:title="@string/scan_bar"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/btnEliminarTodosLixo"
+        android:icon="@drawable/ic_eliminar"
+        android:title="@string/elim_tds"
+        app:showAsAction="ifRoom|collapseActionView" />
+
 </menu>

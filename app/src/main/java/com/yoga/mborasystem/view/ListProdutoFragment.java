@@ -18,6 +18,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
@@ -29,15 +38,6 @@ import com.yoga.mborasystem.databinding.FragmentProdutoListBinding;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ListProdutoFragment extends Fragment {
 
@@ -153,6 +153,8 @@ public class ListProdutoFragment extends Fragment {
             menu.findItem(R.id.dialogCriarProduto).setVisible(false);
             menu.findItem(R.id.dialogFiltrarProduto).setVisible(false);
             menu.findItem(R.id.btnScannerBack).setVisible(false);
+        } else {
+            menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
         }
         SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
@@ -205,10 +207,22 @@ public class ListProdutoFragment extends Fragment {
             case R.id.btnScannerBack:
                 scanearCodigoQr();
                 break;
+            case R.id.btnEliminarTodosLixo:
+                dialogEliminarTodosProdutosLixeira(getString(R.string.tem_cert_elim_pds));
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void dialogEliminarTodosProdutosLixeira(String msg) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.elim_pds))
+                .setMessage(msg)
+                .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(null, false, null, true))
+                .show();
     }
 
     public class ProdutoListPageAdapter extends Item<GroupieViewHolder> {
@@ -300,7 +314,7 @@ public class ListProdutoFragment extends Fragment {
                     .setMessage(getString(R.string.tem_certeza_eliminar_produto))
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
-                        produtoViewModel.eliminarProduto(produto, false, null);
+                        produtoViewModel.eliminarProduto(produto, false, null, false);
                     })
                     .show();
         }

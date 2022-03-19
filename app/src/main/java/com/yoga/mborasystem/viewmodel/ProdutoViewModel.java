@@ -9,6 +9,13 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentResult;
@@ -23,12 +30,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
@@ -191,9 +192,9 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarProduto(Produto produto, boolean lx, Dialog dialog) {
+    public void eliminarProduto(Produto produto, boolean lx, Dialog dialog, boolean eliminarTodasLixeira) {
         MainActivity.getProgressBar();
-        Completable.fromAction(() -> produtoRepository.delete(produto, lx))
+        Completable.fromAction(() -> produtoRepository.delete(produto, lx, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -205,7 +206,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira? getApplication().getString(R.string.pds_elim) : getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
                         if (dialog != null) {
                             dialog.dismiss();
                         }

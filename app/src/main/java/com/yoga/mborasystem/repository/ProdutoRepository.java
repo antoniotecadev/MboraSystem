@@ -6,6 +6,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 
+import androidx.lifecycle.LiveData;
+
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.ProdutoDao;
@@ -15,7 +17,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import io.reactivex.Flowable;
 
 public class ProdutoRepository {
@@ -35,11 +36,15 @@ public class ProdutoRepository {
         produtoDao.update(pd.getNome(), pd.getPreco(), pd.getPrecofornecedor(), pd.getQuantidade(), pd.getCodigoBarra(), pd.isIva(), pd.getEstado(), pd.getData_modifica(), pd.getId());
     }
 
-    public void delete(Produto pd, boolean lx) {
-        if (lx && (pd != null)) {
-            produtoDao.deleteLixeira(pd.getEstado(), Ultilitario.monthInglesFrances(pd.getData_elimina()), pd.getId());
+    public void delete(Produto pd, boolean lx, boolean eliminarTodasLixeira) {
+        if (eliminarTodasLixeira) {
+            produtoDao.deleteAllProdutoLixeira(3);
         } else {
-            produtoDao.delete(pd);
+            if (lx && (pd != null)) {
+                produtoDao.deleteLixeira(pd.getEstado(), Ultilitario.monthInglesFrances(pd.getData_elimina()), pd.getId());
+            } else {
+                produtoDao.delete(pd);
+            }
         }
     }
 

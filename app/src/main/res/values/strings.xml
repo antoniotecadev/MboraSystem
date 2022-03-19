@@ -80,6 +80,7 @@
     <string name="usuario_nao_criado">Erro: Usuário não criado</string>
     <string name="editar">Editar</string>
     <string name="eliminar_produto">Eliminar Produto</string>
+    <string name="elim_pds">Eliminar Produtos</string>
     <string name="desativar">Desativar</string>
     <string name="estado">Estado:</string>
     <string name="Estado">ESTADO</string>
@@ -151,6 +152,7 @@
     <string name="nome_produto_invalido">Produto já existe</string>
     <string name="codigobarra_existe">Código de barra já existe</string>
     <string name="produto_eliminado">Produto eliminado</string>
+    <string name="pds_elim">Produtos eliminados</string>
     <string name="produto_nao_eliminado">Produto não eliminado</string>
     <string name="termo_politica_privacidade">Aceito os termos e política de privacidade</string>
     <string name="conta_criada">Conta de parceiro criada com sucesso.</string>
@@ -493,6 +495,8 @@
     <string name="dds_n_elim">Dados de parceiro não eliminados</string>
     <string name="parc_sv">Parceiro salvo</string>
     <string name="parc_n_sv">Parceiro não salvo</string>
-    <string name="elim_tds">Eliminar Todos(as)</string>
+    <string name="elim_tds">Eliminar Todos</string>
+    <string name="elim_tdas">Eliminar Todas</string>
     <string name="tem_cert_elim_vds">Tem certeza que quer eliminar permanentemente  todas as vendas da lixeira?</string>
+    <string name="tem_cert_elim_pds">Tem certeza que quer eliminar permanentemente  todos os produtos da lixeira?</string>
 </resources>

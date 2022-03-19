@@ -1,14 +1,15 @@
 package com.yoga.mborasystem.model.dao;
 
-import com.yoga.mborasystem.model.entidade.Produto;
-
-import java.util.List;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.yoga.mborasystem.model.entidade.Produto;
+
+import java.util.List;
+
 import io.reactivex.Flowable;
 
 @Dao
@@ -25,6 +26,9 @@ public interface ProdutoDao {
 
     @Query("UPDATE produtos SET estado = :est, data_elimina = :data WHERE id = :id")
     void deleteLixeira(int est, String data, long id);
+
+    @Query("DELETE FROM produtos WHERE estado = :estado")
+    public abstract void deleteAllProdutoLixeira(int estado);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getProdutos(long idcat);
