@@ -272,11 +272,15 @@ public class VendaFragment extends Fragment {
                                 if (venda.getDivida() == Ultilitario.ZERO)
                                     Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
                                 else
-                                    caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true);
+                                    caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true, false);
+                                return false;
+                            });
+                            menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(getString(R.string.env_lx) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_lix, false, false);
                                 return false;
                             });
                             menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_lix, false);
+                                caixaDialogo(getString(R.string.elim_vend_perm) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_n_lix, false, true);
                                 return false;
                             });
                         }
@@ -327,7 +331,7 @@ public class VendaFragment extends Fragment {
             return R.layout.fragment_venda;
         }
 
-        private void caixaDialogo(String titulo, int mensagem, boolean isliquidar) {
+        private void caixaDialogo(String titulo, int mensagem, boolean isliquidar, boolean permanente) {
 
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
             alert.setTitle(titulo);
@@ -362,7 +366,11 @@ public class VendaFragment extends Fragment {
                         MainActivity.dismissProgressBar();
                     }
                 } else {
-                    vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, false, false);
+                    if (permanente) {
+                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, true, false);
+                    } else {
+                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, false, false);
+                    }
                 }
             }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
