@@ -513,4 +513,5 @@
     <string name="tem_cert_elim_vds">Tem certeza que quer eliminar permanentemente  todas as vendas da lixeira?</string>
     <string name="tem_cert_elim_pds">Tem certeza que quer eliminar permanentemente  todos os produtos da lixeira?</string>
     <string name="tem_cert_elim_cts">Tem certeza que quer eliminar permanentemente  todas as categorias da lixeira?</string>
+    <string name="lx_vz">Lixeira vazia</string>
 </resources>

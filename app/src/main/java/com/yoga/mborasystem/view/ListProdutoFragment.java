@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
@@ -41,6 +42,7 @@ import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 
 public class ListProdutoFragment extends Fragment {
 
+    private boolean vazio;
     private Bundle bundle;
     private Long idcategoria;
     private String categoria;
@@ -91,6 +93,7 @@ public class ListProdutoFragment extends Fragment {
             binding.chipQuantidadeProduto.setText(produtos.size() + "");
             adapter.clear();
             if (produtos.isEmpty()) {
+                vazio = true;
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
             } else {
                 for (Produto produto : produtos) {
@@ -208,7 +211,11 @@ public class ListProdutoFragment extends Fragment {
                 scanearCodigoQr();
                 break;
             case R.id.btnEliminarTodosLixo:
-                dialogEliminarTodosProdutosLixeira(getString(R.string.tem_cert_elim_pds));
+                if (vazio) {
+                    Snackbar.make(binding.mySwipeRefreshLayout,getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
+                } else {
+                    dialogEliminarTodosProdutosLixeira(getString(R.string.tem_cert_elim_pds));
+                }
                 break;
             default:
                 break;

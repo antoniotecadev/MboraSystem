@@ -59,6 +59,7 @@ import java.util.Objects;
 
 public class VendaFragment extends Fragment {
 
+    private boolean vazio;
     private String data = "";
     private GroupAdapter adapter;
     private StringBuilder dataBuilder;
@@ -147,6 +148,7 @@ public class VendaFragment extends Fragment {
             binding.chipQuantVenda.setText(String.valueOf(vendas.size()));
             adapter.clear();
             if (vendas.isEmpty()) {
+                vazio = true;
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.venda_nao_encontrada);
             } else {
                 for (Venda venda : vendas)
@@ -440,7 +442,7 @@ public class VendaFragment extends Fragment {
     @SuppressLint("NonConstantResourceId")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean  onOptionsItemSelected(MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         switch (item.getItemId()) {
             case R.id.btnScannerBack:
@@ -458,7 +460,11 @@ public class VendaFragment extends Fragment {
                 Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
                 break;
             case R.id.btnEliminarTodosLixo:
-                dialogEliminarTodasVendasLixeira(getString(R.string.tem_cert_elim_vds));
+                if (vazio) {
+                    Snackbar.make(binding.myCoordinatorLayout,getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
+                } else {
+                    dialogEliminarTodasVendasLixeira(getString(R.string.tem_cert_elim_vds));
+                }
                 break;
             default:
                 break;

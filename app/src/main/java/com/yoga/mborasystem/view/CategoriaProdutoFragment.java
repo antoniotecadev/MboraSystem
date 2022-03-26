@@ -32,6 +32,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -57,6 +58,7 @@ import java.util.Random;
 
 public class CategoriaProdutoFragment extends Fragment {
 
+    private boolean vazio;
     private Random random;
     private Bundle bundle;
     private StringBuilder data;
@@ -101,6 +103,7 @@ public class CategoriaProdutoFragment extends Fragment {
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
             adapter.clear();
             if (categorias.isEmpty()) {
+                vazio = true;
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada);
             } else {
                 stringList.clear();
@@ -229,7 +232,11 @@ public class CategoriaProdutoFragment extends Fragment {
                 exportarImportar(Ultilitario.IMPORTAR_CATEGORIA);
                 break;
             case R.id.btnEliminarTodosLixo:
-                dialogEliminarTodasCategoriasLixeira(getString(R.string.tem_cert_elim_cts));
+                if (vazio) {
+                    Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
+                } else {
+                    dialogEliminarTodasCategoriasLixeira(getString(R.string.tem_cert_elim_cts));
+                }
                 break;
             default:
                 break;
