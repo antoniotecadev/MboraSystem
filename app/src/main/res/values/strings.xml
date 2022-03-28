@@ -518,4 +518,5 @@
     <string name="rest_tdas_vds">Restaurar todas vendas</string>
     <string name="vends_rests">Vendas restauradas</string>
     <string name="rest_vds">Restaurar vendas</string>
+    <string name="vend_env_lx">Venda enviada para lixeira</string>
 </resources>
