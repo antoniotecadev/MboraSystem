@@ -84,7 +84,7 @@ public class ListProdutoFragment extends Fragment {
 
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.prod) + ")");
-            binding.btnCriarProdutoFragment.setVisibility(View.INVISIBLE);
+            binding.btnCriarProdutoFragment.setVisibility(View.GONE);
         }
 
 
