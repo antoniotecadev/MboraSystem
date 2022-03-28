@@ -103,7 +103,7 @@ public class VendaFragment extends Fragment {
 
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.venda) + ")");
-            binding.bottomNav.setVisibility(View.INVISIBLE);
+            binding.bottomNav.setVisibility(View.GONE);
         }
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
             MainActivity.getProgressBar();
