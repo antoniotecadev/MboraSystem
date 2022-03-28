@@ -202,9 +202,9 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarCategoria(Categoria cat, boolean lx, boolean eliminarTodasLixeira) {
+    public void eliminarCategoria(Categoria cat, boolean isLixeira, boolean eliminarTodasLixeira) {
         MainActivity.getProgressBar();
-        Completable.fromAction(() -> categoriaRepository.delete(cat, lx, eliminarTodasLixeira))
+        Completable.fromAction(() -> categoriaRepository.delete(cat, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -216,8 +216,12 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.cts_elims) : getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
-                        if (!lx) {
+                        if (!isLixeira || eliminarTodasLixeira) {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.cts_elims) : getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
+                        } else {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_env_lx), R.drawable.ic_toast_feito);
+                        }
+                        if (!isLixeira) {
                             consultarCategorias(null, true);
                         }
                     }
@@ -226,7 +230,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_eliminada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        if (!lx) {
+                        if (!isLixeira) {
                             consultarCategorias(null, true);
                         }
                     }

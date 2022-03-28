@@ -524,4 +524,5 @@
     <string name="prods_rests">Produtos restaurados</string>
     <string name="rest_tdos_prods">Restaurar todos produtos</string>
     <string name="rest_pds">Restaurar Produtos</string>
+    <string name="cat_env_lx">Categoria enviada para lixeira</string>
 </resources>
