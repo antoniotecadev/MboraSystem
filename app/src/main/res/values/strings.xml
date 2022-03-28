@@ -532,4 +532,5 @@
     <string name="senha_dif">Senha diferente</string>
     <string name="sen_alt">Senha alterada</string>
     <string name="sen_n_alt">Senha não alterada</string>
+    <string name="nome_estab">Nome do estabelecimento</string>
 </resources>
