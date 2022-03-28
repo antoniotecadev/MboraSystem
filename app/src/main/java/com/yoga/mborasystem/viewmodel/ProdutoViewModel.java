@@ -553,9 +553,9 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void restaurarProduto(int estado, long idproduto) {
+    public void restaurarProduto(int estado, long idproduto, boolean todosProdutoss) {
         MainActivity.dismissProgressBar();
-        Completable.fromAction(() -> produtoRepository.restaurarCategoria(estado, idproduto))
+        Completable.fromAction(() -> produtoRepository.restaurarProduto(estado, idproduto, todosProdutoss))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -567,8 +567,13 @@ public class ProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_rest), R.drawable.ic_toast_feito);
-                        consultarProdutos(0, false, null, true);
+                        if (todosProdutoss) {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prods_rests), R.drawable.ic_toast_feito);
+                            consultarProdutos(0, false, null, true);
+                        } else {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_rest), R.drawable.ic_toast_feito);
+                            consultarProdutos(0, false, null, true);
+                        }
                     }
 
                     @Override

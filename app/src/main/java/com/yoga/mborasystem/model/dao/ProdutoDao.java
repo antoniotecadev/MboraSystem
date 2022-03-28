@@ -52,7 +52,10 @@ public interface ProdutoDao {
     Flowable<List<Produto>> searchProdutosLixeira(String search);
 
     @Query("UPDATE produtos SET estado = :est WHERE id = :id")
-    void restaurarCategoria(int est, long id);
+    void restaurarProduto(int est, long id);
+
+    @Query("UPDATE produtos SET estado = :est")
+    void restaurarTodosProdutos(int est);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd);

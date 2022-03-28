@@ -72,8 +72,12 @@ public class ProdutoRepository {
         }
     }
 
-    public void restaurarCategoria(int estado, long idproduto) {
-        produtoDao.restaurarCategoria(estado, idproduto);
+    public void restaurarProduto(int estado, long idproduto, boolean todosProdutoss) {
+        if (todosProdutoss) {
+            produtoDao.restaurarTodosProdutos(estado);
+        } else {
+            produtoDao.restaurarProduto(estado, idproduto);
+        }
     }
 
     public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd) {

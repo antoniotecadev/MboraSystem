@@ -347,6 +347,7 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         if (todasVendas) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vends_rests), R.drawable.ic_toast_feito);
                             consultarVendas(null, 0, false, 0, true);
@@ -354,7 +355,6 @@ public class VendaViewModel extends AndroidViewModel {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_rest), R.drawable.ic_toast_feito);
                             consultarVendas(null, 0, false, 0, true);
                         }
-                        MainActivity.dismissProgressBar();
                     }
 
                     @Override

@@ -96,6 +96,7 @@ public class ListProdutoFragment extends Fragment {
                 vazio = true;
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
             } else {
+                vazio = false;
                 for (Produto produto : produtos) {
                     adapter.add(new ProdutoListPageAdapter(produto, getContext()));
                 }
@@ -211,11 +212,10 @@ public class ListProdutoFragment extends Fragment {
                 scanearCodigoQr();
                 break;
             case R.id.btnEliminarTodosLixo:
-                if (vazio) {
-                    Snackbar.make(binding.mySwipeRefreshLayout,getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
-                } else {
-                    dialogEliminarTodosProdutosLixeira(getString(R.string.tem_cert_elim_pds));
-                }
+                dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.elim_pds), getString(R.string.tem_cert_elim_pds), true);
+                break;
+            case R.id.btnRestaurarTodosLixo:
+                dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.rest_pds), getString(R.string.rest_tdos_prods), false);
                 break;
             default:
                 break;
@@ -223,13 +223,21 @@ public class ListProdutoFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void dialogEliminarTodosProdutosLixeira(String msg) {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.elim_pds))
-                .setMessage(msg)
-                .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(null, false, null, true))
-                .show();
+    private void dialogEliminarReataurarTodasProdutosLixeira(String titulo, String msg, boolean isEliminar) {
+        if (vazio) {
+            Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+            alert.setTitle(titulo);
+            alert.setMessage(msg);
+            alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
+            if (isEliminar) {
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(null, false, null, true));
+            } else {
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, 0, true));
+            }
+            alert.show();
+        }
     }
 
     public class ProdutoListPageAdapter extends Item<GroupieViewHolder> {
@@ -296,11 +304,11 @@ public class ListProdutoFragment extends Fragment {
                         return false;
                     });
                     menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                        caixaDialogo(produto,getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
+                        caixaDialogo(produto, getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
                         return false;
                     });
                     menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                        caixaDialogo(produto,getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
+                        caixaDialogo(produto, getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
                         return false;
                     });
                 });
@@ -319,7 +327,7 @@ public class ListProdutoFragment extends Fragment {
             new AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.rest) + " (" + produto.getNome() + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, produto.getId()))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, produto.getId(), false))
                     .show();
         }
 

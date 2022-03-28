@@ -31,4 +31,10 @@
         android:title="@string/elim_tds"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/btnRestaurarTodosLixo"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="@string/rest_tdos"
+        app:showAsAction="ifRoom|collapseActionView" />
+
 </menu>
