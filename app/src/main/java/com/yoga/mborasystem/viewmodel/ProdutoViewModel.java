@@ -192,9 +192,9 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarProduto(Produto produto, boolean lx, Dialog dialog, boolean eliminarTodasLixeira) {
+    public void eliminarProduto(Produto produto, boolean isLixeira, Dialog dialog, boolean eliminarTodasLixeira) {
         MainActivity.getProgressBar();
-        Completable.fromAction(() -> produtoRepository.delete(produto, lx, eliminarTodasLixeira))
+        Completable.fromAction(() -> produtoRepository.delete(produto, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -205,12 +205,16 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira? getApplication().getString(R.string.pds_elim) : getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
+                        if (!isLixeira || eliminarTodasLixeira) {
+                            MainActivity.dismissProgressBar();
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.pds_elim) : getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
+                        } else {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_env_lx), R.drawable.ic_toast_feito);
+                        }
                         if (dialog != null) {
                             dialog.dismiss();
                         }
-                        if (lx) {
+                        if (isLixeira) {
                             consultarProdutos(produto.getIdcategoria(), false, null, false);
                         }
                     }
@@ -219,7 +223,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_eliminado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        if (lx) {
+                        if (isLixeira) {
                             consultarProdutos(produto.getIdcategoria(), false, null, false);
                         }
                     }
