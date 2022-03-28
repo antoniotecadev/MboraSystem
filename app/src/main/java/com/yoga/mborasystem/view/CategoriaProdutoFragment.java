@@ -93,7 +93,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.cat) + ")");
-            binding.btncriarCategoriaDialog.setVisibility(View.INVISIBLE);
+            binding.btncriarCategoriaDialog.setVisibility(View.GONE);
         }
         binding.btncriarCategoriaDialog.setOnClickListener(v -> criarCategoria());
         binding.recyclerViewCategoriaProduto.setAdapter(adapter);
