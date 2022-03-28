@@ -528,4 +528,8 @@
     <string name="rest_cts">Restaurar Categorias</string>
     <string name="rest_tdas_cats">Restaurar todas categorias</string>
     <string name="cats_rests">Categorias restauradas</string>
+    <string name="alt_senha">Alterar senha</string>
+    <string name="senha_dif">Senha diferente</string>
+    <string name="sen_alt">Senha alterada</string>
+    <string name="sen_n_alt">Senha não alterada</string>
 </resources>

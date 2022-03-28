@@ -7,6 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogSenhaBinding;
@@ -18,12 +24,6 @@ import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 
 public class DialogSenha extends DialogFragment {
 
@@ -68,10 +68,10 @@ public class DialogSenha extends DialogFragment {
         binding.btnEntrar.setOnClickListener(v -> {
             if (isCampoVazio(Objects.requireNonNull(binding.senha.getText()).toString()) || letraNumero.matcher(binding.senha.getText().toString()).find()) {
                 binding.senha.requestFocus();
-                binding.senha.setError(getString(R.string.senha_invalida));
+                binding.textInputSenha.setError(getString(R.string.senha_invalida));
             } else {
                 MainActivity.getProgressBar();
-                clienteViewModel.logar(binding.senha);
+                clienteViewModel.logar(binding.senha, binding.textInputSenha );
             }
         });
 

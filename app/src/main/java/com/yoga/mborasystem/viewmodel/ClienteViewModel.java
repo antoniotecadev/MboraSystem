@@ -16,6 +16,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -137,7 +138,7 @@ public class ClienteViewModel extends AndroidViewModel {
             senhaNovamente.setError(getApplication().getString(R.string.senha_invalida));
         } else if (!senha.getText().toString().equalsIgnoreCase(senhaNovamente.getText().toString())) {
             senhaNovamente.requestFocus();
-            senhaNovamente.setError(getApplication().getString(R.string.pin_diferente));
+            senhaNovamente.setError(getApplication().getString(R.string.senha_dif));
         } else if (isCampoVazio(Objects.requireNonNull(codigoEquipa.getText()).toString()) || numero.matcher(codigoEquipa.getText().toString()).find()) {
             codigoEquipa.requestFocus();
             codigoEquipa.setError(getApplication().getString(R.string.cod_eqp_inv));
@@ -166,6 +167,49 @@ public class ClienteViewModel extends AndroidViewModel {
             }
         }
 
+    }
+
+    public void alterarSenha(TextInputEditText senha, TextInputEditText senhaNovamente) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (isCampoVazio(Objects.requireNonNull(senha.getText()).toString()) || letraNumero.matcher(senha.getText().toString()).find()) {
+            senha.requestFocus();
+            senha.setError(getApplication().getString(R.string.senha_invalida));
+        } else if (isCampoVazio(Objects.requireNonNull(senhaNovamente.getText()).toString()) || letraNumero.matcher(senhaNovamente.getText().toString()).find()) {
+            senhaNovamente.requestFocus();
+            senhaNovamente.setError(getApplication().getString(R.string.senha_invalida));
+        } else if (!senha.getText().toString().equalsIgnoreCase(senhaNovamente.getText().toString())) {
+            senhaNovamente.requestFocus();
+            senhaNovamente.setError(getApplication().getString(R.string.senha_dif));
+        } else {
+            MainActivity.getProgressBar();
+            cliente.setId(1);
+            cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
+            alterarSenha(cliente);
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    public void alterarSenha(Cliente cliente) {
+        Completable.fromAction(() -> clienteRepository.alterarSenha(cliente))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.sen_alt), R.drawable.ic_toast_feito);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.sen_n_alt) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
     }
 
     @SuppressLint("CheckResult")
@@ -266,7 +310,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void logar(TextInputEditText senha) {
+    public void logar(TextInputEditText senha, TextInputLayout senhaLayout) {
         clienteRepository.clienteExiste()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -283,14 +327,14 @@ public class ClienteViewModel extends AndroidViewModel {
                                 getClienteMutableLiveData().setValue(cliente);
                             } else {
                                 MainActivity.dismissProgressBar();
-                                senha.setError(getApplication().getString(R.string.senha_incorreta));
+                                senhaLayout.setError(getApplication().getString(R.string.senha_incorreta));
                             }
                         } catch (NoSuchAlgorithmException e) {
                             e.printStackTrace();
-                            senha.setError(e.getMessage());
+                            senhaLayout.setError(e.getMessage());
                         } catch (InvalidKeySpecException e) {
                             e.printStackTrace();
-                            senha.setError(e.getMessage());
+                            senhaLayout.setError(e.getMessage());
                         } finally {
                             MainActivity.dismissProgressBar();
                         }
@@ -299,7 +343,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        senha.setError("Login\n: " + e.getMessage());
+                        senhaLayout.setError("Login\n: " + e.getMessage());
                     }
                 });
     }
@@ -339,7 +383,7 @@ public class ClienteViewModel extends AndroidViewModel {
         }
     }
 
-    private void  eliminarParceiro(Cliente cliente) {
+    private void eliminarParceiro(Cliente cliente) {
         Completable.fromAction(() -> clienteRepository.delete(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

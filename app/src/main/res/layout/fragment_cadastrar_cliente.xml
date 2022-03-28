@@ -301,6 +301,16 @@
                 android:layout_marginTop="10dp"
                 android:background="?android:attr/listDivider" />
 
+            <TextView
+                android:id="@+id/textSenha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margin_top"
+                android:text="@string/alt_senha"
+                android:textColor="@color/black"
+                android:visibility="gone"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputSenha"
                 android:layout_width="match_parent"
@@ -348,6 +358,17 @@
                     android:text="123456" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/buttonAlterarSenha"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:enabled="false"
+                android:text="@string/ok"
+                app:backgroundTint="@android:color/holo_green_light"
+                android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"

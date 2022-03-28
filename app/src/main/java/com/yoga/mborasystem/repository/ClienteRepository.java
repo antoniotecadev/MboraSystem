@@ -34,4 +34,8 @@ public class ClienteRepository {
     public void delete(Cliente cliente) {
         clienteDao.delete(cliente);
     }
+
+    public void alterarSenha(Cliente cliente) {
+        clienteDao.alterarSenha(cliente.getId(), cliente.getSenha());
+    }
 }

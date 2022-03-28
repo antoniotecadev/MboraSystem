@@ -4,24 +4,33 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.ClienteViewModel;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 public class DialogAlterarCliente extends DialogFragment {
 
     private AlertDialog dialog;
+    private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
+        clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
 
         binding = FragmentCadastrarClienteBinding.inflate(LayoutInflater.from(getContext()));
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
@@ -34,9 +43,11 @@ public class DialogAlterarCliente extends DialogFragment {
         binding.buttonCriarConta.setVisibility(View.GONE);
         binding.buttonCancelar.setVisibility(View.VISIBLE);
         binding.editTextIMEI.setVisibility(View.VISIBLE);
+        binding.textSenha.setVisibility(View.VISIBLE);
+        binding.buttonAlterarSenha.setVisibility(View.VISIBLE);
+        binding.buttonAlterarSenha.setEnabled(true);
+        binding.textEquipa.setVisibility(View.GONE);
         binding.editTextCodigoEquipa.setVisibility(View.GONE);
-        binding.textInputSenha.setVisibility(View.GONE);
-        binding.textInputSenhaNovamente.setVisibility(View.GONE);
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());
 
         if (getArguments() != null) {
@@ -71,6 +82,18 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextRua.setEnabled(false);
             binding.editTextIMEI.setEnabled(false);
         }
+
+        binding.buttonAlterarSenha.setOnClickListener(v-> {
+            try {
+                clienteViewModel.alterarSenha(binding.editTextSenha, binding.editTextSenhaNovamente);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
         return dialog;
     }
