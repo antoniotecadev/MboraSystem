@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
-import com.yoga.mborasystem.model.entidade.Cliente;
-import com.yoga.mborasystem.util.Ultilitario;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
+import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.util.Ultilitario;
 
 public class DialogAlterarCliente extends DialogFragment {
 
@@ -34,6 +34,7 @@ public class DialogAlterarCliente extends DialogFragment {
         binding.buttonCriarConta.setVisibility(View.GONE);
         binding.buttonCancelar.setVisibility(View.VISIBLE);
         binding.editTextIMEI.setVisibility(View.VISIBLE);
+        binding.editTextCodigoEquipa.setVisibility(View.GONE);
         binding.textInputSenha.setVisibility(View.GONE);
         binding.textInputSenhaNovamente.setVisibility(View.GONE);
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());
