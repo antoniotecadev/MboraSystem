@@ -106,6 +106,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 vazio = true;
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada);
             } else {
+                vazio = false;
                 stringList.clear();
                 random = new Random();
                 for (Categoria categoria : categorias) {
@@ -232,11 +233,10 @@ public class CategoriaProdutoFragment extends Fragment {
                 exportarImportar(Ultilitario.IMPORTAR_CATEGORIA);
                 break;
             case R.id.btnEliminarTodosLixo:
-                if (vazio) {
-                    Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
-                } else {
-                    dialogEliminarTodasCategoriasLixeira(getString(R.string.tem_cert_elim_cts));
-                }
+                dialogEliminarReataurarTodasCategoriasLixeira(getString(R.string.elim_cts), getString(R.string.tem_cert_elim_cts), true);
+                break;
+            case R.id.btnRestaurarTodosLixo:
+                dialogEliminarReataurarTodasCategoriasLixeira(getString(R.string.rest_cts), getString(R.string.rest_tdas_cats), false);
                 break;
             default:
                 break;
@@ -245,13 +245,21 @@ public class CategoriaProdutoFragment extends Fragment {
                 || super.onOptionsItemSelected(item);
     }
 
-    private void dialogEliminarTodasCategoriasLixeira(String msg) {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.elim_cts))
-                .setMessage(msg)
-                .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(null, false, true))
-                .show();
+    private void dialogEliminarReataurarTodasCategoriasLixeira(String titulo, String msg, boolean isEliminar) {
+        if (vazio) {
+            Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+            alert.setTitle(titulo);
+            alert.setMessage(msg);
+            alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
+            if (isEliminar) {
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(null, false, true));
+            }else{
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, 0, true));
+            }
+            alert.show();
+        }
     }
 
     class ItemCategoria extends Item<GroupieViewHolder> {
@@ -379,7 +387,7 @@ public class CategoriaProdutoFragment extends Fragment {
             new AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.rest) + " (" + categoria.getCategoria() + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, categoria.getId()))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, categoria.getId(), false))
                     .show();
         }
     }

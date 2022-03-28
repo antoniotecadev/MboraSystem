@@ -47,8 +47,12 @@ public class CategoriaRepository {
         }
     }
 
-    public void restaurarCategoria(int estado, long idcategoria) {
-        categoriaDao.restaurarCategoria(estado, idcategoria);
+    public void restaurarCategoria(int estado, long idcategoria, boolean todasCategorias) {
+        if (todasCategorias) {
+            categoriaDao.restaurarCategoria(estado);
+        } else {
+            categoriaDao.restaurarCategoria(estado, idcategoria);
+        }
     }
 
     public Flowable<List<Categoria>> getCategorias(boolean isLixeira) {

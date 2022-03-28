@@ -44,4 +44,7 @@ public interface CategoriaDao {
     @Query("UPDATE categorias SET estado = :est WHERE id = :id")
     void restaurarCategoria(int est, long id);
 
+    @Query("UPDATE categorias SET estado = :est")
+    void restaurarCategoria(int est);
+
 }

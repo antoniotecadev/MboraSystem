@@ -174,9 +174,9 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void restaurarCategoria(int estado, long idcategoria) {
+    public void restaurarCategoria(int estado, long idcategoria, boolean todasCategorias) {
         MainActivity.getProgressBar();
-        Completable.fromAction(() -> categoriaRepository.restaurarCategoria(estado, idcategoria))
+        Completable.fromAction(() -> categoriaRepository.restaurarCategoria(estado, idcategoria, todasCategorias))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -188,8 +188,13 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_rest), R.drawable.ic_toast_feito);
-                        consultarCategorias(null, true);
+                        if (todasCategorias) {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cats_rests), R.drawable.ic_toast_feito);
+                            consultarCategorias(null, true);
+                        } else {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_rest), R.drawable.ic_toast_feito);
+                            consultarCategorias(null, true);
+                        }
                     }
 
                     @Override
