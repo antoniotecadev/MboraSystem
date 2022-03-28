@@ -205,8 +205,8 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        MainActivity.dismissProgressBar();
                         if (!isLixeira || eliminarTodasLixeira) {
-                            MainActivity.dismissProgressBar();
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.pds_elim) : getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_env_lx), R.drawable.ic_toast_feito);
