@@ -107,6 +107,9 @@ public abstract class VendaDao {
     @Query("UPDATE vendas SET estado = :est WHERE id = :id")
     public abstract void restaurarVendas(int est, long id);
 
+    @Query("UPDATE vendas SET estado = :est")
+    public abstract void restaurarTodasVendas(int est);
+
     @Query("SELECT id, sum(preco_total) AS preco_total" +
             ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas WHERE data_cria = :data GROUP BY nome_produto ORDER BY sum(quantidade) DESC LIMIT 3")
     public abstract LiveData<List<ProdutoVenda>> getProdutoMaisVendido(String data);

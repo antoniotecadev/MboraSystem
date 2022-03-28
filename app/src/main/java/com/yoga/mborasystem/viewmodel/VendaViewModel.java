@@ -318,7 +318,7 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
                     }
 
                     @Override
@@ -330,9 +330,9 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void restaurarVenda(int estado, long idvenda) {
+    public void restaurarVenda(int estado, long idvenda, boolean todasVendas) {
         MainActivity.getProgressBar();
-        Completable.fromAction(() -> vendaRepository.restaurarVenda(estado, idvenda))
+        Completable.fromAction(() -> vendaRepository.restaurarVenda(estado, idvenda, todasVendas))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -343,8 +343,13 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_rest), R.drawable.ic_toast_feito);
-                        consultarVendas(null, 0, false, 0, true);
+                        if (todasVendas) {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vends_rests), R.drawable.ic_toast_feito);
+                            consultarVendas(null, 0, false, 0, true);
+                        } else {
+                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_rest), R.drawable.ic_toast_feito);
+                            consultarVendas(null, 0, false, 0, true);
+                        }
                         MainActivity.dismissProgressBar();
                     }
 
@@ -357,10 +362,11 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    public LiveData<List<ProdutoVenda>> getProdutoMaisVendido(String data){
+    public LiveData<List<ProdutoVenda>> getProdutoMaisVendido(String data) {
         return vendaRepository.produtoMaisVendido(data);
     }
-    public LiveData<List<ProdutoVenda>> getProdutoMenosVendido(String data){
+
+    public LiveData<List<ProdutoVenda>> getProdutoMenosVendido(String data) {
         return vendaRepository.produtoMenosVendido(data);
     }
 

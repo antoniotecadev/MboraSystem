@@ -65,7 +65,7 @@ public class VendaRepository {
 
     public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
         if (eliminarTodasLixeira) {
-                vendaDao.deleteAllVendaLixeira(3);
+            vendaDao.deleteAllVendaLixeira(3);
         } else {
             if (isLixeira) {
                 vendaDao.deleteVendas(venda);
@@ -75,8 +75,12 @@ public class VendaRepository {
         }
     }
 
-    public void restaurarVenda(int estado, long idvenda) {
-        vendaDao.restaurarVenda(estado, idvenda);
+    public void restaurarVenda(int estado, long idvenda, boolean todasVendas) {
+        if (todasVendas) {
+            vendaDao.restaurarTodasVendas(estado);
+        } else {
+            vendaDao.restaurarVenda(estado, idvenda);
+        }
     }
 
     public LiveData<List<ProdutoVenda>> produtoMaisVendido(String data) {

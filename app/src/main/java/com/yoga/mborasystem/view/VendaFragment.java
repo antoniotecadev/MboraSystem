@@ -151,6 +151,7 @@ public class VendaFragment extends Fragment {
                 vazio = true;
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.venda_nao_encontrada);
             } else {
+                vazio = false;
                 for (Venda venda : vendas)
                     adapter.add(new ItemVenda(venda));
             }
@@ -324,7 +325,7 @@ public class VendaFragment extends Fragment {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.rest) + " (" + venda.getCodigo_qr() + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.restaurarVenda(Ultilitario.UM, venda.getId()))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.restaurarVenda(Ultilitario.UM, venda.getId(), false))
                     .show();
         }
 
@@ -391,6 +392,7 @@ public class VendaFragment extends Fragment {
             menu.findItem(R.id.importarvenda).setVisible(false);
         } else {
             menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
+            menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
         }
 
         if (getArguments() != null) {
@@ -442,7 +444,7 @@ public class VendaFragment extends Fragment {
     @SuppressLint("NonConstantResourceId")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public boolean  onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         switch (item.getItemId()) {
             case R.id.btnScannerBack:
@@ -460,11 +462,10 @@ public class VendaFragment extends Fragment {
                 Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
                 break;
             case R.id.btnEliminarTodosLixo:
-                if (vazio) {
-                    Snackbar.make(binding.myCoordinatorLayout,getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
-                } else {
-                    dialogEliminarTodasVendasLixeira(getString(R.string.tem_cert_elim_vds));
-                }
+                dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
+                break;
+            case R.id.btnRestaurarTodosLixo:
+                dialogEliminarReataurarTodasVendasLixeira(getString(R.string.rest_vds), getString(R.string.rest_tdas_vds), false);
                 break;
             default:
                 break;
@@ -478,13 +479,21 @@ public class VendaFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(direction);
     }
 
-    private void dialogEliminarTodasVendasLixeira(String msg) {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.elim_vends))
-                .setMessage(msg)
-                .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(0, null, null, false, true))
-                .show();
+    private void dialogEliminarReataurarTodasVendasLixeira(String titulo, String msg, boolean isEliminar) {
+        if (vazio) {
+            Snackbar.make(binding.myCoordinatorLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+            alert.setTitle(titulo);
+            alert.setMessage(msg);
+            alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
+            if (isEliminar) {
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(0, null, null, false, true));
+            } else {
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.restaurarVenda(Ultilitario.UM, 0, true));
+            }
+            alert.show();
+        }
     }
 
     @Override
