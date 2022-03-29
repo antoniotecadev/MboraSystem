@@ -237,7 +237,15 @@ public class ListProdutoFragment extends Fragment {
             } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, 0, true));
             }
-            alert.show();
+            if (getArguments() != null) {
+                if (isMaster) {
+                    alert.show();
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.nao_alt_ope), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
