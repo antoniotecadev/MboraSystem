@@ -174,6 +174,7 @@ public class CategoriaProdutoFragment extends Fragment {
             menu.findItem(R.id.exinpCategoria).setVisible(false);
         } else {
             menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
+            menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
         }
         SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
