@@ -256,10 +256,18 @@ public class CategoriaProdutoFragment extends Fragment {
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
             if (isEliminar) {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(null, false, true));
-            }else{
+            } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, 0, true));
             }
-            alert.show();
+            if (getArguments() != null) {
+                if (isMaster) {
+                    alert.show();
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.nao_alt_ope), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
