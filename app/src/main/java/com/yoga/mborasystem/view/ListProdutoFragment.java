@@ -304,14 +304,20 @@ public class ListProdutoFragment extends Fragment {
                         entrarProduto();
                         return false;
                     });
-                    menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                        caixaDialogo(produto, getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
-                        return false;
-                    });
-                    menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                        caixaDialogo(produto, getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
-                        return false;
-                    });
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master") || isMaster) {
+                            menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(produto, getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
+                                return false;
+                            });
+                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(produto, getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
+                                return false;
+                            });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    }
                 });
                 entrarProduto.setOnClickListener(v -> entrarProduto());
             }
