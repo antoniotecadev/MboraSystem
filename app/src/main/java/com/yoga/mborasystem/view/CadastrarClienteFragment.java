@@ -65,54 +65,54 @@ public class CadastrarClienteFragment extends Fragment {
         binding.spinnerMunicipios.setAdapter(adapter);
     }
 
-    private void spinnerBairros() {
-        MainActivity.getProgressBar();
-        String URL = "http://192.168.18.3/mborasystem-admin/public/api/bairros";
-        ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
-        Ion.with(requireActivity())
-                .load(URL)
-                .asJsonArray()
-                .setCallback((e, jsonElements) -> {
-                    try {
-                        for (int i = 0; i < jsonElements.size(); i++) {
-                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
-                            bairros.add("");
-                            bairros.add(parceiro.get("mr_bt").getAsString());
-                        }
-                    } catch (Exception ex) {
-                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
-                    } finally {
-                        MainActivity.dismissProgressBar();
-                    }
-                });
-        bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerBairros.setAdapter(bairros);
-    }
+//    private void spinnerBairros() {
+//        MainActivity.getProgressBar();
+//        String URL = "http://192.168.18.3/mborasystem-admin/public/api/luanda/bairros";
+//        ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
+//        Ion.with(requireActivity())
+//                .load(URL)
+//                .asJsonArray()
+//                .setCallback((e, jsonElements) -> {
+//                    try {
+//                        bairros.add("");
+//                        for (int i = 0; i < jsonElements.size(); i++) {
+//                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
+//                            bairros.add(parceiro.get("br").getAsString());
+//                        }
+//                    } catch (Exception ex) {
+//                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+//                    } finally {
+//                        MainActivity.dismissProgressBar();
+//                    }
+//                });
+//        bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        binding.spinnerBairros.setAdapter(bairros);
+//    }
 
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         spinnerProvincias();
         spinnerMunicipios();
-        if (isNetworkConnected(requireContext())) {
-            if (internetIsConnected()) {
-                spinnerBairros();
-            } else {
-                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
-            }
-        } else {
-            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
-        }
+//        if (isNetworkConnected(requireContext())) {
+//            if (internetIsConnected()) {
+//                spinnerBairros();
+//            } else {
+//                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+//            }
+//        } else {
+//            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+//        }
 
-        binding.spinnerBairros.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                binding.editTextBairro.setText(parent.getItemAtPosition(position).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+//        binding.spinnerBairros.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                binding.editTextBairro.setText(parent.getItemAtPosition(position).toString());
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
 
         binding.buttonCriarConta.setOnClickListener(v -> {
             try {

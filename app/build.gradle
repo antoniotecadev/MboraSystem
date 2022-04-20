@@ -5,10 +5,10 @@ plugins {
 android {
     signingConfigs {
         debug {
-            storeFile file('C:\\repositoriochave\\keystoreyoga.keystore')
-            keyAlias 'keystoreyoga'
-            storePassword 'delfiaimetro1997'
-            keyPassword 'engenheiro19teca97'
+//            storeFile file('C:\\repositoriochave\\keystoreyoga.keystore')
+//            keyAlias 'keystoreyoga'
+//            storePassword 'delfiaimetro1997'
+//            keyPassword 'engenheiro19teca97'
         }
     }
     compileSdkVersion 30
