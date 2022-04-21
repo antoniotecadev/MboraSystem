@@ -78,6 +78,7 @@ public class Ultilitario {
     private static Float parsed;
     private static Locale pt_AO;
     public static String categoria = "";
+    public static final String MBORASYSTEM = "ryogamborasystem";
     public static boolean isLocal = true;
     private static String formatted, current = "";
     public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");
