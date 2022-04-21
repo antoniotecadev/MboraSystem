@@ -50,8 +50,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/nome"
-                    android:inputType="textPersonName"
-                    android:text="Antonio " />
+                    android:inputType="textPersonName" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,8 +70,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/Sobre_Nome"
-                    android:inputType="textPersonName"
-                    android:text="Teca Enge" />
+                    android:inputType="textPersonName"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +91,6 @@
                     android:ems="10"
                     android:hint="@string/nifbi"
                     android:inputType="text"
-                    android:text="1456987LA12364"
                     android:textAlignment="center"
                     android:textAllCaps="true" />
 
@@ -115,8 +112,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/Numero_Telefone"
-                    android:inputType="phone"
-                    android:text="987654321" />
+                    android:inputType="phone"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -136,8 +132,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/Numero_Telefone_Alternativo"
-                    android:inputType="phone"
-                    android:text="912345678" />
+                    android:inputType="phone"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -157,8 +152,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/Email"
-                    android:inputType="textEmailAddress"
-                    android:text="antonio@gmail.com" />
+                    android:inputType="textEmailAddress"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -178,8 +172,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/nome_estab"
-                    android:inputType="textPersonName"
-                    android:text="Maliana" />
+                    android:inputType="textPersonName"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -286,12 +279,9 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/rua"
-                    android:inputType="text"
-                    android:text="Predio de ferro" />
+                    android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
             <View
                 android:id="@+id/divider4"
                 android:layout_width="match_parent"
@@ -328,8 +318,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/senha"
-                    android:inputType="textPersonName|text|textPassword"
-                    android:text="123456" />
+                    android:inputType="textPersonName|text|textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -352,11 +341,9 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/repetir_senha"
-                    android:inputType="textPersonName|text|textPassword"
-                    android:text="123456" />
+                    android:inputType="textPersonName|text|textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
             <Button
                 android:id="@+id/buttonAlterarSenha"
                 android:layout_width="match_parent"
@@ -367,7 +354,6 @@
                 android:text="@string/ok"
                 app:backgroundTint="@android:color/holo_green_light"
                 android:visibility="gone"/>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
