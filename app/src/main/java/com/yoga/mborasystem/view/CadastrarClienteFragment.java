@@ -1,9 +1,12 @@
 package com.yoga.mborasystem.view;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,18 +17,30 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
+import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.EventListener;
+import java.util.Random;
+import java.util.function.Consumer;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -37,18 +52,55 @@ import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 public class CadastrarClienteFragment extends Fragment {
 
+    private Query query;
+    private DatabaseReference mDatabase;
     private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
+//        query = FirebaseDatabase.getInstance().getReference("cliente").limitToLast(1);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+//        query.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                if (snapshot.exists()) {
+//                    Cliente cliente = snapshot.getValue(Cliente.class);
+//                    Log.i("cliente", cliente.getData_cria() + "");
+//                } else {
+//                    Toast.makeText(requireActivity(), "Vazio", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(requireActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+
         setHasOptionsMenu(true);
         return criarCliente(inflater, container);
     }
@@ -133,6 +185,15 @@ public class CadastrarClienteFragment extends Fragment {
         Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao -> {
             switch (operacao) {
                 case CRIAR:
+                    try {
+                        writeNewClient(binding);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                        Toast.makeText(requireActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    } catch (InvalidKeySpecException e) {
+                        e.printStackTrace();
+                        Toast.makeText(requireActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                     Ultilitario.dialogConta(getString(R.string.conta_criada), getContext()).show();
                     Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_bloquearFragment);
                     break;
@@ -165,6 +226,30 @@ public class CadastrarClienteFragment extends Fragment {
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
+    }
+
+    public void writeNewClient(FragmentCadastrarClienteBinding binding) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        Cliente cliente = new Cliente();
+
+        cliente.setId(1);
+        cliente.setNome(binding.editTextNome.getText().toString());
+        cliente.setSobrenome(binding.editTextSobreNome.getText().toString());
+        cliente.setNifbi(binding.editTextNif.getText().toString());
+        cliente.setMaster(true);
+        cliente.setTelefone(binding.editTextNumeroTelefone.getText().toString());
+        cliente.setTelefonealternativo(binding.editTextNumeroTelefoneAlternativo.getText().toString());
+        cliente.setEmail(binding.editTextEmail.getText().toString());
+        cliente.setNomeEmpresa(binding.editTextNomeLoja.getText().toString());
+        cliente.setProvincia(binding.spinnerProvincias.getSelectedItem().toString());
+        cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
+        cliente.setBairro(binding.editTextBairro.getText().toString());
+        cliente.setRua(binding.editTextBairro.getText().toString());
+        cliente.setSenha(binding.editTextSenha.getText().toString());
+        cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
+        cliente.setCodigoEquipa(binding.editTextCodigoEquipa.getText().toString());
+        cliente.setData_cria(Ultilitario.getDateCurrent());
+
+        mDatabase.child(cliente.getImei()).setValue(cliente);
     }
 
     @Override

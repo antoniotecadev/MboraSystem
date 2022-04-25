@@ -32,6 +32,7 @@ public class Cliente implements Parcelable {
     private String rua;
     private String imei;
     @Ignore private String codigoEquipa;
+    @Ignore private String data_cria;
 
     protected Cliente(Parcel in) {
         id = in.readLong();
@@ -189,6 +190,14 @@ public class Cliente implements Parcelable {
 
     public void setCodigoEquipa(String codigoEquipa) {
         this.codigoEquipa = codigoEquipa;
+    }
+
+    public String getData_cria() {
+        return data_cria;
+    }
+
+    public void setData_cria(String data_cria) {
+        this.data_cria = data_cria;
     }
 
     @Override
