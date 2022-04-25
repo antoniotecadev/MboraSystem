@@ -11,7 +11,7 @@ android {
 //            keyPassword 'engenheiro19teca97'
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.yoga.mborasystem"
@@ -28,7 +28,7 @@ android {
 
         multiDexEnabled true // métodos
 
-        buildToolsVersion '29.0.2' // codigo de barra
+        buildToolsVersion '30.0.2' // codigo de barra
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -84,7 +84,7 @@ dependencies {
     implementation 'com.github.ybq:android-SpinKit:1.4.0'
 
     //  Component
-    def nav_version = "2.3.3"
+    def nav_version = "2.4.2"
 
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
