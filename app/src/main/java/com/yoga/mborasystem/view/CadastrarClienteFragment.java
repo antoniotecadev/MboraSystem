@@ -101,7 +101,7 @@ public class CadastrarClienteFragment extends Fragment {
 //            }
 //        });
 
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
         return criarCliente(inflater, container);
     }
 
@@ -211,7 +211,7 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_configuracao, menu);
+//        inflater.inflate(R.menu.menu_configuracao, menu);
     }
 
     @Override
