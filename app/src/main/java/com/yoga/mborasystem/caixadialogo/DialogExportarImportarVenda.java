@@ -3,8 +3,6 @@ package com.yoga.mborasystem.caixadialogo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogExportarImportarVendaBinding;
 import com.yoga.mborasystem.util.Event;
@@ -24,7 +22,7 @@ public class DialogExportarImportarVenda extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
-        com.yoga.mborasystem.databinding.DialogExportarImportarVendaBinding binding = DialogExportarImportarVendaBinding.inflate(LayoutInflater.from(getContext()));
+        com.yoga.mborasystem.databinding.DialogExportarImportarVendaBinding binding = DialogExportarImportarVendaBinding.inflate(getLayoutInflater());
 
         long idcliente = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIdcliente();
         long idusuario = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIdusuario();
