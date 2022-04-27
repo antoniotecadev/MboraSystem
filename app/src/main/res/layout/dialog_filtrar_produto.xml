@@ -72,7 +72,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtPrecoProdutoMin"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
@@ -101,7 +101,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtPrecoProdutoMax"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
