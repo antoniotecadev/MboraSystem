@@ -8,10 +8,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -43,13 +45,15 @@ public class DialogCriarProduto extends DialogFragment {
 
     private int preco;
 
+    private IntentIntegrator intentIntegrator;
+
     @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
+        intentIntegrator = new IntentIntegrator(getActivity());
+        binding = DialogCriarProdutoBinding.inflate(getLayoutInflater());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
-        binding = DialogCriarProdutoBinding.inflate(LayoutInflater.from(getContext()));
 
         Ultilitario.addItemOnSpinner(binding.spinnerQuantidade, getContext());
 
@@ -184,11 +188,10 @@ public class DialogCriarProduto extends DialogFragment {
     }
 
     private void scanearCodigoBar(int camera) {
-        new IntentIntegrator(getActivity())
-                .setPrompt(getString(R.string.alinhar_codigo_barra))
-                .setOrientationLocked(false)
-                .setCameraId(camera)
-                .initiateScan();
+        intentIntegrator.setPrompt(getString(R.string.alinhar_codigo_barra));
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setCameraId(camera);
+        zxingActivityResultLauncher.launch(intentIntegrator.createScanIntent());
     }
 
     private void createProduto(long idcategoria) {
@@ -211,6 +214,7 @@ public class DialogCriarProduto extends DialogFragment {
         alert.show();
     }
 
+    @SuppressLint("SetTextI18n")
     private void calularMargemLucro(DialogCriarProdutoBinding b) {
         preco = Ultilitario.removerKZ(b.txtPrecoProduto);
         int quantidade = Integer.parseInt(Objects.requireNonNull(b.txtQuantidadeProduto.getText()).toString());
@@ -267,17 +271,29 @@ public class DialogCriarProduto extends DialogFragment {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if (result != null) {
-                produtoViewModel.codigoBarra(result, binding.txtCodigoBar);
-            } else {
-                super.onActivityResult(requestCode, resultCode, data);
-            }
-        }
-    }
+    ActivityResultLauncher<Intent> zxingActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
+                    produtoViewModel.codigoBarra(r.getContents(), binding.txtCodigoBar);
+                } else {
+                    Toast.makeText(requireActivity(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    /* DEPRECIATE */
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        if (resultCode == Activity.RESULT_OK) {
+//            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//            if (result != null) {
+//                produtoViewModel.codigoBarra(result, binding.txtCodigoBar);
+//            } else {
+//                super.onActivityResult(requestCode, resultCode, data);
+//            }
+//        }
+//    }
 
     @Override
     public void onStart() {

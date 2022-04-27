@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,7 +17,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.zxing.integration.android.IntentResult;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -536,13 +534,8 @@ public class ProdutoViewModel extends AndroidViewModel {
 //    }
 
     @SuppressLint("SetTextI18n")
-    public void codigoBarra(IntentResult result, TextInputEditText codigoBarra) {
-        if (result.getContents() == null) {
-            Toast.makeText(getApplication(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
-        } else {
-            codigoBarra.setText("");
-            codigoBarra.setText("" + result.getContents());
-        }
+    public void codigoBarra(String result, TextInputEditText codigoBarra) {
+        codigoBarra.setText(result);
     }
 
     public void searchProduto(String produto, boolean isLixeira) {
