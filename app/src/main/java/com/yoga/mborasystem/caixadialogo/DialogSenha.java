@@ -3,7 +3,6 @@ package com.yoga.mborasystem.caixadialogo;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -45,7 +44,7 @@ public class DialogSenha extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         us = new Usuario();
-        binding = DialogSenhaBinding.inflate(LayoutInflater.from(getContext()));
+        binding = DialogSenhaBinding.inflate(getLayoutInflater());
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
