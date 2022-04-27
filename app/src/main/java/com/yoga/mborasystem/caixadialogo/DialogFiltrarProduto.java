@@ -2,7 +2,6 @@ package com.yoga.mborasystem.caixadialogo;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -42,7 +41,7 @@ public class DialogFiltrarProduto extends DialogFragment {
         }
 
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
-        binding = DialogFiltrarProdutoBinding.inflate(LayoutInflater.from(getContext()));
+        binding = DialogFiltrarProdutoBinding.inflate(getLayoutInflater());
 
         formatted = NumberFormat.getCurrencyInstance(new Locale("pt", "AO")).format((0));
 
