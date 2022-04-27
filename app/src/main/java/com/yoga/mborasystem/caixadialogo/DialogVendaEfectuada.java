@@ -3,7 +3,6 @@ package com.yoga.mborasystem.caixadialogo;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogVendaEfectuadaBinding;
@@ -31,7 +30,7 @@ public class DialogVendaEfectuada extends DialogFragment {
 
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
 
-        binding = DialogVendaEfectuadaBinding.inflate(LayoutInflater.from(getContext()));
+        binding = DialogVendaEfectuadaBinding.inflate(getLayoutInflater());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(binding.getRoot());
