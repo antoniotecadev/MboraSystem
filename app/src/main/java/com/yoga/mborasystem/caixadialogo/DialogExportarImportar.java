@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -52,7 +51,7 @@ public class DialogExportarImportar extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         data = new StringBuilder();
-        binding = DialogExportarImportarBinding.inflate(LayoutInflater.from(getContext()));
+        binding = DialogExportarImportarBinding.inflate(getLayoutInflater());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
