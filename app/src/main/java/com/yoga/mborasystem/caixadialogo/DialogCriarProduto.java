@@ -221,9 +221,9 @@ public class DialogCriarProduto extends DialogFragment {
         b.textPossivelReceita.setText(Ultilitario.formatPreco(String.valueOf(receita)));
         if (lucro >= Ultilitario.ZERO) {
             b.textPossivelLucro.setText(Ultilitario.formatPreco(String.valueOf(lucro)));
-            b.textPossivelLucro.setTextColor(Color.GREEN);
+            b.textPossivelLucro.setTextColor(Color.parseColor("#32CD32"));
             b.textPossivelLucroPercentagem.setText(((int) percentagem + " %"));
-            b.textPossivelLucroPercentagem.setTextColor(Color.GREEN);
+            b.textPossivelLucroPercentagem.setTextColor(Color.parseColor("#32CD32"));
         } else {
             b.textPossivelLucro.setText(getString(R.string.lucro_negativo));
             b.textPossivelLucro.setTextColor(Color.RED);
