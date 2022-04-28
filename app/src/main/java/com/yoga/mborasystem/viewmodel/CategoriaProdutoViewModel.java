@@ -227,7 +227,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_env_lx), R.drawable.ic_toast_feito);
                         }
                         if (!isLixeira) {
-                            consultarCategorias(null, true);
+                            consultarCategorias(null, false);
                         }
                     }
 
