@@ -18,6 +18,7 @@ public class DialogExportarImportarVenda extends DialogFragment {
     private AlertDialog dialog;
     private VendaViewModel vendaViewModel;
 
+    @SuppressWarnings("ConstantConditions")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
