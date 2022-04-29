@@ -382,13 +382,12 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void importarCategoriasProdutos(ActivityResultLauncher<Intent> importActivityResultLauncher, Activity activity, int PICK_CSV_FILE) {
+    public static void importarCategoriasProdutos(ActivityResultLauncher<Intent> importActivityResultLauncher) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         String[] mimetypes = {"text/csv", "text/comma-separated-values", "application/csv"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
-//        activity.startActivityForResult(intent, PICK_CSV_FILE);
         importActivityResultLauncher.launch(intent);
     }
 

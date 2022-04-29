@@ -171,12 +171,12 @@ public class DialogExportarImportar extends DialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarProdutos() {
-        Ultilitario.importarCategoriasProdutos(null, requireActivity(), Ultilitario.QUATRO);
+        Ultilitario.importarCategoriasProdutos(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarCategorias() {
-        Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher, requireActivity(), Ultilitario.SINCO);
+        Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher);
     }
 
     @SuppressLint("StaticFieldLeak")
