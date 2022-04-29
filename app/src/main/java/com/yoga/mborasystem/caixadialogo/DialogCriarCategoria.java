@@ -3,7 +3,6 @@ package com.yoga.mborasystem.caixadialogo;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.yoga.mborasystem.MainActivity;
@@ -32,7 +31,7 @@ public class DialogCriarCategoria extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
-        binding = DialogCriarCategoriaBinding.inflate(LayoutInflater.from(getContext()));
+        binding = DialogCriarCategoriaBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         if (getArguments() != null) {
