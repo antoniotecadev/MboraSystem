@@ -28,7 +28,7 @@ public interface ProdutoDao {
     void deleteLixeira(int est, String data, long id);
 
     @Query("DELETE FROM produtos WHERE estado = :estado")
-    public abstract void deleteAllProdutoLixeira(int estado);
+    void deleteAllProdutoLixeira(int estado);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getProdutos(long idcat);
