@@ -67,6 +67,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
@@ -325,7 +326,7 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void exportarLocal(Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data, int CREATE_FILE) {
+    public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data, int CREATE_FILE) {
         try {
             FileOutputStream out = activity.openFileOutput(ficheiro, Context.MODE_PRIVATE);
             out.write((dataStringBuilder.toString()).getBytes());
@@ -336,7 +337,8 @@ public class Ultilitario {
             intent.setType("application/csv");
             intent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data + ".csv");
             intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
-            activity.startActivityForResult(intent, CREATE_FILE);
+//            activity.startActivityForResult(intent, CREATE_FILE);
+            exportActivityResultLauncher.launch(intent);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(activity.getBaseContext(), activity.getString(R.string.falha) + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -380,13 +382,14 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void importarCategoriasProdutos(Activity activity, int PICK_CSV_FILE) {
+    public static void importarCategoriasProdutos(ActivityResultLauncher<Intent> importActivityResultLauncher, Activity activity, int PICK_CSV_FILE) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         String[] mimetypes = {"text/csv", "text/comma-separated-values", "application/csv"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
-        activity.startActivityForResult(intent, PICK_CSV_FILE);
+//        activity.startActivityForResult(intent, PICK_CSV_FILE);
+        importActivityResultLauncher.launch(intent);
     }
 
     public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout) {

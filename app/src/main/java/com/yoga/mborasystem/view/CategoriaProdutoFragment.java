@@ -135,7 +135,7 @@ public class CategoriaProdutoFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void exportarProdutos(String nomeFicheiro, boolean isLocal) {
         if (isLocal) {
-            Ultilitario.exportarLocal(getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_PRODUTO);
+            Ultilitario.exportarLocal(null, getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_PRODUTO);
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
         }

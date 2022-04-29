@@ -190,7 +190,7 @@ public class VendaFragment extends Fragment {
                 }
                 dataBuilder = dt;
                 if (isLocal) {
-                    Ultilitario.exportarLocal(getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data, Ultilitario.CREATE_FILE_PRODUTO);
+                    Ultilitario.exportarLocal(null, getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data, Ultilitario.CREATE_FILE_PRODUTO);
                 } else {
                     Ultilitario.exportarNuvem(getContext(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
                 }
@@ -459,7 +459,7 @@ public class VendaFragment extends Fragment {
                 break;
             case R.id.importarvenda:
                 //Importa as vendas
-                Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
+                Ultilitario.importarCategoriasProdutos(null, requireActivity(), Ultilitario.QUATRO);
                 break;
             case R.id.btnEliminarTodosLixo:
                 dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);

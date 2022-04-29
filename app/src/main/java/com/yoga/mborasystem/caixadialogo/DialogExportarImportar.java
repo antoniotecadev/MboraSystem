@@ -33,6 +33,8 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -161,7 +163,7 @@ public class DialogExportarImportar extends DialogFragment {
         }
         this.data = data;
         if (isLocal) {
-            Ultilitario.exportarLocal(getActivity(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_CATEGORIA);
+            Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_CATEGORIA);
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
         }
@@ -169,12 +171,12 @@ public class DialogExportarImportar extends DialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarProdutos() {
-        Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.QUATRO);
+        Ultilitario.importarCategoriasProdutos(null, requireActivity(), Ultilitario.QUATRO);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarCategorias() {
-        Ultilitario.importarCategoriasProdutos(requireActivity(), Ultilitario.SINCO);
+        Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher, requireActivity(), Ultilitario.SINCO);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -207,34 +209,39 @@ public class DialogExportarImportar extends DialogFragment {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-        if (requestCode == Ultilitario.CREATE_FILE_CATEGORIA && resultCode == Activity.RESULT_OK) {
-            Uri uri;
-            if (resultData != null) {
-                uri = resultData.getData();
-                Ultilitario.alterDocument(uri, data, requireActivity());
-                data.delete(0, data.length());
-            }
-        } else if (requestCode == Ultilitario.SINCO && resultCode == Activity.RESULT_OK) {
-            Uri uri;
-            if (resultData != null) {
-                uri = resultData.getData();
-                try {
-                    readTextFromUri(uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
+    ActivityResultLauncher<Intent> importCategoryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Uri uri;
+                    if (data != null) {
+                        uri = data.getData();
+                        try {
+                            readTextFromUri(uri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            }
-        }
-    }
+            });
+
+    ActivityResultLauncher<Intent> exportCategoryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent resultData = result.getData();
+                    Uri uri;
+                    if (resultData != null) {
+                        uri = resultData.getData();
+                        Ultilitario.alterDocument(uri, data, requireActivity());
+                        data.delete(0, data.length());
+                    }
+                }
+            });
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (!executor.isShutdown())
-            executor.shutdownNow();
+        executor.shutdownNow();
     }
 }
