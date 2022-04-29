@@ -2,7 +2,6 @@ package com.yoga.mborasystem.caixadialogo;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,7 +31,7 @@ public class DialogAlterarCliente extends DialogFragment {
 
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
 
-        binding = FragmentCadastrarClienteBinding.inflate(LayoutInflater.from(getContext()));
+        binding = FragmentCadastrarClienteBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setView(binding.getRoot());
         dialog = builder.create();
