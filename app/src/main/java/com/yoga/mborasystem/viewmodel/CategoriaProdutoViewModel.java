@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
@@ -226,9 +227,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_env_lx), R.drawable.ic_toast_feito);
                         }
-                        if (!isLixeira) {
-                            consultarCategorias(null, false);
-                        }
                     }
 
                     @Override
@@ -236,7 +234,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_eliminada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                         if (!isLixeira) {
-                            consultarCategorias(null, true);
+                            consultarCategorias(null, false);
                         }
                     }
                 });
