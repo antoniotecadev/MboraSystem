@@ -163,7 +163,7 @@ public class DialogExportarImportar extends DialogFragment {
         }
         this.data = data;
         if (isLocal) {
-            Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_CATEGORIA);
+            Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
         }
@@ -239,6 +239,7 @@ public class DialogExportarImportar extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        executor.shutdownNow();
+        if (executor != null)
+            executor.shutdownNow();
     }
 }

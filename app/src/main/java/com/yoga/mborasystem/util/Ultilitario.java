@@ -326,7 +326,7 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data, int CREATE_FILE) {
+    public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data) {
         try {
             FileOutputStream out = activity.openFileOutput(ficheiro, Context.MODE_PRIVATE);
             out.write((dataStringBuilder.toString()).getBytes());
@@ -337,7 +337,6 @@ public class Ultilitario {
             intent.setType("application/csv");
             intent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data + ".csv");
             intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
-//            activity.startActivityForResult(intent, CREATE_FILE);
             exportActivityResultLauncher.launch(intent);
         } catch (Exception e) {
             e.printStackTrace();

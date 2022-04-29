@@ -22,6 +22,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -135,7 +137,7 @@ public class CategoriaProdutoFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void exportarProdutos(String nomeFicheiro, boolean isLocal) {
         if (isLocal) {
-            Ultilitario.exportarLocal(null, getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent(), Ultilitario.CREATE_FILE_PRODUTO);
+            Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
         }
@@ -451,27 +453,40 @@ public class CategoriaProdutoFragment extends Fragment {
         }.execute();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-        if (requestCode == Ultilitario.CREATE_FILE_PRODUTO && resultCode == Activity.RESULT_OK) {
-            Uri uri;
-            if (resultData != null) {
-                uri = resultData.getData();
-                Ultilitario.alterDocument(uri, data, requireActivity());
-                data.delete(0, data.length());
-            }
-        } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
-            Uri uri;
-            if (resultData != null) {
-                uri = resultData.getData();
-                try {
-                    readTextFromUri(uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode,
+//                                 Intent resultData) {
+//        if (requestCode == Ultilitario.CREATE_FILE_PRODUTO && resultCode == Activity.RESULT_OK) {
+//            Uri uri;
+//            if (resultData != null) {
+//                uri = resultData.getData();
+//                Ultilitario.alterDocument(uri, data, requireActivity());
+//                data.delete(0, data.length());
+//            }
+//        } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
+//            Uri uri;
+//            if (resultData != null) {
+//                uri = resultData.getData();
+//                try {
+//                    readTextFromUri(uri);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }
+//    }
+
+    ActivityResultLauncher<Intent> exportProductActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent resultData = result.getData();
+                    Uri uri;
+                    if (resultData != null) {
+                        uri = resultData.getData();
+                        Ultilitario.alterDocument(uri, data, requireActivity());
+                        data.delete(0, data.length());
+                    }
                 }
-            }
-        }
-    }
+            });
 }

@@ -190,7 +190,7 @@ public class VendaFragment extends Fragment {
                 }
                 dataBuilder = dt;
                 if (isLocal) {
-                    Ultilitario.exportarLocal(null, getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data, Ultilitario.CREATE_FILE_PRODUTO);
+                    Ultilitario.exportarLocal(null, getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
                 } else {
                     Ultilitario.exportarNuvem(getContext(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
                 }
