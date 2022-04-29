@@ -282,19 +282,6 @@ public class DialogCriarProduto extends DialogFragment {
                 }
             });
 
-    /* DEPRECIATE */
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        if (resultCode == Activity.RESULT_OK) {
-//            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//            if (result != null) {
-//                produtoViewModel.codigoBarra(result, binding.txtCodigoBar);
-//            } else {
-//                super.onActivityResult(requestCode, resultCode, data);
-//            }
-//        }
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
