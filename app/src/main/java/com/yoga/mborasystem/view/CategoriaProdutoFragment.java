@@ -461,6 +461,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     readTextFromUri(uri);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }

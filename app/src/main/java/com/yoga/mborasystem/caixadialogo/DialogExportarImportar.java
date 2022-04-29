@@ -216,6 +216,7 @@ public class DialogExportarImportar extends DialogFragment {
                             readTextFromUri(uri);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 }
