@@ -1,8 +1,7 @@
 package com.yoga.mborasystem.repository;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.widget.Toast;
 
 import com.yoga.mborasystem.R;
@@ -71,41 +70,17 @@ public class CategoriaRepository {
         }
     }
 
-    public void importarCategorias(Map<String, String> categorias, Context context) {
-        new CategoriaIm(categorias, context).execute();
+    public void importarCategorias(Map<String, String> categorias, Context context, Handler handler) {
+
+        Categoria categoria = new Categoria();
+
+        for (String ct : categorias.keySet()) {
+            categoria.setCategoria(ct);
+            categoria.setDescricao(categorias.get(ct));
+            categoria.setEstado(1);
+            categoria.setData_cria(Ultilitario.getDateCurrent());
+            categoriaDao.insert(categoria);
+        }
+        handler.post(() -> Toast.makeText(context, R.string.cats_impo, Toast.LENGTH_LONG).show());
     }
-
-    @SuppressLint("StaticFieldLeak")
-    class CategoriaIm extends AsyncTask<Void, Void, Void> {
-
-        Context context;
-        Map<String, String> categorias;
-
-        CategoriaIm(Map<String, String> categorias, Context context) {
-            this.context = context;
-            this.categorias = categorias;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            Categoria categoria = new Categoria();
-
-            for (String ct : categorias.keySet()) {
-                categoria.setCategoria(ct);
-                categoria.setDescricao(categorias.get(ct));
-                categoria.setEstado(1);
-                categoria.setData_cria(Ultilitario.getDateCurrent());
-                categoriaDao.insert(categoria);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Toast.makeText(context, R.string.cats_impo, Toast.LENGTH_LONG).show();
-        }
-    }
-
 }

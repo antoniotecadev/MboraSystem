@@ -202,10 +202,7 @@ public class DialogExportarImportar extends DialogFragment {
                 e.printStackTrace();
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
-            handler.post(() -> {
-                //UI Thread work here
-                categoriaProdutoViewModel.importarCategorias(categorias);
-            });
+            categoriaProdutoViewModel.importarCategorias(categorias, handler);
         });
     }
 

@@ -3,6 +3,7 @@ package com.yoga.mborasystem.viewmodel;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -22,6 +23,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -240,8 +242,8 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void importarCategorias(Map<String, String> categorias) {
-        categoriaRepository.importarCategorias(categorias, getApplication());
+    public void importarCategorias(Map<String, String> categorias, Handler handler) {
+        categoriaRepository.importarCategorias(categorias, getApplication(), handler);
     }
 
     @Override
