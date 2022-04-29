@@ -6,9 +6,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +48,8 @@ public class DialogExportarImportar extends DialogFragment {
     private ArrayList<String> categorias, descricoes;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
     private StringBuilder data;
+
+    private ExecutorService executor;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @NonNull
@@ -174,38 +179,32 @@ public class DialogExportarImportar extends DialogFragment {
 
     @SuppressLint("StaticFieldLeak")
     public void readTextFromUri(Uri uri) throws IOException {
-
-        new AsyncTask<Void, Void, Map<String, String>>() {
-
-            @Override
-            protected Map<String, String> doInBackground(Void... voids) {
-                Map<String, String> categorias = new HashMap<>();
-                try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
-                     BufferedReader reader = new BufferedReader(
-                             new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] categoria = line.split(",");
-                        categorias.put(categoria[0], categoria[1]);
-                    }
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            //Background work here
+            Map<String, String> categorias = new HashMap<>();
+            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+                 BufferedReader reader = new BufferedReader(
+                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] categoria = line.split(",");
+                    categorias.put(categoria[0], categoria[1]);
                 }
-                return categorias;
-            }
 
-            @Override
-            protected void onPostExecute(Map<String, String> categorias) {
-                super.onPostExecute(categorias);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            handler.post(() -> {
+                //UI Thread work here
                 categoriaProdutoViewModel.importarCategorias(categorias);
-            }
-
-        }.execute();
+            });
+        });
     }
 
     @Override
@@ -235,5 +234,7 @@ public class DialogExportarImportar extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        if (!executor.isShutdown())
+            executor.shutdownNow();
     }
 }
