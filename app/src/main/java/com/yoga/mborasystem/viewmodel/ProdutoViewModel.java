@@ -106,7 +106,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 produto.setIdcategoria(idcategoria);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                criarProduto(produto, dialog, continuar);
+                criarProduto(produto, dialog, continuar, idcategoria);
                 nome.setText("");
                 preco.setText(getApplication().getText(R.string.preco_zero));
                 precofornecedor.setText(getApplication().getText(R.string.preco_zero));
@@ -132,7 +132,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     private int contar = 0;
 
     @SuppressLint("CheckResult")
-    private void criarProduto(Produto produto, AlertDialog dialog, Boolean continuar) {
+    private void criarProduto(Produto produto, AlertDialog dialog, Boolean continuar, long idcategoria) {
         Completable.fromAction(() -> produtoRepository.insert(produto))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -149,6 +149,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                         if (continuar) {
                             dialog.dismiss();
                         }
+                        consultarProdutos(idcategoria, false, null, false);
                     }
 
                     @Override
