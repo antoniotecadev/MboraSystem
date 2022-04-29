@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -35,7 +34,7 @@ public class DialogCriarUsuario extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        binding = DialogCriarUsuarioBinding.inflate(LayoutInflater.from(getContext()));
+        binding = DialogCriarUsuarioBinding.inflate(getLayoutInflater());
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
