@@ -104,7 +104,7 @@ public class CategoriaRepository {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(context, R.string.categorias_carregar, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.cats_impo, Toast.LENGTH_LONG).show();
         }
     }
 
