@@ -2,7 +2,6 @@ package com.yoga.mborasystem.caixadialogo;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.yoga.mborasystem.MainActivity;
@@ -33,7 +32,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
 
         clienteCantina = new ClienteCantina();
 
-        binding = DialogCriarClienteCantinaBinding.inflate(LayoutInflater.from(getContext()));
+        binding = DialogCriarClienteCantinaBinding.inflate(getLayoutInflater());
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
