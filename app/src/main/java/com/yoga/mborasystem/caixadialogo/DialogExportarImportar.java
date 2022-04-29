@@ -171,12 +171,12 @@ public class DialogExportarImportar extends DialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarProdutos() {
-        Ultilitario.importarCategoriasProdutos(null);
+        Ultilitario.importarCategoriasProdutos(null, getActivity());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarCategorias() {
-        Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher);
+        Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher, null);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -194,7 +194,6 @@ public class DialogExportarImportar extends DialogFragment {
                     String[] categoria = line.split(",");
                     categorias.put(categoria[0], categoria[1]);
                 }
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();

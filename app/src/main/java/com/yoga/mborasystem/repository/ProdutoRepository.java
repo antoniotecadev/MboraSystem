@@ -1,10 +1,9 @@
 package com.yoga.mborasystem.repository;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.AsyncTask;
+import android.os.Handler;
 
 import androidx.lifecycle.LiveData;
 
@@ -20,6 +19,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 public class ProdutoRepository {
+    private boolean isErro;
     private final ProdutoDao produtoDao;
 
     public ProdutoRepository(Context context) {
@@ -140,53 +140,31 @@ public class ProdutoRepository {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar, estadoProd);
     }
 
-    public void importarProdutos(List<String> produtos, Application application) {
-        new ProdutoIm(produtos, application).execute();
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    class ProdutoIm extends AsyncTask<Void, Void, Void> {
-        private final Context context;
-        private final List<String> produtos;
-        private boolean isErro;
-
-        ProdutoIm(List<String> produtos, Context context) {
-            this.context = context;
-            this.produtos = produtos;
-            isErro = false;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            Produto produto = new Produto();
-            for (String pt : produtos) {
-                try {
-                    String[] prod = pt.split(",");
-                    produto.setNome(prod[0]);
-                    produto.setPreco(Integer.parseInt(prod[1]));
-                    produto.setPrecofornecedor(Integer.parseInt(prod[2]));
-                    produto.setQuantidade(Integer.parseInt(prod[3]));
-                    produto.setCodigoBarra(prod[4]);
-                    produto.setIva(Boolean.parseBoolean(prod[5]));
-                    produto.setEstado(Integer.parseInt(prod[6]));
-                    produto.setIdcategoria(Long.parseLong(prod[7]));
-                    produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                    produtoDao.insert(produto);
-                } catch (Exception e) {
-                    isErro = true;
+    public void importarProdutos(List<String> produtos, Application context, Handler handler) {
+        Produto produto = new Produto();
+        for (String pt : produtos) {
+            try {
+                String[] prod = pt.split(",");
+                produto.setNome(prod[0]);
+                produto.setPreco(Integer.parseInt(prod[1]));
+                produto.setPrecofornecedor(Integer.parseInt(prod[2]));
+                produto.setQuantidade(Integer.parseInt(prod[3]));
+                produto.setCodigoBarra(prod[4]);
+                produto.setIva(Boolean.parseBoolean(prod[5]));
+                produto.setEstado(Integer.parseInt(prod[6]));
+                produto.setIdcategoria(Long.parseLong(prod[7]));
+                produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                produtoDao.insert(produto);
+            } catch (Exception e) {
+                isErro = true;
+            }
+            handler.post(() -> {
+                if (isErro) {
+                    Ultilitario.showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.ficheiro_certo), R.drawable.ic_toast_erro);
+                } else {
+                    Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.produto_importado), R.drawable.ic_toast_feito);
                 }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (isErro) {
-                Ultilitario.showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.ficheiro_certo), R.drawable.ic_toast_erro);
-            } else {
-                Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.produto_importado), R.drawable.ic_toast_feito);
-            }
+            });
         }
     }
 }

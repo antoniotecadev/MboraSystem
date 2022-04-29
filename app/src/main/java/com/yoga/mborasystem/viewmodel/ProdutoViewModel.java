@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -578,8 +579,8 @@ public class ProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void importarProdutos(List<String> produtos) {
-        produtoRepository.importarProdutos(produtos, getApplication());
+    public void importarProdutos(List<String> produtos, Handler handler) {
+        produtoRepository.importarProdutos(produtos, getApplication(), handler);
     }
 
     @Override

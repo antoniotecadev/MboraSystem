@@ -381,13 +381,17 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void importarCategoriasProdutos(ActivityResultLauncher<Intent> importActivityResultLauncher) {
+    public static void importarCategoriasProdutos(ActivityResultLauncher<Intent> importActivityResultLauncher, Activity activity) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         String[] mimetypes = {"text/csv", "text/comma-separated-values", "application/csv"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
-        importActivityResultLauncher.launch(intent);
+        if (importActivityResultLauncher == null) {
+            activity.startActivityForResult(intent, QUATRO);
+        } else {
+            importActivityResultLauncher.launch(intent);
+        }
     }
 
     public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout) {

@@ -7,9 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,9 +55,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CategoriaProdutoFragment extends Fragment {
 
@@ -70,6 +75,8 @@ public class CategoriaProdutoFragment extends Fragment {
     private FragmentCategoriaProdutoBinding binding;
     private ArrayList<String> stringList, stringListDesc;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
+
+    private ExecutorService executor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -419,63 +426,45 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     public void readTextFromUri(Uri uri) throws IOException {
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            List<String> produtos = new ArrayList<>();
+            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+                 BufferedReader reader = new BufferedReader(
+                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                String line;
 
-        new AsyncTask<Void, Void, List<String>>() {
-
-            @Override
-            protected List<String> doInBackground(Void... voids) {
-                List<String> produtos = new ArrayList<>();
-
-                try (
-                        @SuppressLint("StaticFieldLeak") InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
-                        BufferedReader reader = new BufferedReader(
-                                new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        produtos.add(line);
-                    }
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                while ((line = reader.readLine()) != null) {
+                    produtos.add(line);
                 }
-                return produtos;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
 
-            @Override
-            protected void onPostExecute(List<String> produtos) {
-                super.onPostExecute(produtos);
-                produtoViewModel.importarProdutos(produtos);
-            }
-        }.execute();
+            produtoViewModel.importarProdutos(produtos, handler);
+        });
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode,
-//                                 Intent resultData) {
-//        if (requestCode == Ultilitario.CREATE_FILE_PRODUTO && resultCode == Activity.RESULT_OK) {
-//            Uri uri;
-//            if (resultData != null) {
-//                uri = resultData.getData();
-//                Ultilitario.alterDocument(uri, data, requireActivity());
-//                data.delete(0, data.length());
-//            }
-//        } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
-//            Uri uri;
-//            if (resultData != null) {
-//                uri = resultData.getData();
-//                try {
-//                    readTextFromUri(uri);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
+            Uri uri;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    readTextFromUri(uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     ActivityResultLauncher<Intent> exportProductActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {

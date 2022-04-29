@@ -459,7 +459,7 @@ public class VendaFragment extends Fragment {
                 break;
             case R.id.importarvenda:
                 //Importa as vendas
-                Ultilitario.importarCategoriasProdutos(null);
+                Ultilitario.importarCategoriasProdutos(null, null);
                 break;
             case R.id.btnEliminarTodosLixo:
                 dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
