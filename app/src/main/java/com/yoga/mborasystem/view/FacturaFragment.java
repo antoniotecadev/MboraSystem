@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -69,10 +68,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -92,8 +92,6 @@ public class FacturaFragment extends Fragment {
     private Map<Long, View> itemView;
     private Map<Long, Boolean> estado;
     private Map<Long, Produto> produtos;
-    private SharedPreferences sharedPref;
-    private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private VendaViewModel vendaViewModel;
     private FragmentFacturaBinding binding;
     private ArrayList<String> listaCategoria;
@@ -199,13 +197,7 @@ public class FacturaFragment extends Fragment {
             }
         });
 
-        binding.buttonFechar.setOnClickListener(v -> {
-            binding.viewStub.setVisibility(View.GONE);
-            binding.buttonFechar.setVisibility(View.GONE);
-            binding.switchFlashlightButton.setVisibility(View.GONE);
-            barcodeView.setTorchOff();
-            barcodeView.pause();
-        });
+        binding.buttonFechar.setOnClickListener(v -> fecharCamera());
 
         binding.btnCriarCliente.setOnClickListener(v -> {
             MainActivity.getProgressBar();
@@ -220,22 +212,9 @@ public class FacturaFragment extends Fragment {
         });
 
         binding.txtNomeCliente.setOnItemClickListener((parent, view, position, id) -> binding.txtNomeCliente.setEnabled(false));
-        binding.btnScannerBack.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(requireActivity(),
-                    Manifest.permission.READ_CONTACTS)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-            }
-            visibityButton();
-        });
-
-        binding.btnClose.setOnClickListener(v -> {
-            binding.viewStub.setVisibility(View.GONE);
-            barcodeView.pause();
-        });
-        binding.btnScannerFront.setOnClickListener(v -> openCamera());
+        binding.btnScannerBack.setOnClickListener(v -> abrirCamera());
+        binding.btnClose.setOnClickListener(v -> fecharCamera());
+        binding.btnScannerFront.setOnClickListener(v -> abrirCamera());
         binding.recyclerViewFacturaProduto.setAdapter(adapter);
         binding.recyclerViewFacturaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewFactura.setAdapter(adapterFactura);
@@ -542,6 +521,16 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void abrirCamera() {
+        if (ContextCompat.checkSelfPermission(requireActivity(),
+                Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED) {
+            mPermissionResult.launch(Manifest.permission.CAMERA);
+        } else {
+            openCamera();
+        }
+    }
+
     private boolean hasFlash() {
         return requireActivity().getApplicationContext().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
@@ -550,6 +539,14 @@ public class FacturaFragment extends Fragment {
     private void visibityButton() {
         binding.buttonFechar.setVisibility(View.VISIBLE);
         binding.switchFlashlightButton.setVisibility(View.VISIBLE);
+    }
+
+    private void fecharCamera() {
+        binding.viewStub.setVisibility(View.GONE);
+        binding.buttonFechar.setVisibility(View.GONE);
+        binding.switchFlashlightButton.setVisibility(View.GONE);
+        barcodeView.setTorchOff();
+        barcodeView.pause();
     }
 
     private void checkValorFormaPagamento(MaterialCheckBox checkBox, TextInputEditText textInputEditText) {
@@ -588,16 +585,16 @@ public class FacturaFragment extends Fragment {
                             + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                             + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
-                            + " dataPreference: " + getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(getActivity())) + "\ndataCurrent: " + getDataSplitDispositivo(Ultilitario.getDateCurrent()) +"\n"
+                            + " dataPreference: " + getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(requireActivity())) + "\ndataCurrent: " + getDataSplitDispositivo(Ultilitario.getDateCurrent()) + "\n"
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        if (getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(getActivity())).equals(getDataSplitDispositivo(Ultilitario.getDateCurrent()))) {
+                        if (getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(requireActivity())).equals(getDataSplitDispositivo(Ultilitario.getDateCurrent()))) {
                             vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());
                         } else {
                             if (isNetworkConnected(requireContext())) {
                                 if (internetIsConnected()) {
-                                    Ultilitario.setSharedPreferencesDataDispositivo(getActivity());
+                                    Ultilitario.setSharedPreferencesDataDispositivo(requireActivity());
                                     estadoConta(cliente.getImei(), nomeIDcliente[0].trim());
                                 } else {
                                     Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
@@ -682,7 +679,7 @@ public class FacturaFragment extends Fragment {
             nome.setText(produto.getNome());
             precorefcod.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " - MS" + produto.getId() + " - " + produto.getCodigoBarra());
             itemView.put(produto.getId(), viewHolder.itemView);
-            if (estado.get(produto.getId()) != null && estado.get(produto.getId())) {
+            if (estado.get(produto.getId()) != null && Objects.requireNonNull(estado.get(produto.getId()))) {
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
             } else {
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -749,8 +746,8 @@ public class FacturaFragment extends Fragment {
             estado.put(id, false);
             Produto produto = produtos.get(id);
             produtos.remove(id);
-            adapterFactura.removeGroupAtAdapterPosition(posicao.get(id));
-            adapterFactura.notifyItemRangeRemoved(posicao.get(id), produtos.size());
+            adapterFactura.removeGroupAtAdapterPosition(Objects.requireNonNull(posicao.get(id)));
+            adapterFactura.notifyItemRangeRemoved(Objects.requireNonNull(posicao.get(id)), produtos.size());
             precoTotal.remove(id);
             somarPreco(precoTotal, id, Objects.requireNonNull(produto).isIva(), Ultilitario.UM, true);
             if (b) {
@@ -766,7 +763,8 @@ public class FacturaFragment extends Fragment {
             for (Map.Entry<Long, Integer> precototal : pTotal.entrySet()) {
                 totalGer += precototal.getValue();
             }
-            if (pTotal.get(id) != null) precoUnit = (pTotal.get(id) / quant);
+            if (pTotal.get(id) != null)
+                precoUnit = (Objects.requireNonNull(pTotal.get(id)) / quant);
             if (isRemove) {
                 iva.remove(id);
                 valor.remove(id);
@@ -966,20 +964,14 @@ public class FacturaFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
-                if ((grantResults != null && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+    private final ActivityResultLauncher<String> mPermissionResult = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> {
+                if (result) {
                     openCamera();
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.noa_scan_codbar), R.drawable.ic_toast_erro);
                 }
-                break;
-            default:
-                break;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+            });
 
 }
