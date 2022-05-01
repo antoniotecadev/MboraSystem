@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -355,7 +356,7 @@ public class Ultilitario {
         }
         FileOutputStream fileOutputStream = new FileOutputStream(Objects.requireNonNull(csv).getFileDescriptor());
 
-        new ExportarAsyncTask(csv, fileOutputStream, uri, activity, data).execute(data.toString());
+        new ExportarAsyncTask(csv, fileOutputStream, uri, activity).execute(data.toString());
 
     }
 
@@ -462,7 +463,7 @@ public class Ultilitario {
         private final ParcelFileDescriptor csv;
         private final FileOutputStream fileOutputStream;
 
-        public ExportarAsyncTask(ParcelFileDescriptor csv, FileOutputStream fileOutputStream, Uri uri, Activity activity, StringBuilder data) {
+        public ExportarAsyncTask(ParcelFileDescriptor csv, FileOutputStream fileOutputStream, Uri uri, Activity activity) {
             this.uri = uri;
             this.csv = csv;
             this.activity = activity;
@@ -510,6 +511,8 @@ public class Ultilitario {
         // For 29 api or above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            Network nw = cm.getActiveNetwork();
+            if (nw == null) return false;
             return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
