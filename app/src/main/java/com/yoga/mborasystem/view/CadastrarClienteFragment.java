@@ -1,32 +1,20 @@
 package com.yoga.mborasystem.view;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonObject;
-import com.koushikdutta.ion.Ion;
-import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -35,20 +23,15 @@ import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.EventListener;
+import java.util.Objects;
 import java.util.Random;
-import java.util.function.Consumer;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
-
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 public class CadastrarClienteFragment extends Fragment {
 
@@ -177,9 +160,7 @@ public class CadastrarClienteFragment extends Fragment {
                 Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        binding.buttonTermoCondicao.setOnClickListener(v -> {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/termoscondicoes")));
-        });
+        binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/termoscondicoes"))));
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
         Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao -> {
@@ -217,12 +198,8 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        switch (item.getItemId()) {
-            case R.id.configRede:
-                Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoRedeFragment);
-                break;
-            default:
-                break;
+        if (item.getItemId() == R.id.configRede) {
+            Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoRedeFragment);
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
@@ -232,21 +209,21 @@ public class CadastrarClienteFragment extends Fragment {
         Cliente cliente = new Cliente();
 
         cliente.setId(1);
-        cliente.setNome(binding.editTextNome.getText().toString());
-        cliente.setSobrenome(binding.editTextSobreNome.getText().toString());
-        cliente.setNifbi(binding.editTextNif.getText().toString());
+        cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
+        cliente.setSobrenome(Objects.requireNonNull(binding.editTextSobreNome.getText()).toString());
+        cliente.setNifbi(Objects.requireNonNull(binding.editTextNif.getText()).toString());
         cliente.setMaster(true);
-        cliente.setTelefone(binding.editTextNumeroTelefone.getText().toString());
-        cliente.setTelefonealternativo(binding.editTextNumeroTelefoneAlternativo.getText().toString());
-        cliente.setEmail(binding.editTextEmail.getText().toString());
-        cliente.setNomeEmpresa(binding.editTextNomeLoja.getText().toString());
+        cliente.setTelefone(Objects.requireNonNull(binding.editTextNumeroTelefone.getText()).toString());
+        cliente.setTelefonealternativo(Objects.requireNonNull(binding.editTextNumeroTelefoneAlternativo.getText()).toString());
+        cliente.setEmail(Objects.requireNonNull(binding.editTextEmail.getText()).toString());
+        cliente.setNomeEmpresa(Objects.requireNonNull(binding.editTextNomeLoja.getText()).toString());
         cliente.setProvincia(binding.spinnerProvincias.getSelectedItem().toString());
         cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
-        cliente.setBairro(binding.editTextBairro.getText().toString());
+        cliente.setBairro(Objects.requireNonNull(binding.editTextBairro.getText()).toString());
         cliente.setRua(binding.editTextBairro.getText().toString());
-        cliente.setSenha(binding.editTextSenha.getText().toString());
+        cliente.setSenha(Objects.requireNonNull(binding.editTextSenha.getText()).toString());
         cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
-        cliente.setCodigoEquipa(binding.editTextCodigoEquipa.getText().toString());
+        cliente.setCodigoEquipa(Objects.requireNonNull(binding.editTextCodigoEquipa.getText()).toString());
         cliente.setData_cria(Ultilitario.getDateCurrent());
 
         mDatabase.child(cliente.getImei()).setValue(cliente);
