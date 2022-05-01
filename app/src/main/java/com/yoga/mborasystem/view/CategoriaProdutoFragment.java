@@ -415,6 +415,7 @@ public class CategoriaProdutoFragment extends Fragment {
         if (bundle != null) {
             bundle.clear();
         }
+        executor.shutdownNow();
     }
 
     @Override
