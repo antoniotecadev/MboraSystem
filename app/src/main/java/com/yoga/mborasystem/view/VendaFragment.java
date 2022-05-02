@@ -193,7 +193,7 @@ public class VendaFragment extends Fragment {
                 }
                 dataBuilder = dt;
                 if (isLocal) {
-                    Ultilitario.exportarLocal(null, getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
+                    Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
                 } else {
                     Ultilitario.exportarNuvem(getContext(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
                 }
@@ -518,6 +518,18 @@ public class VendaFragment extends Fragment {
                             e.printStackTrace();
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
+                    }
+                }
+            });
+    ActivityResultLauncher<Intent> exportVendaActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent resultData = result.getData();
+                    Uri uri;
+                    if (resultData != null) {
+                        uri = resultData.getData();
+                        Ultilitario.alterDocument(uri, dataBuilder, requireActivity());
+                        dataBuilder.delete(0, data.length());
                     }
                 }
             });

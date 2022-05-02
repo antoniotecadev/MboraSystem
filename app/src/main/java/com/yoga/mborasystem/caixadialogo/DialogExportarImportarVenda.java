@@ -61,6 +61,4 @@ public class DialogExportarImportarVenda extends DialogFragment {
 
         return dialog;
     }
-
-
 }
