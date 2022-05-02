@@ -110,7 +110,7 @@ public class VendaFragment extends Fragment {
             vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida, idusuario, isLixeira);
         });
 
-        binding.bottomNav.setOnNavigationItemReselectedListener(item -> {
+        binding.bottomNav.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.tdsVd:
                     isDivida = false;
@@ -139,6 +139,7 @@ public class VendaFragment extends Fragment {
                 default:
                     break;
             }
+            return true;
         });
 
         binding.recyclerViewListaVenda.setAdapter(adapter);
@@ -301,9 +302,7 @@ public class VendaFragment extends Fragment {
                                 dialogEliminarVenda(getString(R.string.cert_elim_vend));
                                 return false;
                             });
-                            menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> {
-                                return false;
-                            });
+                            menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
                         }
                     } else {
                         Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
