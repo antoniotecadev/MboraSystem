@@ -22,6 +22,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -458,7 +460,7 @@ public class VendaFragment extends Fragment {
                 break;
             case R.id.importarvenda:
                 //Importa as vendas
-                Ultilitario.importarCategoriasProdutos(null, null);
+                Ultilitario.importarCategoriasProdutos(importVendaActivityResultLauncher, null);
                 break;
             case R.id.btnEliminarTodosLixo:
                 dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
@@ -502,6 +504,23 @@ public class VendaFragment extends Fragment {
             }
         }
     }
+
+    ActivityResultLauncher<Intent> importVendaActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Uri uri;
+                    if (data != null) {
+                        uri = data.getData();
+                        try {
+                            readTextFromUri(uri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
