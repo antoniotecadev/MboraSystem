@@ -217,7 +217,7 @@ public abstract class VendaDao {
             venda.setCodigo_qr(vend[1]);
             venda.setQuantidade(Integer.parseInt(vend[2]));
             venda.setTotal_venda(Integer.parseInt(vend[3]));
-            venda.setTotal_desconto(Integer.parseInt(vend[4]));
+            venda.setDesconto(Integer.parseInt(vend[4]));
             venda.setTotal_desconto(Integer.parseInt(vend[5]));
             venda.setValor_pago(Integer.parseInt(vend[6]));
             venda.setDivida(Integer.parseInt(vend[7]));

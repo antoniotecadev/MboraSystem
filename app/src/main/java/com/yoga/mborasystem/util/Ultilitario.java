@@ -316,6 +316,9 @@ public class Ultilitario {
     public static int removerKZ(TextInputEditText editText) {
         return Integer.parseInt(Objects.requireNonNull(editText.getText()).toString().replaceAll(",", "").replaceAll("Kz", "").replaceAll("\\s+", ""));
     }
+    public static String trocarVírgulaPorPonto(TextInputEditText editText) {
+        return Objects.requireNonNull(editText.getText()).toString().replaceAll(",", ".");
+    }
 
     public static void addItemOnSpinner(Spinner spinner, Context context) {
         ArrayList<Integer> listaQuantidade = new ArrayList<>();

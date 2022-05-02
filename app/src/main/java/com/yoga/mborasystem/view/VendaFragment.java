@@ -205,11 +205,10 @@ public class VendaFragment extends Fragment {
     }
 
     private void scanearCodigoQr() {
-        new IntentIntegrator(getActivity())
-                .setPrompt(getString(R.string.alinhar_codigo_qr))
-                .setOrientationLocked(false)
-                .setCameraId(0)
-                .initiateScan();
+        IntentIntegrator intentIntegrator = new IntentIntegrator(requireActivity());
+        intentIntegrator.setPrompt(getString(R.string.alinhar_codigo_qr));
+        intentIntegrator.setCameraId(0);
+        zxingActivityResultLauncher.launch(intentIntegrator.createScanIntent());
     }
 
     class ItemVenda extends Item<GroupieViewHolder> {
@@ -533,43 +532,16 @@ public class VendaFragment extends Fragment {
                     }
                 }
             });
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 @Nullable Intent resultData) {
-
-        if (requestCode == Ultilitario.CREATE_FILE_PRODUTO && resultCode == Activity.RESULT_OK) {
-            Uri uri;
-            if (resultData != null) {
-                uri = resultData.getData();
-                Ultilitario.alterDocument(uri, dataBuilder, requireActivity());
-                dataBuilder.delete(0, data.length());
-            }
-        } else if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
-            Uri uri;
-            if (resultData != null) {
-                uri = resultData.getData();
-                try {
-                    readTextFromUri(uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        } else if (resultCode == Activity.RESULT_OK) {
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, resultData);
-            if (result != null) {
-                if (result.getContents() == null) {
-                    Toast.makeText(getContext(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
+    ActivityResultLauncher<Intent> zxingActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
+                    vendaViewModel.searchVendas(r.getContents(), idcliente, isDivida, idusuario, isLixeira);
                 } else {
-                    vendaViewModel.searchVendas(result.getContents(), idcliente, isDivida, idusuario, isLixeira);
+                    Toast.makeText(requireActivity(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                super.onActivityResult(requestCode, resultCode, resultData);
-            }
-        }
-
-    }
+            });
 
     @SuppressLint("StaticFieldLeak")
     public void readTextFromUri(Uri uri) throws IOException {
@@ -586,8 +558,7 @@ public class VendaFragment extends Fragment {
                     while ((line = reader.readLine()) != null) {
                         vendas.add(line);
                     }
-                } catch (
-                        FileNotFoundException e) {
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
