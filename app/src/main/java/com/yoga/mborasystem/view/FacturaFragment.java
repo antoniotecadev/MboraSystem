@@ -585,7 +585,7 @@ public class FacturaFragment extends Fragment {
                             + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                             + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
-                            + " dataPreference: " + getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(requireActivity())) + "\ndataCurrent: " + getDataSplitDispositivo(Ultilitario.getDateCurrent()) + "\n"
+                            + "dataPreference: " + getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(requireActivity())) + "\ndataCurrent: " + getDataSplitDispositivo(Ultilitario.getDateCurrent()) + "\n"
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
