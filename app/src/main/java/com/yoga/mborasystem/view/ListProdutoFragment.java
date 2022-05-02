@@ -18,6 +18,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -102,12 +104,6 @@ public class ListProdutoFragment extends Fragment {
                 }
             }
         });
-//        produtoViewModel.consultarQuantidadeProduto(idcategoria).observe(getViewLifecycleOwner(), new Observer<Long>() {
-//            @Override
-//            public void onChanged(Long quant) {
-//                binding.chipQuantidadeProduto.setText(quant + "");
-//            }
-//        });
 
         binding.btnCriarProdutoFragment.setOnClickListener(v -> {
             if (!categoria.isEmpty()) {
@@ -136,11 +132,11 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void scanearCodigoQr() {
-        new IntentIntegrator(getActivity())
-                .setPrompt(getString(R.string.alinhar_codigo_qr))
-                .setOrientationLocked(false)
-                .setCameraId(0)
-                .initiateScan();
+        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+        intentIntegrator.setPrompt(getString(R.string.alinhar_codigo_qr));
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setCameraId(0);
+        zxingActivityResultLauncher.launch(intentIntegrator.createScanIntent());
     }
 
     @Override
@@ -351,9 +347,7 @@ public class ListProdutoFragment extends Fragment {
                     .setTitle(getString(R.string.eliminar) + " (" + produto.getNome() + ")")
                     .setMessage(getString(R.string.tem_certeza_eliminar_produto))
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
-                        produtoViewModel.eliminarProduto(produto, false, null, false);
-                    })
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, false, null, false))
                     .show();
         }
 
@@ -382,23 +376,16 @@ public class ListProdutoFragment extends Fragment {
             return R.layout.fragment_produto;
         }
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 @Nullable Intent resultData) {
-        if (resultCode == Activity.RESULT_OK) {
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, resultData);
-            if (result != null) {
-                if (result.getContents() == null) {
-                    Toast.makeText(getContext(), R.string.scaner_cod_bar_cancel, Toast.LENGTH_LONG).show();
+    ActivityResultLauncher<Intent> zxingActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
+                    produtoViewModel.searchProduto(r.getContents(), isLixeira);
                 } else {
-                    produtoViewModel.searchProduto(result.getContents(), isLixeira);
+                    Toast.makeText(requireActivity(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                super.onActivityResult(requestCode, resultCode, resultData);
-            }
-        }
-    }
+            });
 
     @Override
     public void onDestroyView() {
