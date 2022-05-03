@@ -594,7 +594,6 @@ public class FacturaFragment extends Fragment {
                         } else {
                             if (isNetworkConnected(requireContext())) {
                                 if (internetIsConnected()) {
-                                    Ultilitario.setSharedPreferencesDataDispositivo(requireActivity());
                                     estadoConta(cliente.getImei(), nomeIDcliente[0].trim());
                                 } else {
                                     Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
@@ -924,7 +923,8 @@ public class FacturaFragment extends Fragment {
                         if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM) {
                             MainActivity.dismissProgressBar();
                             Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext());
-                        } else if (estadoConta == Ultilitario.UM || termina == Ultilitario.ZERO) {
+                        } else if (estadoConta == Ultilitario.UM && termina == Ultilitario.ZERO) {
+                            Ultilitario.setSharedPreferencesDataDispositivo(requireActivity());
                             vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());
                         }
                     } catch (Exception ex) {
