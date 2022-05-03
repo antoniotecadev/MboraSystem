@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -58,9 +56,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VendaFragment extends Fragment {
 
+    private ExecutorService executor;
     private boolean vazio;
     private String data = "";
     private GroupAdapter adapter;
@@ -543,44 +544,34 @@ public class VendaFragment extends Fragment {
                 }
             });
 
-    @SuppressLint("StaticFieldLeak")
     public void readTextFromUri(Uri uri) throws IOException {
-        new AsyncTask<Void, Void, List<String>>() {
-
-            @Override
-            protected List<String> doInBackground(Void... voids) {
-                List<String> vendas = new ArrayList<>();
-
-                try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
-                     BufferedReader reader = new BufferedReader(
-                             new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        vendas.add(line);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            List<String> vendas = new ArrayList<>();
+            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+                 BufferedReader reader = new BufferedReader(
+                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    vendas.add(line);
                 }
-                return vendas;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
-
-            @Override
-            protected void onPostExecute(List<String> vendas) {
-                super.onPostExecute(vendas);
-                vendaViewModel.importarVenda(vendas);
-            }
-        }.execute();
-
+            vendaViewModel.importarVenda(vendas);
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        if (executor != null)
+            executor.shutdownNow();
     }
 
     @Override
