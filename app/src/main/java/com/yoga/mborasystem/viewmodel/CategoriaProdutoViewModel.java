@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
@@ -23,7 +22,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
