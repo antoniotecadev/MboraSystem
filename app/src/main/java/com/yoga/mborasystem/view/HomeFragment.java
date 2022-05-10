@@ -293,7 +293,16 @@ public class HomeFragment extends Fragment {
                         Ultilitario.alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext());
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
-                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle(getString(R.string.erro))
+                                .setMessage(ex.getMessage())
+                                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    MainActivity.getProgressBar();
+                                    estadoConta(imei);
+                                })
+                                .show();
                     }
                 });
     }

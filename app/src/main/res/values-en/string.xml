@@ -239,7 +239,7 @@
     <string name="diamesano">d/m/a</string>
     <string name="certifique_data">Make sure the date is right.</string>
     <string name="alterar_codigo_pin">Change pin code</string>
-    <string name="erro">Mistake</string>
+    <string name="erro">Error</string>
     <string name="data_cria">Creation date</string>
     <string name="data_modifica">Modification date</string>
     <string name="info_usuario_bloqueado">Get in touch with your Administrator</string>

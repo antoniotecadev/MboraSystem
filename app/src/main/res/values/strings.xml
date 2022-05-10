@@ -534,4 +534,5 @@
     <string name="nome_estab">Nome do estabelecimento</string>
     <string name="nao_alt_ope">Não tem autorização para esta operação</string>
     <string name="cats_impo">Categorias importadas</string>
+    <string name="tent_nov">Tentar novamente</string>
 </resources>
