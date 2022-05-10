@@ -929,7 +929,16 @@ public class FacturaFragment extends Fragment {
                         }
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
-                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_LONG).show();
+                        new android.app.AlertDialog.Builder(requireContext())
+                                .setTitle(getString(R.string.erro))
+                                .setMessage(ex.getMessage())
+                                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    MainActivity.getProgressBar();
+                                    estadoConta(imei, nomeIDcliente);
+                                })
+                                .show();
                     }
                 });
     }
