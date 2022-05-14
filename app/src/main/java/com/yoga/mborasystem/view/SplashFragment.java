@@ -24,11 +24,9 @@ public class SplashFragment extends Fragment {
         super.onCreate(savedInstanceState);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             clienteViewModel.clienteExiste(false, null);
 
@@ -42,10 +40,7 @@ public class SplashFragment extends Fragment {
                         break;
                 }
             });
-
-
         }, 5000);
-
         return inflater.inflate(R.layout.fragment_splash, container, false);
     }
 }
