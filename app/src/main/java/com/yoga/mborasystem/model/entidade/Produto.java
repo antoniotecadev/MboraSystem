@@ -15,7 +15,8 @@ import static androidx.room.ForeignKey.CASCADE;
         foreignKeys = @ForeignKey(entity = Categoria.class, parentColumns = "id", childColumns = "idcategoria", onDelete = CASCADE))
 public class Produto implements Parcelable {
 
-    public Produto() {}
+    public Produto() {
+    }
 
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -25,6 +26,7 @@ public class Produto implements Parcelable {
     private int quantidade;
     private String codigoBarra;
     private boolean iva;
+    private Integer percentagemIva;
     private int estado;
     private long idcategoria;
 
@@ -45,6 +47,7 @@ public class Produto implements Parcelable {
         quantidade = in.readInt();
         codigoBarra = in.readString();
         iva = in.readByte() != 0;
+        percentagemIva = in.readInt();
         estado = in.readInt();
         idcategoria = in.readLong();
         data_cria = in.readString();
@@ -176,6 +179,14 @@ public class Produto implements Parcelable {
         this.iva = iva;
     }
 
+    public Integer getPercentagemIva() {
+        return percentagemIva;
+    }
+
+    public void setPercentagemIva(Integer percentagemIva) {
+        this.percentagemIva = percentagemIva;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -190,6 +201,7 @@ public class Produto implements Parcelable {
         dest.writeInt(quantidade);
         dest.writeString(codigoBarra);
         dest.writeByte((byte) (iva ? 1 : 0));
+        dest.writeInt(percentagemIva);
         dest.writeInt(estado);
         dest.writeLong(idcategoria);
         dest.writeString(data_cria);

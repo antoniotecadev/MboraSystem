@@ -71,12 +71,15 @@ public class DialogCriarProduto extends DialogFragment {
                 binding.txtPrecoProduto.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 binding.txtPrecoProdutoFornecedor.setText(Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
                 binding.checkIva.setChecked(produto.isIva());
+                binding.spinnerIva.setSelection(produto.getPercentagemIva() == 0 ? 0 : produto.getPercentagemIva() - 1);
                 binding.txtCodigoBar.setText(produto.getCodigoBarra());
                 binding.switchEstado.setChecked(produto.getEstado() != 1);
                 binding.switchEstado.setText(produto.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
 
                 if (produto.isIva()) {
+                    binding.txtPrecoProduto.setEnabled(false);
                     binding.btnLimparPreco.setEnabled(false);
+                    binding.spinnerIva.setEnabled(false);
                 }
 
                 if (produto.getData_cria() != null) {
@@ -141,13 +144,11 @@ public class DialogCriarProduto extends DialogFragment {
         binding.spinnerIva.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                if (produto != null) {
-//                    binding.txtQuantidadeProduto.setText(String.valueOf(produto.getQuantidade()));
-//                } else {
-//                    binding.txtQuantidadeProduto.setText(parent.getItemAtPosition(position).toString());
-//                }
-
-                binding.checkIva.setText(getText(R.string.montante_iva) + "(" + parent.getItemAtPosition(position).toString() + "%)");
+                if (produto != null) {
+                    binding.checkIva.setText(getText(R.string.montante_iva) + "(" + (produto.getPercentagemIva() == 0 ? parent.getItemAtPosition(position).toString() : produto.getPercentagemIva()) + "%)");
+                } else {
+                    binding.checkIva.setText(getText(R.string.montante_iva) + "(" + parent.getItemAtPosition(position).toString() + "%)");
+                }
             }
 
             @Override
@@ -214,11 +215,11 @@ public class DialogCriarProduto extends DialogFragment {
     }
 
     private void createProduto(long idcategoria) {
-        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, binding.switchEstado, dialog, !binding.switchContinuar.isChecked(), idcategoria);
+        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, dialog, !binding.switchContinuar.isChecked(), idcategoria);
     }
 
     private void updateProduto(long idproduto, long idcategoria) {
-        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, binding.switchEstado, idcategoria, dialog);
+        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, idcategoria, dialog);
     }
 
     private void deleteProduto(Produto produto) {
@@ -269,6 +270,7 @@ public class DialogCriarProduto extends DialogFragment {
             binding.txtPrecoProduto.setEnabled(false);
             binding.btnLimparPreco.setEnabled(false);
             b.spinnerIva.setEnabled(false);
+            binding.checkIva.setText(getText(R.string.montante_iva) + "(" + b.spinnerIva.getSelectedItem().toString() + "%)");
         } else {
             binding.txtPrecoProduto.setEnabled(true);
             binding.btnLimparPreco.setEnabled(true);
@@ -278,6 +280,7 @@ public class DialogCriarProduto extends DialogFragment {
             } else {
                 b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1.0" + b.spinnerIva.getSelectedItem().toString())));
             }
+            b.checkIva.setText(getText(R.string.montante_iva) + "(1%)");
             b.textMontanteIva.setText("");
         }
     }

@@ -76,7 +76,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         return listaProdutosImport;
     }
 
-    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, Boolean continuar, long idcategoria) {
+    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, Boolean continuar, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -104,6 +104,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             produto.setIva(checkIva.isChecked());
             produto.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
+                produto.setPercentagemIva(percentagemIva == 1 ? 0 : percentagemIva);
                 produto.setIdcategoria(idcategoria);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 criarProduto(produto, dialog, continuar, idcategoria);
@@ -114,6 +115,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 codigoBarra.setText("");
                 nome.requestFocus();
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
+                produto.setPercentagemIva(checkIva.isChecked() ? (percentagemIva == 1 ? 0 : percentagemIva) : 0);
                 produto.setId(id);
                 produto.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 actualizarProduto(produto, dialog);
@@ -121,12 +123,12 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void criarProduto(EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, boolean c, long idcategoria) {
-        validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, estado, dialog, c, idcategoria);
+    public void criarProduto(EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, boolean c, long idcategoria) {
+        validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, dialog, c, idcategoria);
     }
 
-    public void actualizarProduto(long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, long idcategoria, AlertDialog dialog) {
-        validarProduto(Ultilitario.Operacao.ACTUALIZAR, id, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, estado, dialog, false, idcategoria);
+    public void actualizarProduto(long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, long idcategoria, AlertDialog dialog) {
+        validarProduto(Ultilitario.Operacao.ACTUALIZAR, id, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, dialog, false, idcategoria);
     }
 
     private int contar = 0;
