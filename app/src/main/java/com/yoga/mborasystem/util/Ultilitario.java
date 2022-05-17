@@ -73,6 +73,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.MutableLiveData;
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class Ultilitario {
@@ -552,6 +553,11 @@ public class Ultilitario {
     public static String getSharedPreferencesDataDispositivo(Activity activity) {
         SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
         return sharedPref.getString("data", "00-00-0000");
+    }
+
+    public static String getPercentagemIva(Activity activity) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        return sharedPreferences.getString("percentagem_iva", "");
     }
 
     public static String monthInglesFrances(String data) {

@@ -535,4 +535,6 @@
     <string name="nao_alt_ope">Não tem autorização para esta operação</string>
     <string name="cats_impo">Categorias importadas</string>
     <string name="tent_nov">Tentar novamente</string>
+    <string name="config">Configurações</string>
+    <string name="perc_iva">Percentagem do IVA</string>
 </resources>

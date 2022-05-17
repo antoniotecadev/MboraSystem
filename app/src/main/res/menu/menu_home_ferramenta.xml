@@ -12,6 +12,9 @@
       android:id="@+id/dialogAlterarCodigoPin"
       android:title="@string/alterar_codigo_pin" />
   <item
+      android:id="@+id/config"
+      android:title="@string/config" />
+  <item
       android:id="@+id/termosCondicoes"
       android:title="@string/termo_condicao" />
   <item

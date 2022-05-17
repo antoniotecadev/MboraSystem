@@ -160,6 +160,7 @@ public class HomeFragment extends Fragment {
                 binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
                 menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
                 menu.findItem(R.id.estadoCliente).setEnabled(false);
+                menu.findItem(R.id.config).setEnabled(false);
             } else {
                 menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
             }
@@ -202,6 +203,9 @@ public class HomeFragment extends Fragment {
                         MainActivity.dismissProgressBar();
                     }
                 }
+                break;
+            case R.id.config:
+                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
                 break;
             case R.id.termosCondicoes:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/termoscondicoes")));

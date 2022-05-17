@@ -77,6 +77,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.preference.EditTextPreference;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
@@ -158,9 +159,7 @@ public class FacturaFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentFacturaBinding.inflate(inflater, container, false);
-
         getListClientesCantina();
-
         barcodeView = binding.viewStub.inflate().findViewById(R.id.barcode_scanner);
         binding.viewStub.setVisibility(View.GONE);
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
@@ -253,7 +252,7 @@ public class FacturaFragment extends Fragment {
                 }
             }
         });
-        binding.textTaxa.setText("14%");
+        binding.textTaxa.setText(Ultilitario.getPercentagemIva(requireActivity()) + "%");
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
         binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
         binding.textDesconto.addTextChangedListener(new TextWatcher() {
@@ -809,7 +808,7 @@ public class FacturaFragment extends Fragment {
                 Button btnRemover = viewHolder.itemView.findViewById(R.id.btnRemover);
                 Ultilitario.addItemOnSpinner(qt, 255, getContext());
                 prod.setText(produto.getNome());
-                ref.setText("MS" + produto.getId() + " " + (produto.isIva() ? getString(R.string.iva) : ""));
+                ref.setText("MS" + produto.getId() + " " + (produto.isIva() ? getText(R.string.montante_iva) + "(" + produto.getPercentagemIva() + "%)" : ""));
                 pr.setText(getText(R.string.preco) + " " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 qt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override

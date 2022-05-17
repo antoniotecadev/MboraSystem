@@ -45,9 +45,6 @@
         <action
             android:id="@+id/action_cadastrarClienteFragment_to_bloquearFragment"
             app:destination="@id/bloquearFragment" />
-        <action
-            android:id="@+id/action_cadastrarClienteFragment_to_configuracaoRedeFragment"
-            app:destination="@id/configuracaoRedeFragment" />
     </fragment>
     <fragment
         android:id="@+id/activarMbora"
@@ -154,6 +151,9 @@
             <action
                 android:id="@+id/action_homeFragment_to_listProdutoFragment"
                 app:destination="@id/listProdutoFragment" />
+            <action
+                android:id="@+id/action_homeFragment_to_configuracaoFragment"
+                app:destination="@id/configuracaoFragment" />
         </fragment>
         <fragment
             android:id="@+id/usuarioFragment"
@@ -384,11 +384,11 @@
             android:name="com.yoga.mborasystem.view.DashboardFragment"
             android:label="@string/dsbd_vd"
             tools:layout="@layout/fragment_dashboard" />
+        <fragment
+            android:id="@+id/configuracaoFragment"
+            android:name="com.yoga.mborasystem.view.ConfiguracaoFragment"
+            android:label="@string/config" />
 
     </navigation>
-    <fragment
-        android:id="@+id/configuracaoRedeFragment"
-        android:name="com.yoga.mborasystem.view.ConfiguracaoRedeFragment"
-        android:label="@string/config_red" />
 
 </navigation>
