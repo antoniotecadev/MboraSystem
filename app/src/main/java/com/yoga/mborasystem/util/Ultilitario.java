@@ -316,13 +316,14 @@ public class Ultilitario {
     public static int removerKZ(TextInputEditText editText) {
         return Integer.parseInt(Objects.requireNonNull(editText.getText()).toString().replaceAll(",", "").replaceAll("Kz", "").replaceAll("\\s+", ""));
     }
+
     public static String trocarVírgulaPorPonto(TextInputEditText editText) {
         return Objects.requireNonNull(editText.getText()).toString().replaceAll(",", ".");
     }
 
-    public static void addItemOnSpinner(Spinner spinner, Context context) {
+    public static void addItemOnSpinner(Spinner spinner, int qtd, Context context) {
         ArrayList<Integer> listaQuantidade = new ArrayList<>();
-        for (int i = 1; i <= 255; ++i) {
+        for (int i = 1; i <= qtd; ++i) {
             listaQuantidade.add(i);
         }
         ArrayAdapter<Integer> itemAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listaQuantidade);

@@ -807,7 +807,7 @@ public class FacturaFragment extends Fragment {
                 Spinner qt = viewHolder.itemView.findViewById(R.id.spinnerQt);
                 totaluni = viewHolder.itemView.findViewById(R.id.textTotalUnit);
                 Button btnRemover = viewHolder.itemView.findViewById(R.id.btnRemover);
-                Ultilitario.addItemOnSpinner(qt, getContext());
+                Ultilitario.addItemOnSpinner(qt, 255, getContext());
                 prod.setText(produto.getNome());
                 ref.setText("MS" + produto.getId() + " " + (produto.isIva() ? getString(R.string.iva) : ""));
                 pr.setText(getText(R.string.preco) + " " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())));

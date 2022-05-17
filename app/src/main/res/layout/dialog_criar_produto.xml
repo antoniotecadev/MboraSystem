@@ -110,9 +110,7 @@
                     android:inputType="number"
                     android:maxLength="15"
                     android:text="@string/preco_zero">
-
                 </com.google.android.material.textfield.TextInputEditText>
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -126,6 +124,12 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margem_lateral_formulario"
+            android:background="?android:attr/listDivider" />
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margem_lateral_formulario"
-            android:text="@string/iva" />
+            android:text="@string/montante_iva" />
 
             <TextView
                 android:id="@+id/textMontanteIva"
@@ -146,7 +150,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario" />
 
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerIva"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:spinnerMode="dropdown"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margem_lateral_formulario"
+            android:background="?android:attr/listDivider" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

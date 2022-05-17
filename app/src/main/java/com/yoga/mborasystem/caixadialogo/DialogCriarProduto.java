@@ -55,7 +55,8 @@ public class DialogCriarProduto extends DialogFragment {
         binding = DialogCriarProdutoBinding.inflate(getLayoutInflater());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
 
-        Ultilitario.addItemOnSpinner(binding.spinnerQuantidade, getContext());
+        Ultilitario.addItemOnSpinner(binding.spinnerQuantidade, 255, getContext());
+        Ultilitario.addItemOnSpinner(binding.spinnerIva, 20, getContext());
 
         if (getArguments() != null) {
             produto = getArguments().getParcelable("produto");
@@ -134,6 +135,24 @@ public class DialogCriarProduto extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        binding.spinnerIva.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if (produto != null) {
+//                    binding.txtQuantidadeProduto.setText(String.valueOf(produto.getQuantidade()));
+//                } else {
+//                    binding.txtQuantidadeProduto.setText(parent.getItemAtPosition(position).toString());
+//                }
+
+                binding.checkIva.setText(getText(R.string.montante_iva) + "(" + parent.getItemAtPosition(position).toString() + "%)");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -238,16 +257,27 @@ public class DialogCriarProduto extends DialogFragment {
 
     private void calcularIVA(DialogCriarProdutoBinding b, boolean isChecked) {
         if (isChecked) {
+            float montanteIVA;
             preco = Ultilitario.removerKZ(b.txtPrecoProduto);
-            float montanteIVA = (float) (preco * 0.14);
+            if (Integer.valueOf(b.spinnerIva.getSelectedItem().toString()) > 9) {
+                montanteIVA = (float) (preco * Float.parseFloat("0." + b.spinnerIva.getSelectedItem().toString()));
+            } else {
+                montanteIVA = (float) (preco * Float.parseFloat("0.0" + b.spinnerIva.getSelectedItem().toString()));
+            }
             b.txtPrecoProduto.setText(String.valueOf(preco + montanteIVA));
             b.textMontanteIva.setText(Ultilitario.formatPreco(String.valueOf((int) montanteIVA)));
             binding.txtPrecoProduto.setEnabled(false);
             binding.btnLimparPreco.setEnabled(false);
+            b.spinnerIva.setEnabled(false);
         } else {
             binding.txtPrecoProduto.setEnabled(true);
             binding.btnLimparPreco.setEnabled(true);
-            b.txtPrecoProduto.setText(String.valueOf(preco / 1.14));
+            b.spinnerIva.setEnabled(true);
+            if (Integer.valueOf(b.spinnerIva.getSelectedItem().toString()) > 9) {
+                b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1." + b.spinnerIva.getSelectedItem().toString())));
+            } else {
+                b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1.0" + b.spinnerIva.getSelectedItem().toString())));
+            }
             b.textMontanteIva.setText("");
         }
     }
