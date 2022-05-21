@@ -169,7 +169,11 @@ public class DialogCriarProduto extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (produto != null) {
-                    binding.txtQuantidadeProduto.setText(String.valueOf(produto.getQuantidade()));
+                    if (Integer.parseInt(parent.getItemAtPosition(position).toString()) != Integer.parseInt(Objects.requireNonNull(binding.txtQuantidadeProduto.getText()).toString())) {
+                        binding.txtQuantidadeProduto.setText(parent.getItemAtPosition(position).toString());
+                    } else {
+                        binding.txtQuantidadeProduto.setText(String.valueOf(produto.getQuantidade()));
+                    }
                 } else {
                     binding.txtQuantidadeProduto.setText(parent.getItemAtPosition(position).toString());
                 }
