@@ -258,11 +258,12 @@ public class DialogCriarProduto extends DialogFragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void calcularIVA(DialogCriarProdutoBinding b, boolean isChecked) {
         if (isChecked) {
             float montanteIVA;
             preco = Ultilitario.removerKZ(b.txtPrecoProduto);
-            if (Integer.valueOf(b.spinnerIva.getSelectedItem().toString()) > 9) {
+            if (Integer.parseInt(b.spinnerIva.getSelectedItem().toString()) > 9) {
                 montanteIVA = (float) (preco * Float.parseFloat("0." + b.spinnerIva.getSelectedItem().toString()));
             } else {
                 montanteIVA = (float) (preco * Float.parseFloat("0.0" + b.spinnerIva.getSelectedItem().toString()));
@@ -277,7 +278,7 @@ public class DialogCriarProduto extends DialogFragment {
             binding.txtPrecoProduto.setEnabled(true);
             binding.btnLimparPreco.setEnabled(true);
             b.spinnerIva.setEnabled(true);
-            if (Integer.valueOf(b.spinnerIva.getSelectedItem().toString()) > 9) {
+            if (Integer.parseInt(b.spinnerIva.getSelectedItem().toString()) > 9) {
                 b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1." + b.spinnerIva.getSelectedItem().toString())));
             } else {
                 b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1.0" + b.spinnerIva.getSelectedItem().toString())));
