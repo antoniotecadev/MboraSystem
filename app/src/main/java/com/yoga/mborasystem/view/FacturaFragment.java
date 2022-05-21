@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.snackbar.Snackbar;
@@ -77,7 +76,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.preference.EditTextPreference;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
