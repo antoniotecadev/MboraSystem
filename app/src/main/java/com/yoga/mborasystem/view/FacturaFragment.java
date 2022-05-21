@@ -110,13 +110,14 @@ public class FacturaFragment extends Fragment {
         @Override
         public void barcodeResult(BarcodeResult result) {
             if (result.getText().equals(resultCodeBar)) {
-                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.ja_scaneado), R.drawable.ic_toast_erro);
+                barcodeView.setStatusText(getString(R.string.ja_scaneado) + " (" + result.getText() + ")");
             } else {
                 addScaner = true;
                 resultCodeBar = result.getText();
-                barcodeView.setStatusText(result.getText());
+                barcodeView.setStatusText(result.getText() + "\n" + getString(R.string.ja_scaneado));
                 beepManager.playBeepSoundAndVibrate();
                 produtoViewModel.searchProduto(resultCodeBar, false);
+                Ultilitario.showToastQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW));
             }
             //Added preview of scanned barcode
 //            ImageView imageView = findViewById(R.id.barcodePreview);

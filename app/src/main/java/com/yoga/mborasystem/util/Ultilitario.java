@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -87,7 +88,7 @@ public class Ultilitario {
     public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");
     public static Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç0-9\n ]");
     public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4;
-    public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, SINCO = 5, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 10;
+    public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, LENGTH_TOAST = 100, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 10;
 
     public Ultilitario() {
     }
@@ -104,6 +105,18 @@ public class Ultilitario {
         toast.setView(view);
         toast.setGravity(Gravity.CENTER, 0, 50);
         toast.setDuration(LENGTH_LONG);
+        toast.show();
+    }
+
+    @SuppressLint("WrongConstant")
+    public static void showToastQrCode(Context context, Bitmap imagem) {
+        Toast toast = new Toast(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
+        ImageView img = view.findViewById(R.id.toast_image);
+        img.setImageBitmap(imagem);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 50);
+        toast.setDuration(LENGTH_TOAST);
         toast.show();
     }
 
