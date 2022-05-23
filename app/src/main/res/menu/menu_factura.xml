@@ -8,5 +8,10 @@
       android:title="@string/pesquisar_produto"
       app:actionViewClass="android.widget.SearchView"
       app:showAsAction="ifRoom|collapseActionView" />
+  <item
+      android:id="@+id/calculadora"
+      android:icon="@drawable/ic_baseline_calculate_24"
+      android:title="@string/calc"
+      app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>
