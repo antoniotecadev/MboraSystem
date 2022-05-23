@@ -108,6 +108,7 @@ public class DialogCriarProduto extends DialogFragment {
                     binding.txtQuantidadeProduto.setEnabled(false);
                     binding.txtCodigoBar.setEnabled(false);
                     binding.checkIva.setEnabled(false);
+                    binding.spinnerIva.setVisibility(View.GONE);
                     binding.btnLimparPreco.setVisibility(View.GONE);
                     binding.btnLimparPrecoFornecedor.setVisibility(View.GONE);
                     binding.spinnerQuantidade.setVisibility(View.GONE);
