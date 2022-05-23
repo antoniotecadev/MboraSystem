@@ -305,14 +305,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
-                android:text="@string/desconto" />
+                android:text="@string/desconto"
+                android:textSize="20sp"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="200dp"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
@@ -329,7 +330,8 @@
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:text="@string/preco_zero"
-                        android:maxLength="15"/>
+                        android:maxLength="15"
+                        android:textSize="24dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -356,7 +358,7 @@
                 android:text="0,00"
                 android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -368,14 +370,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
-                android:text="@string/valor_pago" />
+                android:text="@string/valor_pago"
+                android:textSize="20sp"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="200dp"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
@@ -392,7 +395,8 @@
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:text="@string/preco_zero"
-                        android:maxLength="15"/>
+                        android:maxLength="15"
+                        android:textSize="24dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -419,7 +423,7 @@
                 android:text="0,00"
                 android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -437,13 +441,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
-                android:text="@string/dvd" />
+                android:text="@string/dvd"
+                android:textSize="20sp"/>
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/checkbox_sem_valor_pago"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/se_val_pag" />
+                android:text="@string/se_val_pag"
+                android:textSize="20sp"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -452,7 +458,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="200dp"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
@@ -470,7 +476,8 @@
                         android:inputType="number"
                         android:text="@string/preco_zero"
                         android:maxLength="15"
-                        android:enabled="false"/>
+                        android:enabled="false"
+                        android:textSize="24dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -489,7 +496,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
-                android:text="@string/alter"/>
+                android:text="@string/alter"
+                android:textSize="20sp"/>
 
             <View
                 android:layout_width="match_parent"
