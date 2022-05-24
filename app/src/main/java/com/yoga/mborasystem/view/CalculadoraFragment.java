@@ -62,8 +62,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return binding.getRoot();
     }
 
-    private void setOnClickListeners()
-    {
+    private void setOnClickListeners() {
         binding.buttonZero.setOnClickListener(this);
         binding.buttonOne.setOnClickListener(this);
         binding.buttonTwo.setOnClickListener(this);
@@ -88,8 +87,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         textViewInputNumbers = binding.textViewInputNumbers;
     }
 
-    private void setOnTouchListener()
-    {
+    private void setOnTouchListener() {
         binding.buttonZero.setOnTouchListener(this);
         binding.buttonOne.setOnTouchListener(this);
         binding.buttonTwo.setOnTouchListener(this);
@@ -112,10 +110,8 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.button_zero:
                 if (addNumber("0")) equalClicked = false;
                 break;
@@ -182,18 +178,14 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent)
-    {
-        switch (motionEvent.getAction())
-        {
-            case MotionEvent.ACTION_DOWN:
-            {
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (motionEvent.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
                 view.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
                 view.invalidate();
                 break;
             }
-            case MotionEvent.ACTION_UP:
-            {
+            case MotionEvent.ACTION_UP: {
                 view.getBackground().clearColorFilter();
                 view.invalidate();
                 break;
@@ -202,24 +194,19 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return false;
     }
 
-    private boolean addDot()
-    {
+    private boolean addDot() {
         boolean done = false;
 
-        if (textViewInputNumbers.getText().length() == 0)
-        {
+        if (textViewInputNumbers.getText().length() == 0) {
             textViewInputNumbers.setText("0.");
             dotUsed = true;
             done = true;
-        } else if (dotUsed == true)
-        {
-        } else if (defineLastCharacter(textViewInputNumbers.getText().charAt(textViewInputNumbers.getText().length() - 1) + "") == IS_OPERAND)
-        {
+        } else if (dotUsed == true) {
+        } else if (defineLastCharacter(textViewInputNumbers.getText().charAt(textViewInputNumbers.getText().length() - 1) + "") == IS_OPERAND) {
             textViewInputNumbers.setText(textViewInputNumbers.getText() + "0.");
             done = true;
             dotUsed = true;
-        } else if (defineLastCharacter(textViewInputNumbers.getText().charAt(textViewInputNumbers.getText().length() - 1) + "") == IS_NUMBER)
-        {
+        } else if (defineLastCharacter(textViewInputNumbers.getText().charAt(textViewInputNumbers.getText().length() - 1) + "") == IS_NUMBER) {
             textViewInputNumbers.setText(textViewInputNumbers.getText() + ".");
             done = true;
             dotUsed = true;
@@ -227,22 +214,18 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return done;
     }
 
-    private boolean addParenthesis()
-    {
+    private boolean addParenthesis() {
         boolean done = false;
         int operationLength = textViewInputNumbers.getText().length();
 
-        if (operationLength == 0)
-        {
+        if (operationLength == 0) {
             textViewInputNumbers.setText(textViewInputNumbers.getText() + "(");
             dotUsed = false;
             openParenthesis++;
             done = true;
-        } else if (openParenthesis > 0 && operationLength > 0)
-        {
+        } else if (openParenthesis > 0 && operationLength > 0) {
             String lastInput = textViewInputNumbers.getText().charAt(operationLength - 1) + "";
-            switch (defineLastCharacter(lastInput))
-            {
+            switch (defineLastCharacter(lastInput)) {
                 case IS_NUMBER:
                     textViewInputNumbers.setText(textViewInputNumbers.getText() + ")");
                     done = true;
@@ -268,17 +251,14 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
                     dotUsed = false;
                     break;
             }
-        } else if (openParenthesis == 0 && operationLength > 0)
-        {
+        } else if (openParenthesis == 0 && operationLength > 0) {
             String lastInput = textViewInputNumbers.getText().charAt(operationLength - 1) + "";
-            if (defineLastCharacter(lastInput) == IS_OPERAND)
-            {
+            if (defineLastCharacter(lastInput) == IS_OPERAND) {
                 textViewInputNumbers.setText(textViewInputNumbers.getText() + "(");
                 done = true;
                 dotUsed = false;
                 openParenthesis++;
-            } else
-            {
+            } else {
                 textViewInputNumbers.setText(textViewInputNumbers.getText() + "x(");
                 done = true;
                 dotUsed = false;
@@ -288,67 +268,54 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return done;
     }
 
-    private boolean addOperand(String operand)
-    {
+    private boolean addOperand(String operand) {
         boolean done = false;
         int operationLength = textViewInputNumbers.getText().length();
-        if (operationLength > 0)
-        {
+        if (operationLength > 0) {
             String lastInput = textViewInputNumbers.getText().charAt(operationLength - 1) + "";
 
-            if ((lastInput.equals("+") || lastInput.equals("-") || lastInput.equals("*") || lastInput.equals("\u00F7") || lastInput.equals("%")))
-            {
-                Toast.makeText(requireContext(), "Wrong format", Toast.LENGTH_LONG).show();
-            } else if (operand.equals("%") && defineLastCharacter(lastInput) == IS_NUMBER)
-            {
+            if ((lastInput.equals("+") || lastInput.equals("-") || lastInput.equals("*") || lastInput.equals("\u00F7") || lastInput.equals("%"))) {
+                Toast.makeText(requireContext(), getString(R.string.form_inc), Toast.LENGTH_LONG).show();
+            } else if (operand.equals("%") && defineLastCharacter(lastInput) == IS_NUMBER) {
                 textViewInputNumbers.setText(textViewInputNumbers.getText() + operand);
                 dotUsed = false;
                 equalClicked = false;
                 lastExpression = "";
                 done = true;
-            } else if (!operand.equals("%"))
-            {
+            } else if (!operand.equals("%")) {
                 textViewInputNumbers.setText(textViewInputNumbers.getText() + operand);
                 dotUsed = false;
                 equalClicked = false;
                 lastExpression = "";
                 done = true;
             }
-        } else
-        {
-            Toast.makeText(requireContext(), "Wrong Format. Operand Without any numbers?", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.form_inc_se_nm), Toast.LENGTH_LONG).show();
         }
         return done;
     }
 
-    private boolean addNumber(String number)
-    {
+    private boolean addNumber(String number) {
         boolean done = false;
         int operationLength = textViewInputNumbers.getText().length();
-        if (operationLength > 0)
-        {
+        if (operationLength > 0) {
             String lastCharacter = textViewInputNumbers.getText().charAt(operationLength - 1) + "";
             int lastCharacterState = defineLastCharacter(lastCharacter);
 
-            if (operationLength == 1 && lastCharacterState == IS_NUMBER && lastCharacter.equals("0"))
-            {
+            if (operationLength == 1 && lastCharacterState == IS_NUMBER && lastCharacter.equals("0")) {
                 textViewInputNumbers.setText(number);
                 done = true;
-            } else if (lastCharacterState == IS_OPEN_PARENTHESIS)
-            {
+            } else if (lastCharacterState == IS_OPEN_PARENTHESIS) {
                 textViewInputNumbers.setText(textViewInputNumbers.getText() + number);
                 done = true;
-            } else if (lastCharacterState == IS_CLOSE_PARENTHESIS || lastCharacter.equals("%"))
-            {
+            } else if (lastCharacterState == IS_CLOSE_PARENTHESIS || lastCharacter.equals("%")) {
                 textViewInputNumbers.setText(textViewInputNumbers.getText() + "x" + number);
                 done = true;
-            } else if (lastCharacterState == IS_NUMBER || lastCharacterState == IS_OPERAND || lastCharacterState == IS_DOT)
-            {
+            } else if (lastCharacterState == IS_NUMBER || lastCharacterState == IS_OPERAND || lastCharacterState == IS_DOT) {
                 textViewInputNumbers.setText(textViewInputNumbers.getText() + number);
                 done = true;
             }
-        } else
-        {
+        } else {
             textViewInputNumbers.setText(textViewInputNumbers.getText() + number);
             done = true;
         }
@@ -356,17 +323,13 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
     }
 
 
-    private void calculate(String input)
-    {
+    private void calculate(String input) {
         String result = "";
-        try
-        {
+        try {
             String temp = input;
-            if (equalClicked)
-            {
+            if (equalClicked) {
                 temp = input + lastExpression;
-            } else
-            {
+            } else {
                 saveLastExpression(input);
             }
             result = scriptEngine.eval(temp.replaceAll("%", "/100").replaceAll("x", "*").replaceAll("[^\\x00-\\x7F]", "/")).toString();
@@ -374,72 +337,55 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
             result = decimal.setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString();
             equalClicked = true;
 
-        } catch (Exception e)
-        {
-            Toast.makeText(requireContext(), "Wrong Format", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), getString(R.string.form_inc), Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (result.equals("Infinity"))
-        {
-            Toast.makeText(requireContext(), "Division by zero is not allowed", Toast.LENGTH_SHORT).show();
+        if (result.equals("Infinity")) {
+            Toast.makeText(requireContext(), getString(R.string.div_zer_n_perm), Toast.LENGTH_LONG).show();
             textViewInputNumbers.setText(input);
 
-        } else if (result.contains("."))
-        {
+        } else if (result.contains(".")) {
             result = result.replaceAll("\\.?0*$", "");
             textViewInputNumbers.setText(result);
         }
     }
 
-    private void saveLastExpression(String input)
-    {
+    private void saveLastExpression(String input) {
         String lastOfExpression = input.charAt(input.length() - 1) + "";
-        if (input.length() > 1)
-        {
-            if (lastOfExpression.equals(")"))
-            {
+        if (input.length() > 1) {
+            if (lastOfExpression.equals(")")) {
                 lastExpression = ")";
                 int numberOfCloseParenthesis = 1;
 
-                for (int i = input.length() - 2; i >= 0; i--)
-                {
-                    if (numberOfCloseParenthesis > 0)
-                    {
+                for (int i = input.length() - 2; i >= 0; i--) {
+                    if (numberOfCloseParenthesis > 0) {
                         String last = input.charAt(i) + "";
-                        if (last.equals(")"))
-                        {
+                        if (last.equals(")")) {
                             numberOfCloseParenthesis++;
-                        } else if (last.equals("("))
-                        {
+                        } else if (last.equals("(")) {
                             numberOfCloseParenthesis--;
                         }
                         lastExpression = last + lastExpression;
-                    } else if (defineLastCharacter(input.charAt(i) + "") == IS_OPERAND)
-                    {
+                    } else if (defineLastCharacter(input.charAt(i) + "") == IS_OPERAND) {
                         lastExpression = input.charAt(i) + lastExpression;
                         break;
-                    } else
-                    {
+                    } else {
                         lastExpression = "";
                     }
                 }
-            } else if (defineLastCharacter(lastOfExpression + "") == IS_NUMBER)
-            {
+            } else if (defineLastCharacter(lastOfExpression + "") == IS_NUMBER) {
                 lastExpression = lastOfExpression;
-                for (int i = input.length() - 2; i >= 0; i--)
-                {
+                for (int i = input.length() - 2; i >= 0; i--) {
                     String last = input.charAt(i) + "";
-                    if (defineLastCharacter(last) == IS_NUMBER || defineLastCharacter(last) == IS_DOT)
-                    {
+                    if (defineLastCharacter(last) == IS_NUMBER || defineLastCharacter(last) == IS_DOT) {
                         lastExpression = last + lastExpression;
-                    } else if (defineLastCharacter(last) == IS_OPERAND)
-                    {
+                    } else if (defineLastCharacter(last) == IS_OPERAND) {
                         lastExpression = last + lastExpression;
                         break;
                     }
-                    if (i == 0)
-                    {
+                    if (i == 0) {
                         lastExpression = "";
                     }
                 }
@@ -447,14 +393,11 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private int defineLastCharacter(String lastCharacter)
-    {
-        try
-        {
+    private int defineLastCharacter(String lastCharacter) {
+        try {
             Integer.parseInt(lastCharacter);
             return IS_NUMBER;
-        } catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
         }
 
         if ((lastCharacter.equals("+") || lastCharacter.equals("-") || lastCharacter.equals("x") || lastCharacter.equals("\u00F7") || lastCharacter.equals("%")))

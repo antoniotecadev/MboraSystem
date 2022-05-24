@@ -538,4 +538,7 @@
     <string name="config">Configurações</string>
     <string name="perc_iva">Percentagem do IVA</string>
     <string name="calc">Calculadora</string>
+    <string name="form_inc">Formato incorreto</string>
+    <string name="form_inc_se_nm">Formato incorreto. Operando Sem números?</string>
+    <string name="div_zer_n_perm">A divisão por zero não é permitida</string>
 </resources>
