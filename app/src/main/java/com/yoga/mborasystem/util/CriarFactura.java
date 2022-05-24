@@ -1,28 +1,27 @@
 package com.yoga.mborasystem.util;
 
+import static com.yoga.mborasystem.util.FormatarDocumento.addLineSeparator;
+import static com.yoga.mborasystem.util.FormatarDocumento.addLineSpace;
+import static com.yoga.mborasystem.util.FormatarDocumento.addNewItem;
+import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
+import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.print.PrintAttributes;
-import android.print.PrintDocumentAdapter;
-import android.print.PrintManager;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BarcodeQRCode;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
-import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -40,7 +39,6 @@ import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.Objects;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 public class CriarFactura {
@@ -120,7 +118,7 @@ public class CriarFactura {
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
             if (!isGuardar)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    CriarFactura.printPDF(activity, activity.getBaseContext(), facturaPath);
+                    printPDF(activity, activity.getBaseContext(), facturaPath);
                 } else {
                     Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
                 }
@@ -130,48 +128,6 @@ public class CriarFactura {
         } catch (DocumentException e) {
             e.printStackTrace();
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-        } finally {
-            MainActivity.dismissProgressBar();
-        }
-    }
-
-    private static void addNewLineWithLeftAndRight(Document document, String textLeft, String textRight, Font textLeftFont, Font textRightFont) throws DocumentException {
-        Chunk chunkTextLeft = new Chunk(textLeft, textLeftFont);
-        Chunk chunkTextRight = new Chunk(textRight
-                , textRightFont);
-        Paragraph p = new Paragraph(chunkTextLeft);
-        p.add(new Chunk(new VerticalPositionMark()));
-        p.add(chunkTextRight);
-        document.add(p);
-    }
-
-    private static void addLineSeparator(Document document) throws DocumentException {
-        LineSeparator lineSeparator = new LineSeparator();
-        lineSeparator.setLineColor(BaseColor.BLACK);
-        addLineSpace(document);
-        document.add(new Chunk(lineSeparator));
-    }
-
-    private static void addLineSpace(Document document) throws DocumentException {
-        document.add(new Paragraph("\n"));
-    }
-
-    private static void addNewItem(Document document, String text, int align, Font font) throws DocumentException {
-        Chunk chunk = new Chunk(text, font);
-        Paragraph paragraph = new Paragraph(chunk);
-        paragraph.setAlignment(align);
-        document.add(paragraph);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void printPDF(Activity activity, Context context, String factura) {
-        PrintManager printManager;
-        printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
-        try {
-            PrintDocumentAdapter printDocumentAdapter = new PdfDocumentAdapter(activity, Common.getAppPath(context) + factura);
-            printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
-        } catch (Exception ex) {
-            Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
         } finally {
             MainActivity.dismissProgressBar();
         }
