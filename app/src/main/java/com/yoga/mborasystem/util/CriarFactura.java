@@ -49,12 +49,12 @@ public class CriarFactura {
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath(context) + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
+                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.factura)) + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath(context) + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
+                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.factura)) + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, codigoQr, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit);
                     }
 
                     @Override
@@ -118,7 +118,7 @@ public class CriarFactura {
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
             if (!isGuardar)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    printPDF(activity, activity.getBaseContext(), facturaPath);
+                    printPDF(activity, activity.getBaseContext(), facturaPath, activity.getString(R.string.factura));
                 } else {
                     Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
                 }
