@@ -471,4 +471,10 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
 
         return -1;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
