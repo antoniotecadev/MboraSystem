@@ -161,4 +161,7 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-database'
 
+    // Executar scripts (Calculadora)
+    implementation 'io.apisense:rhino-android:1.0'
+
 }

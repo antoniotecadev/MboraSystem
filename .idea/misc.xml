@@ -50,10 +50,13 @@
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/menu/menu_venda.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/MboraSystem/app/src/main/res/xml/preferences_rede.xml" value="0.33" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/drawable/ic_baseline_calculate_24.xml" value="0.1615" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout-h480dp/fragment_login.xml" value="0.3998015873015873" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout-h600dp/fragment_login.xml" value="0.182518115942029" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_produto.xml" value="0.5" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_usuario.xml" value="0.17074275362318841" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_filtrar_produto.xml" value="0.17074275362318841" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_cadastrar_cliente.xml" value="0.15806159420289856" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_calculadora.xml" value="0.25" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_factura.xml" value="0.182518115942029" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_factura.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_home_ferramenta.xml" value="0.20416666666666666" />

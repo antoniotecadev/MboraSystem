@@ -388,6 +388,11 @@
             android:id="@+id/configuracaoFragment"
             android:name="com.yoga.mborasystem.view.ConfiguracaoFragment"
             android:label="@string/config" />
+        <fragment
+            android:id="@+id/calculadoraFragment"
+            android:name="com.yoga.mborasystem.view.CalculadoraFragment"
+            android:label="@string/calc"
+            tools:layout="@layout/fragment_calculadora" />
 
     </navigation>
 
