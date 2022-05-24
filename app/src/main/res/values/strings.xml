@@ -541,4 +541,5 @@
     <string name="form_inc">Formato incorreto</string>
     <string name="form_inc_se_nm">Formato incorreto. Operando Sem números?</string>
     <string name="div_zer_n_perm">A divisão por zero não é permitida</string>
+    <string name="rel_dia_ven">Relatório diário</string>
 </resources>

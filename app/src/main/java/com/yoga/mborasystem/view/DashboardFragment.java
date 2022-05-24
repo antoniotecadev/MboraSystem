@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -30,6 +33,9 @@ import org.eazegraph.lib.models.ValueLineSeries;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 public class DashboardFragment extends Fragment {
 
@@ -42,6 +48,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
@@ -360,6 +367,26 @@ public class DashboardFragment extends Fragment {
         series.addPoint(new ValueLinePoint("Nov", isQuant ? nov : (nov / 100)));
         series.addPoint(new ValueLinePoint("Dec", isQuant ? dez : (dez / 100)));
         mCubicValueLineChart.addSeries(series);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+        switch (item.getItemId()) {
+            case R.id.relatorioDiarioVenda:
+                Toast.makeText(requireContext(), "feito", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        return NavigationUI.onNavDestinationSelected(item, navController)
+                || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_dashboard, menu);
     }
 
     @Override
