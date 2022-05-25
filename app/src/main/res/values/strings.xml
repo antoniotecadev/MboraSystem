@@ -477,8 +477,9 @@
         <item>Desbloqueados(as)</item>
     </string-array>
     <string name="prazterm">
-        O prazo de utilização do serviço MboraSystem terminou.\n
+        MBORASYSTEM: O prazo de utilização do serviço MboraSystem terminou.\n
         Activa já a sua conta para voltar a utiliza - lo.\n
+        Para mais informações entra em contacto com os nossos serviços de apoio técnico.\n
     </string>
     <string name="sm_int">Sem internet</string>
     <string name="conec_wif_dad">Conecta - se a uma rede: Dados móveis ou Wi-Fi</string>
@@ -541,5 +542,11 @@
     <string name="form_inc">Formato incorreto</string>
     <string name="form_inc_se_nm">Formato incorreto. Operando Sem números?</string>
     <string name="div_zer_n_perm">A divisão por zero não é permitida</string>
-    <string name="rel_dia_ven">Relatório diário</string>
+    <string name="rel_dia_ven">Relatório de venda diária</string>
+    <string name="rel_ven_dia_gua">Relatório de venda guardada na pasta MboraSystem Admin</string>
+    <string name="rel_vend">RELATÓRIO DE VENDA DIÁRIA\n</string>
+    <string-array name="array_rela_vend_diar">
+        <item>Guardar</item>
+        <item>Imprimir</item>
+    </string-array>
 </resources>
