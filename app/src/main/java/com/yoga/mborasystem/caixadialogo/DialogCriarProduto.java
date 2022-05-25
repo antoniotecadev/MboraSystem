@@ -232,7 +232,7 @@ public class DialogCriarProduto extends DialogFragment {
     private void deleteProduto(Produto produto) {
         produto.setId(produto.getId());
         produto.setEstado(Ultilitario.TRES);
-        produto.setData_elimina(Ultilitario.getDateCurrent());
+        produto.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
         AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
         alert.setTitle(getString(R.string.env_lx) + " (" + produto.getNome() + ")");
         alert.setMessage(getString(R.string.env_prod_lix));

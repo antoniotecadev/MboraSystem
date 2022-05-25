@@ -4,7 +4,6 @@ import static com.yoga.mborasystem.util.RelatorioDiariaVenda.getPemissionAcessSt
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;

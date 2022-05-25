@@ -78,7 +78,7 @@ public class CategoriaRepository {
             categoria.setCategoria(ct);
             categoria.setDescricao(categorias.get(ct));
             categoria.setEstado(1);
-            categoria.setData_cria(Ultilitario.getDateCurrent());
+            categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
             categoriaDao.insert(categoria);
         }
         handler.post(() -> Toast.makeText(context, R.string.cats_impo, Toast.LENGTH_LONG).show());

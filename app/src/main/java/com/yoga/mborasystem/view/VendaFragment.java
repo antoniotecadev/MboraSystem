@@ -318,7 +318,7 @@ public class VendaFragment extends Fragment {
                     .setTitle(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, true, false))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false))
                     .show();
         }
 
@@ -371,9 +371,9 @@ public class VendaFragment extends Fragment {
                     }
                 } else {
                     if (permanente) {
-                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, true, false);
+                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false);
                     } else {
-                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.getDateCurrent(), venda, false, false);
+                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, false, false);
                     }
                 }
             }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())

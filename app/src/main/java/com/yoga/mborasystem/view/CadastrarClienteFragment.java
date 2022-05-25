@@ -220,7 +220,7 @@ public class CadastrarClienteFragment extends Fragment {
         cliente.setSenha(Objects.requireNonNull(binding.editTextSenha.getText()).toString());
         cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
         cliente.setCodigoEquipa(Objects.requireNonNull(binding.editTextCodigoEquipa.getText()).toString());
-        cliente.setData_cria(Ultilitario.getDateCurrent());
+        cliente.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
 
         mDatabase.child(cliente.getImei()).setValue(cliente);
     }

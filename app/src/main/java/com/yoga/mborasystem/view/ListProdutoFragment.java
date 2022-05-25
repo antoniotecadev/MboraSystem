@@ -353,7 +353,7 @@ public class ListProdutoFragment extends Fragment {
         private void caixaDialogo(Produto produto, String titulo, int mensagem, boolean permanente) {
             produto.setId(produto.getId());
             produto.setEstado(Ultilitario.TRES);
-            produto.setData_elimina(Ultilitario.getDateCurrent());
+            produto.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
             alert.setTitle(titulo);
             alert.setMessage(getString(mensagem));
