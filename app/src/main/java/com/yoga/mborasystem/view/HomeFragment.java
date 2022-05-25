@@ -276,8 +276,8 @@ public class HomeFragment extends Fragment {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
                             estadoTitulo = Byte.parseByte(parceiro.get("estado").getAsString());
                             termina = parceiro.get("termina").getAsByte();
-                            estado = (termina == Ultilitario.UM ? getString(R.string.prazterm) :
-                                    (estadoTitulo == Ultilitario.ZERO ? getString(R.string.cont_des) + " ❌\n" : "")) + "\n" +
+                            estado = (termina == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
+                                    (estadoTitulo == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
