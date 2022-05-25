@@ -25,6 +25,7 @@ import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
+import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
@@ -53,7 +54,10 @@ public class DashboardFragment extends Fragment {
 
     private Cliente cliente;
     private List<Venda> venda;
+    private String data = "";
     private String facturaPath;
+
+    private int idItem;
 
     private long totalVenda = 0;
     private long totalPrecoFornecedor = 0;
@@ -312,6 +316,18 @@ public class DashboardFragment extends Fragment {
         mCubicValueLineChartQuant.startAnimation();
         mCubicValueLineChartVal.startAnimation();
 
+        vendaViewModel.getVendaDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
+            this.data = data;
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.dat_sel))
+                    .setMessage(getString(R.string.vendas) + ": " + data)
+                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
+                        guardarImprimirRelatorioVendaDiaria(idItem, facturaPath);
+                    }).show();
+        }));
+
         return binding.getRoot();
     }
 
@@ -400,8 +416,9 @@ public class DashboardFragment extends Fragment {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.rel_dia_ven)
                         .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
-                            facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
-                            guardarImprimirRelatorioVendaDiaria(i, facturaPath);
+                            this.idItem = i;
+                            DashboardFragmentDirections.ActionDashboardFragmentToDatePickerFragment direction = DashboardFragmentDirections.actionDashboardFragmentToDatePickerFragment(false);
+                            Navigation.findNavController(requireView()).navigate(direction);
                         }).show();
                 break;
             default:

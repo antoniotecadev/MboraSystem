@@ -452,7 +452,7 @@ public class VendaFragment extends Fragment {
                 scanearCodigoQr();
                 break;
             case R.id.btnData:
-                VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
+                VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
                 Navigation.findNavController(requireView()).navigate(direction);
                 break;
             case R.id.exportarvenda:

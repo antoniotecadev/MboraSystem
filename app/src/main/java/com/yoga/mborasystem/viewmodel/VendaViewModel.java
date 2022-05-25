@@ -61,7 +61,7 @@ public class VendaViewModel extends AndroidViewModel {
     MutableLiveData<Event<Boolean>> exportLocal;
     MutableLiveData<Boolean> imprimir, guardarPdf, selectedData;
     MutableLiveData<String> enviarWhatsApp;
-    MutableLiveData<Event<String>> dataExport;
+    MutableLiveData<Event<String>> dataExport, dataVenda;
 
     public MutableLiveData<Boolean> getPrintLiveData() {
         if (imprimir == null) {
@@ -124,6 +124,13 @@ public class VendaViewModel extends AndroidViewModel {
             dataExport = new MutableLiveData<>();
         }
         return dataExport;
+    }
+
+    public MutableLiveData<Event<String>> getVendaDatatAppLiveData() {
+        if (dataVenda == null) {
+            dataVenda = new MutableLiveData<>();
+        }
+        return dataVenda;
     }
 
     public MutableLiveData<Event<List<Venda>>> getVendasParaExportar() {

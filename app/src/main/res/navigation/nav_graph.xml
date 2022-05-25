@@ -319,6 +319,9 @@
                 android:name="idusuario"
                 app:argType="long"
                 android:defaultValue="0L" />
+            <argument
+                android:name="isVenda"
+                app:argType="boolean" />
         </dialog>
         <dialog
             android:id="@+id/dialogExportarImportarVenda"
@@ -383,7 +386,11 @@
             android:id="@+id/dashboardFragment"
             android:name="com.yoga.mborasystem.view.DashboardFragment"
             android:label="@string/dsbd_vd"
-            tools:layout="@layout/fragment_dashboard" />
+            tools:layout="@layout/fragment_dashboard" >
+            <action
+                android:id="@+id/action_dashboardFragment_to_datePickerFragment"
+                app:destination="@id/datePickerFragment" />
+        </fragment>
         <fragment
             android:id="@+id/configuracaoFragment"
             android:name="com.yoga.mborasystem.view.ConfiguracaoFragment"

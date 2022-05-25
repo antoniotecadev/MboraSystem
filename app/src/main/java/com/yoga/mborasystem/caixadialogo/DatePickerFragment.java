@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
@@ -21,7 +22,8 @@ public class DatePickerFragment extends DialogFragment
 
     private VendaViewModel vendaViewModel;
 
-    public DatePickerFragment() { }
+    public DatePickerFragment() {
+    }
 
     @NonNull
     @Override
@@ -39,13 +41,20 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+        boolean isVenda = DatePickerFragmentArgs.fromBundle(getArguments()).getIsVenda();
+
         long idcliente = DatePickerFragmentArgs.fromBundle(getArguments()).getIdcliente();
         boolean isDivida = DatePickerFragmentArgs.fromBundle(getArguments()).getIsDivida();
         long idusuario = DatePickerFragmentArgs.fromBundle(getArguments()).getIdusuario();
 
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
-        Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
-        vendaViewModel.getVendasPorData(data, false, idcliente, isDivida, idusuario);
+        if (isVenda) {
+            Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
+            vendaViewModel.getVendasPorData(data, false, idcliente, isDivida, idusuario);
+        } else {
+            vendaViewModel.getVendaDatatAppLiveData().setValue(new Event<>(data));
+        }
     }
 
 }
