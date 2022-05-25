@@ -547,6 +547,6 @@
     <string name="rel_vend">RELATÓRIO DE VENDA DIÁRIA\n</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar</item>
-        <item>Imprimir</item>
+        <item>Guardar + Imprimir</item>
     </string-array>
 </resources>
