@@ -478,8 +478,8 @@
     </string-array>
     <string name="prazterm">
         MBORASYSTEM: O prazo de utilização do serviço MboraSystem terminou.\n
-        Activa já a sua conta para voltar a utiliza - lo.\n
-        Para mais informações entra em contacto com os nossos serviços de apoio técnico.\n
+        Activa já a sua conta para voltar a utiliza - lo.\n\n
+        Para mais informações entra em contacto com os nossos serviços de apoio técnico.
     </string>
     <string name="sm_int">Sem internet</string>
     <string name="conec_wif_dad">Conecta - se a uma rede: Dados móveis ou Wi-Fi</string>

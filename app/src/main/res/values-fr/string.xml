@@ -443,8 +443,8 @@
     <string name="oro">Or</string>
     <string name="prazterm">
         La durée d’utilisation du service MboraSystem est terminée.\n
-        Activez votre compte maintenant pour l’utiliser à nouveau.\n
-        Pour plus d\'informations, contactez nos services d\'assistance technique.\n
+        Activez votre compte maintenant pour l’utiliser à nouveau.\n\n
+        Pour plus d\'informations, contactez nos services d\'assistance technique.
     </string>
     <string name="sm_int">Pas d’internet</string>
     <string name="conec_wif_dad">Se connecte à un réseau : données mobiles ou Wi-Fi</string>

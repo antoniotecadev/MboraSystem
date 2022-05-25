@@ -443,8 +443,8 @@
     <string name="oro">Gold</string>
     <string name="prazterm">
         The term of use of the MboraSystem service has ended.\n
-        Activate your account now to use it again.\n
-        For more information, contact our technical support services.\n
+        Activate your account now to use it again.\n\n
+        For more information, contact our technical support services.
     </string>
     <string name="sm_int">No internet</string>
     <string name="conec_wif_dad">Connects to a network: Mobile data or Wi-Fi</string>
