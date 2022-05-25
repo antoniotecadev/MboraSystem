@@ -1,8 +1,14 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.RelatorioDiariaVenda.getPemissionAcessStoregeExternal;
+
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +21,7 @@ import android.widget.Toast;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDashboardBinding;
+import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
@@ -37,7 +44,16 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class DashboardFragment extends Fragment {
+
+    private Cliente cliente;
+    private List<Venda> venda;
+    private String facturaPath;
 
     private long totalVenda = 0;
     private long totalPrecoFornecedor = 0;
@@ -45,10 +61,14 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private ProdutoViewModel produtoViewModel;
 
+    private ExecutorService executor;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        cliente = new Cliente();
+        venda = new ArrayList<>();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
@@ -77,6 +97,9 @@ public class DashboardFragment extends Fragment {
         binding.nivelVendaQuantidade.setText(getString(R.string.nv_vd_ms) + " - " + dataActual[2]);
         binding.nivelVendaValor.setText(getString(R.string.nv_vd_vl) + " - " + dataActual[2]);
 
+        vendaViewModel.getDataAdminMaster();
+        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente);
+
         vendaViewModel.getProdutoMaisVendido(dataActual[0] + "-" + dataActual[1] + "-" + dataActual[2]).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
                 for (ProdutoVenda pdVd : produtoVendas) {
@@ -101,7 +124,7 @@ public class DashboardFragment extends Fragment {
                 long jan = 0, fev = 0, mar = 0, abr = 0, mai = 0, jun = 0, jul = 0, ago = 0, set = 0, out = 0, nov = 0, dez = 0;
                 int v1 = 0, v2 = 0, v3 = 0, v4 = 0, v5 = 0, v6 = 0, v7 = 0, v8 = 0, v9 = 0, v10 = 0, v11 = 0, v12 = 0, v13 = 0, v14 = 0, v15 = 0, v16 = 0, v17 = 0, v18 = 0, v19 = 0, v20 = 0, v21 = 0, v22 = 0, v23 = 0, v24 = 0, v25 = 0, v26 = 0, v27 = 0, v28 = 0, v29 = 0, v30 = 0, v31 = 0;
                 int cv1 = 0, cv2 = 0, cv3 = 0, cv4 = 0, cv5 = 0, cv6 = 0, cv7 = 0, cv8 = 0, cv9 = 0, cv10 = 0, cv11 = 0, cv12 = 0, cv13 = 0, cv14 = 0, cv15 = 0, cv16 = 0, cv17 = 0, cv18 = 0, cv19 = 0, cv20 = 0, cv21 = 0, cv22 = 0, cv23 = 0, cv24 = 0, cv25 = 0, cv26 = 0, cv27 = 0, cv28 = 0, cv29 = 0, cv30 = 0, cv31 = 0;
-
+                this.venda.addAll(vendas);
                 for (Venda venda : vendas) {
                     String[] data = TextUtils.split(venda.getData_cria(), "-");
                     if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
@@ -374,13 +397,30 @@ public class DashboardFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         switch (item.getItemId()) {
             case R.id.relatorioDiarioVenda:
-                Toast.makeText(requireContext(), "feito", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.rel_dia_ven)
+                        .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
+                            facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
+                            guardarImprimirRelatorioVendaDiaria(i, facturaPath);
+                        }).show();
                 break;
             default:
                 break;
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
+    }
+
+    private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            if (i == 0) {
+                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, handler);
+            } else if (i == 1) {
+                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, handler);
+            }
+        });
     }
 
     @Override
@@ -393,6 +433,8 @@ public class DashboardFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        if (executor != null)
+            executor.shutdownNow();
     }
 
     @Override

@@ -24,8 +24,7 @@ public class FormatarDocumento {
 
     public static void addNewLineWithLeftAndRight(Document document, String textLeft, String textRight, Font textLeftFont, Font textRightFont) throws DocumentException {
         Chunk chunkTextLeft = new Chunk(textLeft, textLeftFont);
-        Chunk chunkTextRight = new Chunk(textRight
-                , textRightFont);
+        Chunk chunkTextRight = new Chunk(textRight, textRightFont);
         Paragraph p = new Paragraph(chunkTextLeft);
         p.add(new Chunk(new VerticalPositionMark()));
         p.add(chunkTextRight);
@@ -51,11 +50,11 @@ public class FormatarDocumento {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void printPDF(Activity activity, Context context, String factura) {
+    public static void printPDF(Activity activity, Context context, String factura, String pasta) {
         PrintManager printManager;
         printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
         try {
-            PrintDocumentAdapter printDocumentAdapter = new PdfDocumentAdapter(activity, Common.getAppPath(context) + factura);
+            PrintDocumentAdapter printDocumentAdapter = new PdfDocumentAdapter(activity, Common.getAppPath(context, pasta) + factura);
             printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
         } catch (Exception ex) {
             Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
