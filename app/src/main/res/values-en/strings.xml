@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="form_inc">Wrong format</string>
-    <string name="form_inc_se_nm">Wrong Format. Operand Without any numbers?</string>
-    <string name="div_zer_n_perm">Division by zero is not allowed</string>
-    <string name="config">Settings</string>
-    <string name="perc_iva">VAT percentage</string>
-    <string name="calc">Calculator</string>
-</resources>
