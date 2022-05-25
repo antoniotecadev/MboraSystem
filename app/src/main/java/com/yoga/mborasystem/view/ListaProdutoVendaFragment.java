@@ -85,7 +85,7 @@ public class ListaProdutoVendaFragment extends Fragment {
                             if (produto.isIva()) {
                                 estadoProduto.setChecked(true);
                                 estadoProduto.setTextColor(Color.BLUE);
-                                estadoProduto.setText(getString(R.string.iva));
+                                estadoProduto.setText(getText(R.string.montante_iva));
                             } else {
                                 estadoProduto.setChecked(false);
                                 estadoProduto.setTextColor(Color.GRAY);
@@ -102,11 +102,13 @@ public class ListaProdutoVendaFragment extends Fragment {
         });
         return binding.getRoot();
     }
+
     @Override
     public void onStart() {
         super.onStart();
         MainActivity.dismissProgressBar();
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
