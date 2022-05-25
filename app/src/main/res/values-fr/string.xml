@@ -523,7 +523,7 @@
     <string name="perc_iva">Pourcentage de TVA</string>
     <string name="calc">Calculatrice</string>
     <string name="rel_dia_ven">Rapport quotidien des ventes</string>
-    <string name="rel_ven_dia_gua">Rapport de ventes enregistré dans le dossier MboraSystem Admin</string>
+    <string name="rel_ven_dia_gua">Rapport de ventes enregistré dans le dossier MboraSystem</string>
     <string name="rel_vend">RAPPORT QUOTIDIEN DES VENTES\n</string>
     <string name="ms_inf">Pour plus d\'informations, contactez nos services d\'assistance technique.</string>
     <string-array name="array_rela_vend_diar">

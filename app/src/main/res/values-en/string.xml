@@ -523,7 +523,7 @@
     <string name="perc_iva">VAT percentage</string>
     <string name="calc">Calculator</string>
     <string name="rel_dia_ven">Daily sales report</string>
-    <string name="rel_ven_dia_gua">Sales report saved in MboraSystem Admin folder</string>
+    <string name="rel_ven_dia_gua">Sales report saved in MboraSystem folder</string>
     <string name="rel_vend">DAILY SALES REPORT\n</string>
     <string name="ms_inf">For more information, contact our technical support services.</string>
     <string-array name="array_rela_vend_diar">
