@@ -928,7 +928,7 @@ public class FacturaFragment extends Fragment {
                         }
                         if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM) {
                             MainActivity.dismissProgressBar();
-                            Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext());
+                            Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), R.drawable.ic_baseline_person_add_disabled_24);
                         } else if (estadoConta == Ultilitario.UM && termina == Ultilitario.ZERO) {
                             Ultilitario.setSharedPreferencesDataDispositivo(requireActivity());
                             vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, codigoQr, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, getView());

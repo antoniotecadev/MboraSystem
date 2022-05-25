@@ -546,10 +546,10 @@ public class Ultilitario {
         }
     }
 
-    public static void alertDialog(String titulo, String mensagem, Context context) {
+    public static void alertDialog(String titulo, String mensagem, Context context, int icon) {
         MainActivity.dismissProgressBar();
         new AlertDialog.Builder(context)
-                .setIcon(R.drawable.ic_logotipo_yoga_original)
+                .setIcon(icon)
                 .setTitle(titulo)
                 .setMessage(mensagem)
                 .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())

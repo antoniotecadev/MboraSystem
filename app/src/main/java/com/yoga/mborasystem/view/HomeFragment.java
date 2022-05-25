@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
             return false;
         });
 
-        binding.floatingActionButton.setOnClickListener(v -> Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext()));
+        binding.floatingActionButton.setOnClickListener(v -> Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext(), R.drawable.ic_baseline_store_24));
 
         binding.floatingActionButtonLixo.setOnClickListener(v -> {
             if (isOpen) {
@@ -220,7 +220,7 @@ public class HomeFragment extends Fragment {
                 }
                 break;
             case R.id.acercaMborasytem:
-                Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext());
+                Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext(), R.drawable.ic_baseline_store_24);
                 break;
             case R.id.itemSair:
                 sairApp();
@@ -294,7 +294,8 @@ public class HomeFragment extends Fragment {
                                     "IMEI: " + parceiro.get("imei").getAsString();
 
                         }
-                        Ultilitario.alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext());
+                        Ultilitario.alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext(),
+                                estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
                         new AlertDialog.Builder(requireContext())
