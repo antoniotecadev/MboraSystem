@@ -37,6 +37,9 @@ import java.util.List;
 
 public class RelatorioDiariaVenda {
 
+    private static long totalVendas;
+    private static int quantidadeVendas, quantidadeProdutos, quantidadeProdutosDistinto, totalDescontos, totalDividas;
+
     public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, Handler handler) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -77,9 +80,13 @@ public class RelatorioDiariaVenda {
             addNewItem(document, context.getString(R.string.nif) + " " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, context.getString(R.string.tel) + " " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
             addNewItem(document, activity.getString(R.string.data) + Ultilitario.getDateCurrent(), Element.ALIGN_LEFT, font);
-            addLineSpace(document);
+            addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.vendas), Element.ALIGN_CENTER, titleFont);
+            quantidadeVendas = vendas.size();
             for (Venda venda : vendas) {
+                totalVendas += venda.getTotal_venda();
+                totalDescontos += venda.getDesconto();
+                totalDividas += venda.getDivida();
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.cliente), activity.getString(R.string.cod_qr), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, venda.getNome_cliente(), venda.getCodigo_qr(), font, font);
@@ -97,13 +104,24 @@ public class RelatorioDiariaVenda {
             }
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.produtos), Element.ALIGN_CENTER, titleFont);
+            quantidadeProdutosDistinto = produtoVendas.size();
             for (ProdutoVenda produto : produtoVendas) {
+                quantidadeProdutos += produto.getQuantidade();
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.prod), activity.getString(R.string.venda), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, produto.getNome_produto(), produto.getCodigo_Barra(), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.quantidade), activity.getString(R.string.total), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, String.valueOf(produto.getQuantidade()), Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())), font, font);
             }
+            addLineSeparator(document);
+            addNewItem(document, activity.getString(R.string.geral), Element.ALIGN_CENTER, titleFont);
+            addLineSeparator(document);
+            addNewLineWithLeftAndRight(document, activity.getString(R.string.num_ven), activity.getString(R.string.total), titleFont, titleFont);
+            addNewLineWithLeftAndRight(document, String.valueOf(quantidadeVendas), Ultilitario.formatPreco(String.valueOf(totalVendas)), font, font);
+            addNewLineWithLeftAndRight(document, activity.getString(R.string.num_pro), activity.getString(R.string.num_pro_dist), titleFont, titleFont);
+            addNewLineWithLeftAndRight(document, String.valueOf(quantidadeProdutos), String.valueOf(quantidadeProdutosDistinto), font, font);
+            addNewLineWithLeftAndRight(document, activity.getString(R.string.tot_des), activity.getString(R.string.tot_div), titleFont, titleFont);
+            addNewLineWithLeftAndRight(document, Ultilitario.formatPreco(String.valueOf(totalDescontos)), Ultilitario.formatPreco(String.valueOf(totalDividas)), font, font);
             addLineSeparator(document);
             addLineSpace(document);
             addNewItem(document, "MboraSystem", Element.ALIGN_CENTER, titleFont);

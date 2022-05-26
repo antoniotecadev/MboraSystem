@@ -546,6 +546,12 @@
     <string name="rel_ven_dia_gua">Relatório de venda guardada na pasta MboraSystem</string>
     <string name="rel_vend">RELATÓRIO DE VENDA DIÁRIA\n</string>
     <string name="ms_inf">Para mais informações entra em contacto com os nossos serviços de apoio técnico.</string>
+    <string name="geral">GERAL</string>
+    <string name="num_ven">Número de vendas</string>
+    <string name="num_pro">Número de produtos</string>
+    <string name="num_pro_dist">N.P.D</string>
+    <string name="tot_des">T. Desconto</string>
+    <string name="tot_div">T. Dívida</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar</item>
         <item>Guardar + Imprimir</item>
