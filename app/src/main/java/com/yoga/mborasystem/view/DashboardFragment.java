@@ -64,11 +64,14 @@ public class DashboardFragment extends Fragment {
 
     private ExecutorService executor;
 
+    private List<Venda> vendas;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         cliente = new Cliente();
+        vendas = new ArrayList<>();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
@@ -319,18 +322,25 @@ public class DashboardFragment extends Fragment {
                     .setMessage(getString(R.string.vendas) + ": " + data)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+                        MainActivity.getProgressBar();
                         vendaViewModel.getVendasPorData(data, false, 0, false, 0, false);
                         dialog.dismiss();
                     }).show();
         }));
 
         vendaViewModel.getVendasGuardarImprimir().observe(getViewLifecycleOwner(), vendas -> {
+            this.vendas.clear();
             if (vendas.isEmpty()) {
                 Ultilitario.alertDialog(getString(R.string.vendas), getString(R.string.nao_tem_venda) + " (" + this.data + ")", requireContext(), R.drawable.ic_baseline_store_24);
             } else {
-                facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
-                guardarImprimirRelatorioVendaDiaria(idItem, facturaPath, vendas);
+                this.vendas.addAll(vendas);
+                vendaViewModel.getProdutosVenda(0, null, this.data, true);
             }
+        });
+
+        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), produtos -> {
+            facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
+            guardarImprimirRelatorioVendaDiaria(idItem, facturaPath, this.vendas, produtos);
         });
 
         return binding.getRoot();
@@ -434,14 +444,14 @@ public class DashboardFragment extends Fragment {
                 || super.onOptionsItemSelected(item);
     }
 
-    private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath, List<Venda> venda) {
+    private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath, List<Venda> venda, List<ProdutoVenda> produtoVendas) {
         Handler handler = new Handler(Looper.getMainLooper());
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             if (i == 0) {
-                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, handler);
+                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler);
             } else if (i == 1) {
-                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, handler);
+                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler);
             }
         });
     }

@@ -156,7 +156,7 @@ public class VendaViewModel extends AndroidViewModel {
 
     MutableLiveData<List<ProdutoVenda>> produtosVenda;
 
-    public MutableLiveData<List<ProdutoVenda>> getProdutosVendaLiveDta() {
+    public MutableLiveData<List<ProdutoVenda>> getProdutosVendaLiveData() {
         if (produtosVenda == null) {
             produtosVenda = new MutableLiveData<>();
         }
@@ -290,11 +290,11 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    public void getProdutosVenda(long idvenda, String codQr) {
-        compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda, codQr)
+    public void getProdutosVenda(long idvenda, String codQr, String data, boolean isGuardarImprimir) {
+        compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda, codQr, data, isGuardarImprimir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> getProdutosVendaLiveDta().setValue(produtos), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+                .subscribe(produtos -> getProdutosVendaLiveData().setValue(produtos), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     @SuppressLint("CheckResult")

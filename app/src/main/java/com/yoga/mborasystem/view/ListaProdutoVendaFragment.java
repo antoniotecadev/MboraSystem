@@ -54,8 +54,8 @@ public class ListaProdutoVendaFragment extends Fragment {
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.chipQuantidadeProduto.setText(quant + "");
 
-        vendaViewModel.getProdutosVenda(idvenda, codQr);
-        vendaViewModel.getProdutosVendaLiveDta().observe(getViewLifecycleOwner(), produtos -> {
+        vendaViewModel.getProdutosVenda(idvenda, codQr, null,false);
+        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), produtos -> {
             adapter.clear();
             if (produtos.isEmpty()) {
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
@@ -77,7 +77,7 @@ public class ListaProdutoVendaFragment extends Fragment {
                             TextView codigoQr = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
 
                             nomeProduto.setText(produto.getNome_produto());
-                            precoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())));
+                            precoProduto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())));
                             precoProdutoFronecedor.setText(getString(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_fornecedor())));
                             quantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
                             referenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());

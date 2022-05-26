@@ -68,6 +68,9 @@ public abstract class VendaDao {
     @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda OR codigo_Barra = :codQr")
     abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda, String codQr);
 
+    @Query("SELECT * FROM produtosvendas WHERE data_cria LIKE '%' || :data || '%'")
+    public abstract Flowable<List<ProdutoVenda>> getProdutoVenda(String data);
+
     @Query("UPDATE vendas SET divida = :divida WHERE id = :idvenda")
     abstract void setDivida(int divida, long idvenda);
 

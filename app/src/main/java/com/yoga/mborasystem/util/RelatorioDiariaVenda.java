@@ -28,6 +28,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
 
 import java.io.File;
@@ -36,18 +37,18 @@ import java.util.List;
 
 public class RelatorioDiariaVenda {
 
-    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, Handler handler) {
+    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, Handler handler) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.rel_dia_ven)) + facturaPath, facturaPath, activity, context, cliente, venda, handler);
+                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.rel_dia_ven)) + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.rel_dia_ven)) + facturaPath, facturaPath, activity, context, cliente, venda, handler);
+                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.rel_dia_ven)) + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
                     }
 
                     @Override
@@ -57,7 +58,7 @@ public class RelatorioDiariaVenda {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, Handler handler) {
+    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, Handler handler) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -77,6 +78,7 @@ public class RelatorioDiariaVenda {
             addNewItem(document, context.getString(R.string.tel) + " " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
             addNewItem(document, activity.getString(R.string.data) + Ultilitario.getDateCurrent(), Element.ALIGN_LEFT, font);
             addLineSpace(document);
+            addNewItem(document, activity.getString(R.string.vendas), Element.ALIGN_CENTER, titleFont);
             for (Venda venda : vendas) {
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.cliente), activity.getString(R.string.cod_qr), titleFont, titleFont);
@@ -93,6 +95,18 @@ public class RelatorioDiariaVenda {
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.dat_ven), venda.getData_cria(), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.operador), (venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA" + venda.getIdoperador()), font, font);
             }
+            addLineSeparator(document);
+            addNewItem(document, activity.getString(R.string.produtos), Element.ALIGN_CENTER, titleFont);
+            for (ProdutoVenda produto : produtoVendas) {
+                addLineSeparator(document);
+                addNewLineWithLeftAndRight(document, activity.getString(R.string.prod), activity.getString(R.string.venda), titleFont, titleFont);
+                addNewLineWithLeftAndRight(document, produto.getNome_produto(), produto.getCodigo_Barra(), font, font);
+                addNewLineWithLeftAndRight(document, activity.getString(R.string.quantidade), activity.getString(R.string.total), titleFont, titleFont);
+                addNewLineWithLeftAndRight(document, String.valueOf(produto.getQuantidade()), Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())), font, font);
+            }
+            addLineSeparator(document);
+            addLineSpace(document);
+            addNewItem(document, "MboraSystem", Element.ALIGN_CENTER, titleFont);
             document.close();
             handler.post(() -> Toast.makeText(context, activity.getString(R.string.rel_ven_dia_gua), Toast.LENGTH_LONG).show());
             if (!isGuardar)
