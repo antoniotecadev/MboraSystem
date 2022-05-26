@@ -52,9 +52,7 @@ import java.util.concurrent.Executors;
 public class DashboardFragment extends Fragment {
 
     private Cliente cliente;
-    private List<Venda> venda;
-    private String data = "";
-    private String facturaPath;
+    private String facturaPath, data;
 
     private int idItem;
 
@@ -71,7 +69,6 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         cliente = new Cliente();
-        venda = new ArrayList<>();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
@@ -127,7 +124,6 @@ public class DashboardFragment extends Fragment {
                 long jan = 0, fev = 0, mar = 0, abr = 0, mai = 0, jun = 0, jul = 0, ago = 0, set = 0, out = 0, nov = 0, dez = 0;
                 int v1 = 0, v2 = 0, v3 = 0, v4 = 0, v5 = 0, v6 = 0, v7 = 0, v8 = 0, v9 = 0, v10 = 0, v11 = 0, v12 = 0, v13 = 0, v14 = 0, v15 = 0, v16 = 0, v17 = 0, v18 = 0, v19 = 0, v20 = 0, v21 = 0, v22 = 0, v23 = 0, v24 = 0, v25 = 0, v26 = 0, v27 = 0, v28 = 0, v29 = 0, v30 = 0, v31 = 0;
                 int cv1 = 0, cv2 = 0, cv3 = 0, cv4 = 0, cv5 = 0, cv6 = 0, cv7 = 0, cv8 = 0, cv9 = 0, cv10 = 0, cv11 = 0, cv12 = 0, cv13 = 0, cv14 = 0, cv15 = 0, cv16 = 0, cv17 = 0, cv18 = 0, cv19 = 0, cv20 = 0, cv21 = 0, cv22 = 0, cv23 = 0, cv24 = 0, cv25 = 0, cv26 = 0, cv27 = 0, cv28 = 0, cv29 = 0, cv30 = 0, cv31 = 0;
-                this.venda.addAll(vendas);
                 for (Venda venda : vendas) {
                     String[] data = TextUtils.split(venda.getData_cria(), "-");
                     if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
@@ -318,14 +314,24 @@ public class DashboardFragment extends Fragment {
         vendaViewModel.getVendaDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             this.data = data;
             new AlertDialog.Builder(getContext())
+                    .setIcon(R.drawable.ic_baseline_store_24)
                     .setTitle(getString(R.string.dat_sel))
                     .setMessage(getString(R.string.vendas) + ": " + data)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                        facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
-                        guardarImprimirRelatorioVendaDiaria(idItem, facturaPath);
+                        vendaViewModel.getVendasPorData(data, false, 0, false, 0, false);
+                        dialog.dismiss();
                     }).show();
         }));
+
+        vendaViewModel.getVendasGuardarImprimir().observe(getViewLifecycleOwner(), vendas -> {
+            if (vendas.isEmpty()) {
+                Ultilitario.alertDialog(getString(R.string.vendas), getString(R.string.nao_tem_venda) + " (" + this.data + ")", requireContext(), R.drawable.ic_baseline_store_24);
+            } else {
+                facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
+                guardarImprimirRelatorioVendaDiaria(idItem, facturaPath, vendas);
+            }
+        });
 
         return binding.getRoot();
     }
@@ -413,6 +419,7 @@ public class DashboardFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.relatorioDiarioVenda:
                 new AlertDialog.Builder(getActivity())
+                        .setIcon(R.drawable.ic_baseline_store_24)
                         .setTitle(R.string.rel_dia_ven)
                         .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
                             this.idItem = i;
@@ -427,7 +434,7 @@ public class DashboardFragment extends Fragment {
                 || super.onOptionsItemSelected(item);
     }
 
-    private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath) {
+    private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath, List<Venda> venda) {
         Handler handler = new Handler(Looper.getMainLooper());
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {

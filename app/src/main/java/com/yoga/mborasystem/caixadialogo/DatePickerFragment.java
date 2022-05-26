@@ -51,7 +51,7 @@ public class DatePickerFragment extends DialogFragment
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
         if (isVenda) {
             Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
-            vendaViewModel.getVendasPorData(data, false, idcliente, isDivida, idusuario);
+            vendaViewModel.getVendasPorData(data, false, idcliente, isDivida, idusuario, true);
         } else {
             vendaViewModel.getVendaDatatAppLiveData().setValue(new Event<>(data));
         }

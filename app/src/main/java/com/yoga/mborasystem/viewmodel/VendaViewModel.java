@@ -109,7 +109,7 @@ public class VendaViewModel extends AndroidViewModel {
         return selectedData;
     }
 
-    MutableLiveData<List<Venda>> listaVendas;
+    MutableLiveData<List<Venda>> listaVendas, vendasGuardarImprimir;
     MutableLiveData<Event<List<Venda>>> vendas;
 
     public MutableLiveData<List<Venda>> getListaVendasLiveData() {
@@ -117,6 +117,13 @@ public class VendaViewModel extends AndroidViewModel {
             listaVendas = new MutableLiveData<>();
         }
         return listaVendas;
+    }
+
+    public MutableLiveData<List<Venda>> getVendasGuardarImprimir() {
+        if (vendasGuardarImprimir == null) {
+            vendasGuardarImprimir = new MutableLiveData<>();
+        }
+        return vendasGuardarImprimir;
     }
 
     public MutableLiveData<Event<String>> getDataExportAppLiveData() {
@@ -243,7 +250,7 @@ public class VendaViewModel extends AndroidViewModel {
                 }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
-    public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida, long idusuario) {
+    public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida, long idusuario, boolean isVenda) {
         compositeDisposable.add(vendaRepository.getVendasPorData(data, idcliente, isDivida, idusuario)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -251,7 +258,11 @@ public class VendaViewModel extends AndroidViewModel {
                     if (isExport) {
                         getVendasParaExportar().setValue(new Event<>(vendas));
                     } else {
-                        getListaVendasLiveData().setValue(vendas);
+                        if (isVenda) {
+                            getListaVendasLiveData().setValue(vendas);
+                        } else {
+                            getVendasGuardarImprimir().setValue(vendas);
+                        }
                     }
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                 }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
