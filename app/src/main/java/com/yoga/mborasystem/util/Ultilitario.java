@@ -570,7 +570,7 @@ public class Ultilitario {
 
     public static String getPercentagemIva(Activity activity) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        return sharedPreferences.getString("percentagem_iva", "");
+        return sharedPreferences.getString("percentagem_iva", "14");
     }
 
     public static String monthInglesFrances(String data) {
