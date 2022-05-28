@@ -723,6 +723,7 @@ public class FacturaFragment extends Fragment {
             if (b) {
                 desfazer(produto.getNome() + " " + getString(R.string.produto_adicionado), id, v, null);
             }
+            habilitarDesabilitarButtonEfectuarVenda();
             v.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
         }
 
