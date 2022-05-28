@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -175,6 +176,7 @@ public class CadastrarClienteFragment extends Fragment {
                         e.printStackTrace();
                         Toast.makeText(requireActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
+                    MainActivity.dismissProgressBar();
                     Ultilitario.dialogConta(getString(R.string.conta_criada), getContext()).show();
                     Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_bloquearFragment);
                     break;
