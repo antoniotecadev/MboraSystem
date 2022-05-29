@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
+import static com.yoga.mborasystem.util.Ultilitario.getSharedPreferencesIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
@@ -175,6 +177,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private int id;
+    private String idioma, codigoIdioma;
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -182,6 +187,34 @@ public class HomeFragment extends Fragment {
         assert getArguments() != null;
         Cliente cliente = getArguments().getParcelable("cliente");
         switch (item.getItemId()) {
+            case R.id.idioma:
+                new AlertDialog.Builder(requireContext())
+                        .setIcon(R.drawable.ic_baseline_store_24)
+                        .setTitle(R.string.alt_idm)
+                        .setSingleChoiceItems(R.array.array_idioma, getSharedPreferencesIdioma(requireActivity()), (dialogInterface, i) -> {
+                            switch (i) {
+                                case 0:
+                                    id = i;
+                                    idioma = "Francês";
+                                    codigoIdioma = "fr";
+                                    break;
+                                case 1:
+                                    id = i;
+                                    idioma = "Inglês";
+                                    codigoIdioma = "en";
+                                    break;
+                                case 2:
+                                    id = i;
+                                    idioma = "Português";
+                                    codigoIdioma = "pt";
+                                    break;
+                                default:
+                                    break;
+                            }
+                        })
+                        .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, id)).show();
+                break;
             case R.id.dialogAlterarCliente:
                 if (getArguments() != null) {
                     bundle.putParcelable("cliente", cliente);

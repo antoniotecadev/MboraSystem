@@ -552,8 +552,14 @@
     <string name="num_pro_dist">N.P.D</string>
     <string name="tot_des">T. Desconto</string>
     <string name="tot_div">T. Dívida</string>
+    <string name="alt_idm">Alterar idioma</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar</item>
         <item>Guardar + Imprimir</item>
+    </string-array>
+    <string-array name="array_idioma">
+        <item>Francês</item>
+        <item>Inglês</item>
+        <item>Português</item>
     </string-array>
 </resources>

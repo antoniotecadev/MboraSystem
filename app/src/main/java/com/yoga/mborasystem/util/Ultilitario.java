@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -81,7 +82,8 @@ public class Ultilitario {
 
     private static Float parsed;
     private static Locale pt_AO;
-    public static String categoria = "";
+    public static String categoria = "", SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
+
     public static final String MBORASYSTEM = "ryogamborasystem";
     public static boolean isLocal = true;
     private static String formatted, current = "";
@@ -607,6 +609,24 @@ public class Ultilitario {
             return date[0] + "-" + date[1] + "-" + date[2];
         else
             return date[0] + "-" + listMonth.get(date[1]) + "-" + date[2];
+    }
+
+    public static void getSelectedIdioma(Activity activity, String codigoIdioma, String msg, int id) {
+        Locale locale = new Locale(codigoIdioma);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        activity.getBaseContext().getResources().updateConfiguration(config, activity.getBaseContext().getResources().getDisplayMetrics());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(SELECTED_LANGUAGE, id);
+        editor.apply();
+        Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public static int getSharedPreferencesIdioma(Activity activity) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        return sharedPreferences.getInt(SELECTED_LANGUAGE, 2);
     }
 
 }
