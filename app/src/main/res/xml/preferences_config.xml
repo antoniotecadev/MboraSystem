@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-        <EditTextPreference
-            android:defaultValue="14"
-            android:key="percentagem_iva"
-            android:title="@string/perc_iva"
-            app:key="percentagem_iva"
-            app:title="@string/perc_iva"
-            app:useSimpleSummaryProvider="true" />
+    <EditTextPreference
+        android:defaultValue="14"
+        android:key="percentagem_iva"
+        android:title="@string/perc_iva"
+        app:dialogIcon="@drawable/ic_baseline_store_24"
+        app:icon="@drawable/ic_baseline_vertical_align_center_24"
+        app:key="percentagem_iva"
+        app:title="@string/perc_iva"
+        app:useSimpleSummaryProvider="true" />
+    <ListPreference
+        android:dialogTitle="@string/alt_idm"
+        android:entries="@array/array_idioma"
+        android:entryValues="@array/array_idioma"
+        android:key="lista_idioma"
+        android:title="@string/idm"
+        app:dialogIcon="@drawable/ic_baseline_store_24"
+        app:icon="@drawable/ic_baseline_translate_24"
+        app:useSimpleSummaryProvider="true"/>
 </PreferenceScreen>

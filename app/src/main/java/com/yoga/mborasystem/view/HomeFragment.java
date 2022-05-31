@@ -179,7 +179,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private int id;
     private String idioma, codigoIdioma;
 
     @SuppressLint("NonConstantResourceId")
@@ -196,17 +195,14 @@ public class HomeFragment extends Fragment {
                         .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(this.language), (dialogInterface, i) -> {
                             switch (i) {
                                 case 0:
-                                    id = i;
                                     idioma = "Francês";
                                     codigoIdioma = "fr";
                                     break;
                                 case 1:
-                                    id = i;
                                     idioma = "Inglês";
                                     codigoIdioma = "en";
                                     break;
                                 case 2:
-                                    id = i;
                                     idioma = "Português";
                                     codigoIdioma = "pt";
                                     break;
@@ -215,7 +211,7 @@ public class HomeFragment extends Fragment {
                             }
                         })
                         .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
-                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, id)).show();
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true)).show();
                 break;
             case R.id.dialogAlterarCliente:
                 if (getArguments() != null) {

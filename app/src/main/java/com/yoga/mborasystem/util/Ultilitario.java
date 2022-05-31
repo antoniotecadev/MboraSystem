@@ -611,16 +611,18 @@ public class Ultilitario {
             return date[0] + "-" + listMonth.get(date[1]) + "-" + date[2];
     }
 
-    public static void getSelectedIdioma(Activity activity, String codigoIdioma, String msg, int id) {
+    public static void getSelectedIdioma(Activity activity, String codigoIdioma, String msg, boolean isHome) {
         Locale locale = new Locale(codigoIdioma);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
         activity.getBaseContext().getResources().updateConfiguration(config, activity.getBaseContext().getResources().getDisplayMetrics());
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(SELECTED_LANGUAGE, id);
-        editor.apply();
+        if (isHome) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("lista_idioma", msg);
+            editor.apply();
+        }
         restartActivity(activity);
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
     }
