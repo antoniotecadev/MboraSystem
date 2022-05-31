@@ -621,7 +621,17 @@ public class Ultilitario {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(SELECTED_LANGUAGE, id);
         editor.apply();
+        restartActivity(activity);
         Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+    }
+
+    private static void restartActivity(Activity activity) {
+        if (Build.VERSION.SDK_INT >= 11) {
+            activity.recreate();
+        } else {
+            activity.finish();
+            activity.startActivity(activity.getIntent());
+        }
     }
 
     public static int getSharedPreferencesIdioma(Activity activity) {
@@ -629,4 +639,14 @@ public class Ultilitario {
         return sharedPreferences.getInt(SELECTED_LANGUAGE, 2);
     }
 
+    public static int getIdIdioma(String language) {
+        if (language.equalsIgnoreCase("FR")) {
+            return 0;
+        } else if (language.equalsIgnoreCase("EN")) {
+            return 1;
+        } else if (language.equalsIgnoreCase("PT")) {
+            return 2;
+        }
+        return 2;
+    }
 }

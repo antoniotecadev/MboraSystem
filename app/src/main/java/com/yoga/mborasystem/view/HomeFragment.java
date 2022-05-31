@@ -1,7 +1,7 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
-import static com.yoga.mborasystem.util.Ultilitario.getSharedPreferencesIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
@@ -42,6 +42,7 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
+    private String language = "";
     private boolean isOpen = false;
     private FragmentHomeBinding binding;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
@@ -170,7 +171,8 @@ public class HomeFragment extends Fragment {
         Locale primaryLocale;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             primaryLocale = getResources().getConfiguration().getLocales().get(0);
-            String locale = primaryLocale.getDisplayName();
+            String locale = primaryLocale.getDisplayLanguage();
+            language = primaryLocale.getLanguage();
             menu.findItem(R.id.idioma).setTitle(locale);
         } else {
             menu.findItem(R.id.idioma).setTitle("");
@@ -191,7 +193,7 @@ public class HomeFragment extends Fragment {
                 new AlertDialog.Builder(requireContext())
                         .setIcon(R.drawable.ic_baseline_store_24)
                         .setTitle(R.string.alt_idm)
-                        .setSingleChoiceItems(R.array.array_idioma, getSharedPreferencesIdioma(requireActivity()), (dialogInterface, i) -> {
+                        .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(this.language), (dialogInterface, i) -> {
                             switch (i) {
                                 case 0:
                                     id = i;
