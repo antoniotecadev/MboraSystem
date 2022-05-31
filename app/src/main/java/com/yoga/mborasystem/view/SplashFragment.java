@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import java.util.Objects;
+
 public class SplashFragment extends Fragment {
 
     private ClienteViewModel clienteViewModel;
@@ -24,6 +26,7 @@ public class SplashFragment extends Fragment {
         super.onCreate(savedInstanceState);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,7 +36,8 @@ public class SplashFragment extends Fragment {
             Ultilitario.getExisteMutableLiveData().observe(getViewLifecycleOwner(), existe -> {
                 switch (existe) {
                     case SIM:
-                        Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_loginFragment);
+                        if (Objects.requireNonNull(Navigation.findNavController(requireView()).getCurrentDestination()).getId() == R.id.splashFragment)
+                            Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_loginFragment);
                         break;
                     case NAO:
                         Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_cadastrarClienteFragment);
