@@ -46,6 +46,7 @@ public class DialogFiltrarProduto extends DialogFragment {
         formatted = NumberFormat.getCurrencyInstance(new Locale("pt", "AO")).format((0));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setIcon(R.drawable.ic_baseline_store_24);
         builder.setTitle(getString(R.string.filtrar_produto));
         builder.setView(binding.getRoot());
         dialog = builder.create();

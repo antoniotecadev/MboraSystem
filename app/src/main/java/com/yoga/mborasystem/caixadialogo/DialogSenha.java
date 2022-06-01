@@ -49,7 +49,7 @@ public class DialogSenha extends DialogFragment {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-
+        builder.setIcon(R.drawable.ic_baseline_store_24);
         if (getArguments() != null) {
             us.setId(getArguments().getLong("idusuario"));
             builder.setTitle(getString(R.string.alterar_codigo_pin));

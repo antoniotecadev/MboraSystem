@@ -62,6 +62,7 @@ public class DialogExportarImportar extends DialogFragment {
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setIcon(R.drawable.ic_baseline_store_24);
         if (getArguments() != null) {
             categorias = getArguments().getStringArrayList("categorias");
             ArrayAdapter<String> adapterCategorias = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, categorias);

@@ -30,7 +30,7 @@ public class DialogExportarImportarVenda extends DialogFragment {
         boolean isDivida = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIsDivida();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
+        builder.setIcon(R.drawable.ic_baseline_store_24);
         if (idusuario == 0) {
             if (idcliente == 0 && !isDivida) {
                 builder.setTitle(getString(R.string.exp_tds_vd));

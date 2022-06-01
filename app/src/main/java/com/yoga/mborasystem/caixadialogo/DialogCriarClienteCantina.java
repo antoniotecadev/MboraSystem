@@ -36,6 +36,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setIcon(R.drawable.ic_baseline_store_24);
         builder.setTitle(getString(R.string.criar_cliente));
 
         String nome = DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getNomeCliente();

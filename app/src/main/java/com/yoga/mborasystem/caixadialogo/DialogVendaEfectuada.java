@@ -33,6 +33,7 @@ public class DialogVendaEfectuada extends DialogFragment {
         binding = DialogVendaEfectuadaBinding.inflate(getLayoutInflater());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setIcon(R.drawable.ic_baseline_store_24);
         builder.setView(binding.getRoot());
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);

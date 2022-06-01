@@ -161,6 +161,7 @@ public class DialogCriarProduto extends DialogFragment {
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setIcon(R.drawable.ic_baseline_store_24);
         builder.setTitle(this.categoria);
         builder.setView(binding.getRoot());
         dialog = builder.create();
