@@ -64,6 +64,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -656,8 +657,9 @@ public class Ultilitario {
         return 2;
     }
 
-    public static ArrayList<String> getPdfList(String uriPath, Context context) {
-        ArrayList<String> pdfList = new ArrayList<>();
+    @SuppressLint("Range")
+    public static List<Documento> getPdfList(String uriPath, Context context) {
+        List<Documento> pdfList = new ArrayList<>();
         Uri collection;
 
         final String[] projection = new String[]{
@@ -665,6 +667,8 @@ public class Ultilitario {
                 MediaStore.Files.FileColumns.DATE_ADDED,
                 MediaStore.Files.FileColumns.DATA,
                 MediaStore.Files.FileColumns.MIME_TYPE,
+                MediaStore.Files.FileColumns.SIZE,
+                MediaStore.Files.FileColumns.DATE_MODIFIED,
         };
 
         final String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
@@ -683,16 +687,78 @@ public class Ultilitario {
 
         try (Cursor cursor = context.getContentResolver().query(collection, projection, selection, new String[]{"%" + uriPath + "%"}, sortOrder)) {
             assert cursor != null;
-
+            Documento doc = new Documento();
             if (cursor.moveToFirst()) {
-                int columnData = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
-                int columnName = cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE);
+                int columnData = cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE);
                 do {
-                    pdfList.add((cursor.getString(columnName)));
-                    Log.d("Utilitario", cursor.getString(columnName) + " " + cursor.getString(columnData));
+                    doc.setNome(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE)));
+                    doc.setCaminho(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
+                    doc.setData_cria(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_ADDED)));
+                    doc.setData_modifica(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED)));
+                    doc.setTamanho(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE)));
+                    doc.setTipo(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE)));
+                    pdfList.add(doc);
+                    Log.d("Utilitario", cursor.getString(columnData));
                 } while (cursor.moveToNext());
             }
         }
         return pdfList;
+    }
+
+    public static class Documento {
+        private String nome;
+        private String caminho;
+        private String data_cria;
+        private String data_modifica;
+        private String tamanho;
+        private String tipo;
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+
+        public String getCaminho() {
+            return caminho;
+        }
+
+        public void setCaminho(String caminho) {
+            this.caminho = caminho;
+        }
+
+        public String getData_cria() {
+            return data_cria;
+        }
+
+        public void setData_cria(String data_cria) {
+            this.data_cria = data_cria;
+        }
+
+        public String getData_modifica() {
+            return data_modifica;
+        }
+
+        public void setData_modifica(String data_modifica) {
+            this.data_modifica = data_modifica;
+        }
+
+        public String getTamanho() {
+            return tamanho;
+        }
+
+        public void setTamanho(String tamanho) {
+            this.tamanho = tamanho;
+        }
+
+        public String getTipo() {
+            return tipo;
+        }
+
+        public void setTipo(String tipo) {
+            this.tipo = tipo;
+        }
     }
 }

@@ -60,23 +60,23 @@ public class DocumentoFragment extends Fragment {
         if (getPdfList(uriPath, requireContext()).isEmpty()) {
             Ultilitario.naoEncontrado(getContext(), adapter, msg);
         } else {
-            for (String documento : getPdfList(uriPath, requireContext()))
+            for (Ultilitario.Documento documento : getPdfList(uriPath, requireContext()))
                 adapter.add(new ItemDocumento(documento));
         }
     }
 
     class ItemDocumento extends Item<GroupieViewHolder> {
 
-        private String documento;
+        private Ultilitario.Documento documento;
 
-        public ItemDocumento(String documento) {
+        public ItemDocumento(Ultilitario.Documento documento) {
             this.documento = documento;
         }
 
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
             TextView nomeDocumento = viewHolder.itemView.findViewById(R.id.txtNomeDocumento);
-            nomeDocumento.setText(documento);
+            nomeDocumento.setText(documento.getNome());
         }
 
         @Override
