@@ -29,6 +29,11 @@
         android:title="@string/factura" />
 
     <item
+        android:id="@+id/documentoFragment"
+        android:icon="@drawable/ic_baseline_insert_drive_file_24"
+        android:title="@string/doc" />
+
+    <item
         android:id="@+id/lixeiraFragment"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/lix">

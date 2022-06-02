@@ -400,6 +400,11 @@
             android:name="com.yoga.mborasystem.view.CalculadoraFragment"
             android:label="@string/calc"
             tools:layout="@layout/fragment_calculadora" />
+        <fragment
+            android:id="@+id/documentoFragment"
+            android:name="com.yoga.mborasystem.view.DocumentoFragment"
+            android:label="@string/factura"
+            tools:layout="@layout/fragment_documento"/>
 
     </navigation>
 

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -21,14 +22,17 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -650,5 +654,45 @@ public class Ultilitario {
             return 2;
         }
         return 2;
+    }
+
+    public static ArrayList<String> getPdfList(String uriPath, Context context) {
+        ArrayList<String> pdfList = new ArrayList<>();
+        Uri collection;
+
+        final String[] projection = new String[]{
+                MediaStore.Files.FileColumns.TITLE,
+                MediaStore.Files.FileColumns.DATE_ADDED,
+                MediaStore.Files.FileColumns.DATA,
+                MediaStore.Files.FileColumns.MIME_TYPE,
+        };
+
+        final String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
+
+        final String selection = MediaStore.Files.FileColumns.DATA + " like ?";
+
+        final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
+        final String[] selectionArgs = new String[]{mimeType};
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        } else {
+            collection = MediaStore.Files.getContentUri("external");
+        }
+
+
+        try (Cursor cursor = context.getContentResolver().query(collection, projection, selection, new String[]{"%" + uriPath + "%"}, sortOrder)) {
+            assert cursor != null;
+
+            if (cursor.moveToFirst()) {
+                int columnData = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                int columnName = cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE);
+                do {
+                    pdfList.add((cursor.getString(columnName)));
+                    Log.d("Utilitario", cursor.getString(columnName) + " " + cursor.getString(columnData));
+                } while (cursor.moveToNext());
+            }
+        }
+        return pdfList;
     }
 }

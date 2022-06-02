@@ -553,6 +553,9 @@
     <string name="tot_des">T. Desconto</string>
     <string name="tot_div">T. Dívida</string>
     <string name="alt_idm">Alterar idioma</string>
+    <string name="doc">Documento</string>
+    <string name="fac_n_enc">Factura não encontrada</string>
+    <string name="rel_n_enc">Relatório não encontrado</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar</item>
         <item>Guardar + Imprimir</item>
