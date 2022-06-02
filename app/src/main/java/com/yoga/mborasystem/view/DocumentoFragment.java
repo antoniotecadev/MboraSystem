@@ -37,27 +37,14 @@ public class DocumentoFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentDocumentoBinding.inflate(inflater, container, false);
         binding.recyclerViewListaDoc.setAdapter(adapter);
+        getDocumentPDF("Factura", R.string.factura, R.string.fac_n_enc);
         binding.bottomNav.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.factura:
-                    adapter.clear();
-                    requireActivity().setTitle(getString(R.string.factura));
-                    if (getPdfList("Factura", requireContext()).isEmpty()) {
-                        Ultilitario.naoEncontrado(getContext(), adapter, R.string.fac_n_enc);
-                    } else {
-                        for (String documento : getPdfList("Factura", requireContext()))
-                            adapter.add(new ItemDocumento(documento));
-                    }
+                    getDocumentPDF("Factura", R.string.factura, R.string.fac_n_enc);
                     break;
                 case R.id.relatorio:
-                    adapter.clear();
-                    requireActivity().setTitle(getString(R.string.rel_dia_ven));
-                    if (getPdfList("Mbora\nSystem/Relatório de venda diária", requireContext()).isEmpty()) {
-                        Ultilitario.naoEncontrado(getContext(), adapter, R.string.rel_n_enc);
-                    } else {
-                        for (String documento : getPdfList("Mbora\nSystem/Relatório de venda diária", requireContext()))
-                            adapter.add(new ItemDocumento(documento));
-                    }
+                    getDocumentPDF("Mbora\nSystem/Relatório de venda diária", R.string.rel_dia_ven, R.string.rel_n_enc);
                     break;
                 default:
                     break;
@@ -65,6 +52,17 @@ public class DocumentoFragment extends Fragment {
             return true;
         });
         return binding.getRoot();
+    }
+
+    private void getDocumentPDF(String uriPath, int title, int msg) {
+        adapter.clear();
+        requireActivity().setTitle(getString(title));
+        if (getPdfList(uriPath, requireContext()).isEmpty()) {
+            Ultilitario.naoEncontrado(getContext(), adapter, msg);
+        } else {
+            for (String documento : getPdfList(uriPath, requireContext()))
+                adapter.add(new ItemDocumento(documento));
+        }
     }
 
     class ItemDocumento extends Item<GroupieViewHolder> {
