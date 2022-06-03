@@ -2,18 +2,15 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
 
-import android.media.MediaScannerConnection;
-import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.xwray.groupie.GroupAdapter;
@@ -23,11 +20,8 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
 import com.yoga.mborasystem.util.Ultilitario;
 
-import java.io.File;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DocumentoFragment extends Fragment {
@@ -41,8 +35,9 @@ public class DocumentoFragment extends Fragment {
         adapter = new GroupAdapter();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDocumentoBinding.inflate(inflater, container, false);
         binding.recyclerViewListaDoc.setAdapter(adapter);
@@ -77,19 +72,19 @@ public class DocumentoFragment extends Fragment {
         }
     }
 
-    class ItemDocumento extends Item<GroupieViewHolder> {
+    static class ItemDocumento extends Item<GroupieViewHolder> {
 
-        private Ultilitario.Documento documento;
-        private TextView nomeDocumento, descricao;
+        private final Ultilitario.Documento documento;
 
         public ItemDocumento(Ultilitario.Documento documento) {
             this.documento = documento;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            nomeDocumento = viewHolder.itemView.findViewById(R.id.txtNomeDocumento);
-            descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
+            TextView nomeDocumento = viewHolder.itemView.findViewById(R.id.txtNomeDocumento);
+            TextView descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
             nomeDocumento.setText(documento.getNome());
             descricao.setText(Ultilitario.converterData(documento.getData_modifica()) + " - " + formatSize(documento.getTamanho()));
         }
