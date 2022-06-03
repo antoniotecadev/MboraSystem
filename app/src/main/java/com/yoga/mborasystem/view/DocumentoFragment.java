@@ -24,6 +24,7 @@ import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,12 +90,20 @@ public class DocumentoFragment extends Fragment {
             nomeDocumento = viewHolder.itemView.findViewById(R.id.txtNomeDocumento);
             descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
             nomeDocumento.setText(documento.getNome());
-            descricao.setText(Ultilitario.converterData(documento.getData_modifica()));
+            descricao.setText(Ultilitario.converterData(documento.getData_modifica()) + " - " + formatSize(documento.getTamanho()));
         }
 
         @Override
         public int getLayout() {
             return R.layout.layout_documento_fragment;
+        }
+
+        public String formatSize(long size) {
+            if (size <= 0)
+                return "0";
+            final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+            int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+            return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
         }
     }
 }

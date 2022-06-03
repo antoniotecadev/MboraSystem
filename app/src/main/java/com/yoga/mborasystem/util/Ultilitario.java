@@ -701,7 +701,7 @@ public class Ultilitario {
                         doc.setNome(cursor.getString(columnTitle));
                         doc.setCaminho(cursor.getString(columnData));
                         doc.setData_modifica(cursor.getLong(columnDateMo));
-                        doc.setTamanho(cursor.getString(columnSize));
+                        doc.setTamanho(cursor.getLong(columnSize));
                         doc.setTipo(cursor.getString(columnType));
                         Log.d("Utilitario", cursor.getString(columnData) + " " + cursor.getCount());
                         pdfList.add(doc);
@@ -727,7 +727,7 @@ public class Ultilitario {
         private String caminho;
         private long data_cria;
         private long data_modifica;
-        private String tamanho;
+        private long tamanho;
         private String tipo;
 
         public String getNome() {
@@ -762,11 +762,11 @@ public class Ultilitario {
             this.data_modifica = data_modifica;
         }
 
-        public String getTamanho() {
+        public long getTamanho() {
             return tamanho;
         }
 
-        public void setTamanho(String tamanho) {
+        public void setTamanho(long tamanho) {
             this.tamanho = tamanho;
         }
 
