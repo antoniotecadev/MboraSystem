@@ -2,14 +2,18 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
 
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.xwray.groupie.GroupAdapter;
@@ -19,7 +23,11 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class DocumentoFragment extends Fragment {
 
@@ -37,14 +45,14 @@ public class DocumentoFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentDocumentoBinding.inflate(inflater, container, false);
         binding.recyclerViewListaDoc.setAdapter(adapter);
-        getDocumentPDF("Factura", R.string.factura, R.string.fac_n_enc);
+        getDocumentPDF("Facturas", R.string.fact_vend, R.string.fac_n_enc);
         binding.bottomNav.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.factura:
-                    getDocumentPDF("Factura", R.string.factura, R.string.fac_n_enc);
+                    getDocumentPDF("Facturas", R.string.fact_vend, R.string.fac_n_enc);
                     break;
                 case R.id.relatorio:
-                    getDocumentPDF("Mbora\nSystem/Relatório de venda diária", R.string.rel_dia_ven, R.string.rel_n_enc);
+                    getDocumentPDF("Relatorios", R.string.rel_dia_ven, R.string.rel_n_enc);
                     break;
                 default:
                     break;
@@ -55,12 +63,14 @@ public class DocumentoFragment extends Fragment {
     }
 
     private void getDocumentPDF(String uriPath, int title, int msg) {
+        List<Ultilitario.Documento> pdfList = new ArrayList<>();
+        pdfList.addAll(getPdfList(uriPath, requireContext()));
         adapter.clear();
         requireActivity().setTitle(getString(title));
-        if (getPdfList(uriPath, requireContext()).isEmpty()) {
+        if (pdfList.isEmpty()) {
             Ultilitario.naoEncontrado(getContext(), adapter, msg);
         } else {
-            for (Ultilitario.Documento documento : getPdfList(uriPath, requireContext()))
+            for (Ultilitario.Documento documento : pdfList)
                 adapter.add(new ItemDocumento(documento));
         }
     }
@@ -68,6 +78,7 @@ public class DocumentoFragment extends Fragment {
     class ItemDocumento extends Item<GroupieViewHolder> {
 
         private Ultilitario.Documento documento;
+        private TextView nomeDocumento, descricao;
 
         public ItemDocumento(Ultilitario.Documento documento) {
             this.documento = documento;
@@ -75,8 +86,10 @@ public class DocumentoFragment extends Fragment {
 
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            TextView nomeDocumento = viewHolder.itemView.findViewById(R.id.txtNomeDocumento);
+            nomeDocumento = viewHolder.itemView.findViewById(R.id.txtNomeDocumento);
+            descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
             nomeDocumento.setText(documento.getNome());
+            descricao.setText(Ultilitario.converterData(documento.getData_modifica()));
         }
 
         @Override

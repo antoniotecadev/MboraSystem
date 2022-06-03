@@ -5,15 +5,22 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addLineSpace;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewItem;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
+import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -40,18 +47,18 @@ public class RelatorioDiariaVenda {
     private static long totalVendas;
     private static int quantidadeVendas, quantidadeProdutos, quantidadeProdutosDistinto, totalDescontos, totalDividas;
 
-    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, Handler handler) {
+    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, Handler handler, View view) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
+                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler, view);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
+                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler, view);
                     }
 
                     @Override
@@ -61,7 +68,7 @@ public class RelatorioDiariaVenda {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, Handler handler) {
+    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, Handler handler, View view) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -126,7 +133,8 @@ public class RelatorioDiariaVenda {
             addLineSpace(document);
             addNewItem(document, "MboraSystem", Element.ALIGN_CENTER, titleFont);
             document.close();
-            handler.post(() -> Toast.makeText(context, activity.getString(R.string.rel_ven_dia_gua), Toast.LENGTH_LONG).show());
+            handler.post(() -> Snackbar.make(view, activity.getString(R.string.rel_ven_dia_gua), Snackbar.LENGTH_LONG).show());
+            addFileContentProvider(activity.getApplicationContext(), "/Relatorios/" + facturaPath);
             if (!isGuardar)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     printPDF(activity, activity.getBaseContext(), facturaPath, activity.getString(R.string.rel_dia_ven));

@@ -449,9 +449,9 @@ public class DashboardFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             if (i == 0) {
-                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler);
+                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler, getView());
             } else if (i == 1) {
-                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler);
+                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler, getView());
             }
         });
     }

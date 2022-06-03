@@ -5,14 +5,17 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addLineSpace;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewItem;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
+import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -116,6 +119,7 @@ public class CriarFactura {
             addNewItem(document, codigoQr, Element.ALIGN_CENTER, font);
             document.close();
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
+            addFileContentProvider(activity.getApplicationContext(), "/Facturas/" + facturaPath);
             if (!isGuardar)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     printPDF(activity, activity.getBaseContext(), facturaPath, activity.getString(R.string.factura));

@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -39,6 +40,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -659,12 +661,10 @@ public class Ultilitario {
 
     @SuppressLint("Range")
     public static List<Documento> getPdfList(String uriPath, Context context) {
-        List<Documento> pdfList = new ArrayList<>();
         Uri collection;
-
+        List<Documento> pdfList = new ArrayList<>();
         final String[] projection = new String[]{
                 MediaStore.Files.FileColumns.TITLE,
-                MediaStore.Files.FileColumns.DATE_ADDED,
                 MediaStore.Files.FileColumns.DATA,
                 MediaStore.Files.FileColumns.MIME_TYPE,
                 MediaStore.Files.FileColumns.SIZE,
@@ -673,43 +673,60 @@ public class Ultilitario {
 
         final String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
 
-        final String selection = MediaStore.Files.FileColumns.DATA + " like ?";
+        final String selection = MediaStore.Files.FileColumns.DATA + " like ?"
+                + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
+
+        File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
 
         final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
-        final String[] selectionArgs = new String[]{mimeType};
+        final String[] selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + uriPath + "%", mimeType};
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
         } else {
             collection = MediaStore.Files.getContentUri("external");
         }
-
-
-        try (Cursor cursor = context.getContentResolver().query(collection, projection, selection, new String[]{"%" + uriPath + "%"}, sortOrder)) {
+        try (Cursor cursor = context.getContentResolver().query(collection, projection, selection, selectionArgs, sortOrder)) {
             assert cursor != null;
-            Documento doc = new Documento();
             if (cursor.moveToFirst()) {
-                int columnData = cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE);
+                int columnTitle = cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE);
+                int columnData = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                int columnDateMo = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED);
+                int columnSize = cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE);
+                int columnType = cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE);
+
                 do {
-                    doc.setNome(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE)));
-                    doc.setCaminho(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                    doc.setData_cria(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_ADDED)));
-                    doc.setData_modifica(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED)));
-                    doc.setTamanho(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE)));
-                    doc.setTipo(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE)));
-                    pdfList.add(doc);
-                    Log.d("Utilitario", cursor.getString(columnData));
+                    if (new File(cursor.getString(columnData)).exists()) {
+                        Documento doc = new Documento();
+                        doc.setNome(cursor.getString(columnTitle));
+                        doc.setCaminho(cursor.getString(columnData));
+                        doc.setData_modifica(cursor.getLong(columnDateMo));
+                        doc.setTamanho(cursor.getString(columnSize));
+                        doc.setTipo(cursor.getString(columnType));
+                        Log.d("Utilitario", cursor.getString(columnData) + " " + cursor.getCount());
+                        pdfList.add(doc);
+                    }
                 } while (cursor.moveToNext());
             }
         }
         return pdfList;
     }
 
+    public static void addFileContentProvider(Context context, String filePath) {
+        File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
+        final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
+        final String[] selectionArgs = new String[]{dir.getPath() + "/MboraSystem/" + filePath};
+        MediaScannerConnection.scanFile(context, selectionArgs, new String[]{mimeType},
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) { }
+                });
+    }
+
     public static class Documento {
         private String nome;
         private String caminho;
-        private String data_cria;
-        private String data_modifica;
+        private long data_cria;
+        private long data_modifica;
         private String tamanho;
         private String tipo;
 
@@ -729,19 +746,19 @@ public class Ultilitario {
             this.caminho = caminho;
         }
 
-        public String getData_cria() {
+        public long getData_cria() {
             return data_cria;
         }
 
-        public void setData_cria(String data_cria) {
+        public void setData_cria(long data_cria) {
             this.data_cria = data_cria;
         }
 
-        public String getData_modifica() {
+        public long getData_modifica() {
             return data_modifica;
         }
 
-        public void setData_modifica(String data_modifica) {
+        public void setData_modifica(long data_modifica) {
             this.data_modifica = data_modifica;
         }
 
@@ -760,5 +777,11 @@ public class Ultilitario {
         public void setTipo(String tipo) {
             this.tipo = tipo;
         }
+    }
+
+    public static String converterData(long data) {
+        Date d = new Date(data * 1000);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        return dateFormat.format(d);  // formatted date in string
     }
 }
