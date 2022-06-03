@@ -46,12 +46,12 @@ public class RelatorioDiariaVenda {
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.rel_dia_ven)) + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
+                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath(context, activity.getString(R.string.rel_dia_ven)) + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
+                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler);
                     }
 
                     @Override

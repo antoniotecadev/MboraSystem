@@ -54,7 +54,7 @@ public class FormatarDocumento {
         PrintManager printManager;
         printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
         try {
-            PrintDocumentAdapter printDocumentAdapter = new PdfDocumentAdapter(activity, Common.getAppPath(context, pasta) + factura);
+            PrintDocumentAdapter printDocumentAdapter = new PdfDocumentAdapter(activity, Common.getAppPath(pasta) + factura);
             printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
         } catch (Exception ex) {
             Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
