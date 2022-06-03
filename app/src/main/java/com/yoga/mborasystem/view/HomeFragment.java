@@ -264,6 +264,7 @@ public class HomeFragment extends Fragment {
 
     private void sairApp() {
         new AlertDialog.Builder(getContext())
+                .setIcon(R.drawable.ic_baseline_store_24)
                 .setTitle(getString(R.string.sair))
                 .setMessage(getString(R.string.tem_certeza_sair_app))
                 .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
@@ -330,6 +331,7 @@ public class HomeFragment extends Fragment {
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
                         new AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_store_24)
                                 .setTitle(getString(R.string.erro))
                                 .setMessage(ex.getMessage())
                                 .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
