@@ -66,6 +66,7 @@ public class DocumentoFragment extends Fragment {
     private void getDocumentPDF(String uriPath, int title, int msg) {
         List<Ultilitario.Documento> pdfList = new ArrayList<>();
         pdfList.addAll(getPdfList(uriPath, requireContext()));
+        binding.chipQuantDoc.setText(String.valueOf(pdfList.size()));
         adapter.clear();
         requireActivity().setTitle(getString(title));
         if (pdfList.isEmpty()) {
