@@ -558,6 +558,9 @@
     <string name="rel_n_enc">Relatório não encontrado</string>
     <string name="fact_vend">Factura de venda</string>
     <string name="guard_imprimi">Guardar + Imprimir</string>
+    <string name="ab_fi">Open File</string>
+    <string name="fal_ab_pdf">Falha ao abrir PDF</string>
+    <string name="inst_app">Instale aplicativo que  abre documentos no formato PDF</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar</item>
         <item>Guardar + Imprimir</item>
