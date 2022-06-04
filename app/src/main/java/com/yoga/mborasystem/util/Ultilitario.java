@@ -703,7 +703,6 @@ public class Ultilitario {
                         doc.setData_modifica(cursor.getLong(columnDateMo));
                         doc.setTamanho(cursor.getLong(columnSize));
                         doc.setTipo(cursor.getString(columnType));
-                        Log.d("Utilitario", cursor.getString(columnData) + " " + cursor.getCount());
                         pdfList.add(doc);
                     }
                 } while (cursor.moveToNext());
