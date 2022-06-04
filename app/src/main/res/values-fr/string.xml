@@ -527,7 +527,7 @@
     <string name="rel_vend">RAPPORT QUOTIDIEN DES VENTES\n</string>
     <string name="ms_inf">Pour plus d\'informations, contactez nos services d\'assistance technique.</string>
     <string-array name="array_rela_vend_diar">
-        <item>Enregistrer</item>
+        <item>Enregistrer PDF</item>
         <item>Enregistrer + Imprimer</item>
     </string-array>
     <string name="geral">GÉNÉRAL</string>

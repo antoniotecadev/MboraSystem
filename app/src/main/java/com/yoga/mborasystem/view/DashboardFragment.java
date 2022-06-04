@@ -328,7 +328,7 @@ public class DashboardFragment extends Fragment {
                     }).show();
         }));
 
-        vendaViewModel.getVendasGuardarImprimir().observe(getViewLifecycleOwner(), vendas -> {
+        vendaViewModel.getVendasGuardarImprimir().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             this.vendas.clear();
             if (vendas.isEmpty()) {
                 Ultilitario.alertDialog(getString(R.string.vendas), getString(R.string.nao_tem_venda) + " (" + this.data + ")", requireContext(), R.drawable.ic_baseline_store_24);
@@ -336,12 +336,12 @@ public class DashboardFragment extends Fragment {
                 this.vendas.addAll(vendas);
                 vendaViewModel.getProdutosVenda(0, null, this.data, true);
             }
-        });
+        }));
 
-        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), produtos -> {
+        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
             facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
             guardarImprimirRelatorioVendaDiaria(idItem, facturaPath, this.vendas, produtos);
-        });
+        }));
 
         return binding.getRoot();
     }

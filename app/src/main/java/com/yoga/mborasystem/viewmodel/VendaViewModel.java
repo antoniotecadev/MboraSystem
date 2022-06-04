@@ -109,8 +109,8 @@ public class VendaViewModel extends AndroidViewModel {
         return selectedData;
     }
 
-    MutableLiveData<List<Venda>> listaVendas, vendasGuardarImprimir;
-    MutableLiveData<Event<List<Venda>>> vendas;
+    MutableLiveData<List<Venda>> listaVendas;
+    MutableLiveData<Event<List<Venda>>> vendas, vendasGuardarImprimir;
 
     public MutableLiveData<List<Venda>> getListaVendasLiveData() {
         if (listaVendas == null) {
@@ -119,7 +119,7 @@ public class VendaViewModel extends AndroidViewModel {
         return listaVendas;
     }
 
-    public MutableLiveData<List<Venda>> getVendasGuardarImprimir() {
+    public MutableLiveData<Event<List<Venda>>> getVendasGuardarImprimir() {
         if (vendasGuardarImprimir == null) {
             vendasGuardarImprimir = new MutableLiveData<>();
         }
@@ -154,9 +154,9 @@ public class VendaViewModel extends AndroidViewModel {
         return exportLocal;
     }
 
-    MutableLiveData<List<ProdutoVenda>> produtosVenda;
+    MutableLiveData<Event<List<ProdutoVenda>>> produtosVenda;
 
-    public MutableLiveData<List<ProdutoVenda>> getProdutosVendaLiveData() {
+    public MutableLiveData<Event<List<ProdutoVenda>>> getProdutosVendaLiveData() {
         if (produtosVenda == null) {
             produtosVenda = new MutableLiveData<>();
         }
@@ -261,7 +261,7 @@ public class VendaViewModel extends AndroidViewModel {
                         if (isVenda) {
                             getListaVendasLiveData().setValue(vendas);
                         } else {
-                            getVendasGuardarImprimir().setValue(vendas);
+                            getVendasGuardarImprimir().setValue(new Event<>(vendas));
                         }
                     }
                     Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
@@ -294,7 +294,7 @@ public class VendaViewModel extends AndroidViewModel {
         compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda, codQr, data, isGuardarImprimir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> getProdutosVendaLiveData().setValue(produtos), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+                .subscribe(produtos -> getProdutosVendaLiveData().setValue(new Event<>(produtos)), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     @SuppressLint("CheckResult")

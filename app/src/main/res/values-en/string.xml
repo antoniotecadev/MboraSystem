@@ -527,7 +527,7 @@
     <string name="rel_vend">DAILY SALES REPORT\n</string>
     <string name="ms_inf">For more information, contact our technical support services.</string>
     <string-array name="array_rela_vend_diar">
-        <item>Save</item>
+        <item>Save PDF</item>
         <item>Save + Print</item>
     </string-array>
     <string name="geral">GENERAL</string>

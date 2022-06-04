@@ -16,6 +16,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentListaProdutoVendaBinding;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
+import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
@@ -54,8 +55,8 @@ public class ListaProdutoVendaFragment extends Fragment {
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.chipQuantidadeProduto.setText(quant + "");
 
-        vendaViewModel.getProdutosVenda(idvenda, codQr, null,false);
-        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), produtos -> {
+        vendaViewModel.getProdutosVenda(idvenda, codQr, null, false);
+        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
             adapter.clear();
             if (produtos.isEmpty()) {
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
@@ -99,7 +100,7 @@ public class ListaProdutoVendaFragment extends Fragment {
                         }
                     });
             }
-        });
+        }));
         return binding.getRoot();
     }
 
