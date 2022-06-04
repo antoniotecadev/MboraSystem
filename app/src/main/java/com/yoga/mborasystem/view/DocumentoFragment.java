@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -155,12 +156,17 @@ public class DocumentoFragment extends Fragment {
         }
 
         private void abrirDocumentoPDF(View v) {
+            Uri fileURI;
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 v.setBackgroundColor(Color.WHITE);
             }, 1000);
             File file = new File(documento.getCaminho());
-            Uri fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
+            } else {
+                fileURI = Uri.fromFile(file);
+            }
             Intent target = new Intent(Intent.ACTION_VIEW);
             target.setDataAndType(fileURI, "application/pdf");
             target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
