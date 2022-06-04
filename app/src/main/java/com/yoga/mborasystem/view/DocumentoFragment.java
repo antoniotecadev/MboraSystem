@@ -15,23 +15,28 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +75,9 @@ public class DocumentoFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void getDocumentPDF(String uriPath, int title, int msg) {
+    private void getDocumentPDF(String pasta, int title, int msg) {
         List<Ultilitario.Documento> pdfList = new ArrayList<>();
-        pdfList.addAll(getPdfList(uriPath, requireContext()));
+        pdfList.addAll(getPdfList(pasta, requireContext()));
         binding.chipQuantDoc.setText(String.valueOf(pdfList.size()));
         adapter.clear();
         requireActivity().setTitle(getString(title));
@@ -80,18 +85,23 @@ public class DocumentoFragment extends Fragment {
             Ultilitario.naoEncontrado(getContext(), adapter, msg);
         } else {
             for (Ultilitario.Documento documento : pdfList)
-                adapter.add(new ItemDocumento(documento, requireContext()));
+                adapter.add(new ItemDocumento(documento, requireContext(), pasta, title, msg));
         }
     }
 
-    static class ItemDocumento extends Item<GroupieViewHolder> {
+    class ItemDocumento extends Item<GroupieViewHolder> {
 
+        private String pasta;
+        private int title, msg;
         private Context context;
         private final Ultilitario.Documento documento;
 
-        public ItemDocumento(Ultilitario.Documento documento, Context context) {
+        public ItemDocumento(Ultilitario.Documento documento, Context context, String pasta, int title, int msg) {
             this.documento = documento;
             this.context = context;
+            this.pasta = pasta;
+            this.title = title;
+            this.msg = msg;
         }
 
         @SuppressLint("SetTextI18n")
@@ -99,10 +109,43 @@ public class DocumentoFragment extends Fragment {
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
             TextView nomeDocumento = viewHolder.itemView.findViewById(R.id.txtNomeDocumento);
             TextView descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
+            ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
             nomeDocumento.setText(documento.getNome());
             descricao.setText(Ultilitario.converterData(documento.getData_modifica()) + " - " + formatSize(documento.getTamanho()));
             viewHolder.itemView.setOnClickListener(v -> {
                 abrirDocumentoPDF(v);
+            });
+            registerForContextMenu(menu);
+            menu.setOnClickListener(View::showContextMenu);
+            viewHolder.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
+                menu1.setHeaderIcon(R.drawable.ic_baseline_store_24);
+                menu1.setHeaderTitle(documento.getNome());
+                menu1.add(getString(R.string.abrir)).setOnMenuItemClickListener(item -> {
+                    abrirDocumentoPDF(v);
+                    return false;
+                });
+                menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                    File file = new File(documento.getCaminho());
+                    file.delete();
+                    if (file.exists()) {
+                        try {
+                            file.getCanonicalFile().delete();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        if (file.exists()) {
+                            requireContext().deleteFile(file.getName());
+                        } else {
+                            Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                            getDocumentPDF(pasta, title, msg);
+                        }
+                    } else {
+                        Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                        getDocumentPDF(pasta, title, msg);
+                    }
+                    return false;
+                });
             });
         }
 

@@ -660,7 +660,7 @@ public class Ultilitario {
     }
 
     @SuppressLint("Range")
-    public static List<Documento> getPdfList(String uriPath, Context context) {
+    public static List<Documento> getPdfList(String pasta, Context context) {
         Uri collection;
         List<Documento> pdfList = new ArrayList<>();
         final String[] projection = new String[]{
@@ -679,7 +679,7 @@ public class Ultilitario {
         File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
 
         final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
-        final String[] selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + uriPath + "%", mimeType};
+        final String[] selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", mimeType};
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
