@@ -216,7 +216,7 @@ public class DocumentoFragment extends Fragment {
             share.setType("application/pdf");
             share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             share.putExtra(Intent.EXTRA_STREAM, fileURI);
-            startActivity(Intent.createChooser(share, "Share file"));
+            startActivity(Intent.createChooser(share, getString(R.string.part_fich)));
         }
     }
 }

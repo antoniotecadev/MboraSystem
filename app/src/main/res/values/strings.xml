@@ -562,6 +562,7 @@
     <string name="fal_ab_pdf">Falha ao abrir PDF</string>
     <string name="inst_app">Instale aplicativo que  abre documentos no formato PDF</string>
     <string name="elmnd">eliminado(a)</string>
+    <string name="part_fich">Share file</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
