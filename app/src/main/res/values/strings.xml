@@ -563,6 +563,11 @@
     <string name="inst_app">Instale aplicativo que  abre documentos no formato PDF</string>
     <string name="elmnd">eliminado(a)</string>
     <string name="part_fich">Share file</string>
+    <string name="det">Detalhes</string>
+    <string name="nome_fich">Nome do ficheiro</string>
+    <string name="tipo_fich">Tipo de ficheiro</string>
+    <string name="caminho">Caminho</string>
+    <string name="tama_fich">Tamanho do ficheiro</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

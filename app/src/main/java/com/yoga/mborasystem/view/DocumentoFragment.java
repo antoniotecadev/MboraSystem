@@ -16,7 +16,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -31,7 +30,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
-import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
 import com.yoga.mborasystem.util.Ultilitario;
@@ -92,9 +90,10 @@ public class DocumentoFragment extends Fragment {
 
     class ItemDocumento extends Item<GroupieViewHolder> {
 
-        private String pasta;
-        private int title, msg;
-        private Context context;
+        private final String pasta;
+        private final int title;
+        private final int msg;
+        private final Context context;
         private final Ultilitario.Documento documento;
 
         public ItemDocumento(Ultilitario.Documento documento, Context context, String pasta, int title, int msg) {
@@ -151,6 +150,10 @@ public class DocumentoFragment extends Fragment {
                     }
                     return false;
                 });
+                menu1.add(getString(R.string.det)).setOnMenuItemClickListener(item -> {
+                    detalhes();
+                    return false;
+                });
             });
         }
 
@@ -199,7 +202,7 @@ public class DocumentoFragment extends Fragment {
             return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
         }
 
-        private void partilharDocumentoPDF(View v){
+        private void partilharDocumentoPDF(View v) {
             Uri fileURI;
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -217,6 +220,15 @@ public class DocumentoFragment extends Fragment {
             share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             share.putExtra(Intent.EXTRA_STREAM, fileURI);
             startActivity(Intent.createChooser(share, getString(R.string.part_fich)));
+        }
+
+        private void detalhes() {
+            Ultilitario.alertDialog(getString(R.string.det), getString(R.string.nome_fich) + ": " + documento.getNome()
+                            + "\n" + getString(R.string.tipo_fich) + ": " + documento.getTipo()
+                            + "\n" + getString(R.string.tama_fich) + ": " + formatSize(documento.getTamanho())
+                            + "\n" + getString(R.string.data_modifica) + ": " + Ultilitario.converterData(documento.getData_modifica())
+                            + "\n" + getString(R.string.caminho) + ": " + documento.getCaminho()
+                    , context, R.drawable.ic_baseline_store_24);
         }
     }
 }
