@@ -125,6 +125,10 @@ public class DocumentoFragment extends Fragment {
                     abrirDocumentoPDF(v);
                     return false;
                 });
+                menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
+                    partilharDocumentoPDF(v);
+                    return false;
+                });
                 menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
                     File file = new File(documento.getCaminho());
                     file.delete();
@@ -193,6 +197,26 @@ public class DocumentoFragment extends Fragment {
             final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
             int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
             return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+        }
+
+        private void partilharDocumentoPDF(View v){
+            Uri fileURI;
+            v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                v.setBackgroundColor(Color.WHITE);
+            }, 1000);
+            File file = new File(documento.getCaminho());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
+            } else {
+                fileURI = Uri.fromFile(file);
+            }
+            Intent share = new Intent();
+            share.setAction(Intent.ACTION_SEND);
+            share.setType("application/pdf");
+            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            share.putExtra(Intent.EXTRA_STREAM, fileURI);
+            startActivity(Intent.createChooser(share, "Share file"));
         }
     }
 }
