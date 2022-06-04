@@ -124,7 +124,6 @@ public class VendaFragment extends Fragment {
                     } else {
                         requireActivity().setTitle(getString(R.string.vds));
                     }
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.tds_vd), R.drawable.ic_toast_feito);
                     vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false, idusuario, isLixeira);
                     break;
                 case R.id.vdDvd:
@@ -136,7 +135,6 @@ public class VendaFragment extends Fragment {
                     } else {
                         requireActivity().setTitle(getString(R.string.dvd));
                     }
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vd_dvd), R.drawable.ic_toast_feito);
                     vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, true, idusuario, isLixeira);
                     break;
                 default:
