@@ -171,9 +171,7 @@ public class DocumentoFragment extends Fragment {
             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
             nomeDocumento.setText(documento.getNome());
             descricao.setText(Ultilitario.converterData(documento.getData_modifica()) + " - " + formatSize(documento.getTamanho()));
-            viewHolder.itemView.setOnClickListener(v -> {
-                abrirDocumentoPDF(v);
-            });
+            viewHolder.itemView.setOnClickListener(this::abrirDocumentoPDF);
             registerForContextMenu(menu);
             menu.setOnClickListener(View::showContextMenu);
             viewHolder.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
@@ -224,9 +222,7 @@ public class DocumentoFragment extends Fragment {
         private void abrirDocumentoPDF(View v) {
             Uri fileURI;
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                v.setBackgroundColor(Color.WHITE);
-            }, 1000);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
             File file = new File(documento.getCaminho());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
@@ -264,9 +260,7 @@ public class DocumentoFragment extends Fragment {
         private void partilharDocumentoPDF(View v) {
             Uri fileURI;
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                v.setBackgroundColor(Color.WHITE);
-            }, 1000);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
             File file = new File(documento.getCaminho());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
