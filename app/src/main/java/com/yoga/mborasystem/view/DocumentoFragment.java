@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +21,13 @@ import androidx.fragment.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,12 +47,14 @@ import java.util.List;
 
 public class DocumentoFragment extends Fragment {
 
+    private String pasta;
     private GroupAdapter adapter;
     private FragmentDocumentoBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         adapter = new GroupAdapter();
     }
 
@@ -57,14 +64,17 @@ public class DocumentoFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentDocumentoBinding.inflate(inflater, container, false);
         binding.recyclerViewListaDoc.setAdapter(adapter);
-        getDocumentPDF("Facturas", R.string.fact_vend, R.string.fac_n_enc);
+        pasta = "Facturas";
+        getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null);
         binding.bottomNav.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.factura:
-                    getDocumentPDF("Facturas", R.string.fact_vend, R.string.fac_n_enc);
+                    pasta = "Facturas";
+                    getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null);
                     break;
                 case R.id.relatorio:
-                    getDocumentPDF("Relatorios", R.string.rel_dia_ven, R.string.rel_n_enc);
+                    pasta = "Relatorios";
+                    getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, false, null);
                     break;
                 default:
                     break;
@@ -74,9 +84,58 @@ public class DocumentoFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void getDocumentPDF(String pasta, int title, int msg) {
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_documento, menu);
+        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+        MenuItem menuItem = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint(getString(R.string.fich));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
+        searchView.onActionViewExpanded();
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getDocumentos(null, false);
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    getDocumentos(null, false);
+                } else {
+                    getDocumentos(newText, true);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void getDocumentos(String ficheiro, boolean isPesquisa) {
+        if (pasta.equalsIgnoreCase("Facturas")) {
+            getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, isPesquisa, ficheiro);
+        } else {
+            getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, isPesquisa, ficheiro);
+        }
+    }
+
+    private void getDocumentPDF(String pasta, int title, int msg, boolean isPesquisa, String ficheiro) {
         List<Ultilitario.Documento> pdfList = new ArrayList<>();
-        pdfList.addAll(getPdfList(pasta, requireContext()));
+        pdfList.addAll(getPdfList(pasta, isPesquisa, ficheiro, requireContext()));
         binding.chipQuantDoc.setText(String.valueOf(pdfList.size()));
         adapter.clear();
         requireActivity().setTitle(getString(title));
@@ -142,11 +201,11 @@ public class DocumentoFragment extends Fragment {
                             requireContext().deleteFile(file.getName());
                         } else {
                             Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-                            getDocumentPDF(pasta, title, msg);
+                            getDocumentPDF(pasta, title, msg, false, null);
                         }
                     } else {
                         Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-                        getDocumentPDF(pasta, title, msg);
+                        getDocumentPDF(pasta, title, msg, false, null);
                     }
                     return false;
                 });

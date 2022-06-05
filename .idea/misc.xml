@@ -67,9 +67,11 @@
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_bottom_doc.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_bottom_venda.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_dashboard.xml" value="0.20416666666666666" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_documento.xml" value="0.2" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_drawer.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_factura.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_home_ferramenta.xml" value="0.20416666666666666" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_pesquisa_criar_produto.xml" value="0.2" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/xml/preferences_config.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/xml/preferences_rede.xml" value="0.182518115942029" />
       </map>

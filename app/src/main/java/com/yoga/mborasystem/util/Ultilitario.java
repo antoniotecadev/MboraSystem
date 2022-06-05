@@ -660,8 +660,10 @@ public class Ultilitario {
     }
 
     @SuppressLint("Range")
-    public static List<Documento> getPdfList(String pasta, Context context) {
+    public static List<Documento> getPdfList(String pasta, boolean isPesquisa, String ficheiro, Context context) {
         Uri collection;
+        String selection;
+        String[] selectionArgs;
         List<Documento> pdfList = new ArrayList<>();
         final String[] projection = new String[]{
                 MediaStore.Files.FileColumns.TITLE,
@@ -671,16 +673,20 @@ public class Ultilitario {
                 MediaStore.Files.FileColumns.DATE_MODIFIED,
         };
 
-        final String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
-
-        final String selection = MediaStore.Files.FileColumns.DATA + " like ?"
-                + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
-
         File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
-
         final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
-        final String[] selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", mimeType};
+        final String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
+        if (isPesquisa) {
+            selection = MediaStore.Files.FileColumns.DATA + " like ?"
+                    + " AND " + MediaStore.Files.FileColumns.TITLE + " like ?"
+                    + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
+            selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", "%" + ficheiro + "%", mimeType};
+        } else {
+            selection = MediaStore.Files.FileColumns.DATA + " like ?"
+                    + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
+            selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", mimeType};
 
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
         } else {
@@ -694,7 +700,6 @@ public class Ultilitario {
                 int columnDateMo = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED);
                 int columnSize = cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE);
                 int columnType = cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE);
-
                 do {
                     if (new File(cursor.getString(columnData)).exists()) {
                         Documento doc = new Documento();
@@ -717,7 +722,8 @@ public class Ultilitario {
         final String[] selectionArgs = new String[]{dir.getPath() + "/MboraSystem/" + filePath};
         MediaScannerConnection.scanFile(context, selectionArgs, new String[]{mimeType},
                 new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) { }
+                    public void onScanCompleted(String path, Uri uri) {
+                    }
                 });
     }
 

@@ -569,6 +569,8 @@
     <string name="tipo_fich">Tipo de ficheiro</string>
     <string name="caminho">Caminho</string>
     <string name="tama_fich">Tamanho do ficheiro</string>
+    <string name="pes_fic">Pesquisar ficheiro</string>
+    <string name="fich">Ficheiro</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
