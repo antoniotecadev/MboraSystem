@@ -7,4 +7,9 @@
         android:title="@string/pes_fic"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/btnData"
+        android:icon="@android:drawable/ic_menu_day"
+        android:title="@string/pes_dat"
+        app:showAsAction="ifRoom|collapseActionView" />
 </menu>
