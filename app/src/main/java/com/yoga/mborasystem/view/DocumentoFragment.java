@@ -15,8 +15,13 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -37,7 +42,9 @@ import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
+import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +56,7 @@ public class DocumentoFragment extends Fragment {
 
     private String pasta;
     private GroupAdapter adapter;
+    private VendaViewModel vendaViewModel;
     private FragmentDocumentoBinding binding;
 
     @Override
@@ -56,8 +64,10 @@ public class DocumentoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         adapter = new GroupAdapter();
+        vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("NonConstantResourceId")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -65,22 +75,26 @@ public class DocumentoFragment extends Fragment {
         binding = FragmentDocumentoBinding.inflate(inflater, container, false);
         binding.recyclerViewListaDoc.setAdapter(adapter);
         pasta = "Facturas";
-        getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null);
+        getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null, "", false);
         binding.bottomNav.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.factura:
                     pasta = "Facturas";
-                    getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null);
+                    getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null, "", false);
                     break;
                 case R.id.relatorio:
                     pasta = "Relatorios";
-                    getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, false, null);
+                    getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, false, null, "", false);
                     break;
                 default:
                     break;
             }
             return true;
         });
+        vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
+            Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
+            getDocumentos(null, false, data, true);
+        }));
         return binding.getRoot();
     }
 
@@ -102,7 +116,7 @@ public class DocumentoFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                getDocumentos(null, false);
+                getDocumentos(null, false, "", false);
                 return true;
             }
         });
@@ -116,34 +130,62 @@ public class DocumentoFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    getDocumentos(null, false);
+                    getDocumentos(null, false, "", false);
                 } else {
-                    getDocumentos(newText, true);
+                    getDocumentos(newText, true, "", false);
                 }
                 return false;
             }
         });
     }
 
-    private void getDocumentos(String ficheiro, boolean isPesquisa) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+        if (item.getItemId() == R.id.btnData) {
+            DocumentoFragmentDirections.ActionDocumentoFragmentToDatePickerFragment direction = DocumentoFragmentDirections.actionDocumentoFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
+            Navigation.findNavController(requireView()).navigate(direction);
+        }
+        return NavigationUI.onNavDestinationSelected(item, navController)
+                || super.onOptionsItemSelected(item);
+    }
+
+    private void getDocumentos(String ficheiro, boolean isPesquisa, String data, boolean isPesquisaData) {
         if (pasta.equalsIgnoreCase("Facturas")) {
-            getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, isPesquisa, ficheiro);
+            getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, isPesquisa, ficheiro, data, isPesquisaData);
         } else {
-            getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, isPesquisa, ficheiro);
+            getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, isPesquisa, ficheiro, data, isPesquisaData);
         }
     }
 
-    private void getDocumentPDF(String pasta, int title, int msg, boolean isPesquisa, String ficheiro) {
+    @SuppressLint("SetTextI18n")
+    private void getDocumentPDF(String pasta, int title, int msg, boolean isPesquisa, String
+            ficheiro, String data, boolean isPesquisaData) {
+        requireActivity().setTitle(getString(title));
         List<Ultilitario.Documento> pdfList = new ArrayList<>();
         pdfList.addAll(getPdfList(pasta, isPesquisa, ficheiro, requireContext()));
         binding.chipQuantDoc.setText(String.valueOf(pdfList.size()));
         adapter.clear();
-        requireActivity().setTitle(getString(title));
         if (pdfList.isEmpty()) {
             Ultilitario.naoEncontrado(getContext(), adapter, msg);
         } else {
-            for (Ultilitario.Documento documento : pdfList)
-                adapter.add(new ItemDocumento(documento, requireContext(), pasta, title, msg));
+            if (isPesquisaData) {
+                int i = 0;
+                for (Ultilitario.Documento documento : pdfList) {
+                    if (data.equals(Ultilitario.converterData(documento.getData_cria(), false))) {
+                        binding.chipQuantDoc.setText(++i + "");
+                        adapter.add(new ItemDocumento(documento, requireContext(), pasta, title, msg));
+                    }
+                }
+                if (i == 0) {
+                    binding.chipQuantDoc.setText(i + "");
+                    Ultilitario.naoEncontrado(getContext(), adapter, msg);
+                }
+            } else {
+                for (Ultilitario.Documento documento : pdfList) {
+                    adapter.add(new ItemDocumento(documento, requireContext(), pasta, title, msg));
+                }
+            }
         }
     }
 
@@ -170,7 +212,7 @@ public class DocumentoFragment extends Fragment {
             TextView descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
             nomeDocumento.setText(documento.getNome());
-            descricao.setText(Ultilitario.converterData(documento.getData_modifica()) + " - " + formatSize(documento.getTamanho()));
+            descricao.setText(Ultilitario.converterData(documento.getData_cria(), true) + " - " + formatSize(documento.getTamanho()));
             viewHolder.itemView.setOnClickListener(this::abrirDocumentoPDF);
             registerForContextMenu(menu);
             menu.setOnClickListener(View::showContextMenu);
@@ -199,11 +241,11 @@ public class DocumentoFragment extends Fragment {
                             requireContext().deleteFile(file.getName());
                         } else {
                             Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-                            getDocumentPDF(pasta, title, msg, false, null);
+                            getDocumentPDF(pasta, title, msg, false, null, "", false);
                         }
                     } else {
                         Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-                        getDocumentPDF(pasta, title, msg, false, null);
+                        getDocumentPDF(pasta, title, msg, false, null, "", false);
                     }
                     return false;
                 });
@@ -279,7 +321,7 @@ public class DocumentoFragment extends Fragment {
             Ultilitario.alertDialog(getString(R.string.det), getString(R.string.nome_fich) + ": " + documento.getNome()
                             + "\n" + getString(R.string.tipo_fich) + ": " + documento.getTipo()
                             + "\n" + getString(R.string.tama_fich) + ": " + formatSize(documento.getTamanho())
-                            + "\n" + getString(R.string.data_modifica) + ": " + Ultilitario.converterData(documento.getData_modifica())
+                            + "\n" + getString(R.string.data_modifica) + ": " + Ultilitario.converterData(documento.getData_modifica(), true)
                             + "\n" + getString(R.string.caminho) + ": " + documento.getCaminho()
                     , context, R.drawable.ic_baseline_store_24);
         }

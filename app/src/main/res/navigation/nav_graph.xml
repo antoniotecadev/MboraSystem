@@ -322,6 +322,10 @@
             <argument
                 android:name="isVenda"
                 app:argType="boolean" />
+            <argument
+                android:name="isPesquisa"
+                app:argType="boolean"
+                android:defaultValue="false" />
         </dialog>
         <dialog
             android:id="@+id/dialogExportarImportarVenda"
@@ -403,8 +407,12 @@
         <fragment
             android:id="@+id/documentoFragment"
             android:name="com.yoga.mborasystem.view.DocumentoFragment"
-            android:label="@string/factura"
-            tools:layout="@layout/fragment_documento"/>
+            android:label="@string/doc"
+            tools:layout="@layout/fragment_documento">
+            <action
+                android:id="@+id/action_documentoFragment_to_datePickerFragment"
+                app:destination="@id/datePickerFragment" />
+        </fragment>
 
     </navigation>
 

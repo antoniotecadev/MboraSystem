@@ -337,6 +337,7 @@ public class Ultilitario {
         return dt;
     }
 
+
     public static int removerKZ(TextInputEditText editText) {
         return Integer.parseInt(Objects.requireNonNull(editText.getText()).toString().replaceAll(",", "").replaceAll("Kz", "").replaceAll("\\s+", ""));
     }
@@ -670,6 +671,7 @@ public class Ultilitario {
                 MediaStore.Files.FileColumns.DATA,
                 MediaStore.Files.FileColumns.MIME_TYPE,
                 MediaStore.Files.FileColumns.SIZE,
+                MediaStore.Files.FileColumns.DATE_ADDED,
                 MediaStore.Files.FileColumns.DATE_MODIFIED,
         };
 
@@ -685,7 +687,6 @@ public class Ultilitario {
             selection = MediaStore.Files.FileColumns.DATA + " like ?"
                     + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
             selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", mimeType};
-
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
@@ -697,6 +698,7 @@ public class Ultilitario {
             if (cursor.moveToFirst()) {
                 int columnTitle = cursor.getColumnIndex(MediaStore.Files.FileColumns.TITLE);
                 int columnData = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                int columnDateCr = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_ADDED);
                 int columnDateMo = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED);
                 int columnSize = cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE);
                 int columnType = cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE);
@@ -705,6 +707,7 @@ public class Ultilitario {
                         Documento doc = new Documento();
                         doc.setNome(cursor.getString(columnTitle));
                         doc.setCaminho(cursor.getString(columnData));
+                        doc.setData_cria(cursor.getLong(columnDateCr));
                         doc.setData_modifica(cursor.getLong(columnDateMo));
                         doc.setTamanho(cursor.getLong(columnSize));
                         doc.setTipo(cursor.getString(columnType));
@@ -784,9 +787,14 @@ public class Ultilitario {
         }
     }
 
-    public static String converterData(long data) {
+    public static String converterData(long data, boolean comHora) {
+        SimpleDateFormat dateFormat;
         Date d = new Date(data * 1000);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        if (comHora) {
+            dateFormat = new SimpleDateFormat("dd-MMMM-yyyy hh:mm:ss", Locale.getDefault());
+        } else {
+            dateFormat = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
+        }
         return dateFormat.format(d);  // formatted date in string
     }
 }

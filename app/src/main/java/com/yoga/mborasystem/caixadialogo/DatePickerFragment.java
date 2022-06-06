@@ -47,13 +47,18 @@ public class DatePickerFragment extends DialogFragment
         long idcliente = DatePickerFragmentArgs.fromBundle(getArguments()).getIdcliente();
         boolean isDivida = DatePickerFragmentArgs.fromBundle(getArguments()).getIsDivida();
         long idusuario = DatePickerFragmentArgs.fromBundle(getArguments()).getIdusuario();
+        boolean isPesquisa = DatePickerFragmentArgs.fromBundle(getArguments()).getIsPesquisa();
 
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
         if (isVenda) {
             Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
             vendaViewModel.getVendasPorData(data, false, idcliente, isDivida, idusuario, true);
         } else {
-            vendaViewModel.getVendaDatatAppLiveData().setValue(new Event<>(data));
+            if (isPesquisa) {
+                vendaViewModel.getDocumentoDatatAppLiveData().setValue(new Event<>(data));
+            } else {
+                vendaViewModel.getVendaDatatAppLiveData().setValue(new Event<>(data));
+            }
         }
     }
 
