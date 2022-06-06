@@ -472,53 +472,67 @@ public class FacturaFragment extends Fragment {
                 }
             }
         });
-
         vendaViewModel.getAlertDialogLiveData().setValue(null);
         vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), alertDialog -> {
             if (alertDialog != null) {
-                binding.txtNomeCliente.setText("");
-                estado.clear();
-                produtos.clear();
-                adapterFactura.clear();
-                precoTotal.clear();
-                valor.clear();
-                iva.clear();
-                posicao.clear();
-                total = 0;
-                totaldesconto = 0;
-                valorBase = 0;
-                valorIva = 0;
-                valorDivida = 0;
-                desconto = 0;
-                troco = 0;
-                valorPago = 0;
-                binding.textTotal.setText(Ultilitario.formatPreco("0"));
-                binding.textValor.setText(Ultilitario.formatPreco("0"));
-                binding.textIva.setText(Ultilitario.formatPreco("0"));
-                binding.txtTot.setText(Ultilitario.formatPreco("0"));
-                binding.totalDesconto.setText(Ultilitario.formatPreco("0"));
-                binding.troco.setText(Ultilitario.formatPreco("0"));
-                binding.txtNomeCliente.setEnabled(true);
-                binding.checkboxDivida.setChecked(false);
-                binding.textValorDivida.setEnabled(false);
-                binding.textValorDivida.setText(Ultilitario.formatPreco("0"));
-                binding.btnEfectuarVenda.setEnabled(false);
-                binding.checkboxDinheiro.setChecked(false);
-                binding.checkboxCartaoMulticaixa.setChecked(false);
-                binding.checkboxDepositoBancario.setChecked(false);
-                binding.checkboxTransferenciaBancario.setChecked(false);
-                Ultilitario.zerarPreco(binding.textDesconto);
-                Ultilitario.zerarPreco(binding.textValorPago);
-                Ultilitario.zerarPreco(binding.dinheiroValorPago);
-                Ultilitario.zerarPreco(binding.cartaoValorPago);
-                Ultilitario.zerarPreco(binding.depValorPago);
-                Ultilitario.zerarPreco(binding.transfValorPago);
-                produtoViewModel.consultarProdutos(idc, false, null, false);
-                alertDialog.dismiss();
+                if (facturaPath.isEmpty()) {
+                    new AlertDialog.Builder(requireContext())
+                            .setIcon(R.drawable.ic_baseline_store_24)
+                            .setTitle(R.string.fechar)
+                            .setMessage(R.string.tem_cert_fech)
+                            .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
+                            .setPositiveButton(R.string.sim, (dialogInterface, i) -> {
+                                restaurar();
+                                alertDialog.dismiss();
+                            }).show();
+                } else {
+                    restaurar();
+                    alertDialog.dismiss();
+                }
             }
         });
-
         return binding.getRoot();
+    }
+
+    private void restaurar() {
+        binding.txtNomeCliente.setText("");
+        estado.clear();
+        produtos.clear();
+        adapterFactura.clear();
+        precoTotal.clear();
+        valor.clear();
+        iva.clear();
+        posicao.clear();
+        total = 0;
+        totaldesconto = 0;
+        valorBase = 0;
+        valorIva = 0;
+        valorDivida = 0;
+        desconto = 0;
+        troco = 0;
+        valorPago = 0;
+        binding.textTotal.setText(Ultilitario.formatPreco("0"));
+        binding.textValor.setText(Ultilitario.formatPreco("0"));
+        binding.textIva.setText(Ultilitario.formatPreco("0"));
+        binding.txtTot.setText(Ultilitario.formatPreco("0"));
+        binding.totalDesconto.setText(Ultilitario.formatPreco("0"));
+        binding.troco.setText(Ultilitario.formatPreco("0"));
+        binding.txtNomeCliente.setEnabled(true);
+        binding.checkboxDivida.setChecked(false);
+        binding.textValorDivida.setEnabled(false);
+        binding.textValorDivida.setText(Ultilitario.formatPreco("0"));
+        binding.btnEfectuarVenda.setEnabled(false);
+        binding.checkboxDinheiro.setChecked(false);
+        binding.checkboxCartaoMulticaixa.setChecked(false);
+        binding.checkboxDepositoBancario.setChecked(false);
+        binding.checkboxTransferenciaBancario.setChecked(false);
+        Ultilitario.zerarPreco(binding.textDesconto);
+        Ultilitario.zerarPreco(binding.textValorPago);
+        Ultilitario.zerarPreco(binding.dinheiroValorPago);
+        Ultilitario.zerarPreco(binding.cartaoValorPago);
+        Ultilitario.zerarPreco(binding.depValorPago);
+        Ultilitario.zerarPreco(binding.transfValorPago);
+        produtoViewModel.consultarProdutos(idc, false, null, false);
     }
 
     private void abrirCamera() {
