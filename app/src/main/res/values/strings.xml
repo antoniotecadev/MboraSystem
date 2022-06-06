@@ -571,6 +571,7 @@
     <string name="tama_fich">Tamanho do ficheiro</string>
     <string name="pes_fic">Pesquisar ficheiro</string>
     <string name="fich">Ficheiro</string>
+    <string name="tem_cert_elim_fich">Tem a certeza que quer eliminar este ficheiro?</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
