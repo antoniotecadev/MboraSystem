@@ -334,4 +334,10 @@ public class DocumentoFragment extends Fragment {
                     , context, R.drawable.ic_baseline_store_24);
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
