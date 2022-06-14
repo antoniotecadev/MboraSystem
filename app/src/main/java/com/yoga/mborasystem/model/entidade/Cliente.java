@@ -33,6 +33,7 @@ public class Cliente implements Parcelable {
     private String imei;
     @Ignore private String codigoEquipa;
     @Ignore private String data_cria;
+    @Ignore private boolean visualizado;
 
     protected Cliente(Parcel in) {
         id = in.readLong();
@@ -198,6 +199,14 @@ public class Cliente implements Parcelable {
 
     public void setData_cria(String data_cria) {
         this.data_cria = data_cria;
+    }
+
+    public boolean isVisualizado() {
+        return visualizado;
+    }
+
+    public void setVisualizado(boolean visualizado) {
+        this.visualizado = visualizado;
     }
 
     @Override

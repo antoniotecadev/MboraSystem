@@ -205,7 +205,6 @@ public class CadastrarClienteFragment extends Fragment {
 
     public void writeNewClient(FragmentCadastrarClienteBinding binding) throws NoSuchAlgorithmException, InvalidKeySpecException {
         Cliente cliente = new Cliente();
-
         cliente.setId(1);
         cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
         cliente.setSobrenome(Objects.requireNonNull(binding.editTextSobreNome.getText()).toString());
@@ -223,7 +222,7 @@ public class CadastrarClienteFragment extends Fragment {
         cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
         cliente.setCodigoEquipa(Objects.requireNonNull(binding.editTextCodigoEquipa.getText()).toString());
         cliente.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-
+        cliente.setVisualizado(false);
         mDatabase.child(cliente.getImei()).setValue(cliente);
     }
 
