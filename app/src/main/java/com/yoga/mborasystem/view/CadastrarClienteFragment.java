@@ -36,6 +36,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class CadastrarClienteFragment extends Fragment {
 
+    private String imei;
     private Query query;
     private DatabaseReference mDatabase;
     private ClienteViewModel clienteViewModel;
@@ -152,7 +153,8 @@ public class CadastrarClienteFragment extends Fragment {
 
         binding.buttonCriarConta.setOnClickListener(v -> {
             try {
-                clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeLoja, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa);
+                imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
+                clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeLoja, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei);
             } catch (InvalidKeySpecException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -168,7 +170,7 @@ public class CadastrarClienteFragment extends Fragment {
             switch (operacao) {
                 case CRIAR:
                     try {
-                        writeNewClient(binding);
+                        writeNewClient(binding, imei);
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                         Toast.makeText(requireActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -203,7 +205,7 @@ public class CadastrarClienteFragment extends Fragment {
                 || super.onOptionsItemSelected(item);
     }
 
-    public void writeNewClient(FragmentCadastrarClienteBinding binding) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public void writeNewClient(FragmentCadastrarClienteBinding binding, String imei) throws NoSuchAlgorithmException, InvalidKeySpecException {
         Cliente cliente = new Cliente();
         cliente.setId(1);
         cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
@@ -219,7 +221,7 @@ public class CadastrarClienteFragment extends Fragment {
         cliente.setBairro(Objects.requireNonNull(binding.editTextBairro.getText()).toString());
         cliente.setRua(binding.editTextBairro.getText().toString());
         cliente.setSenha(Objects.requireNonNull(binding.editTextSenha.getText()).toString());
-        cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
+        cliente.setImei(imei);
         cliente.setCodigoEquipa(Objects.requireNonNull(binding.editTextCodigoEquipa.getText()).toString());
         cliente.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
         cliente.setVisualizado(false);

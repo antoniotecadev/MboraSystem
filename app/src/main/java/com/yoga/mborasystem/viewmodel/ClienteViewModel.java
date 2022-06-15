@@ -81,7 +81,7 @@ public class ClienteViewModel extends AndroidViewModel {
         return (isCampoVazio(numero) || !Patterns.PHONE.matcher(numero).matches());
     }
 
-    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa, String imei) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (isCampoVazio(Objects.requireNonNull(nome.getText()).toString()) || letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -158,7 +158,7 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setBairro(bairro.getText().toString());
             cliente.setRua(rua.getText().toString());
             cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
-            cliente.setImei(System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1));
+            cliente.setImei(imei);
             cliente.setCodigoEquipa(codigoEquipa.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 verificarCodigoEquipa(codigoEquipa.getText().toString(), cliente);
