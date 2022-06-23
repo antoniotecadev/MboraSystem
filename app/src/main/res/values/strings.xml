@@ -573,6 +573,7 @@
     <string name="fich">Ficheiro</string>
     <string name="tem_cert_elim_fich">Tem a certeza que quer eliminar este ficheiro?</string>
     <string name="tem_cert_fech">Tem a certeza que quer fechar sem guardar ou imprimir esta venda?</string>
+    <string name="sm_prm_na_vis_doc">Sem permissão não pode ver documentos</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

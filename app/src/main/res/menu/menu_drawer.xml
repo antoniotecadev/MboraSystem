@@ -29,7 +29,7 @@
         android:title="@string/factura" />
 
     <item
-        android:id="@+id/documentoFragment"
+        android:id="@+id/documentoFragmentMenu"
         android:icon="@drawable/ic_baseline_insert_drive_file_24"
         android:title="@string/doc" />
 

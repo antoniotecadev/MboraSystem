@@ -41,6 +41,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
 import com.yoga.mborasystem.util.EventObserver;
@@ -162,6 +163,7 @@ public class DocumentoFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getDocumentPDF(String pasta, int title, int msg, boolean isPesquisa, String
             ficheiro, String data, boolean isPesquisaData) {
+        MainActivity.getProgressBar();
         requireActivity().setTitle(getString(title));
         List<Ultilitario.Documento> pdfList = new ArrayList<>();
         pdfList.addAll(getPdfList(pasta, isPesquisa, ficheiro, requireContext()));
@@ -188,6 +190,7 @@ public class DocumentoFragment extends Fragment {
                 }
             }
         }
+        MainActivity.dismissProgressBar();
     }
 
     class ItemDocumento extends Item<GroupieViewHolder> {
