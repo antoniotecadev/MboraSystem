@@ -583,6 +583,17 @@ public class Ultilitario {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         return sharedPreferences.getString("percentagem_iva", "14");
     }
+    public static boolean getNaoMostrarNovamente(Activity activity) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        return sharedPreferences.getBoolean("switch_most_nov", false);
+    }
+
+    public static void setNaoMostrarNovamente(Activity activity, boolean estado) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("switch_most_nov", estado);
+        editor.apply();
+    }
 
     public static String monthInglesFrances(String data) {
         Map<String, String> listMonth = new HashMap<>();

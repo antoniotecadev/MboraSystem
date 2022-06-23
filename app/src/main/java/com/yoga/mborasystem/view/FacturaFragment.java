@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -474,24 +475,30 @@ public class FacturaFragment extends Fragment {
         });
         vendaViewModel.getAlertDialogLiveData().setValue(null);
         vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), alertDialog -> {
-            if (alertDialog != null) {
+            if (alertDialog != null && !Ultilitario.getNaoMostrarNovamente(requireActivity())) {
                 if (facturaPath.isEmpty()) {
                     new AlertDialog.Builder(requireContext())
                             .setIcon(R.drawable.ic_baseline_store_24)
                             .setTitle(R.string.fechar)
                             .setMessage(R.string.tem_cert_fech)
+                            .setNeutralButton(getString(R.string.n_most_nov), (dialogInterface, i) -> Ultilitario.setNaoMostrarNovamente(requireActivity(), true))
                             .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
-                            .setPositiveButton(R.string.sim, (dialogInterface, i) -> {
-                                restaurar();
-                                alertDialog.dismiss();
-                            }).show();
+                            .setPositiveButton(R.string.sim, (dialogInterface, i) -> fecharAlertDialog(alertDialog)).show();
                 } else {
-                    restaurar();
-                    alertDialog.dismiss();
+                    fecharAlertDialog(alertDialog);
                 }
+            } else {
+                if (alertDialog != null)
+                    fecharAlertDialog(alertDialog);
+
             }
         });
         return binding.getRoot();
+    }
+
+    private void fecharAlertDialog(AlertDialog alertDialog) {
+        restaurar();
+        alertDialog.dismiss();
     }
 
     private void restaurar() {

@@ -19,4 +19,10 @@
         app:dialogIcon="@drawable/ic_baseline_store_24"
         app:icon="@drawable/ic_baseline_translate_24"
         app:useSimpleSummaryProvider="true"/>
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="switch_most_nov"
+        android:title="@string/n_most_nov_config"
+        app:icon="@android:drawable/ic_menu_view"
+        app:useSimpleSummaryProvider="true"/>
 </PreferenceScreen>
