@@ -1,6 +1,10 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,12 +13,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.gson.JsonObject;
+import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
@@ -102,54 +109,65 @@ public class CadastrarClienteFragment extends Fragment {
         binding.spinnerMunicipios.setAdapter(adapter);
     }
 
-//    private void spinnerBairros() {
-//        MainActivity.getProgressBar();
-//        String URL = "http://192.168.18.3/mborasystem-admin/public/api/luanda/bairros";
-//        ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
-//        Ion.with(requireActivity())
-//                .load(URL)
-//                .asJsonArray()
-//                .setCallback((e, jsonElements) -> {
-//                    try {
-//                        bairros.add("");
-//                        for (int i = 0; i < jsonElements.size(); i++) {
-//                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
-//                            bairros.add(parceiro.get("br").getAsString());
-//                        }
-//                    } catch (Exception ex) {
-//                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
-//                    } finally {
-//                        MainActivity.dismissProgressBar();
-//                    }
-//                });
-//        bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        binding.spinnerBairros.setAdapter(bairros);
-//    }
+    private void spinnerBairros(String município) {
+        MainActivity.getProgressBar();
+        String URL = "http://192.168.18.3/mborasystem-admin/public/api/" + município + "/bairros";
+        ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
+        Ion.with(requireActivity())
+                .load(URL)
+                .asJsonArray()
+                .setCallback((e, jsonElements) -> {
+                    try {
+                        bairros.add("");
+                        for (int i = 0; i < jsonElements.size(); i++) {
+                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
+                            bairros.add(parceiro.get("br").getAsString());
+                        }
+                        if (bairros.getItem(1).isEmpty())
+                            Toast.makeText(requireContext(), getString(R.string.br_na_enc_mun), Toast.LENGTH_LONG).show();
+                    } catch (Exception ex) {
+                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        MainActivity.dismissProgressBar();
+                    }
+                });
+        bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerBairros.setAdapter(bairros);
+    }
 
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         spinnerProvincias();
         spinnerMunicipios();
-//        if (isNetworkConnected(requireContext())) {
-//            if (internetIsConnected()) {
-//                spinnerBairros();
-//            } else {
-//                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
-//            }
-//        } else {
-//            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
-//        }
+        binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isNetworkConnected(requireContext())) {
+                    if (internetIsConnected()) {
+                        spinnerBairros(parent.getItemAtPosition(position).toString());
+                    } else {
+                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                    }
+                } else {
+                    Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+                }
+            }
 
-//        binding.spinnerBairros.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                binding.editTextBairro.setText(parent.getItemAtPosition(position).toString());
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//        });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        binding.spinnerBairros.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                binding.editTextBairro.setText(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         binding.buttonCriarConta.setOnClickListener(v -> {
             try {
