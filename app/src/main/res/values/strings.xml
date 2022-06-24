@@ -456,14 +456,14 @@
     </string-array>
     <string-array name="municipios">
         <item></item>
-        <item>Luanda</item>
         <item>Belas</item>
         <item>Cazenga</item>
         <item>Cacuaco</item>
         <item>Icolo e Bengo</item>
+        <item>Luanda</item>
         <item>Quissama</item>
+        <item>Kilamba Kiaxi</item>
         <item>Talatona</item>
-        <item>Quilamba Quiaxi</item>
         <item>Viana</item>
     </string-array>
     <string-array name="quantidade">

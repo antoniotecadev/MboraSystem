@@ -111,7 +111,7 @@ public class CadastrarClienteFragment extends Fragment {
 
     private void spinnerBairros(String município) {
         MainActivity.getProgressBar();
-        String URL = "http://192.168.18.3/mborasystem-admin/public/api/" + município + "/bairros";
+        String URL = "http://192.168.18.3/mborasystem-admin/public/api/" + município.trim().replaceAll("\\s+", "") + "/bairros";
         ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
         Ion.with(requireActivity())
                 .load(URL)
@@ -126,7 +126,7 @@ public class CadastrarClienteFragment extends Fragment {
                         if (bairros.getItem(1).isEmpty())
                             Toast.makeText(requireContext(), getString(R.string.br_na_enc_mun), Toast.LENGTH_LONG).show();
                     } catch (Exception ex) {
-                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
