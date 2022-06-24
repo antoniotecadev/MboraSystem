@@ -28,7 +28,6 @@ import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +39,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -105,9 +103,9 @@ public class Ultilitario {
     @SuppressLint("WrongConstant")
     public static void showToast(Context context, int color, String s, int imagem) {
         Toast toast = new Toast(context);
-        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
         TextView text = view.findViewById(R.id.toast_text);
-        ImageView img = view.findViewById(R.id.toast_image);
+        ImageView img = view.findViewById(R.id.image);
         text.setText(s);
         img.setImageResource(imagem);
         view.setBackgroundColor(color);
@@ -118,15 +116,24 @@ public class Ultilitario {
     }
 
     @SuppressLint("WrongConstant")
-    public static void showToastQrCode(Context context, Bitmap imagem) {
-        Toast toast = new Toast(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
-        ImageView img = view.findViewById(R.id.toast_image);
-        img.setImageBitmap(imagem);
-        toast.setView(view);
-        toast.setGravity(Gravity.CENTER, 0, 50);
-        toast.setDuration(LENGTH_TOAST);
-        toast.show();
+    public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser) {
+        View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
+        ImageView img = view.findViewById(R.id.image);
+        img.setImageBitmap(qrCode);
+
+        if (!isQrCodeUser) {
+            Toast toast = new Toast(context);
+            toast.setView(view);
+            toast.setGravity(Gravity.CENTER, 0, 50);
+            toast.setDuration(LENGTH_TOAST);
+            toast.show();
+        } else {
+            new androidx.appcompat.app.AlertDialog.Builder(context)
+                    .setIcon(R.drawable.ic_baseline_store_24)
+                    .setTitle(R.string.meu_qr_code)
+                    .setView(view)
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss()).show();
+        }
     }
 
     public enum Operacao {
@@ -583,6 +590,7 @@ public class Ultilitario {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         return sharedPreferences.getString("percentagem_iva", "14");
     }
+
     public static boolean getNaoMostrarNovamente(Activity activity) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         return sharedPreferences.getBoolean("switch_most_nov", false);

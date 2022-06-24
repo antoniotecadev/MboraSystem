@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -38,6 +40,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.gson.JsonObject;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -51,6 +55,7 @@ public class HomeFragment extends Fragment {
 
     private Bundle bundle;
     private String language = "";
+    private Cliente cliente;
     private boolean isOpen = false;
     private FragmentHomeBinding binding;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
@@ -63,6 +68,8 @@ public class HomeFragment extends Fragment {
         FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
         FabRClockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
         FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
+        cliente = getArguments().getParcelable("cliente");
+
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -74,7 +81,17 @@ public class HomeFragment extends Fragment {
         Toolbar toolbar = binding.toolbar;
         toolbar.inflateMenu(R.menu.menu_bloquear);
         toolbar.setOnMenuItemClickListener(item -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
+            switch (item.getItemId()) {
+                case R.id.bloquearFragment:
+                    Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
+                    break;
+                case R.id.gerarQrCode:
+                    if (getArguments() != null)
+                        Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true);
+                    break;
+                default:
+                    break;
+            }
             return false;
         });
 
@@ -140,6 +157,17 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private Bitmap gerarCodigoQr() {
+        Bitmap bitmap = null;
+        try {
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            bitmap = barcodeEncoder.encodeBitmap(cliente.getImei(), BarcodeFormat.QR_CODE, 500, 500);
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return bitmap;
+    }
+
     private void animationLixeira(Animation animation, Animation animationLixo, boolean isOpen) {
         binding.floatingActionButtonCategoria.startAnimation(animation);
         binding.floatingActionButtonProduto.startAnimation(animation);
@@ -197,7 +225,6 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         assert getArguments() != null;
-        Cliente cliente = getArguments().getParcelable("cliente");
         switch (item.getItemId()) {
             case R.id.idioma:
                 new AlertDialog.Builder(requireContext())

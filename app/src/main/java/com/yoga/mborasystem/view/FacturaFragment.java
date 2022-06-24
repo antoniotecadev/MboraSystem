@@ -120,7 +120,7 @@ public class FacturaFragment extends Fragment {
                 barcodeView.setStatusText(result.getText() + "\n" + getString(R.string.ja_scaneado));
                 beepManager.playBeepSoundAndVibrate();
                 produtoViewModel.searchProduto(resultCodeBar, false);
-                Ultilitario.showToastQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW));
+                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false);
             }
             //Added preview of scanned barcode
 //            ImageView imageView = findViewById(R.id.barcodePreview);
