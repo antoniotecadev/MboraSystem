@@ -89,6 +89,9 @@ public class HomeFragment extends Fragment {
                     if (getArguments() != null)
                         Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true);
                     break;
+                case R.id.sairApp:
+                    sairApp();
+                    break;
                 default:
                     break;
             }

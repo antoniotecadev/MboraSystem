@@ -12,5 +12,9 @@
       android:icon="@android:drawable/ic_lock_lock"
       android:title="Bloquear"
       app:showAsAction="ifRoom|collapseActionView" />
-
+  <item
+      android:id="@+id/sairApp"
+      android:icon="@drawable/ic_baseline_exit_to_app_24"
+      android:title="@string/sair"
+      app:showAsAction="ifRoom|collapseActionView"/>
 </menu>
