@@ -9,11 +9,9 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -41,6 +38,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -49,7 +47,9 @@ import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -272,6 +272,10 @@ public class HomeFragment extends Fragment {
                         MainActivity.dismissProgressBar();
                     }
                 }
+                break;
+            case R.id.gerarCodigoQr:
+                if (getArguments() != null)
+                    Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true);
                 break;
             case R.id.config:
                 Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);

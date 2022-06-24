@@ -9,6 +9,9 @@
       android:id="@+id/estadoCliente"
       android:title="@string/estd_cont" />
   <item
+      android:id="@+id/gerarCodigoQr"
+      android:title="@string/cod_qr"/>
+  <item
       android:id="@+id/dialogAlterarCodigoPin"
       android:title="@string/alterar_codigo_pin" />
   <item
