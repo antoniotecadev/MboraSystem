@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.util;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -116,7 +117,7 @@ public class Ultilitario {
     }
 
     @SuppressLint("WrongConstant")
-    public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser) {
+    public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser, ActivityResultLauncher<String> requestPermissionLauncherShareQrCode, String nome, String estabalecimento) {
         View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
         ImageView img = view.findViewById(R.id.image);
         img.setImageBitmap(qrCode);
@@ -131,7 +132,11 @@ public class Ultilitario {
             new androidx.appcompat.app.AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_baseline_store_24)
                     .setTitle(R.string.meu_qr_code)
+                    .setMessage(context.getString(R.string.nome) + ": " + nome + "\n" + context.getString(R.string.estab) + ": " + estabalecimento)
                     .setView(view)
+                    .setNegativeButton(R.string.guard_part, (dialogInterface, i) -> {
+                        requestPermissionLauncherShareQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    })
                     .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss()).show();
         }
     }

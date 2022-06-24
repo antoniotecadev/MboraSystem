@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,7 +83,7 @@ public class HomeFragment extends Fragment {
                     break;
                 case R.id.gerarQrCode:
                     if (getArguments() != null)
-                        Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true);
+                        Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa());
                     break;
                 case R.id.sairApp:
                     sairApp();
@@ -273,7 +274,7 @@ public class HomeFragment extends Fragment {
                 break;
             case R.id.gerarCodigoQr:
                 if (getArguments() != null)
-                    Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true);
+                    Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa());
                 break;
             case R.id.config:
                 Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
@@ -406,6 +407,21 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.documentoFragment);
                 } else {
                     Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
+    private final ActivityResultLauncher<String> requestPermissionLauncherShareQrCode = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                if (result) {
+                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(),  getString(R.string.cod_qr)+ "-" + getString(R.string.estab) + "-" + cliente.getNomeEmpresa(), null);
+                    Uri bitmapUri = Uri.parse(bitmapPath);
+
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("image/png");
+                    intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+                    startActivity(Intent.createChooser(intent, getString(R.string.part_me_cod_qr)));
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.sm_perm_n_pod_part_cod_qr), Toast.LENGTH_SHORT).show();
                 }
             }
     );

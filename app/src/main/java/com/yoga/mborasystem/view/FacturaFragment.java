@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -120,7 +119,7 @@ public class FacturaFragment extends Fragment {
                 barcodeView.setStatusText(result.getText() + "\n" + getString(R.string.ja_scaneado));
                 beepManager.playBeepSoundAndVibrate();
                 produtoViewModel.searchProduto(resultCodeBar, false);
-                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false);
+                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false, null, "", "");
             }
             //Added preview of scanned barcode
 //            ImageView imageView = findViewById(R.id.barcodePreview);
