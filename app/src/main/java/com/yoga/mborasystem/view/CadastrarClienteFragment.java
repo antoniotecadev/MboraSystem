@@ -126,7 +126,7 @@ public class CadastrarClienteFragment extends Fragment {
                         if (bairros.getItem(1).isEmpty())
                             Toast.makeText(requireContext(), getString(R.string.br_na_enc_mun), Toast.LENGTH_LONG).show();
                     } catch (Exception ex) {
-//                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
