@@ -24,6 +24,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -51,8 +54,6 @@ public class HomeFragment extends Fragment {
     private boolean isOpen = false;
     private FragmentHomeBinding binding;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
-
-    private final int REQUEST_PERMISSION = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,13 +107,7 @@ public class HomeFragment extends Fragment {
                     entrarVendas();
                     break;
                 case R.id.documentoFragmentMenu:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                            && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                REQUEST_PERMISSION);
-                    } else {
-                        Navigation.findNavController(getView()).navigate(R.id.documentoFragment);
-                    }
+                    requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
                     break;
                 default:
                     break;
@@ -376,15 +371,13 @@ public class HomeFragment extends Fragment {
         MainActivity.dismissProgressBar();
     }
 
-    @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Navigation.findNavController(getView()).navigate(R.id.documentoFragment);
-            } else {
-                Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_SHORT).show();
+    private ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                if (result) {
+                    Navigation.findNavController(getView()).navigate(R.id.documentoFragment);
+                } else {
+                    Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-    }
+    );
 }
