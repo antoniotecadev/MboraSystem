@@ -23,7 +23,7 @@
   <item
       android:id="@+id/politicaPrivacidade"
       android:title="@string/politica_privacidade" />
-  <item android:title="@string/precisa_ajuda" />
+<!--  <item android:title="@string/precisa_ajuda" />-->
   <item
       android:id="@+id/bloquearFragment"
       android:title="@string/bloquear" />
