@@ -23,13 +23,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -38,7 +35,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -47,9 +43,7 @@ import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -68,6 +62,7 @@ public class HomeFragment extends Fragment {
         FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
         FabRClockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
         FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
+        assert getArguments() != null;
         cliente = getArguments().getParcelable("cliente");
 
     }
@@ -405,10 +400,10 @@ public class HomeFragment extends Fragment {
         MainActivity.dismissProgressBar();
     }
 
-    private ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    Navigation.findNavController(getView()).navigate(R.id.documentoFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.documentoFragment);
                 } else {
                     Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_SHORT).show();
                 }
