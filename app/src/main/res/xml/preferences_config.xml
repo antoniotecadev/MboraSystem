@@ -27,7 +27,7 @@
         app:useSimpleSummaryProvider="true" />
     <PreferenceCategory android:title="Configurações de rede">
         <EditTextPreference
-            android:defaultValue="http://192.168.18.3"
+            android:defaultValue="https://ea85-154-71-128-128.sa.ngrok.io"
             android:key="apn"
             android:title="@string/apn"
             app:dialogIcon="@drawable/ic_baseline_store_24"
