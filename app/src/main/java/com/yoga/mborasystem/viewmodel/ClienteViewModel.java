@@ -28,7 +28,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Objects;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 import io.reactivex.Completable;
@@ -271,7 +270,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     private void salvarParceiro(Cliente cliente) {
-        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts";
+        String URL = Ultilitario.getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/contacts";
         Ion.with(getApplication().getApplicationContext())
                 .load("POST", URL)
                 .setBodyParameter("account_id", "1")
@@ -352,7 +351,7 @@ public class ClienteViewModel extends AndroidViewModel {
     public void verificarCodigoEquipa(String codigoEquipa, Cliente cliente) {
         if (isNetworkConnected(getApplication().getApplicationContext())) {
             if (internetIsConnected()) {
-                String URL = "http://192.168.18.3/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
+                String URL = Ultilitario.getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
                 Ion.with(getApplication().getApplicationContext())
                         .load(URL)
                         .asJsonArray()

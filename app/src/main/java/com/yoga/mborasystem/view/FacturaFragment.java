@@ -935,7 +935,7 @@ public class FacturaFragment extends Fragment {
     private byte estadoConta, termina;
 
     private void estadoConta(String imei, String nomeIDcliente) {
-        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts/" + imei + "/estado";
+        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
                 .asJsonArray()

@@ -582,6 +582,7 @@
     <string name="sm_perm_n_pod_part_cod_qr">Sem permissão não pode partilhar o seu código QR</string>
     <string name="guard_part">Guardar + Partilhar</string>
     <string name="estab">Estabelecimento</string>
+    <string name="apn">APN (Acess Point Network)</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

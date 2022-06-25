@@ -111,7 +111,7 @@ public class CadastrarClienteFragment extends Fragment {
 
     private void spinnerBairros(String município) {
         MainActivity.getProgressBar();
-        String URL = "http://192.168.18.3/mborasystem-admin/public/api/" + município.trim().replaceAll("\\s+", "") + "/bairros";
+        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/" + município.trim().replaceAll("\\s+", "") + "/bairros";
         ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
         Ion.with(requireActivity())
                 .load(URL)
@@ -181,7 +181,7 @@ public class CadastrarClienteFragment extends Fragment {
                 Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/termoscondicoes"))));
+        binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes"))));
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
         Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao -> {

@@ -608,6 +608,11 @@ public class Ultilitario {
         editor.apply();
     }
 
+    public static String getAPN(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString("apn", "");
+    }
+
     public static String monthInglesFrances(String data) {
         Map<String, String> listMonth = new HashMap<>();
         listMonth.put("january", "janeiro");

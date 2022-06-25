@@ -280,10 +280,10 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
                 break;
             case R.id.termosCondicoes:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/termoscondicoes")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));
                 break;
             case R.id.politicaPrivacidade:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://192.168.18.3/mborasystem-admin/public/api/politicaprivacidade")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/politicaprivacidade")));
                 break;
             case R.id.dialogAlterarCodigoPin:
                 if (getArguments() != null) {
@@ -339,7 +339,7 @@ public class HomeFragment extends Fragment {
 
     private void estadoConta(String imei) {
         String[] pacote = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
-        String URL = "http://192.168.18.3/mborasystem-admin/public/api/contacts/" + imei + "/estado";
+        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
                 .asJsonArray()
@@ -413,7 +413,7 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncherShareQrCode = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(),  getString(R.string.cod_qr)+ "-" + getString(R.string.estab) + "-" + cliente.getNomeEmpresa(), null);
+                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(), getString(R.string.cod_qr) + "-" + getString(R.string.estab) + "-" + cliente.getNomeEmpresa(), null);
                     Uri bitmapUri = Uri.parse(bitmapPath);
 
                     Intent intent = new Intent(Intent.ACTION_SEND);
