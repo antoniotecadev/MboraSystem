@@ -87,6 +87,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         textViewInputNumbers = binding.textViewInputNumbers;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setOnTouchListener() {
         binding.buttonZero.setOnTouchListener(this);
         binding.buttonOne.setOnTouchListener(this);
@@ -109,6 +110,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         binding.buttonDot.setOnTouchListener(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -177,6 +179,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
@@ -194,6 +197,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return false;
     }
 
+    @SuppressLint("SetTextI18n")
     private boolean addDot() {
         boolean done = false;
 
@@ -214,6 +218,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return done;
     }
 
+    @SuppressLint("SetTextI18n")
     private boolean addParenthesis() {
         boolean done = false;
         int operationLength = textViewInputNumbers.getText().length();
@@ -250,6 +255,8 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
                     openParenthesis--;
                     dotUsed = false;
                     break;
+                default:
+                    break;
             }
         } else if (openParenthesis == 0 && operationLength > 0) {
             String lastInput = textViewInputNumbers.getText().charAt(operationLength - 1) + "";
@@ -268,6 +275,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return done;
     }
 
+    @SuppressLint("SetTextI18n")
     private boolean addOperand(String operand) {
         boolean done = false;
         int operationLength = textViewInputNumbers.getText().length();
@@ -295,6 +303,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         return done;
     }
 
+    @SuppressLint("SetTextI18n")
     private boolean addNumber(String number) {
         boolean done = false;
         int operationLength = textViewInputNumbers.getText().length();
@@ -324,7 +333,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
 
 
     private void calculate(String input) {
-        String result = "";
+        String result;
         try {
             String temp = input;
             if (equalClicked) {
@@ -398,6 +407,7 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
             Integer.parseInt(lastCharacter);
             return IS_NUMBER;
         } catch (NumberFormatException e) {
+            Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         if ((lastCharacter.equals("+") || lastCharacter.equals("-") || lastCharacter.equals("x") || lastCharacter.equals("\u00F7") || lastCharacter.equals("%")))
