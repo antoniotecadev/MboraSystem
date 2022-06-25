@@ -144,7 +144,8 @@ public class CadastrarClienteFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isNetworkConnected(requireContext())) {
                     if (internetIsConnected()) {
-                        spinnerBairros(parent.getItemAtPosition(position).toString());
+                        if (!parent.getItemAtPosition(position).toString().isEmpty())
+                            spinnerBairros(parent.getItemAtPosition(position).toString());
                     } else {
                         Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
                     }
