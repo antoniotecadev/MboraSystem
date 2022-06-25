@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.RoomWarnings;
 import androidx.room.Transaction;
 
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -113,10 +114,12 @@ public abstract class VendaDao {
     @Query("UPDATE vendas SET estado = :est")
     public abstract void restaurarTodasVendas(int est);
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT id, sum(preco_total) AS preco_total" +
             ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas WHERE data_cria = :data GROUP BY nome_produto ORDER BY sum(quantidade) DESC LIMIT 3")
     public abstract LiveData<List<ProdutoVenda>> getProdutoMaisVendido(String data);
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT id, sum(preco_total) AS preco_total" +
             ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas WHERE data_cria = :data GROUP BY nome_produto ORDER BY sum(quantidade) ASC LIMIT 3")
     public abstract LiveData<List<ProdutoVenda>> getProdutoMenosVendido(String data);
