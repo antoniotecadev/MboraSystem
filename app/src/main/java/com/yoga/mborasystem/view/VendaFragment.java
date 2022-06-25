@@ -24,7 +24,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -95,7 +94,6 @@ public class VendaFragment extends Fragment {
     }
 
     @SuppressLint("NonConstantResourceId")
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -192,7 +190,11 @@ public class VendaFragment extends Fragment {
                 }
                 dataBuilder = dt;
                 if (isLocal) {
-                    Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
+                    } else {
+                        Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    }
                 } else {
                     Ultilitario.exportarNuvem(getContext(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
                 }
@@ -441,7 +443,6 @@ public class VendaFragment extends Fragment {
     }
 
     @SuppressLint("NonConstantResourceId")
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
@@ -457,8 +458,12 @@ public class VendaFragment extends Fragment {
                 exportarVenda();
                 break;
             case R.id.importarvenda:
-                //Importa as vendas
-                Ultilitario.importarCategoriasProdutos(importVendaActivityResultLauncher, null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    //Importa as vendas
+                    Ultilitario.importarCategoriasProdutos(importVendaActivityResultLauncher, null);
+                } else {
+                    Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                }
                 break;
             case R.id.btnEliminarTodosLixo:
                 dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
