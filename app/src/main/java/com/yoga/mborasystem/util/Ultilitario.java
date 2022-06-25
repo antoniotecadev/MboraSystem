@@ -134,9 +134,7 @@ public class Ultilitario {
                     .setTitle(R.string.meu_qr_code)
                     .setMessage(context.getString(R.string.nome) + ": " + nome + "\n" + context.getString(R.string.estab) + ": " + estabalecimento)
                     .setView(view)
-                    .setNegativeButton(R.string.guard_part, (dialogInterface, i) -> {
-                        requestPermissionLauncherShareQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    })
+                    .setNegativeButton(R.string.guard_part, (dialogInterface, i) -> requestPermissionLauncherShareQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss()).show();
         }
     }
@@ -378,7 +376,11 @@ public class Ultilitario {
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/csv");
             intent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data + ".csv");
-            intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
+            } else {
+                Toast.makeText(activity, "API >= 19", Toast.LENGTH_LONG).show();
+            }
             exportActivityResultLauncher.launch(intent);
         } catch (Exception e) {
             e.printStackTrace();
