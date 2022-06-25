@@ -26,7 +26,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -89,7 +88,6 @@ public class CategoriaProdutoFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -139,10 +137,13 @@ public class CategoriaProdutoFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void exportarProdutos(String nomeFicheiro, boolean isLocal) {
         if (isLocal) {
-            Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+            } else {
+                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
         }
