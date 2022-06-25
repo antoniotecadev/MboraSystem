@@ -43,11 +43,11 @@ android {
         release {
             // Ativa a redução, ofuscação e otimização de código apenas para
             // o tipo de compilação de lançamento do seu projeto.
-//            minifyEnabled true
+            minifyEnabled true
 
             // Ativa a redução de recursos, que é realizada pelo
             // Plug-in do Android para Gradle.
-//            shrinkResources true
+            shrinkResources true
 
             // Inclui os arquivos de regras ProGuard padrão que são empacotados com
             // o plugin Android Gradle. Para saber mais, vá para a seção sobre
