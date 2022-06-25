@@ -31,6 +31,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
             }
             return true;
         });
+        assert listaIdioma != null;
         listaIdioma.setOnPreferenceChangeListener((preference, newValue) -> {
             switch (newValue.toString()) {
                 case "Francês":
