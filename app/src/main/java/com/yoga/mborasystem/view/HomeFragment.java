@@ -292,7 +292,7 @@ public class HomeFragment extends Fragment {
                 }
                 break;
             case R.id.acercaMborasytem:
-                Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext(), R.drawable.ic_baseline_store_24);
+                acercaMboraSystem();
                 break;
             case R.id.itemSair:
                 sairApp();
@@ -301,6 +301,44 @@ public class HomeFragment extends Fragment {
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
+    }
+
+    private void acercaMboraSystem() {
+        MainActivity.getProgressBar();
+        if (isNetworkConnected(requireContext())) {
+            if (internetIsConnected()) {
+                String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/contactos";
+                Ion.with(requireActivity())
+                        .load(URL)
+                        .asJsonArray()
+                        .setCallback((e, jsonElements) -> {
+                            try {
+                                JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
+                                String contactos = parceiro.get("contactos").getAsString();
+                                Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca) + "\n" + contactos, requireContext(), R.drawable.ic_baseline_store_24);
+                            } catch (Exception ex) {
+                                MainActivity.dismissProgressBar();
+                                new AlertDialog.Builder(requireContext())
+                                        .setIcon(R.drawable.ic_baseline_store_24)
+                                        .setTitle(getString(R.string.erro))
+                                        .setMessage(ex.getMessage())
+                                        .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                                        .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                                            dialog.dismiss();
+                                            MainActivity.getProgressBar();
+                                            acercaMboraSystem();
+                                        })
+                                        .show();
+                            }
+                        });
+            } else {
+                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                MainActivity.dismissProgressBar();
+            }
+        } else {
+            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+            MainActivity.dismissProgressBar();
+        }
     }
 
     private void sairApp() {
