@@ -378,7 +378,7 @@ public class Ultilitario {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
             } else {
-                Toast.makeText(activity, "API >= 19", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "API >= 26", Toast.LENGTH_LONG).show();
             }
             exportActivityResultLauncher.launch(intent);
         } catch (Exception e) {
