@@ -26,8 +26,7 @@
             android:ems="10"
             android:hint="@string/senha"
             android:imeOptions="actionDone"
-            android:inputType="textPersonName|text|textPassword"
-            android:text="123456">
+            android:inputType="textPersonName|text|textPassword">
 
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
