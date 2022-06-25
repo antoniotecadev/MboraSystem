@@ -11,13 +11,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
