@@ -37,7 +37,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -53,7 +52,6 @@ public class DialogExportarImportar extends DialogFragment {
 
     private ExecutorService executor;
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -127,7 +125,6 @@ public class DialogExportarImportar extends DialogFragment {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarExportar(boolean isLocal) {
         if (getArguments() != null) {
             categorias = getArguments().getStringArrayList("categorias");
@@ -156,7 +153,6 @@ public class DialogExportarImportar extends DialogFragment {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void exportarCategorias(boolean isLocal) {
         StringBuilder data = new StringBuilder();
         for (int i = 0; i < categorias.size(); i++) {
@@ -164,20 +160,30 @@ public class DialogExportarImportar extends DialogFragment {
         }
         this.data = data;
         if (isLocal) {
-            Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
+            } else {
+                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarProdutos() {
-        Ultilitario.importarCategoriasProdutos(null, getActivity());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Ultilitario.importarCategoriasProdutos(null, getActivity());
+        } else {
+            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void importarCategorias() {
-        Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher, null);
+        } else {
+            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        }
     }
 
     @SuppressLint("StaticFieldLeak")

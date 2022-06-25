@@ -371,7 +371,6 @@ public class Ultilitario {
             FileOutputStream out = activity.openFileOutput(ficheiro, Context.MODE_PRIVATE);
             out.write((dataStringBuilder.toString()).getBytes());
             out.close();
-
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/csv");

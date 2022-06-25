@@ -583,6 +583,9 @@
     <string name="guard_part">Guardar + Partilhar</string>
     <string name="estab">Estabelecimento</string>
     <string name="apn">APN (Acess Point Network)</string>
+    <string name="avs">Aviso</string>
+    <string name="exp_dis_api_sup">A exportação só está disponível para nível de API 19 ou superior</string>
+    <string name="imp_dis_api_sup">A importação só está disponível para nível de API 19 ou superior</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
