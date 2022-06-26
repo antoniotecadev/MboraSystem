@@ -407,7 +407,6 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
             Integer.parseInt(lastCharacter);
             return IS_NUMBER;
         } catch (NumberFormatException e) {
-            Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         if ((lastCharacter.equals("+") || lastCharacter.equals("-") || lastCharacter.equals("x") || lastCharacter.equals("\u00F7") || lastCharacter.equals("%")))
