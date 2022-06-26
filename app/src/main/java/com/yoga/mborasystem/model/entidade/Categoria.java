@@ -3,9 +3,10 @@ package com.yoga.mborasystem.model.entidade;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
+@Keep
 @Entity(tableName = "categorias")
 public class Categoria implements Parcelable {
     @PrimaryKey(autoGenerate = true)

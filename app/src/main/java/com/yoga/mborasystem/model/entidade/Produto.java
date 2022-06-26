@@ -3,6 +3,7 @@ package com.yoga.mborasystem.model.entidade;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -10,7 +11,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
-
+@Keep
 @Entity(tableName = "produtos", indices = {@Index(value = {"idcategoria"})},
         foreignKeys = @ForeignKey(entity = Categoria.class, parentColumns = "id", childColumns = "idcategoria", onDelete = CASCADE))
 public class Produto implements Parcelable {

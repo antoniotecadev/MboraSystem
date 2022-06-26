@@ -3,10 +3,11 @@ package com.yoga.mborasystem.model.entidade;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Keep;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
+@Keep
 @Entity(tableName = "vendas", indices = {@Index(value = {"codigo_qr", "data_cria", "idclicant", "idoperador"})})
 public class Venda implements Parcelable {
 
