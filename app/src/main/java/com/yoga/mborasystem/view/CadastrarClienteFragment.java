@@ -52,8 +52,7 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
+//        mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
 //        query = FirebaseDatabase.getInstance().getReference("cliente").limitToLast(1);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
@@ -61,6 +60,7 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
 //        query.addChildEventListener(new ChildEventListener() {
 //            @Override
 //            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
