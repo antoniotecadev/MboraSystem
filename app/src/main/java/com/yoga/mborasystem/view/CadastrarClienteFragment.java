@@ -52,6 +52,7 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
 //        query = FirebaseDatabase.getInstance().getReference("cliente").limitToLast(1);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
@@ -60,7 +61,6 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 //        query.addChildEventListener(new ChildEventListener() {
 //            @Override
 //            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -215,11 +215,27 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_home_ferramenta, menu);
+        menu.findItem(R.id.dialogAlterarCliente).setVisible(false);
+        menu.findItem(R.id.estadoCliente).setVisible(false);
+        menu.findItem(R.id.gerarCodigoQr).setVisible(false);
+        menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
+        menu.findItem(R.id.termosCondicoes).setVisible(false);
+        menu.findItem(R.id.politicaPrivacidade).setVisible(false);
+        menu.findItem(R.id.acercaMborasytem).setVisible(false);
+        menu.findItem(R.id.itemSair).setVisible(false);
+        menu.findItem(R.id.bloquearFragment).setVisible(false);
+        menu.findItem(R.id.idioma).setVisible(false);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+        switch (item.getItemId()) {
+            case R.id.config:
+                Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoFragment2);
+                break;
+        }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
     }
