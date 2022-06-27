@@ -134,9 +134,9 @@ public class LoginFragment extends Fragment {
         });
 
         clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), cliente -> {
-            bundle.putString("nome", cliente.getNome() + " " + cliente.getSobrenome());
-            bundle.putBoolean("master", cliente.isMaster());
-            bundle.putParcelable("cliente", cliente);
+            bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
+            bundle.putBoolean("master", cliente.get(0).isMaster());
+            bundle.putParcelable("cliente", cliente.get(0));
             try {
                 Navigation.findNavController(requireView()).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle);
             } catch (Exception e) {
@@ -193,8 +193,7 @@ public class LoginFragment extends Fragment {
             try {
                 logarComTecladoPersonalizado();
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
