@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
@@ -19,10 +23,13 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -30,12 +37,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class UsuarioViewModel extends AndroidViewModel {
 
     private final Usuario usuario;
     private Disposable disposable;
+    private ExecutorService executor;
     private final UsuarioRepository usuarioRepository;
     private final CompositeDisposable compositeDisposable;
 
@@ -173,28 +182,26 @@ public class UsuarioViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void verificarCodigoPin(Usuario us, AlertDialog dg) {
-        usuarioRepository.confirmarCodigoPin(us.getCodigoPin())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<Usuario>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
-                        disposable = d;
-                    }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.annotations.NonNull Usuario usuario) {
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            try {
+                if (usuarioRepository.confirmarCodigoPin(us.getCodigoPin()).isEmpty()) {
+                    criarUsuario(us, dg);
+                } else {
+                    handler.post(() -> {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.codigopin_invalido), R.drawable.ic_toast_erro);
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        criarUsuario(us, dg);
-                    }
+                    });
+                }
+            } catch (Exception e) {
+                handler.post(() -> {
+                    MainActivity.dismissProgressBar();
+                    Toast.makeText(getApplication().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 });
+            }
+        });
     }
-
     @SuppressLint("CheckResult")
     public void eliminarUsuario(Usuario usuario, Dialog dg) {
         MainActivity.getProgressBar();
@@ -240,5 +247,7 @@ public class UsuarioViewModel extends AndroidViewModel {
         if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
             compositeDisposable.clear();
         }
+        if (executor != null)
+            executor.shutdownNow();
     }
 }

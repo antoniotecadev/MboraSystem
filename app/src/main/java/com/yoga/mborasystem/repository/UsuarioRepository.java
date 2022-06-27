@@ -1,16 +1,21 @@
 package com.yoga.mborasystem.repository;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.UsuarioDao;
 import com.yoga.mborasystem.model.entidade.Usuario;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 public class UsuarioRepository {
 
@@ -44,7 +49,7 @@ public class UsuarioRepository {
         }
     }
 
-    public Single<Usuario> confirmarCodigoPin(String cp) {
+    public List<Usuario> confirmarCodigoPin(String cp) throws Exception {
         return usuarioDao.confirmarCodigoPin(cp);
     }
 }

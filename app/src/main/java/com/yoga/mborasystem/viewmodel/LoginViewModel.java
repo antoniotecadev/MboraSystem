@@ -2,6 +2,10 @@ package com.yoga.mborasystem.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -10,21 +14,23 @@ import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class LoginViewModel extends AndroidViewModel {
 
     private int contar = 0;
     private Disposable disposable;
+    private ExecutorService executor;
     private MutableLiveData<String> infoPin;
     private final UsuarioRepository usuarioRepository;
 
@@ -63,32 +69,30 @@ public class LoginViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void logar(String cp) throws NoSuchAlgorithmException {
-        usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(cp))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<Usuario>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
-                        disposable = d;
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            try {
+                List<Usuario> usuario = usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(cp));
+                if (usuario.isEmpty()) {
+                    infoPin.postValue(getApplication().getString(R.string.infoPinIncorreto));
+                    contarIntroducaoPin();
+                    MainActivity.dismissProgressBar();
+                } else {
+                    if (usuario.get(0).getEstado() == Ultilitario.DOIS) {
+                        infoPin.postValue(getApplication().getString(R.string.usuario_bloqueado) + "\n" + getApplication().getString(R.string.info_usuario_bloqueado));
+                    } else {
+                        getUsuarioMutableLiveData().postValue(usuario.get(0));
                     }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.annotations.NonNull Usuario usuario) {
-                        if (usuario.getEstado() == Ultilitario.DOIS) {
-                            infoPin.setValue(getApplication().getString(R.string.usuario_bloqueado) + "\n" + getApplication().getString(R.string.info_usuario_bloqueado));
-                        } else {
-                            getUsuarioMutableLiveData().setValue(usuario);
-                        }
-                        MainActivity.dismissProgressBar();
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        infoPin.setValue(getApplication().getString(R.string.infoPinIncorreto));
-                        contarIntroducaoPin();
-                        MainActivity.dismissProgressBar();
-                    }
+                    MainActivity.dismissProgressBar();
+                }
+            } catch (Exception e) {
+                handler.post(() -> {
+                    MainActivity.dismissProgressBar();
+                    Toast.makeText(getApplication().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 });
+            }
+        });
     }
 
     @Override
@@ -97,6 +101,8 @@ public class LoginViewModel extends AndroidViewModel {
         if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
+        if (executor != null)
+            executor.shutdownNow();
     }
 
 }

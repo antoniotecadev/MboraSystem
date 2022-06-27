@@ -164,24 +164,6 @@ public class Ultilitario {
         return formatted;
     }
 
-    private static MutableLiveData<Existe> existeMutableLiveData;
-
-    public static MutableLiveData<Ultilitario.Existe> getExisteMutableLiveData() {
-        if (existeMutableLiveData == null) {
-            existeMutableLiveData = new MutableLiveData<>();
-        }
-        return existeMutableLiveData;
-    }
-
-    private static MutableLiveData<Ultilitario.Operacao> valido;
-
-    public static MutableLiveData<Ultilitario.Operacao> getValido() {
-        if (valido == null) {
-            valido = new MutableLiveData<>();
-        }
-        return valido;
-    }
-
     public static AlertDialog.Builder dialogConta(String message, Context context) {
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
         alert.setIcon(R.drawable.ic_baseline_store_24);
@@ -612,6 +594,13 @@ public class Ultilitario {
     public static String getAPN(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString("apn", "");
+    }
+
+    public static void setAPN(Context context, String apn) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("apn", apn);
+        editor.apply();
     }
 
     public static String monthInglesFrances(String data) {

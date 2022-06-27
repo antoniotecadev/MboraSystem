@@ -30,6 +30,6 @@ public interface UsuarioDao {
     void delete(Usuario usuario);
 
     @Query("SELECT * FROM usuarios WHERE estado != 3 AND codigo_pin =:cp")
-    Single<Usuario> confirmarCodigoPin(String cp);
+    List<Usuario> confirmarCodigoPin(String cp) throws Exception;
 
 }
