@@ -46,6 +46,14 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         categoriaRepository = new CategoriaRepository(application);
     }
 
+    private MutableLiveData<Ultilitario.Operacao> valido;
+    public MutableLiveData<Ultilitario.Operacao> getValido() {
+        if (valido == null) {
+            valido = new MutableLiveData<>();
+        }
+        return valido;
+    }
+
     private boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
@@ -124,7 +132,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categorias -> {
                     getListaCategorias().setValue(categorias);
-                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                     MainActivity.dismissProgressBar();
                 }, e -> {
@@ -140,7 +148,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categorias -> {
                     getListaCategorias().setValue(categorias);
-                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
                 }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 

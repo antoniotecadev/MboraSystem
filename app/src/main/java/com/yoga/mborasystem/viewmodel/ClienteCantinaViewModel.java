@@ -69,6 +69,14 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return listaClientesCantina;
     }
 
+    private MutableLiveData<Ultilitario.Operacao> valido;
+    public MutableLiveData<Ultilitario.Operacao> getValido() {
+        if (valido == null) {
+            valido = new MutableLiveData<>();
+        }
+        return valido;
+    }
+
     private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
         if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
             nomeCliente.requestFocus();
@@ -128,7 +136,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(clientesCantina -> {
                     getListaClientesCantina().setValue(clientesCantina);
-                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                 }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
@@ -139,7 +147,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(clientes -> {
                     getListaClientesCantina().setValue(clientes);
-                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
                 }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
