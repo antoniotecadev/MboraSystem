@@ -432,6 +432,11 @@
             android:name="com.yoga.mborasystem.view.FacturaFragment"
             android:label="@string/factura"
             tools:layout="@layout/fragment_factura" />
+        <fragment
+            android:id="@+id/calculadoraFragment"
+            android:name="com.yoga.mborasystem.view.CalculadoraFragment"
+            android:label="@string/calc"
+            tools:layout="@layout/fragment_calculadora" />
     </navigation>
 
 </navigation>
