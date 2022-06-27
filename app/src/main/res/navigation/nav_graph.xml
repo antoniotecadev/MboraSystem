@@ -73,6 +73,9 @@
             app:popExitAnim="@android:anim/fade_out"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_atalho"
+            app:destination="@id/atalho" />
     </fragment>
     <navigation
         android:id="@+id/navigation"
@@ -422,5 +425,13 @@
         android:id="@+id/configuracaoFragment2"
         android:name="com.yoga.mborasystem.view.ConfiguracaoFragment"
         android:label="@string/config" />
+    <navigation android:id="@+id/atalho"
+        app:startDestination="@id/facturaFragmentAtalho">
+        <fragment
+            android:id="@+id/facturaFragmentAtalho"
+            android:name="com.yoga.mborasystem.view.FacturaFragment"
+            android:label="@string/factura"
+            tools:layout="@layout/fragment_factura" />
+    </navigation>
 
 </navigation>

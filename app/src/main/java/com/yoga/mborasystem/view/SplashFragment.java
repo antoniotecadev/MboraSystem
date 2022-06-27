@@ -40,7 +40,7 @@ public class SplashFragment extends Fragment {
                 switch (existe) {
                     case SIM:
                         if (composeFactura.equals(requireActivity().getIntent().getAction())) {
-//                            Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_atalho);
+                            Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_atalho);
                         } else {
                             if (Objects.requireNonNull(Navigation.findNavController(requireView()).getCurrentDestination()).getId() == R.id.splashFragment)
                                 Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_loginFragment);
