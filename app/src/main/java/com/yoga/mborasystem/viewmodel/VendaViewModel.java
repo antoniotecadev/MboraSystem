@@ -3,6 +3,8 @@ package com.yoga.mborasystem.viewmodel;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -31,6 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -44,10 +48,10 @@ public class VendaViewModel extends AndroidViewModel {
 
     private final Venda venda;
     private Disposable disposable;
+    private ExecutorService executor;
     private final VendaRepository vendaRepository;
     private final ClienteRepository clienteRepository;
     private final CompositeDisposable compositeDisposable;
-
 
     public VendaViewModel(@NonNull Application application) {
         super(application);
@@ -84,9 +88,9 @@ public class VendaViewModel extends AndroidViewModel {
         return enviarWhatsApp;
     }
 
-    MutableLiveData<Cliente> dataAdminMaster;
+    MutableLiveData<List<Cliente>> dataAdminMaster;
 
-    public MutableLiveData<Cliente> getAdminMasterLiveData() {
+    public MutableLiveData<List<Cliente>> getAdminMasterLiveData() {
         if (dataAdminMaster == null) {
             dataAdminMaster = new MutableLiveData<>();
         }
@@ -170,6 +174,15 @@ public class VendaViewModel extends AndroidViewModel {
         return produtosVenda;
     }
 
+    private MutableLiveData<Ultilitario.Operacao> valido;
+
+    public MutableLiveData<Ultilitario.Operacao> getValido() {
+        if (valido == null) {
+            valido = new MutableLiveData<>();
+        }
+        return valido;
+    }
+
     @SuppressLint("CheckResult")
     public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
         venda.setNome_cliente(txtNomeCliente);
@@ -213,24 +226,21 @@ public class VendaViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void getDataAdminMaster() {
-        clienteRepository.clienteExiste().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<Cliente>() {
-                    @Override
-                    public void onSubscribe(@NotNull Disposable d) {
-                        disposable = d;
-                    }
-
-                    @Override
-                    public void onSuccess(@NotNull Cliente cliente) {
-                        getAdminMasterLiveData().setValue(cliente);
-                    }
-
-                    @Override
-                    public void onError(@NotNull Throwable e) {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.dados_admin_nao) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                    }
-                });
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            try {
+                List<Cliente> cliente;
+                cliente = clienteRepository.clienteExiste();
+                if (cliente.isEmpty()) {
+                    handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.dados_admin_nao), R.drawable.ic_toast_erro));
+                } else {
+                    getAdminMasterLiveData().postValue(cliente);
+                }
+            } catch (Exception e) {
+                handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
+            }
+        });
     }
 
     public void consultarVendas(SwipeRefreshLayout mySwipeRefreshLayout, long idcliente, boolean isdivida, long idusuario, boolean isLixeira) {
@@ -253,7 +263,7 @@ public class VendaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> {
                     getListaVendasLiveData().setValue(vendas);
-                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
                 }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
@@ -271,7 +281,7 @@ public class VendaViewModel extends AndroidViewModel {
                             getVendasGuardarImprimir().setValue(new Event<>(vendas));
                         }
                     }
-                    Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
                 }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
@@ -408,6 +418,8 @@ public class VendaViewModel extends AndroidViewModel {
         if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
             compositeDisposable.clear();
         }
+        if (executor != null)
+            executor.shutdownNow();
     }
 
 }

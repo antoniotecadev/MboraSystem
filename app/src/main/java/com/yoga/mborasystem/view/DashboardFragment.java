@@ -101,7 +101,7 @@ public class DashboardFragment extends Fragment {
         binding.nivelVendaValor.setText(getString(R.string.nv_vd_vl) + " - " + dataActual[2]);
 
         vendaViewModel.getDataAdminMaster();
-        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente);
+        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente.get(0));
 
         vendaViewModel.getProdutoMaisVendido(dataActual[0] + "-" + dataActual[1] + "-" + dataActual[2]).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())

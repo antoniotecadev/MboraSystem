@@ -433,7 +433,7 @@ public class FacturaFragment extends Fragment {
         });
 
         vendaViewModel.getDataAdminMaster();
-        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente);
+        vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente.get(0));
 
         vendaViewModel.getGuardarPdfLiveData().setValue(false);
         vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), aBoolean -> {

@@ -7,6 +7,9 @@ import androidx.room.Query;
 
 import com.yoga.mborasystem.model.entidade.Cliente;
 
+import java.util.List;
+
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 @Dao
@@ -15,8 +18,11 @@ public interface ClienteDao {
     @Insert
     void insert(Cliente cliente);
 
-    @Query("SELECT * FROM cliente")
-    Single<Cliente> clienteExiste();
+    //    @Query("SELECT * FROM cliente")
+//    Single<Cliente> clienteExiste();
+//
+    @Query("SELECT * FROM cliente LIMIT 1")
+    List<Cliente> clienteExiste() throws Exception;
 
     @Delete
     void delete(Cliente cliente);

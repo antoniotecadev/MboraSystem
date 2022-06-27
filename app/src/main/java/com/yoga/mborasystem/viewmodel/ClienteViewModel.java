@@ -6,6 +6,8 @@ import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Toast;
@@ -27,7 +29,10 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 import io.reactivex.Completable;
@@ -44,6 +49,7 @@ public class ClienteViewModel extends AndroidViewModel {
     private String codigo;
     private final Cliente cliente;
     private Disposable disposable;
+    private ExecutorService executor;
     private final ClienteRepository clienteRepository;
 
     public ClienteViewModel(@NonNull Application application) {
@@ -51,16 +57,30 @@ public class ClienteViewModel extends AndroidViewModel {
         cliente = new Cliente();
         disposable = new CompositeDisposable();
         clienteRepository = new ClienteRepository(application);
-        clienteExiste(false, null);
     }
 
-    MutableLiveData<Cliente> clienteMutableLiveData;
-
-    public MutableLiveData<Cliente> getClienteMutableLiveData() {
+    MutableLiveData<List<Cliente>> clienteMutableLiveData;
+    public MutableLiveData<List<Cliente>> getClienteMutableLiveData() {
         if (clienteMutableLiveData == null) {
             clienteMutableLiveData = new MutableLiveData<>();
         }
         return clienteMutableLiveData;
+    }
+
+    private MutableLiveData<Ultilitario.Operacao> valido;
+    public MutableLiveData<Ultilitario.Operacao> getValido() {
+        if (valido == null) {
+            valido = new MutableLiveData<>();
+        }
+        return valido;
+    }
+
+    private MutableLiveData<Ultilitario.Existe> existeMutableLiveData;
+    public MutableLiveData<Ultilitario.Existe> getExisteMutableLiveData() {
+        if (existeMutableLiveData == null) {
+            existeMutableLiveData = new MutableLiveData<>();
+        }
+        return existeMutableLiveData;
     }
 
     private final Pattern numero = Pattern.compile("[^0-9 ]");
@@ -213,35 +233,34 @@ public class ClienteViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void clienteExiste(boolean limitCadastro, Cliente c) {
-        clienteRepository.clienteExiste()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<Cliente>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
-                        disposable = d;
-                    }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.annotations.NonNull Cliente cliente) {
-                        if (limitCadastro) {
-                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_cliente_ja_existe), R.drawable.ic_toast_erro);
-                        } else {
-                            Ultilitario.getExisteMutableLiveData().setValue(Ultilitario.Existe.SIM);
-                        }
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            try {
+                List<Cliente> cliente;
+                cliente = clienteRepository.clienteExiste();
+                if (cliente.isEmpty()) {
+                    if (limitCadastro) {
+                        cadastrarCliente(c);
+                    } else {
+                        getExisteMutableLiveData().postValue(Ultilitario.Existe.NAO);
                         MainActivity.dismissProgressBar();
                     }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        if (limitCadastro) {
-                            cadastrarCliente(c);
-                        } else {
-                            Ultilitario.getExisteMutableLiveData().setValue(Ultilitario.Existe.NAO);
-                            MainActivity.dismissProgressBar();
-                        }
+                } else {
+                    if (limitCadastro) {
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_cliente_ja_existe), R.drawable.ic_toast_erro);
+                    } else {
+                        getExisteMutableLiveData().postValue(Ultilitario.Existe.SIM);
                     }
+                    MainActivity.dismissProgressBar();
+                }
+            } catch (Exception e) {
+                handler.post(() -> {
+                    MainActivity.dismissProgressBar();
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
                 });
+            }
+        });
     }
 
     @SuppressLint("CheckResult")
@@ -262,7 +281,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                        getValido().setValue(Ultilitario.Operacao.NENHUMA);
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Local Storege:\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
@@ -291,15 +310,15 @@ public class ClienteViewModel extends AndroidViewModel {
                     try {
                         String retorno = jsonObject.get("insert").getAsString();
                         if (retorno.equals("ok")) {
+                            getValido().postValue(Ultilitario.Operacao.CRIAR);
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
-                            Ultilitario.getValido().setValue(Ultilitario.Operacao.CRIAR);
                         } else if (retorno.equals("erro")) {
-                            Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
                             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.parc_n_sv), R.drawable.ic_toast_erro);
+                            getValido().postValue(Ultilitario.Operacao.NENHUMA);
                             eliminarParceiro(cliente);
                         }
                     } catch (Exception ex) {
-                        Ultilitario.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+                        getValido().postValue(Ultilitario.Operacao.NENHUMA);
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), "Online Storege:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
                         eliminarParceiro(cliente);
                     } finally {
@@ -310,42 +329,40 @@ public class ClienteViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void logar(TextInputEditText senha, TextInputLayout senhaLayout) {
-        clienteRepository.clienteExiste()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<Cliente>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
-                        disposable = d;
-                    }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.annotations.NonNull Cliente cliente) {
-                        try {
-                            if (Ultilitario.validateSenhaPin(Objects.requireNonNull(senha.getText()).toString(), cliente.getSenha())
-                                    || Objects.requireNonNull(senha.getText()).toString().equals(Ultilitario.MBORASYSTEM)) {
-                                getClienteMutableLiveData().setValue(cliente);
-                            } else {
-                                MainActivity.dismissProgressBar();
-                                senhaLayout.setError(getApplication().getString(R.string.senha_incorreta));
-                            }
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                            senhaLayout.setError(e.getMessage());
-                        } catch (InvalidKeySpecException e) {
-                            e.printStackTrace();
-                            senhaLayout.setError(e.getMessage());
-                        } finally {
-                            MainActivity.dismissProgressBar();
-                        }
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            try {
+                List<Cliente> cliente;
+                cliente = clienteRepository.clienteExiste();
+                try {
+                    if (Ultilitario.validateSenhaPin(Objects.requireNonNull(senha.getText()).toString(), cliente.get(0).getSenha())
+                            || Objects.requireNonNull(senha.getText()).toString().equals(Ultilitario.MBORASYSTEM)) {
+                        getClienteMutableLiveData().postValue(cliente);
+                    } else {
                         MainActivity.dismissProgressBar();
-                        senhaLayout.setError("Login\n: " + e.getMessage());
+                        handler.post(() -> {
+                            senhaLayout.setError(getApplication().getString(R.string.senha_incorreta));
+                        });
                     }
+                } catch (NoSuchAlgorithmException e) {
+                    handler.post(() -> {
+                        senhaLayout.setError(e.getMessage());
+                    });
+                } catch (InvalidKeySpecException e) {
+                    handler.post(() -> {
+                        senhaLayout.setError(e.getMessage());
+                    });
+                } finally {
+                    MainActivity.dismissProgressBar();
+                }
+            } catch (Exception e) {
+                handler.post(() -> {
+                    MainActivity.dismissProgressBar();
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
                 });
+            }
+        });
     }
 
     public void verificarCodigoEquipa(String codigoEquipa, Cliente cliente) {
@@ -411,5 +428,7 @@ public class ClienteViewModel extends AndroidViewModel {
         if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
             disposable.dispose();
         }
+        if (executor != null)
+            executor.shutdownNow();
     }
 }

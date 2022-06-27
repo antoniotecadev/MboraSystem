@@ -7,7 +7,9 @@ import com.yoga.mborasystem.model.dao.ClienteDao;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 public class ClienteRepository {
@@ -27,7 +29,7 @@ public class ClienteRepository {
         clienteDao.insert(cliente);
     }
 
-    public Single<Cliente> clienteExiste() {
+    public List<Cliente> clienteExiste() throws Exception {
         return clienteDao.clienteExiste();
     }
 
