@@ -586,6 +586,7 @@
     <string name="avs">Aviso</string>
     <string name="exp_dis_api_sup">A exportação só está disponível para nível de API 19 ou superior</string>
     <string name="imp_dis_api_sup">A importação só está disponível para nível de API 19 ou superior</string>
+    <string name="apn_mborasystem" translatable="false">https://ea85-154-71-128-128.sa.ngrok.io</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
