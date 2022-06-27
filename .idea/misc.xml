@@ -54,6 +54,7 @@
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout-h480dp/fragment_login.xml" value="0.3998015873015873" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout-h600dp/fragment_login.xml" value="0.182518115942029" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout-h600dp/fragment_splash.xml" value="0.1" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/activity_main.xml" value="0.11614583333333334" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_produto.xml" value="0.5" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_usuario.xml" value="0.17074275362318841" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_filtrar_produto.xml" value="0.17074275362318841" />
@@ -79,6 +80,7 @@
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/menu/menu_venda.xml" value="0.2" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/xml/preferences_config.xml" value="0.22" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/xml/preferences_rede.xml" value="0.182518115942029" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/xml/shortcuts.xml" value="0.10733695652173914" />
       </map>
     </option>
   </component>
