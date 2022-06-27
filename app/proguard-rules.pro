@@ -20,5 +20,11 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+#Fragments androidx
 -keep class * extends androidx.fragment.app.Fragment{}
 -keepnames class androidx.navigation.fragment.NavHostFragment
+
+# Mozila Rhino
+-keep class javax.script.** { *; }
+-keep class com.sun.script.javascript.** { *; }
+-keep class org.mozilla.javascript.** { *; }
