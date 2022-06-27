@@ -52,8 +52,9 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
+        mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
 //        query = FirebaseDatabase.getInstance().getReference("cliente").limitToLast(1);
+        Ultilitario.setAPN(requireContext(), getString(R.string.apn_mborasystem));
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
@@ -185,7 +186,7 @@ public class CadastrarClienteFragment extends Fragment {
         binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes"))));
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
-        Ultilitario.getValido().observe(getViewLifecycleOwner(), operacao -> {
+        clienteViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
             switch (operacao) {
                 case CRIAR:
                     try {
