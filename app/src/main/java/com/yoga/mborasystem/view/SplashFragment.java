@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yoga.mborasystem.R;
-import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import androidx.fragment.app.Fragment;
@@ -32,8 +31,7 @@ public class SplashFragment extends Fragment {
                              Bundle savedInstanceState) {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             clienteViewModel.clienteExiste(false, null);
-
-            Ultilitario.getExisteMutableLiveData().observe(getViewLifecycleOwner(), existe -> {
+            clienteViewModel.getExisteMutableLiveData().observe(getViewLifecycleOwner(), existe -> {
                 switch (existe) {
                     case SIM:
                         if (Objects.requireNonNull(Navigation.findNavController(requireView()).getCurrentDestination()).getId() == R.id.splashFragment)
