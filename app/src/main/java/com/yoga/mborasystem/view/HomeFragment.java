@@ -442,7 +442,7 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    Navigation.findNavController(requireView()).navigate(R.id.documentoFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, isUserMaster());
                 } else {
                     Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_SHORT).show();
                 }

@@ -229,35 +229,39 @@ public class DocumentoFragment extends Fragment {
                     partilharDocumentoPDF(v);
                     return false;
                 });
-                menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                    File file = new File(documento.getCaminho());
-                    new AlertDialog.Builder(requireContext())
-                            .setIcon(R.drawable.ic_baseline_store_24)
-                            .setTitle(documento.getNome())
-                            .setMessage(R.string.tem_cert_elim_fich)
-                            .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
-                            .setPositiveButton(R.string.sim, (dialogInterface, i) -> {
-                                file.delete();
-                                if (file.exists()) {
-                                    try {
-                                        file.getCanonicalFile().delete();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                    if (file.exists()) {
-                                        requireContext().deleteFile(file.getName());
-                                    } else {
-                                        Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-                                        getDocumentPDF(pasta, title, msg, false, null, "", false);
-                                    }
-                                } else {
-                                    Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-                                    getDocumentPDF(pasta, title, msg, false, null, "", false);
-                                }
-                            }).show();
-                    return false;
-                });
+                if (getArguments() != null) {
+                    if (getArguments().getBoolean("master")) {
+                        menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                            File file = new File(documento.getCaminho());
+                            new AlertDialog.Builder(requireContext())
+                                    .setIcon(R.drawable.ic_baseline_store_24)
+                                    .setTitle(documento.getNome())
+                                    .setMessage(R.string.tem_cert_elim_fich)
+                                    .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
+                                    .setPositiveButton(R.string.sim, (dialogInterface, i) -> {
+                                        file.delete();
+                                        if (file.exists()) {
+                                            try {
+                                                file.getCanonicalFile().delete();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                            }
+                                            if (file.exists()) {
+                                                requireContext().deleteFile(file.getName());
+                                            } else {
+                                                Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                                getDocumentPDF(pasta, title, msg, false, null, "", false);
+                                            }
+                                        } else {
+                                            Snackbar.make(v, documento.getNome() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                            getDocumentPDF(pasta, title, msg, false, null, "", false);
+                                        }
+                                    }).show();
+                            return false;
+                        });
+                    }
+                }
                 menu1.add(getString(R.string.det)).setOnMenuItemClickListener(item -> {
                     detalhes();
                     return false;
