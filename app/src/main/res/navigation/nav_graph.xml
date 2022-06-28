@@ -242,6 +242,9 @@
             <deepLink
                 android:id="@+id/deepLink"
                 app:uri="https://mborasystem://factura" />
+            <action
+                android:id="@+id/action_facturaFragment_to_calculadoraFragment"
+                app:destination="@id/calculadoraFragment" />
         </fragment>
         <dialog
             android:id="@+id/dialogVendaEfectuada"
@@ -405,7 +408,7 @@
             android:id="@+id/configuracaoFragment"
             android:name="com.yoga.mborasystem.view.ConfiguracaoFragment"
             android:label="@string/config" />
-        <fragment
+        <dialog
             android:id="@+id/calculadoraFragment"
             android:name="com.yoga.mborasystem.view.CalculadoraFragment"
             android:label="@string/calc"

@@ -63,7 +63,6 @@ public class DialogSenha extends DialogFragment {
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
 
-
         binding.btnEntrar.setOnClickListener(v -> {
             if (isCampoVazio(Objects.requireNonNull(binding.senha.getText()).toString()) || letraNumero.matcher(binding.senha.getText().toString()).find()) {
                 binding.senha.requestFocus();

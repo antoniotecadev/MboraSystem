@@ -1,11 +1,15 @@
 package com.yoga.mborasystem.view;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,15 +19,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.databinding.FragmentCalculadoraBinding;
+import com.yoga.mborasystem.util.Ultilitario;
 
 import java.math.BigDecimal;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-public class CalculadoraFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
+public class CalculadoraFragment extends DialogFragment implements View.OnClickListener, View.OnTouchListener {
 
     private FragmentCalculadoraBinding binding;
 
@@ -40,9 +47,10 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
     private final static int IS_CLOSE_PARENTHESIS = 3;
     private final static int IS_DOT = 4;
 
-    TextView textViewInputNumbers;
+    private TextView textViewInputNumbers;
+    private ScriptEngine scriptEngine;
 
-    ScriptEngine scriptEngine;
+    private AlertDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,16 +58,18 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
         scriptEngine = new ScriptEngineManager().getEngineByName("rhino");
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentCalculadoraBinding.inflate(inflater, container, false);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        binding = FragmentCalculadoraBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setView(binding.getRoot());
+        dialog = builder.create();
 
         setOnClickListeners();
         setOnTouchListener();
 
-        return binding.getRoot();
+        return dialog;
     }
 
     private void setOnClickListeners() {
@@ -422,6 +432,12 @@ public class CalculadoraFragment extends Fragment implements View.OnClickListene
             return IS_DOT;
 
         return -1;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainActivity.dismissProgressBar();
     }
 
     @Override

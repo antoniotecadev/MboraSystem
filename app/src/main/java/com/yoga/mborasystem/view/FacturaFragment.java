@@ -885,6 +885,13 @@ public class FacturaFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+        switch (item.getItemId()) {
+            case R.id.calculadoraFragmentItem:
+                Navigation.findNavController(requireView()).navigate(R.id.action_facturaFragment_to_calculadoraFragment);
+                break;
+            default:
+                break;
+        }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
     }
