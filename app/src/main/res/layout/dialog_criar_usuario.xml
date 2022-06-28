@@ -131,8 +131,7 @@
                     android:hint="@string/codigopin"
                     android:imeOptions="actionNext"
                     android:inputType="numberPassword"
-                    android:maxLines="1"
-                    android:text="123456" />
+                    android:maxLines="1"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -158,8 +157,7 @@
                     android:hint="@string/codigopinnovamente"
                     android:imeOptions="actionDone"
                     android:inputType="numberPassword"
-                    android:maxLines="1"
-                    android:text="123456" />
+                    android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
