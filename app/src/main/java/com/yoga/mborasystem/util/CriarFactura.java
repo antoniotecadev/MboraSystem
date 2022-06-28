@@ -120,7 +120,7 @@ public class CriarFactura {
             addFileContentProvider(activity.getApplicationContext(), "/Facturas/" + facturaPath);
             if (!isGuardar)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    printPDF(activity, activity.getBaseContext(), facturaPath, activity.getString(R.string.factura));
+                    printPDF(activity, activity.getBaseContext(), facturaPath, "Facturas");
                 } else {
                     Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
                 }

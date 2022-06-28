@@ -1,9 +1,5 @@
 package com.yoga.mborasystem.util;
 
-import android.content.Context;
-
-import com.yoga.mborasystem.R;
-
 import java.io.File;
 
 public class Common {
