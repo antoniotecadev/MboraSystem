@@ -133,7 +133,7 @@ public class RelatorioDiariaVenda {
             addFileContentProvider(activity.getApplicationContext(), "/Relatorios/" + facturaPath);
             if (!isGuardar)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    printPDF(activity, activity.getBaseContext(), facturaPath, activity.getString(R.string.rel_dia_ven));
+                    printPDF(activity, activity.getBaseContext(), facturaPath, "Relatorios");
                 } else {
                     Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
                 }
