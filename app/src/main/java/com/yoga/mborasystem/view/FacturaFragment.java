@@ -489,6 +489,7 @@ public class FacturaFragment extends Fragment {
 
             }
         });
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
 

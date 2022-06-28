@@ -73,9 +73,6 @@
             app:popExitAnim="@android:anim/fade_out"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_splashFragment_to_atalho"
-            app:destination="@id/atalho" />
     </fragment>
     <navigation
         android:id="@+id/navigation"
@@ -242,6 +239,9 @@
                 app:destination="@id/dialogCriarProduto"
                 app:enterAnim="@android:anim/fade_in"
                 app:popExitAnim="@android:anim/fade_out" />
+            <deepLink
+                android:id="@+id/deepLink"
+                app:uri="https://mborasystem://factura" />
         </fragment>
         <dialog
             android:id="@+id/dialogVendaEfectuada"
@@ -425,18 +425,4 @@
         android:id="@+id/configuracaoFragment2"
         android:name="com.yoga.mborasystem.view.ConfiguracaoFragment"
         android:label="@string/config" />
-    <navigation android:id="@+id/atalho"
-        app:startDestination="@id/facturaFragmentAtalho">
-        <fragment
-            android:id="@+id/facturaFragmentAtalho"
-            android:name="com.yoga.mborasystem.view.FacturaFragment"
-            android:label="@string/factura"
-            tools:layout="@layout/fragment_factura" />
-        <fragment
-            android:id="@+id/calculadoraFragment"
-            android:name="com.yoga.mborasystem.view.CalculadoraFragment"
-            android:label="@string/calc"
-            tools:layout="@layout/fragment_calculadora" />
-    </navigation>
-
 </navigation>
