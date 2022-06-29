@@ -655,12 +655,8 @@ public class Ultilitario {
     }
 
     private static void restartActivity(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            activity.recreate();
-        } else {
-            activity.finish();
-            activity.startActivity(activity.getIntent());
-        }
+        activity.finish();
+        activity.startActivity(activity.getIntent());
     }
 
     public static int getSharedPreferencesIdioma(Activity activity) {
