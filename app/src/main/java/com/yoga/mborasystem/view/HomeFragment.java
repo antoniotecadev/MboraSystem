@@ -387,6 +387,7 @@ public class HomeFragment extends Fragment {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
                             estadoTitulo = Byte.parseByte(parceiro.get("estado").getAsString());
                             termina = parceiro.get("termina").getAsByte();
+                            String contactos = parceiro.get("contactos").getAsString();
                             estado = (termina == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
                                     (estadoTitulo == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
@@ -402,7 +403,7 @@ public class HomeFragment extends Fragment {
                                     getString(R.string.municipio) + ": " + parceiro.get("municipality").getAsString() + "\n" +
                                     getString(R.string.bairro) + ": " + parceiro.get("district").getAsString() + "\n" +
                                     getString(R.string.rua) + ": " + parceiro.get("street").getAsString() + "\n" +
-                                    "IMEI: " + parceiro.get("imei").getAsString();
+                                    "IMEI: " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
 
                         }
                         Ultilitario.alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext(),

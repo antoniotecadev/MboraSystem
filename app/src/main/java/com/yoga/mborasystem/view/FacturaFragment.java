@@ -950,7 +950,8 @@ public class FacturaFragment extends Fragment {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
                             estadoConta = Byte.parseByte(parceiro.get("estado").getAsString());
                             termina = parceiro.get("termina").getAsByte();
-                            mensagem = (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n";
+                            String contactos = parceiro.get("contactos").getAsString();
+                            mensagem = (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
                         }
                         if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM) {
                             MainActivity.dismissProgressBar();
