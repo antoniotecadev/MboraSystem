@@ -229,7 +229,7 @@ public class HomeFragment extends Fragment {
                 new AlertDialog.Builder(requireContext())
                         .setIcon(R.drawable.ic_baseline_store_24)
                         .setTitle(R.string.alt_idm)
-                        .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(this.language), (dialogInterface, i) -> {
+                        .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(requireContext()), (dialogInterface, i) -> {
                             switch (i) {
                                 case 0:
                                     idioma = "Francês";
