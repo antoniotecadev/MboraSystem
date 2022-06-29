@@ -32,7 +32,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layoutSenhaRepete"
+        android:id="@+id/layoutPin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margem_lateral_formulario"
@@ -44,7 +44,36 @@
         app:passwordToggleTint="@color/cor_castanha">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/senhaRepete"
+            android:id="@+id/pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margem_lateral_formulario"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/margem_lateral_formulario"
+            android:ems="10"
+            android:digits="0123456789"
+            android:hint="@string/codigopin"
+            android:imeOptions="actionDone"
+            android:inputType="numberPassword"
+            android:maxLength="6">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutPinRepete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margem_lateral_formulario"
+        android:visibility="gone"
+        app:boxBackgroundColor="@color/material_on_background_disabled"
+        app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/cor_castanha">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pinRepete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margem_lateral_formulario"
@@ -55,8 +84,7 @@
             android:hint="@string/codigopinnovamente"
             android:imeOptions="actionDone"
             android:inputType="numberPassword"
-            android:maxLength="6"
-            android:text="123456">
+            android:maxLength="6">
 
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>

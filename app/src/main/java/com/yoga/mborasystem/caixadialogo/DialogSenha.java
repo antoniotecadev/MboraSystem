@@ -53,8 +53,9 @@ public class DialogSenha extends DialogFragment {
         if (getArguments() != null) {
             us.setId(getArguments().getLong("idusuario"));
             builder.setTitle(getString(R.string.alterar_codigo_pin));
-            binding.senha.setHint(getString(R.string.codigopin));
-            binding.layoutSenhaRepete.setVisibility(View.VISIBLE);
+            binding.layoutPin.setVisibility(View.VISIBLE);
+            binding.layoutPinRepete.setVisibility(View.VISIBLE);
+            binding.textInputSenha.setVisibility(View.GONE);
             binding.btnAlterar.setVisibility(View.VISIBLE);
             binding.btnEntrar.setVisibility(View.GONE);
         }
@@ -69,7 +70,7 @@ public class DialogSenha extends DialogFragment {
                 binding.textInputSenha.setError(getString(R.string.senha_invalida));
             } else {
                 MainActivity.getProgressBar();
-                clienteViewModel.logar(binding.senha, binding.textInputSenha );
+                clienteViewModel.logar(binding.senha, binding.textInputSenha);
             }
         });
 
@@ -78,7 +79,7 @@ public class DialogSenha extends DialogFragment {
                 alterarCodigoPin(dialog);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -88,23 +89,23 @@ public class DialogSenha extends DialogFragment {
     }
 
     private void alterarCodigoPin(AlertDialog ad) throws NoSuchAlgorithmException {
-        if (isCampoVazio(Objects.requireNonNull(binding.senha.getText()).toString()) || numero.matcher(binding.senha.getText().toString()).find()) {
-            binding.senha.requestFocus();
-            binding.senha.setError(getString(R.string.senha_invalida));
-        } else if (isCampoVazio(Objects.requireNonNull(binding.senhaRepete.getText()).toString()) || numero.matcher(binding.senhaRepete.getText().toString()).find()) {
-            binding.senha.requestFocus();
-            binding.senha.setError(getString(R.string.senha_invalida));
-        } else if (binding.senha.length() > 6 || binding.senha.length() < 6) {
-            binding.senha.requestFocus();
-            binding.senha.setError(getString(R.string.codigopin_incompleto));
-        } else if (binding.senhaRepete.length() > 6 || binding.senhaRepete.length() < 6) {
-            binding.senhaRepete.requestFocus();
-            binding.senhaRepete.setError(getString(R.string.codigopin_incompleto));
-        } else if (!binding.senha.getText().toString().equals(binding.senhaRepete.getText().toString())) {
-            binding.senhaRepete.requestFocus();
-            binding.senhaRepete.setError(getString(R.string.pin_diferente));
+        if (isCampoVazio(Objects.requireNonNull(binding.pin.getText()).toString()) || numero.matcher(binding.pin.getText().toString()).find()) {
+            binding.pin.requestFocus();
+            binding.pin.setError(getString(R.string.codigopin_invalido));
+        } else if (isCampoVazio(Objects.requireNonNull(binding.pinRepete.getText()).toString()) || numero.matcher(binding.pinRepete.getText().toString()).find()) {
+            binding.pinRepete.requestFocus();
+            binding.pinRepete.setError(getString(R.string.codigopin_invalido));
+        } else if (binding.pin.length() > 6 || binding.pin.length() < 6) {
+            binding.pin.requestFocus();
+            binding.pin.setError(getString(R.string.codigopin_incompleto));
+        } else if (binding.pinRepete.length() > 6 || binding.pinRepete.length() < 6) {
+            binding.pinRepete.requestFocus();
+            binding.pinRepete.setError(getString(R.string.codigopin_incompleto));
+        } else if (!binding.pin.getText().toString().equals(binding.pinRepete.getText().toString())) {
+            binding.pinRepete.requestFocus();
+            binding.pinRepete.setError(getString(R.string.pin_diferente));
         } else {
-            us.setCodigoPin(Ultilitario.gerarHash(binding.senha.getText().toString()));
+            us.setCodigoPin(Ultilitario.gerarHash(binding.pin.getText().toString()));
             usuarioViewModel.actualizarUsuario(us, true, ad);
         }
     }
