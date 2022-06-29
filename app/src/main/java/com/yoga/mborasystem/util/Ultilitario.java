@@ -659,17 +659,17 @@ public class Ultilitario {
         activity.startActivity(activity.getIntent());
     }
 
-    public static int getSharedPreferencesIdioma(Activity activity) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        return sharedPreferences.getInt(SELECTED_LANGUAGE, 2);
+    public static String getSharedPreferencesIdioma(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString("lista_idioma", "Português");
     }
 
-    public static int getIdIdioma(String language) {
-        if (language.equalsIgnoreCase("FR")) {
+    public static int getIdIdioma(Context context) {
+        if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Francês")) {
             return 0;
-        } else if (language.equalsIgnoreCase("EN")) {
+        } else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Inglês")) {
             return 1;
-        } else if (language.equalsIgnoreCase("PT")) {
+        } else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Português")) {
             return 2;
         }
         return 2;
