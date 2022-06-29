@@ -198,7 +198,9 @@ public class HomeFragment extends Fragment {
         if (getArguments() != null) {
             if (!getArguments().getBoolean("master")) {
                 binding.btnUsuario.setEnabled(false);
+                binding.btnDashboard.setEnabled(false);
                 binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
+                binding.btnDashboard.setCardBackgroundColor(Color.GRAY);
                 menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
                 menu.findItem(R.id.estadoCliente).setEnabled(false);
                 menu.findItem(R.id.config).setEnabled(false);
