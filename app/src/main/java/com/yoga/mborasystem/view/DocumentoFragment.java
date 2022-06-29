@@ -221,14 +221,28 @@ public class DocumentoFragment extends Fragment {
             viewHolder.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
                 menu1.setHeaderIcon(R.drawable.ic_baseline_store_24);
                 menu1.setHeaderTitle(documento.getNome());
-                menu1.add(getString(R.string.abrir)).setOnMenuItemClickListener(item -> {
-                    abrirDocumentoPDF(v);
-                    return false;
-                });
-                menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
-                    partilharDocumentoPDF(v);
-                    return false;
-                });
+                if (getArguments() != null) {
+                    if (pasta.equalsIgnoreCase("Relatorios") && getArguments().getBoolean("master") ||
+                            pasta.equalsIgnoreCase("Facturas") && getArguments().getBoolean("master")) {
+                        menu1.add(getString(R.string.abrir)).setOnMenuItemClickListener(item -> {
+                            abrirDocumentoPDF(v);
+                            return false;
+                        });
+                        menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
+                            partilharDocumentoPDF(v);
+                            return false;
+                        });
+                    } else if (pasta.equalsIgnoreCase("Facturas")) {
+                        menu1.add(getString(R.string.abrir)).setOnMenuItemClickListener(item -> {
+                            abrirDocumentoPDF(v);
+                            return false;
+                        });
+                        menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
+                            partilharDocumentoPDF(v);
+                            return false;
+                        });
+                    }
+                }
                 if (getArguments() != null) {
                     if (getArguments().getBoolean("master")) {
                         menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
