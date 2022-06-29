@@ -3,6 +3,7 @@ package com.yoga.mborasystem.model.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.yoga.mborasystem.model.entidade.Categoria;
@@ -14,7 +15,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface CategoriaDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Categoria categoria);
 
     @Query("UPDATE categorias SET categoria = :nome, descricao = :desc, estado = :est, data_modifica = :data WHERE id = :id")

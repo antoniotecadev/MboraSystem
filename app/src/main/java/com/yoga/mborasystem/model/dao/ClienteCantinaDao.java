@@ -7,13 +7,14 @@ import java.util.List;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import io.reactivex.Flowable;
 
 @Dao
 public interface ClienteCantinaDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(ClienteCantina clienteCantina);
 
     @Query("SELECT * FROM clientecantina WHERE estado != 3 ORDER BY id DESC")

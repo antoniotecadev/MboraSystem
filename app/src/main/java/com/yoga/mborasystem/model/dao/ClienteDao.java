@@ -3,6 +3,7 @@ package com.yoga.mborasystem.model.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -15,7 +16,7 @@ import io.reactivex.Single;
 @Dao
 public interface ClienteDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Cliente cliente);
 
     //    @Query("SELECT * FROM cliente")
