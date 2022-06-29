@@ -61,8 +61,10 @@ public class DialogCriarUsuario extends DialogFragment {
                 }
 
                 if (getArguments().getBoolean("master")) {
-                    binding.editCodigoPin.setVisibility(View.GONE);
-                    binding.editCodigoPinNovamente.setVisibility(View.GONE);
+                    binding.editTextCodigoPin.setText("000000");
+                    binding.editTextCodigoPinNovamente.setText("000000");
+                    binding.editCodigoPin.setEnabled(false);
+                    binding.editCodigoPinNovamente.setEnabled(false);
                 }
 
                 binding.buttonCriarUsuario.setVisibility(View.GONE);
