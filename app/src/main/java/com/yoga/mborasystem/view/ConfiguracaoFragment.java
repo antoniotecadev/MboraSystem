@@ -46,7 +46,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
                 default:
                     return false;
             }
-            getSelectedIdioma(requireActivity(), codigoIdioma, newValue.toString(), false);
+            getSelectedIdioma(requireActivity(), codigoIdioma, newValue.toString(), false, false);
             return true;
         });
     }

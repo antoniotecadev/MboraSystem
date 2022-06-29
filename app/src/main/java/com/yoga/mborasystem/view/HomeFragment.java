@@ -248,7 +248,7 @@ public class HomeFragment extends Fragment {
                             }
                         })
                         .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
-                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true)).show();
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false)).show();
                 break;
             case R.id.dialogAlterarCliente:
                 if (getArguments() != null) {

@@ -1,6 +1,8 @@
 package com.yoga.mborasystem.view;
 
 
+import static com.yoga.mborasystem.util.Ultilitario.getSharedPreferencesIdioma;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import androidx.fragment.app.Fragment;
@@ -26,6 +29,13 @@ public class SplashFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Francês")) {
+            Ultilitario.getSelectedIdioma(requireActivity(), "FR", null, false, true);
+        } else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Inglês")) {
+            Ultilitario.getSelectedIdioma(requireActivity(), "EN", null, false, true);
+        } else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Português")) {
+            Ultilitario.getSelectedIdioma(requireActivity(), "PT", null, false, true);
+        }
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 

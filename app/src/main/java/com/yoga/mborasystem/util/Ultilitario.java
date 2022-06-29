@@ -638,7 +638,7 @@ public class Ultilitario {
             return date[0] + "-" + listMonth.get(date[1]) + "-" + date[2];
     }
 
-    public static void getSelectedIdioma(Activity activity, String codigoIdioma, String msg, boolean isHome) {
+    public static void getSelectedIdioma(Activity activity, String codigoIdioma, String msg, boolean isHome, boolean isSplash) {
         Locale locale = new Locale(codigoIdioma);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -650,8 +650,10 @@ public class Ultilitario {
             editor.putString("lista_idioma", msg);
             editor.apply();
         }
-        restartActivity(activity);
-        Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+        if (!isSplash) {
+            restartActivity(activity);
+            Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+        }
     }
 
     private static void restartActivity(Activity activity) {
