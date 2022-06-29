@@ -588,6 +588,7 @@
     <string name="imp_dis_api_sup">A importação só está disponível para nível de API 19 ou superior</string>
     <string name="apn_mborasystem" translatable="false">https://ea85-154-71-128-128.sa.ngrok.io</string>
     <string name="vend_ago">Vender Agora</string>
+    <string name="br_car">Bairros carregados</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

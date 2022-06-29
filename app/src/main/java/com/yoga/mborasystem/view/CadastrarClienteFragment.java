@@ -111,7 +111,6 @@ public class CadastrarClienteFragment extends Fragment {
     }
 
     private void spinnerBairros(String município) {
-        MainActivity.getProgressBar();
         String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/" + município.trim().replaceAll("\\s+", "") + "/bairros";
         ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
         Ion.with(requireActivity())
@@ -124,8 +123,11 @@ public class CadastrarClienteFragment extends Fragment {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
                             bairros.add(parceiro.get("br").getAsString());
                         }
-                        if (bairros.getItem(1).isEmpty())
+                        if (bairros.getItem(1).isEmpty()) {
                             Toast.makeText(requireContext(), getString(R.string.br_na_enc_mun), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(requireContext(), getString(R.string.br_car), Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception ex) {
                         Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
                     } finally {
@@ -143,14 +145,20 @@ public class CadastrarClienteFragment extends Fragment {
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.getProgressBar();
                 if (isNetworkConnected(requireContext())) {
                     if (internetIsConnected()) {
-                        if (!parent.getItemAtPosition(position).toString().isEmpty())
+                        if (!parent.getItemAtPosition(position).toString().isEmpty()) {
                             spinnerBairros(parent.getItemAtPosition(position).toString());
+                        } else {
+                            MainActivity.dismissProgressBar();
+                        }
                     } else {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
                     }
                 } else {
+                    MainActivity.dismissProgressBar();
                     Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
                 }
             }
