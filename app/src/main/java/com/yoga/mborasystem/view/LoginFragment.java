@@ -259,6 +259,7 @@ public class LoginFragment extends Fragment {
         handler.postDelayed(() -> {
             binding.tvinfoCodigoPin.setText(R.string.tvIntroduzirCodigoPin);
             binding.gridLayout.setVisibility(View.VISIBLE);
+            limparCodigoPin();
         }, 60000);
     }
 
