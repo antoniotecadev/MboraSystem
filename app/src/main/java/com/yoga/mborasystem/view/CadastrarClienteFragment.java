@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -124,12 +125,12 @@ public class CadastrarClienteFragment extends Fragment {
                             bairros.add(parceiro.get("br").getAsString());
                         }
                         if (bairros.getItem(1).isEmpty()) {
-                            Toast.makeText(requireContext(), getString(R.string.br_na_enc_mun), Toast.LENGTH_LONG).show();
+                            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.br_na_enc_mun), R.drawable.ic_toast_erro);
                         } else {
-                            Toast.makeText(requireContext(), getString(R.string.br_car), Toast.LENGTH_LONG).show();
+                            Snackbar.make(requireView(), getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
                         }
                     } catch (Exception ex) {
-                        Toast.makeText(requireContext(), "Erro:" + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), "Erro:" + ex.getMessage(), R.drawable.ic_toast_erro);
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
