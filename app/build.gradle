@@ -164,4 +164,7 @@ dependencies {
     // Executar scripts (Calculadora)
     implementation 'io.apisense:rhino-android:1.1.1'
 
+    //Autenticação biométrica
+    implementation "androidx.biometric:biometric:1.1.0"
+
 }
