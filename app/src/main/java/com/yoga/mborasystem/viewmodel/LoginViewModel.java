@@ -59,11 +59,11 @@ public class LoginViewModel extends AndroidViewModel {
     private void contarIntroducaoPin() {
         ++contar;
         if (contar == Ultilitario.TRES) {
-            infoPin.setValue(getApplication().getString(R.string.infoAviso1));
+            infoPin.postValue(getApplication().getString(R.string.infoAviso1));
         } else if (contar == Ultilitario.QUATRO) {
-            infoPin.setValue(getApplication().getString(R.string.infoAviso2));
+            infoPin.postValue(getApplication().getString(R.string.infoAviso2));
         } else if (contar > Ultilitario.QUATRO) {
-            infoPin.setValue(String.valueOf(Ultilitario.QUATRO));
+            infoPin.postValue(String.valueOf(Ultilitario.QUATRO));
         }
     }
 
