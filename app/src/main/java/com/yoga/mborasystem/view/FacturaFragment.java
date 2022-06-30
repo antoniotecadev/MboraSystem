@@ -747,7 +747,7 @@ public class FacturaFragment extends Fragment {
 
         private void desfazer(String message, long id, View view, Produto produto) {
             Snackbar.make(binding.myCoordinatorLayout, message,
-                    Snackbar.LENGTH_SHORT)
+                    Snackbar.LENGTH_LONG)
                     .setAction(R.string.desfazer, v -> {
                         if (produto == null) {
                             removerProduto(id, view, "", false);
