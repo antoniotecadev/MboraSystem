@@ -167,6 +167,7 @@
             app:backgroundTint="@color/cor_castanha"
             app:icon="@android:drawable/ic_menu_myplaces"
             app:iconGravity="textEnd"
+            tools:ignore="SpeakableTextPresentCheck"
             tools:layout_editor_absoluteX="233dp"
             tools:layout_editor_absoluteY="376dp" />
 
@@ -190,6 +191,7 @@
             app:backgroundTint="@color/cor_castanha"
             app:icon="@drawable/ic_baseline_backspace_24"
             app:iconGravity="textEnd"
+            tools:ignore="SpeakableTextPresentCheck"
             tools:layout_editor_absoluteX="233dp"
             tools:layout_editor_absoluteY="376dp" />
 
