@@ -37,7 +37,6 @@ import java.util.regex.Pattern;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -325,6 +324,24 @@ public class ClienteViewModel extends AndroidViewModel {
                         MainActivity.dismissProgressBar();
                     }
                 });
+    }
+
+    public void logarComBiometria() {
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            try {
+                List<Cliente> cliente;
+                cliente = clienteRepository.clienteExiste();
+                if (!cliente.isEmpty()) {
+                    getClienteMutableLiveData().postValue(cliente);
+                } else {
+                    Toast.makeText(getApplication(), getApplication().getString(R.string.usu_n_enc), Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
+            }
+        });
     }
 
     @SuppressLint("CheckResult")

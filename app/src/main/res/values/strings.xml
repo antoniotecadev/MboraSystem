@@ -589,6 +589,12 @@
     <string name="apn_mborasystem" translatable="false">https://ea85-154-71-128-128.sa.ngrok.io</string>
     <string name="vend_ago">Vender Agora</string>
     <string name="br_car">Bairros carregados</string>
+    <string name="aut_bio">Autenticação biométrica</string>
+    <string name="usu_n_enc">Usuário não encontrado</string>
+    <string name="subtitlte_biometricprompt">Faça login usando sua credencial biométrica</string>
+    <string name="titlte_biometricprompt">Login biométrico para meu aplicativo</string>
+    <string name="fal_aut">Falha na autenticação</string>
+    <string name="err_aut">\"Erro de autenticação: \"</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

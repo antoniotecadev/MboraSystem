@@ -46,9 +46,8 @@
       android:id="@+id/gridLayout"
       android:layout_width="wrap_content"
       android:layout_height="0dp"
-      android:layout_marginBottom="25dp"
       app:columnCount="3"
-      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintBottom_toTopOf="@+id/btnAuthBiometric"
       app:layout_constraintEnd_toEndOf="@+id/tvinfoCodigoPin"
       app:layout_constraintStart_toStartOf="@+id/tvinfoCodigoPin"
       app:rowCount="4">
@@ -157,6 +156,7 @@
         app:backgroundTint="@color/cor_castanha"
         app:icon="@android:drawable/ic_menu_myplaces"
         app:iconGravity="textEnd"
+        tools:ignore="SpeakableTextPresentCheck"
         tools:layout_editor_absoluteX="233dp"
         tools:layout_editor_absoluteY="376dp" />
 
@@ -180,6 +180,7 @@
         app:backgroundTint="@color/cor_castanha"
         app:icon="@drawable/ic_baseline_backspace_24"
         app:iconGravity="textEnd"
+        tools:ignore="SpeakableTextPresentCheck"
         tools:layout_editor_absoluteX="233dp"
         tools:layout_editor_absoluteY="376dp" />
 
@@ -251,5 +252,16 @@
       app:layout_constraintBottom_toTopOf="@+id/gridLayout"
       app:layout_constraintEnd_toStartOf="@+id/d5"
       app:layout_constraintStart_toEndOf="@+id/d3" />
+
+  <Button
+      android:id="@+id/btnAuthBiometric"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/aut_bio"
+      android:textSize="10sp"
+      app:backgroundTint="@android:color/holo_red_dark"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,14 +26,19 @@ import com.yoga.mborasystem.viewmodel.LoginViewModel;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
 public class LoginFragment extends Fragment {
 
@@ -45,6 +50,50 @@ public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
     private ClienteViewModel clienteViewModel;
 
+    private boolean isBiometria = false;
+
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
+
+    private void instanceOfBiometricPrompt() {
+        executor = ContextCompat.getMainExecutor(requireContext());
+        biometricPrompt = new BiometricPrompt(requireActivity(),
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode,
+                                              @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(requireContext(),
+                        getString(R.string.err_aut) + ": " + errString, Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                isBiometria = true;
+                clienteViewModel.logarComBiometria();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(requireContext(), getString(R.string.fal_aut),
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle(getString(R.string.titlte_biometricprompt))
+                .setSubtitle(getString(R.string.subtitlte_biometricprompt))
+                .setAllowedAuthenticators(BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
+                .build();
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +103,7 @@ public class LoginFragment extends Fragment {
         handler = new Handler(Looper.getMainLooper());
 
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
+        clienteViewModel = new ViewModelProvider(this).get(ClienteViewModel.class);
 
         final Observer<String> infoPinObserver = s -> {
             if (s.equals("4")) {
@@ -103,7 +152,6 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 //        if (ContextCompat.checkSelfPermission(getActivity(),
 //                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
 //            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
@@ -116,7 +164,7 @@ public class LoginFragment extends Fragment {
 //            }
 //        }
         binding = FragmentLoginBinding.inflate(inflater, container, false);
-
+        instanceOfBiometricPrompt();
         binding.btn1.setOnClickListener(v -> digitarCodigoPin(1));
         binding.btn2.setOnClickListener(v -> digitarCodigoPin(2));
         binding.btn3.setOnClickListener(v -> digitarCodigoPin(3));
@@ -138,18 +186,23 @@ public class LoginFragment extends Fragment {
             bundle.putBoolean("master", cliente.get(0).isMaster());
             bundle.putParcelable("cliente", cliente.get(0));
             try {
-                Navigation.findNavController(requireView()).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle);
+                if (isBiometria) {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
+                } else {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle);
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
         loginViewModel.getUsuarioMutableLiveData().observe(getViewLifecycleOwner(), usuario -> {
             bundle.putString("nome", usuario.getNome());
             bundle.putBoolean("master", false);
             bundle.putLong("idusuario", usuario.getId());
             Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
         });
+
+        binding.btnAuthBiometric.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
