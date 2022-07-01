@@ -25,13 +25,21 @@
         android:title="@string/n_most_nov_config"
         app:icon="@android:drawable/ic_menu_view"
         app:useSimpleSummaryProvider="true" />
-    <PreferenceCategory android:title="Configurações de rede">
+    <PreferenceCategory android:title="@string/config_rede">
         <EditTextPreference
             android:defaultValue="@string/apn_mborasystem"
             android:key="apn"
             android:title="@string/apn"
             app:dialogIcon="@drawable/ic_baseline_store_24"
             app:icon="@android:drawable/ic_lock_idle_charging"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/aut_bio">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="autenticacaobiometrica"
+            android:title="@string/act_aut_biom"
+            app:icon="@drawable/ic_baseline_fingerprint_24"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -603,6 +603,11 @@ public class Ultilitario {
         editor.apply();
     }
 
+    public static boolean getActivarAutenticacaoBiometrica(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean("autenticacaobiometrica", true);
+    }
+
     public static String monthInglesFrances(String data) {
         Map<String, String> listMonth = new HashMap<>();
         listMonth.put("january", "janeiro");
