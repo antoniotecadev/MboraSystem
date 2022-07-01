@@ -594,7 +594,7 @@
     <string name="subtitlte_biometricprompt">Faça login usando sua credencial biométrica</string>
     <string name="titlte_biometricprompt">Login biométrico para meu aplicativo</string>
     <string name="fal_aut">Falha na autenticação</string>
-    <string name="err_aut">\"Erro de autenticação: \"</string>
+    <string name="err_aut">"Erro de autenticação: "</string>
     <string name="config_rede">Configurações de rede</string>
     <string name="act_aut_biom">Activar autenticação biométrica</string>
     <string-array name="array_rela_vend_diar">
