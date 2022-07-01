@@ -50,8 +50,6 @@ public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
     private ClienteViewModel clienteViewModel;
 
-    private boolean isBiometria = false;
-
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
@@ -73,7 +71,6 @@ public class LoginFragment extends Fragment {
             public void onAuthenticationSucceeded(
                     @NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                isBiometria = true;
                 clienteViewModel.logarComBiometria();
             }
 
@@ -186,11 +183,7 @@ public class LoginFragment extends Fragment {
             bundle.putBoolean("master", cliente.get(0).isMaster());
             bundle.putParcelable("cliente", cliente.get(0));
             try {
-                if (isBiometria) {
-                    Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
-                } else {
-                    Navigation.findNavController(requireView()).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle);
-                }
+                Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
             } catch (Exception e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -203,6 +196,10 @@ public class LoginFragment extends Fragment {
         });
 
         binding.btnAuthBiometric.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
+
+        if (!Ultilitario.getActivarAutenticacaoBiometrica(requireContext())) {
+            binding.btnAuthBiometric.setVisibility(View.INVISIBLE);
+        }
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
