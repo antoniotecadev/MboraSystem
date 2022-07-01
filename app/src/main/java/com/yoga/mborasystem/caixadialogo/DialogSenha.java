@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 public class DialogSenha extends DialogFragment {
 
+    private Bundle bundle;
     private AlertDialog dialog;
     private DialogSenhaBinding binding;
     private ClienteViewModel clienteViewModel;
@@ -40,14 +41,19 @@ public class DialogSenha extends DialogFragment {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        us = new Usuario();
+        bundle = new Bundle();
+        clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
+        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        us = new Usuario();
         binding = DialogSenhaBinding.inflate(getLayoutInflater());
-        clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
-        usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setIcon(R.drawable.ic_baseline_store_24);
         if (getArguments() != null) {
@@ -70,7 +76,7 @@ public class DialogSenha extends DialogFragment {
                 binding.textInputSenha.setError(getString(R.string.senha_invalida));
             } else {
                 MainActivity.getProgressBar();
-                clienteViewModel.logar(binding.senha, binding.textInputSenha);
+                clienteViewModel.logar(requireParentFragment().requireView(), binding.senha, binding.textInputSenha);
             }
         });
 
