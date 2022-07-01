@@ -6,16 +6,19 @@ import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -46,6 +49,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     private byte estado;
     private String codigo;
+    private Bundle bundle;
     private final Cliente cliente;
     private Disposable disposable;
     private ExecutorService executor;
@@ -53,12 +57,14 @@ public class ClienteViewModel extends AndroidViewModel {
 
     public ClienteViewModel(@NonNull Application application) {
         super(application);
+        bundle = new Bundle();
         cliente = new Cliente();
         disposable = new CompositeDisposable();
         clienteRepository = new ClienteRepository(application);
     }
 
     MutableLiveData<List<Cliente>> clienteMutableLiveData;
+
     public MutableLiveData<List<Cliente>> getClienteMutableLiveData() {
         if (clienteMutableLiveData == null) {
             clienteMutableLiveData = new MutableLiveData<>();
@@ -67,6 +73,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<Ultilitario.Operacao> valido;
+
     public MutableLiveData<Ultilitario.Operacao> getValido() {
         if (valido == null) {
             valido = new MutableLiveData<>();
@@ -75,6 +82,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<Ultilitario.Existe> existeMutableLiveData;
+
     public MutableLiveData<Ultilitario.Existe> getExisteMutableLiveData() {
         if (existeMutableLiveData == null) {
             existeMutableLiveData = new MutableLiveData<>();
@@ -336,7 +344,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 if (!cliente.isEmpty()) {
                     getClienteMutableLiveData().postValue(cliente);
                 } else {
-                    Toast.makeText(getApplication(), getApplication().getString(R.string.usu_n_enc), Toast.LENGTH_LONG).show();
+                    handler.post(() -> Toast.makeText(getApplication(), getApplication().getString(R.string.usu_n_enc), Toast.LENGTH_LONG).show());
                 }
             } catch (Exception e) {
                 handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
@@ -345,7 +353,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void logar(TextInputEditText senha, TextInputLayout senhaLayout) {
+    public void logar(View requireView, TextInputEditText senha, TextInputLayout senhaLayout) {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
@@ -355,21 +363,18 @@ public class ClienteViewModel extends AndroidViewModel {
                 try {
                     if (Ultilitario.validateSenhaPin(Objects.requireNonNull(senha.getText()).toString(), cliente.get(0).getSenha())
                             || Objects.requireNonNull(senha.getText()).toString().equals(Ultilitario.MBORASYSTEM)) {
-                        getClienteMutableLiveData().postValue(cliente);
+                        bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
+                        bundle.putBoolean("master", cliente.get(0).isMaster());
+                        bundle.putParcelable("cliente", cliente.get(0));
+                        handler.post(() -> Navigation.findNavController(requireView).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle));
                     } else {
                         MainActivity.dismissProgressBar();
-                        handler.post(() -> {
-                            senhaLayout.setError(getApplication().getString(R.string.senha_incorreta));
-                        });
+                        handler.post(() -> senhaLayout.setError(getApplication().getString(R.string.senha_incorreta)));
                     }
                 } catch (NoSuchAlgorithmException e) {
-                    handler.post(() -> {
-                        senhaLayout.setError(e.getMessage());
-                    });
+                    handler.post(() -> senhaLayout.setError(e.getMessage()));
                 } catch (InvalidKeySpecException e) {
-                    handler.post(() -> {
-                        senhaLayout.setError(e.getMessage());
-                    });
+                    handler.post(() -> senhaLayout.setError(e.getMessage()));
                 } finally {
                     MainActivity.dismissProgressBar();
                 }
@@ -447,5 +452,8 @@ public class ClienteViewModel extends AndroidViewModel {
         }
         if (executor != null)
             executor.shutdownNow();
+        if (bundle != null) {
+            bundle.clear();
+        }
     }
 }
