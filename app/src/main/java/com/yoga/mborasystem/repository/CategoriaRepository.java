@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.repository;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -73,14 +74,17 @@ public class CategoriaRepository {
     public void importarCategorias(Map<String, String> categorias, Context context, Handler handler) {
 
         Categoria categoria = new Categoria();
-
-        for (String ct : categorias.keySet()) {
-            categoria.setCategoria(ct);
-            categoria.setDescricao(categorias.get(ct));
-            categoria.setEstado(1);
-            categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-            categoriaDao.insert(categoria);
+        try {
+            for (String ct : categorias.keySet()) {
+                categoria.setCategoria(ct);
+                categoria.setDescricao(categorias.get(ct));
+                categoria.setEstado(1);
+                categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                categoriaDao.insert(categoria);
+            }
+            handler.post(() -> Toast.makeText(context, R.string.cats_impo, Toast.LENGTH_LONG).show());
+        } catch (Exception e) {
+            handler.post(() -> Ultilitario.showToast(context, Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
         }
-        handler.post(() -> Toast.makeText(context, R.string.cats_impo, Toast.LENGTH_LONG).show());
     }
 }
