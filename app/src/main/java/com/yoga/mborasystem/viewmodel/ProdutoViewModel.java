@@ -586,8 +586,8 @@ public class ProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void importarProdutos(List<String> produtos, Handler handler) {
-        produtoRepository.importarProdutos(produtos, getApplication(), handler);
+    public void importarProdutos(List<String> produtos, Handler handler, boolean vemCat, Long idcategoria) {
+        produtoRepository.importarProdutos(produtos, getApplication(), handler, vemCat, idcategoria);
     }
 
     @Override

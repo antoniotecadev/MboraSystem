@@ -448,7 +448,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
 
-            produtoViewModel.importarProdutos(produtos, handler);
+            produtoViewModel.importarProdutos(produtos, handler, true, 0L);
         });
     }
 

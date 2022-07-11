@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 
@@ -19,7 +20,6 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 public class ProdutoRepository {
-    private boolean isErro;
     private final ProdutoDao produtoDao;
 
     public ProdutoRepository(Context context) {
@@ -144,7 +144,7 @@ public class ProdutoRepository {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar, estadoProd);
     }
 
-    public void importarProdutos(List<String> produtos, Application context, Handler handler) {
+    public void importarProdutos(List<String> produtos, Application context, Handler handler, boolean vemCat, Long idcategoria) {
         Produto produto = new Produto();
         for (String pt : produtos) {
             try {
@@ -156,19 +156,17 @@ public class ProdutoRepository {
                 produto.setCodigoBarra(prod[4]);
                 produto.setIva(Boolean.parseBoolean(prod[5]));
                 produto.setEstado(Integer.parseInt(prod[6]));
-                produto.setIdcategoria(Long.parseLong(prod[7]));
+                produto.setIdcategoria(vemCat ? Long.parseLong(prod[7]) : idcategoria);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 produtoDao.insert(produto);
-            } catch (Exception e) {
-                isErro = true;
-            }
-            handler.post(() -> {
-                if (isErro) {
-                    Ultilitario.showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.ficheiro_certo), R.drawable.ic_toast_erro);
-                } else {
+                handler.post(() -> {
                     Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.produto_importado), R.drawable.ic_toast_feito);
-                }
-            });
+                });
+            } catch (Exception e) {
+                handler.post(() -> {
+                    Ultilitario.showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.ficheiro_certo), R.drawable.ic_toast_erro);
+                });
+            }
         }
     }
 }

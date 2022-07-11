@@ -47,6 +47,14 @@ import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -134,7 +142,7 @@ public class ListProdutoFragment extends Fragment {
                     dt.append(produto.getNome()).append(",").append(produto.getPreco()).append(",").append(produto.getPrecofornecedor()).append(",").append(produto.getQuantidade()).append(",").append(produto.getCodigoBarra()).append(",").append(produto.isIva()).append(",").append(produto.getEstado()).append(",").append(produto.getIdcategoria()).append("\n");
                 }
                 data = dt;
-                exportarProdutos(Ultilitario.categoria, tipo == 0 ? Ultilitario.isLocal : false);
+                exportarProdutos(this.categoria, tipo == 0 ? Ultilitario.isLocal : false);
             }
         }));
 
@@ -150,6 +158,14 @@ public class ListProdutoFragment extends Fragment {
             }
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+        }
+    }
+
+    private void importarProdutos() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Ultilitario.importarCategoriasProdutos(importProductActivityResultLauncher, getActivity());
+        } else {
+            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
     }
 
@@ -283,6 +299,7 @@ public class ListProdutoFragment extends Fragment {
                 exportarProduto();
                 break;
             case R.id.importarproduto:
+                importarProdutos();
                 break;
             case R.id.btnEliminarTodosLixo:
                 dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.elim_pds), getString(R.string.tem_cert_elim_pds), true);
@@ -476,6 +493,45 @@ public class ListProdutoFragment extends Fragment {
                     }
                 }
             });
+
+    ActivityResultLauncher<Intent> importProductActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Uri uri;
+                    if (data != null) {
+                        uri = data.getData();
+                        try {
+                            readTextFromUri(uri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+
+    public void readTextFromUri(Uri uri) throws IOException {
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            List<String> produtos = new ArrayList<>();
+            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+                 BufferedReader reader = new BufferedReader(
+                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    produtos.add(line);
+                }
+            } catch (FileNotFoundException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            produtoViewModel.importarProdutos(produtos, handler, false, this.idcategoria);
+        });
+    }
 
     @Override
     public void onDestroyView() {
