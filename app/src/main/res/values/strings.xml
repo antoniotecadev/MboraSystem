@@ -606,4 +606,8 @@
         <item>Inglês</item>
         <item>Português</item>
     </string-array>
+    <string-array name="array_local_nuvem">
+        <item>@string/exportar_local</item>
+        <item>@string/exportar_nuvem</item>
+    </string-array>
 </resources>

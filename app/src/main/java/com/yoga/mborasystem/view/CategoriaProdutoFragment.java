@@ -121,7 +121,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 }
             }
         });
-        produtoViewModel.getListaProdutosImport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
+        produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
             StringBuilder dt = new StringBuilder();
             if (prod.isEmpty()) {
                 Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);

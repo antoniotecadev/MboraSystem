@@ -6,7 +6,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,8 +42,12 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentProdutoListBinding;
 import com.yoga.mborasystem.model.entidade.Produto;
+import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ListProdutoFragment extends Fragment {
 
@@ -47,17 +55,20 @@ public class ListProdutoFragment extends Fragment {
     private Bundle bundle;
     private Long idcategoria;
     private String categoria;
+    private StringBuilder data;
     private boolean isLixeira, isMaster;
     private GroupAdapter adapter;
     private ProdutoViewModel produtoViewModel;
     private FragmentProdutoListBinding binding;
+
+    private ExecutorService executor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         bundle = new Bundle();
-
+        data = new StringBuilder();
         adapter = new GroupAdapter();
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
@@ -112,7 +123,32 @@ public class ListProdutoFragment extends Fragment {
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira)
         );
 
+        produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
+            StringBuilder dt = new StringBuilder();
+            if (prod.isEmpty()) {
+                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
+            } else {
+                for (Produto produto : prod) {
+                    dt.append(produto.getNome()).append(",").append(produto.getPreco()).append(",").append(produto.getPrecofornecedor()).append(",").append(produto.getQuantidade()).append(",").append(produto.getCodigoBarra()).append(",").append(produto.isIva()).append(",").append(produto.getEstado()).append(",").append(produto.getIdcategoria()).append("\n");
+                }
+                data = dt;
+                exportarProdutos(Ultilitario.categoria, Ultilitario.isLocal);
+            }
+        }));
+
         return binding.getRoot();
+    }
+
+    private void exportarProdutos(String nomeFicheiro, boolean isLocal) {
+        if (isLocal) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+            } else {
+                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
+        } else {
+            Ultilitario.exportarNuvem(getContext(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+        }
     }
 
     private void createProduto(long id, String categoria) {
@@ -136,6 +172,33 @@ public class ListProdutoFragment extends Fragment {
         intentIntegrator.setOrientationLocked(false);
         intentIntegrator.setCameraId(0);
         zxingActivityResultLauncher.launch(intentIntegrator.createScanIntent());
+    }
+
+    private void exportarProduto() {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setIcon(R.drawable.ic_baseline_store_24)
+                .setTitle(R.string.exportar)
+                .setSingleChoiceItems(R.array.array_local_nuvem, 3, (dialogInterface, i) -> {
+                    switch (i) {
+                        case 0:
+                            executor = Executors.newSingleThreadExecutor();
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            executor.execute(() -> {
+                                try {
+                                    produtoViewModel.exportarProdutos(this.idcategoria);
+                                } catch (Exception e) {
+                                    handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
+                                }
+                            });
+                            dialogInterface.dismiss();
+                            break;
+                        case 1:
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
     }
 
     @Override
@@ -206,6 +269,11 @@ public class ListProdutoFragment extends Fragment {
                 break;
             case R.id.btnScannerBack:
                 scanearCodigoQr();
+                break;
+            case R.id.exportarproduto:
+                exportarProduto();
+                break;
+            case R.id.importarproduto:
                 break;
             case R.id.btnEliminarTodosLixo:
                 dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.elim_pds), getString(R.string.tem_cert_elim_pds), true);
@@ -375,6 +443,7 @@ public class ListProdutoFragment extends Fragment {
             return R.layout.fragment_produto;
         }
     }
+
     ActivityResultLauncher<Intent> zxingActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -386,6 +455,19 @@ public class ListProdutoFragment extends Fragment {
                 }
             });
 
+    ActivityResultLauncher<Intent> exportProductActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent resultData = result.getData();
+                    Uri uri;
+                    if (resultData != null) {
+                        uri = resultData.getData();
+                        Ultilitario.alterDocument(uri, data, requireActivity());
+                        data.delete(0, data.length());
+                    }
+                }
+            });
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -393,6 +475,8 @@ public class ListProdutoFragment extends Fragment {
         if (bundle != null) {
             bundle.clear();
         }
+        if (executor != null)
+            executor.shutdownNow();
     }
 
     @Override

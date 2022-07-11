@@ -34,6 +34,9 @@ public interface ProdutoDao {
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getProdutos(long idcat);
 
+    @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
+    List<Produto> getProdutosExport(long idcat) throws Exception;
+
     @Query("SELECT * FROM produtos WHERE estado = 3 ORDER BY produtos.id DESC")
     Flowable<List<Produto>> getProdutosLixeira();
 

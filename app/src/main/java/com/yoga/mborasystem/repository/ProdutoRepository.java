@@ -56,6 +56,10 @@ public class ProdutoRepository {
         }
     }
 
+    public List<Produto> getProdutosExport(long idcat) throws Exception {
+        return produtoDao.getProdutosExport(idcat);
+    }
+
     public LiveData<Long> getProdutos() {
         return produtoDao.getProdutos();
     }

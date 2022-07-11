@@ -18,13 +18,17 @@
         android:icon="@drawable/ic_baseline_filter_list_24"
         android:title="@string/filtrar_produto"
         app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/btnScannerBack"
         android:icon="@drawable/ic_baseline_qr_code_24"
         android:title="@string/scan_bar"
         app:showAsAction="ifRoom|collapseActionView" />
-
+    <item
+        android:id="@+id/exportarproduto"
+        android:title="@string/exportar_produto" />
+    <item
+        android:id="@+id/importarproduto"
+        android:title="@string/importar_produto" />
     <item
         android:id="@+id/btnEliminarTodosLixo"
         android:icon="@drawable/ic_eliminar"

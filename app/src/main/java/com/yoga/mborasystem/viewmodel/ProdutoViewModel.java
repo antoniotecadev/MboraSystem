@@ -69,7 +69,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         return listaProdutos;
     }
 
-    public MutableLiveData<Event<List<Produto>>> getListaProdutosImport() {
+    public MutableLiveData<Event<List<Produto>>> getListaProdutosisExport() {
         if (listaProdutosImport == null) {
             listaProdutosImport = new MutableLiveData<>();
         }
@@ -232,14 +232,18 @@ public class ProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void consultarProdutos(long idcategoria, boolean isImport, SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
+    public void exportarProdutos(long idcategoria) throws Exception {
+        getListaProdutosisExport().postValue(new Event<>(produtoRepository.getProdutosExport(idcategoria)));
+    }
+
+    public void consultarProdutos(long idcategoria, boolean isExport, SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
         MainActivity.getProgressBar();
         compositeDisposable.add(produtoRepository.getProdutos(idcategoria, isLixeira)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(produtos -> {
-                    if (isImport) {
-                        getListaProdutosImport().setValue(new Event<>(produtos));
+                    if (isExport) {
+                        getListaProdutosisExport().setValue(new Event<>(produtos));
                     } else {
                         getListaProdutos().setValue(produtos);
                     }
