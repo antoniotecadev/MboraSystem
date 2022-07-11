@@ -43,6 +43,10 @@ public class VendaRepository {
         return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
     }
 
+    public List<Venda> getVendasPorDataExport(String data) {
+        return vendaDao.getVendaExport(data);
+    }
+
     public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
         if (isLixeira) {
             return vendaDao.searchVendasLixeira(codQr);

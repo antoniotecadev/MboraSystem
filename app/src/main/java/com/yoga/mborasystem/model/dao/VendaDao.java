@@ -57,6 +57,9 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
     abstract Flowable<List<Venda>> getVenda(String data);
 
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
+    public abstract List<Venda> getVendaExport(String data);
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
     abstract Flowable<List<Venda>> getVendaDataDiv(String data);
 

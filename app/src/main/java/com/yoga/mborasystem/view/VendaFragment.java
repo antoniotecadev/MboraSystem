@@ -176,8 +176,11 @@ public class VendaFragment extends Fragment {
             if (this.data.isEmpty()) {
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.selec_data), R.drawable.ic_toast_erro);
             } else {
+                executor = Executors.newSingleThreadExecutor();
                 isLocal = aBoolean;
-                vendaViewModel.getVendasPorData(this.data, true, idcliente, isDivida, idusuario, true);
+                executor.execute(() -> {
+                    vendaViewModel.getVendasPorDataExport(this.data);
+                });
             }
         }));
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {

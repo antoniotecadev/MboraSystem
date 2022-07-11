@@ -267,6 +267,10 @@ public class VendaViewModel extends AndroidViewModel {
                 }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    public void getVendasPorDataExport(String data) {
+        getVendasParaExportar().postValue(new Event<>(vendaRepository.getVendasPorDataExport(data)));
+    }
+
     public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida, long idusuario, boolean isVenda) {
         compositeDisposable.add(vendaRepository.getVendasPorData(data, idcliente, isDivida, idusuario)
                 .subscribeOn(Schedulers.io())
