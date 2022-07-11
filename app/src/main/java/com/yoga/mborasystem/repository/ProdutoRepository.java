@@ -145,8 +145,8 @@ public class ProdutoRepository {
 
     public void importarProdutos(List<String> produtos, Application context, Handler handler, boolean vemCat, Long idcategoria) {
         Produto produto = new Produto();
-        for (String pt : produtos) {
-            try {
+        try {
+            for (String pt : produtos) {
                 String[] prod = pt.split(",");
                 produto.setNome(prod[0]);
                 produto.setPreco(Integer.parseInt(prod[1]));
@@ -158,10 +158,10 @@ public class ProdutoRepository {
                 produto.setIdcategoria(vemCat ? Long.parseLong(prod[7]) : idcategoria);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 produtoDao.insert(produto);
-                handler.post(() -> Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.produto_importado), R.drawable.ic_toast_feito));
-            } catch (Exception e) {
-                handler.post(() -> Ultilitario.showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.ficheiro_certo), R.drawable.ic_toast_erro));
             }
+            handler.post(() -> Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.produto_importado), R.drawable.ic_toast_feito));
+        } catch (Exception e) {
+            handler.post(() -> Ultilitario.showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.ficheiro_certo), R.drawable.ic_toast_erro));
         }
     }
 }
