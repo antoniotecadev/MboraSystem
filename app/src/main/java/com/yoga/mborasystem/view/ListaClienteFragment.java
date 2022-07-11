@@ -35,6 +35,14 @@ import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -167,13 +175,13 @@ public class ListaClienteFragment extends Fragment {
         clienteCantinaViewModel.getListaClientesExport().observe(getViewLifecycleOwner(), new EventObserver<>(cliente -> {
             StringBuilder dt = new StringBuilder();
             if (cliente.isEmpty()) {
-                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
+                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.cliente_nao_encontrado), R.drawable.ic_toast_erro);
             } else {
                 for (ClienteCantina clienteCantina : cliente) {
-                    dt.append(clienteCantina.getNome()).append(",").append(clienteCantina.getTelefone()).append(",").append(clienteCantina.getEmail()).append(",").append(clienteCantina.getEndereco()).append("\n");
+                    dt.append(clienteCantina.getNome().isEmpty() ? " " : clienteCantina.getNome()).append(",").append(clienteCantina.getTelefone().isEmpty() ? " " : clienteCantina.getTelefone()).append(",").append(clienteCantina.getEmail().isEmpty() ? " " : clienteCantina.getEmail()).append(",").append(clienteCantina.getEndereco().isEmpty() ? " " : clienteCantina.getEndereco()).append("\n");
                 }
                 data = dt;
-                exportarClientes(getString(R.string.cliente), tipo == 0 ? Ultilitario.isLocal : false);
+                exportarClientes(getString(R.string.clientes), tipo == 0 ? Ultilitario.isLocal : false);
             }
         }));
 
@@ -191,6 +199,14 @@ public class ListaClienteFragment extends Fragment {
             }
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "clientes.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+        }
+    }
+
+    private void importarClientes() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Ultilitario.importarCategoriasProdutosClientes(importClientActivityResultLauncher, requireActivity());
+        } else {
+            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
     }
 
@@ -243,7 +259,7 @@ public class ListaClienteFragment extends Fragment {
         } else if (item.getItemId() == R.id.exportarcliente) {
             exportarCliente();
         } else if (item.getItemId() == R.id.importarcliente) {
-
+            importarClientes();
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
@@ -301,6 +317,45 @@ public class ListaClienteFragment extends Fragment {
                     }
                 }
             });
+
+    ActivityResultLauncher<Intent> importClientActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Uri uri;
+                    if (data != null) {
+                        uri = data.getData();
+                        try {
+                            readTextFromUri(uri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+
+    public void readTextFromUri(Uri uri) throws IOException {
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            List<String> clientes = new ArrayList<>();
+            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+                 BufferedReader reader = new BufferedReader(
+                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    clientes.add(line);
+                }
+            } catch (FileNotFoundException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            clienteCantinaViewModel.importarClientes(clientes, handler);
+        });
+    }
 
     @Override
     public void onDestroyView() {

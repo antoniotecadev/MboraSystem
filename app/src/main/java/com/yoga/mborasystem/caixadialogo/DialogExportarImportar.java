@@ -172,7 +172,7 @@ public class DialogExportarImportar extends DialogFragment {
 
     private void importarProdutos() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Ultilitario.importarCategoriasProdutos(null, getActivity());
+            Ultilitario.importarCategoriasProdutosClientes(null, getActivity());
         } else {
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
@@ -180,7 +180,7 @@ public class DialogExportarImportar extends DialogFragment {
 
     private void importarCategorias() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Ultilitario.importarCategoriasProdutos(importCategoryActivityResultLauncher, null);
+            Ultilitario.importarCategoriasProdutosClientes(importCategoryActivityResultLauncher, null);
         } else {
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }

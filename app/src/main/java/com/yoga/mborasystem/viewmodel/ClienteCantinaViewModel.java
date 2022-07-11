@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Patterns;
 
@@ -231,6 +232,10 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
 
     public void exportarClientes() throws Exception {
         getListaClientesExport().postValue(new Event<>(clienteCantinaRepository.getClientesExport()));
+    }
+
+    public void importarClientes(List<String> clientes, Handler handler) {
+        clienteCantinaRepository.importarClientes(clientes, getApplication(), handler);
     }
 
     @Override

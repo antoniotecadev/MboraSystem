@@ -405,7 +405,7 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void importarCategoriasProdutos(ActivityResultLauncher<Intent> importActivityResultLauncher, Activity activity) {
+    public static void importarCategoriasProdutosClientes(ActivityResultLauncher<Intent> importActivityResultLauncher, Activity activity) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");

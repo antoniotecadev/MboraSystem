@@ -163,7 +163,7 @@ public class ListProdutoFragment extends Fragment {
 
     private void importarProdutos() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Ultilitario.importarCategoriasProdutos(importProductActivityResultLauncher, getActivity());
+            Ultilitario.importarCategoriasProdutosClientes(importProductActivityResultLauncher, getActivity());
         } else {
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
