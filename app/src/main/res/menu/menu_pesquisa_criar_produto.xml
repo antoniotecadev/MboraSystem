@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/btnScannerBack"
-        android:icon="@drawable/ic_baseline_camera_rear_24"
+        android:icon="@drawable/ic_baseline_qr_code_24"
         android:title="@string/scan_bar"
         app:showAsAction="ifRoom|collapseActionView" />
 
