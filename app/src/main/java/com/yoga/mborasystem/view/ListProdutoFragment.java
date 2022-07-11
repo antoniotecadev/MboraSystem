@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -51,6 +52,7 @@ import java.util.concurrent.Executors;
 
 public class ListProdutoFragment extends Fragment {
 
+    private int tipo;
     private boolean vazio;
     private Bundle bundle;
     private Long idcategoria;
@@ -132,7 +134,7 @@ public class ListProdutoFragment extends Fragment {
                     dt.append(produto.getNome()).append(",").append(produto.getPreco()).append(",").append(produto.getPrecofornecedor()).append(",").append(produto.getQuantidade()).append(",").append(produto.getCodigoBarra()).append(",").append(produto.isIva()).append(",").append(produto.getEstado()).append(",").append(produto.getIdcategoria()).append("\n");
                 }
                 data = dt;
-                exportarProdutos(Ultilitario.categoria, Ultilitario.isLocal);
+                exportarProdutos(Ultilitario.categoria, tipo == 0 ? Ultilitario.isLocal : false);
             }
         }));
 
@@ -179,26 +181,33 @@ public class ListProdutoFragment extends Fragment {
                 .setIcon(R.drawable.ic_baseline_store_24)
                 .setTitle(R.string.exportar)
                 .setSingleChoiceItems(R.array.array_local_nuvem, 3, (dialogInterface, i) -> {
+                    executor = Executors.newSingleThreadExecutor();
+                    Handler handler = new Handler(Looper.getMainLooper());
                     switch (i) {
                         case 0:
-                            executor = Executors.newSingleThreadExecutor();
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            executor.execute(() -> {
-                                try {
-                                    produtoViewModel.exportarProdutos(this.idcategoria);
-                                } catch (Exception e) {
-                                    handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
-                                }
-                            });
-                            dialogInterface.dismiss();
+                            tipo = 0;
+                            exportarProdutos(executor, handler, dialogInterface);
                             break;
                         case 1:
+                            tipo = 1;
+                            exportarProdutos(executor, handler, dialogInterface);
                             break;
                         default:
                             break;
                     }
                 })
                 .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
+    }
+
+    public void exportarProdutos(ExecutorService executor, Handler handler, DialogInterface dialogInterface) {
+        executor.execute(() -> {
+            try {
+                produtoViewModel.exportarProdutos(this.idcategoria);
+            } catch (Exception e) {
+                handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
+            }
+        });
+        dialogInterface.dismiss();
     }
 
     @Override

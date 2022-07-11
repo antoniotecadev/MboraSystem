@@ -400,7 +400,6 @@ public class Ultilitario {
             fileIntent.putExtra(Intent.EXTRA_STREAM, path);
             context.startActivity(Intent.createChooser(fileIntent, context.getString(R.string.partilhar)));
         } catch (Exception e) {
-            e.printStackTrace();
             Toast.makeText(context, context.getString(R.string.falha) + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
