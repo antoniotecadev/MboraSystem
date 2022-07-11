@@ -120,7 +120,7 @@
     <string name="categorias_carregar">Categorias carregadas</string>
     <string name="alinhar_codigo_barra">Alinhar código de barras para fazer a leitura</string>
     <string name="continuar_criar_produto">Continuar a criar produto</string>
-    <string name="descricao">Descrição</string>
+    <string name="descricao">Descrição *</string>
     <string name="descricao_invalida">Descrição não é válida\nNão use caracteres especias</string>
     <string name="bazar">Bazar</string>
     <string name="bebidas">Bebidas</string>
@@ -207,7 +207,7 @@
     <string name="importar_produto">Importar Produtos</string>
     <string name="eliminar_categoria">Eliminar Categoria</string>
     <string name="elim_cts">Eliminar Categorias</string>
-    <string name="nome_categoria">Nome da Categoria</string>
+    <string name="nome_categoria">Nome da Categoria *</string>
     <string name="nome_usuario">Nome do Usuário</string>
     <string name="eliminar_usuario">Eliminar Usuário</string>
     <string name="nome">Nome</string>

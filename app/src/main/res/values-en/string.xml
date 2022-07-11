@@ -110,7 +110,7 @@
     <string name="categorias_carregar">Categories loaded</string>
     <string name="alinhar_codigo_barra">Align barcode to scan</string>
     <string name="continuar_criar_produto">Continue creating product</string>
-    <string name="descricao">Description</string>
+    <string name="descricao">Description *</string>
     <string name="descricao_invalida">Description is not valid\nDo not use special characters</string>
     <string name="bazar">Bazaar</string>
     <string name="bebidas">Drinks</string>
@@ -194,7 +194,7 @@
     <string name="exportar_produto">Export Products</string>
     <string name="importar_produto">Import Products</string>
     <string name="eliminar_categoria">Delete Category</string>
-    <string name="nome_categoria">Category Name</string>
+    <string name="nome_categoria">Category Name *</string>
     <string name="nome_usuario">Username</string>
     <string name="eliminar_usuario">Delete User</string>
     <string name="nome">Name</string>
