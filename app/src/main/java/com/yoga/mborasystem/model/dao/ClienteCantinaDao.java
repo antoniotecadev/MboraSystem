@@ -30,4 +30,7 @@ public interface ClienteCantinaDao {
     @Delete
     void delete(ClienteCantina clienteCantina);
 
+    @Query("SELECT * FROM clientecantina ORDER BY clientecantina.id DESC")
+    List<ClienteCantina> getClientesExport() throws Exception;
+
 }

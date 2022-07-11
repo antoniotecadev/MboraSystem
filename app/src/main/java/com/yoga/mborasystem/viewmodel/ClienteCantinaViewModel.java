@@ -12,6 +12,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.repository.ClienteCantinaRepository;
+import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.List;
@@ -81,6 +82,15 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             valido = new MutableLiveData<>();
         }
         return valido;
+    }
+
+    private MutableLiveData<Event<List<ClienteCantina>>> listaClienteExport;
+
+    public MutableLiveData<Event<List<ClienteCantina>>> getListaClientesExport() {
+        if (listaClienteExport == null) {
+            listaClienteExport = new MutableLiveData<>();
+        }
+        return listaClienteExport;
     }
 
     private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
@@ -216,6 +226,11 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cli_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
+
+    }
+
+    public void exportarClientes() throws Exception {
+        getListaClientesExport().postValue(new Event<>(clienteCantinaRepository.getClientesExport()));
     }
 
     @Override

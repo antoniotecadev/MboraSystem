@@ -13,5 +13,11 @@
         android:icon="@drawable/ic_baseline_add_box_24"
         android:title="@string/criar_produto"
         app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/exportarcliente"
+        android:title="@string/exportcli" />
+    <item
+        android:id="@+id/importarcliente"
+        android:title="@string/importcli" />
 
 </menu>

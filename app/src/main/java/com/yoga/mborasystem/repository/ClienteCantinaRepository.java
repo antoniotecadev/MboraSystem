@@ -42,4 +42,8 @@ public class ClienteCantinaRepository {
             clienteCantinaDao.delete(clienteCantina);
         }
     }
+
+    public List<ClienteCantina> getClientesExport() throws Exception {
+        return clienteCantinaDao.getClientesExport();
+    }
 }

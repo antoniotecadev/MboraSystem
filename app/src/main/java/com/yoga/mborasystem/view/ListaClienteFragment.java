@@ -1,9 +1,14 @@
 package com.yoga.mborasystem.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -25,11 +31,16 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentListaClienteBinding;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
+import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -41,7 +52,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ListaClienteFragment extends Fragment {
 
+    private int tipo;
+    private StringBuilder data;
     private GroupAdapter adapter;
+    private ExecutorService executor;
     private ClienteCantina clienteCantina;
     private FragmentListaClienteBinding binding;
     private ClienteCantinaViewModel clienteCantinaViewModel;
@@ -49,6 +63,7 @@ public class ListaClienteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        data = new StringBuilder();
         adapter = new GroupAdapter();
         clienteCantina = new ClienteCantina();
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
@@ -149,9 +164,34 @@ public class ListaClienteFragment extends Fragment {
 
         });
 
+        clienteCantinaViewModel.getListaClientesExport().observe(getViewLifecycleOwner(), new EventObserver<>(cliente -> {
+            StringBuilder dt = new StringBuilder();
+            if (cliente.isEmpty()) {
+                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
+            } else {
+                for (ClienteCantina clienteCantina : cliente) {
+                    dt.append(clienteCantina.getNome()).append(",").append(clienteCantina.getTelefone()).append(",").append(clienteCantina.getEmail()).append(",").append(clienteCantina.getEndereco()).append("\n");
+                }
+                data = dt;
+                exportarClientes(getString(R.string.cliente), tipo == 0 ? Ultilitario.isLocal : false);
+            }
+        }));
+
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout));
 
         return binding.getRoot();
+    }
+
+    private void exportarClientes(String nomeFicheiro, boolean isLocal) {
+        if (isLocal) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Ultilitario.exportarLocal(exportClientActivityResultLauncher, getActivity(), data, "clientes.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+            } else {
+                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
+        } else {
+            Ultilitario.exportarNuvem(getContext(), data, "clientes.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+        }
     }
 
     @Override
@@ -200,6 +240,10 @@ public class ListaClienteFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         if (item.getItemId() == R.id.criarClienteCantina) {
             criarCliente();
+        } else if (item.getItemId() == R.id.exportarcliente) {
+            exportarCliente();
+        } else if (item.getItemId() == R.id.importarcliente) {
+
         }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
@@ -211,10 +255,59 @@ public class ListaClienteFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(direction);
     }
 
+    private void exportarCliente() {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setIcon(R.drawable.ic_baseline_store_24)
+                .setTitle(R.string.exportar)
+                .setSingleChoiceItems(R.array.array_local_nuvem, 3, (dialogInterface, i) -> {
+                    executor = Executors.newSingleThreadExecutor();
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    switch (i) {
+                        case 0:
+                            tipo = 0;
+                            exportarClientes(executor, handler, dialogInterface);
+                            break;
+                        case 1:
+                            tipo = 1;
+                            exportarClientes(executor, handler, dialogInterface);
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
+    }
+
+    public void exportarClientes(ExecutorService executor, Handler handler, DialogInterface dialogInterface) {
+        executor.execute(() -> {
+            try {
+                clienteCantinaViewModel.exportarClientes();
+            } catch (Exception e) {
+                handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
+            }
+        });
+        dialogInterface.dismiss();
+    }
+
+    ActivityResultLauncher<Intent> exportClientActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent resultData = result.getData();
+                    Uri uri;
+                    if (resultData != null) {
+                        uri = resultData.getData();
+                        Ultilitario.alterDocument(uri, data, requireActivity());
+                        data.delete(0, data.length());
+                    }
+                }
+            });
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        if (executor != null)
+            executor.shutdownNow();
     }
 
     @Override
