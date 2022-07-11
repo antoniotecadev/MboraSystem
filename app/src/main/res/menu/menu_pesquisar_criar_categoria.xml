@@ -21,7 +21,7 @@
     <menu>
       <item
           android:id="@+id/exportarproduto"
-          android:icon="@drawable/ic_baseline_file_copy_24"
+          android:icon="@drawable/ic_baseline_insert_drive_file_24"
           android:title="@string/exportar_produto" />
       <item
           android:id="@+id/importarproduto"
@@ -37,7 +37,7 @@
     <menu>
       <item
           android:id="@+id/exportarcategoria"
-          android:icon="@drawable/ic_baseline_file_copy_24"
+          android:icon="@drawable/ic_baseline_insert_drive_file_24"
           android:title="@string/exportar_categoria" />
       <item
           android:id="@+id/importarcategoria"
