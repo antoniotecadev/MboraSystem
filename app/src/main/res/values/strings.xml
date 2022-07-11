@@ -226,7 +226,7 @@
     <string name="turn_on_flashlight">Ligar flash</string>
     <string name="turn_off_flashlight">Desligar flash</string>
     <string name="factura">Factura</string>
-    <string name="nome_cliente">Nome do cliente</string>
+    <string name="nome_cliente">Nome do cliente *</string>
     <string name="criar_cliente">Criar Cliente</string>
     <string name="clientes">Clientes</string>
     <string name="endereco_invalido">Endereço inválido</string>

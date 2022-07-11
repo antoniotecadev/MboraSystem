@@ -213,7 +213,7 @@
     <string name="turn_on_flashlight">Allumer le flash</string>
     <string name="turn_off_flashlight">Désactiver le flash</string>
     <string name="factura">Facture d\'achat</string>
-    <string name="nome_cliente">Nom du client</string>
+    <string name="nome_cliente">Nom du client *</string>
     <string name="criar_cliente">Créer un client</string>
     <string name="clientes">Les clients</string>
     <string name="endereco_invalido">Adresse invalide</string>
