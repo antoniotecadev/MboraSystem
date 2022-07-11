@@ -240,6 +240,8 @@ public class ListProdutoFragment extends Fragment {
             menu.findItem(R.id.dialogCriarProduto).setVisible(false);
             menu.findItem(R.id.dialogFiltrarProduto).setVisible(false);
             menu.findItem(R.id.btnScannerBack).setVisible(false);
+            menu.findItem(R.id.exportarproduto).setVisible(false);
+            menu.findItem(R.id.importarproduto).setVisible(false);
         } else {
             menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
             menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
