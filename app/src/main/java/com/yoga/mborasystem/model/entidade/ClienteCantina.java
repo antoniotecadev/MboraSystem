@@ -7,16 +7,20 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "clientecantina")
 public class ClienteCantina {
 
-    public ClienteCantina(long id, String nome, String telefone) {
+    public ClienteCantina(long id, String nome, String telefone, String email, String endereco) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
+        this.email = email;
+        this.endereco = endereco;
     }
 
     @PrimaryKey(autoGenerate = true)
     private long id;
     private String nome;
     private String telefone;
+    private String email;
+    private String endereco;
 
     private int estado;
 
@@ -48,6 +52,22 @@ public class ClienteCantina {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
     public int getEstado() {

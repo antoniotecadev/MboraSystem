@@ -120,7 +120,7 @@ public class ListaClienteFragment extends Fragment {
                                     if (getArguments().getBoolean("master")) {
                                         menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
                                             MainActivity.getProgressBar();
-                                            ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId());
+                                            ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId(), cliente.getEmail(), cliente.getEndereco());
                                             Navigation.findNavController(requireView()).navigate(direction);
                                             return false;
                                         });
@@ -207,7 +207,7 @@ public class ListaClienteFragment extends Fragment {
 
     private void criarCliente() {
         MainActivity.getProgressBar();
-        ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0);
+        ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0, "", "");
         Navigation.findNavController(requireView()).navigate(direction);
     }
 

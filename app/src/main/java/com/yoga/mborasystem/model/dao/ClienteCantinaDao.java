@@ -9,6 +9,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
 import io.reactivex.Flowable;
 
 @Dao
@@ -23,8 +24,8 @@ public interface ClienteCantinaDao {
     @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR telefone LIKE '%' || :search || '%')")
     Flowable<List<ClienteCantina>> searchCliente(String search);
 
-    @Query("UPDATE clientecantina SET nome = :nome, telefone = :telefone, estado = :estado, data_modifica = :dataModif WHERE id = :id")
-    void update(String nome, String telefone, int estado, String dataModif, long id);
+    @Query("UPDATE clientecantina SET nome = :nome, telefone = :telefone, email = :email, endereco = :endereco, estado = :estado, data_modifica = :dataModif WHERE id = :id")
+    void update(String nome, String telefone, String email, String endereco, int estado, String dataModif, long id);
 
     @Delete
     void delete(ClienteCantina clienteCantina);

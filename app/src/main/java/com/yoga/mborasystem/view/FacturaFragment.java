@@ -198,7 +198,7 @@ public class FacturaFragment extends Fragment {
 
         binding.btnCriarCliente.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(requireView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0));
+            Navigation.findNavController(requireView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0, "", ""));
             binding.txtNomeCliente.setText("");
         });
 
@@ -642,7 +642,7 @@ public class FacturaFragment extends Fragment {
         clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientesCantina -> {
             clienteCantina.clear();
             for (ClienteCantina cliente : clientesCantina) {
-                clienteCantina.add(new ClienteCantina(cliente.getId(), cliente.getNome(), cliente.getTelefone()));
+                clienteCantina.add(new ClienteCantina(cliente.getId(), cliente.getNome(), cliente.getTelefone(), cliente.getEmail(), cliente.getEndereco()));
             }
             AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(requireContext(), clienteCantina);
             binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);

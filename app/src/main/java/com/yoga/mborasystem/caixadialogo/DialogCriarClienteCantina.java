@@ -41,10 +41,14 @@ public class DialogCriarClienteCantina extends DialogFragment {
 
         String nome = DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getNomeCliente();
         String telefone = DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getTelefoneCliente();
+        String email = DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getEmail();
+        String endereco = DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getEndereco();
         long idcliente = DialogCriarClienteCantinaArgs.fromBundle(getArguments()).getIdcliente();
 
         binding.editTextNome.setText(nome);
         binding.editTextNumeroTelefone.setText(telefone);
+        binding.editTextEmail.setText(email);
+        binding.editTextEndereco.setText(endereco);
 
         if (idcliente == Ultilitario.ZERO) {
             binding.buttonGuardar.setVisibility(View.GONE);
@@ -55,9 +59,9 @@ public class DialogCriarClienteCantina extends DialogFragment {
             binding.buttonCriarCliente.setVisibility(View.GONE);
             binding.buttonEliminarCliente.setVisibility(View.VISIBLE);
         }
-        binding.buttonCriarCliente.setOnClickListener(v -> clienteCantinaViewModel.criarCliente(binding.editTextNome, binding.editTextNumeroTelefone, dialog));
+        binding.buttonCriarCliente.setOnClickListener(v -> clienteCantinaViewModel.criarCliente(binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog));
 
-        binding.buttonGuardar.setOnClickListener(v -> clienteCantinaViewModel.actualizarCliente(idcliente, binding.editTextNome, binding.editTextNumeroTelefone, dialog));
+        binding.buttonGuardar.setOnClickListener(v -> clienteCantinaViewModel.actualizarCliente(idcliente, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog));
 
         binding.buttonEliminarCliente.setOnClickListener(v -> deleteClient(idcliente, Objects.requireNonNull(binding.editTextNome.getText()).toString()));
 

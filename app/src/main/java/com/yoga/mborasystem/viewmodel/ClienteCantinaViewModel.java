@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -48,16 +49,20 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
 
+    private boolean isEmailValido(String email) {
+        return (!isCampoVazio(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+
     private boolean isNumeroValido(String numero) {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
-    public void criarCliente(TextInputEditText nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
-        validarCliente(0, Ultilitario.Operacao.CRIAR, nomeCliente, telefone, dialog);
+    public void criarCliente(TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
+        validarCliente(0, Ultilitario.Operacao.CRIAR, nomeCliente, telefone, email, endereco, dialog);
     }
 
-    public void actualizarCliente(long idcliente, TextInputEditText nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
-        validarCliente(idcliente, Ultilitario.Operacao.ACTUALIZAR, nomeCliente, telefone, dialog);
+    public void actualizarCliente(long idcliente, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
+        validarCliente(idcliente, Ultilitario.Operacao.ACTUALIZAR, nomeCliente, telefone, email, endereco, dialog);
     }
 
     private MutableLiveData<List<ClienteCantina>> listaClientesCantina;
@@ -70,6 +75,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<Ultilitario.Operacao> valido;
+
     public MutableLiveData<Ultilitario.Operacao> getValido() {
         if (valido == null) {
             valido = new MutableLiveData<>();
@@ -77,17 +83,25 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return valido;
     }
 
-    private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nomeCliente, TextInputEditText telefone, AlertDialog dialog) {
+    private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
         if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
             nomeCliente.requestFocus();
             nomeCliente.setError(getApplication().getString(R.string.nome_invalido));
         } else if ((!isCampoVazio(Objects.requireNonNull(telefone.getText()).toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
             telefone.requestFocus();
             telefone.setError(getApplication().getString(R.string.numero_invalido));
+        } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
+            email.requestFocus();
+            email.setError(getApplication().getString(R.string.email_invalido));
+        } else if (!isCampoVazio(Objects.requireNonNull(endereco.getText()).toString()) && Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
+            endereco.requestFocus();
+            endereco.setError(getApplication().getString(R.string.endereco_invalido));
         } else {
             MainActivity.getProgressBar();
             clienteCantina.setNome(nomeCliente.getText().toString());
             clienteCantina.setTelefone(telefone.getText().toString());
+            clienteCantina.setEmail(email.getText().toString());
+            clienteCantina.setEndereco(endereco.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 clienteCantina.setId(Ultilitario.ZERO);
                 clienteCantina.setEstado(Ultilitario.UM);
@@ -96,8 +110,6 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
                 clienteCantina.setId(idcliente);
                 clienteCantina.setEstado(Ultilitario.DOIS);
-                clienteCantina.setNome(nomeCliente.getText().toString());
-                clienteCantina.setTelefone(telefone.getText().toString());
                 clienteCantina.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 actualizarCliente(clienteCantina, dialog);
             }
@@ -153,7 +165,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void actualizarCliente(ClienteCantina clienteCantina, AlertDialog dialog) {
-        Completable.fromAction(() -> clienteCantinaRepository.update(clienteCantina.getNome(), clienteCantina.getTelefone(), clienteCantina.getEstado(), clienteCantina.getData_modifica(), clienteCantina.getId()))
+        Completable.fromAction(() -> clienteCantinaRepository.update(clienteCantina.getNome(), clienteCantina.getTelefone(), clienteCantina.getEmail(), clienteCantina.getEndereco(), clienteCantina.getEstado(), clienteCantina.getData_modifica(), clienteCantina.getId()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {

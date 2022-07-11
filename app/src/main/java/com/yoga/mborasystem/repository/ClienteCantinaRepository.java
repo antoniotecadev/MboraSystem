@@ -33,8 +33,8 @@ public class ClienteCantinaRepository {
         return clienteCantinaDao.searchCliente(cliente);
     }
 
-    public void update(String nome, String telefone, int estado, String dataModif, long id) {
-        clienteCantinaDao.update(nome, telefone, estado, dataModif, id);
+    public void update(String nome, String telefone, String email, String endereco,int estado, String dataModif, long id) {
+        clienteCantinaDao.update(nome, telefone, email, endereco,estado, dataModif, id);
     }
 
     public void delete(ClienteCantina clienteCantina) {
