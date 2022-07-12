@@ -599,7 +599,7 @@
     <string name="act_aut_biom">Activar autenticação biométrica</string>
     <string name="exportcli">Exportar cliente(s)</string>
     <string name="importcli">Importar cliente(s)</string>
-    <string name="cli_import">Clientes importados</string>
+    <string name="cli_import">Cliente(s) importado(s)</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

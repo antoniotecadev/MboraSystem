@@ -54,12 +54,12 @@
     <string name="categoria_produto">Category/Product</string>
     <string name="usuario">User</string>
     <string name="venda">Sale</string>
-    <string name="cliente">Customer</string>
+    <string name="cliente">Client</string>
     <string name="dashboard">Dashboard</string>
     <string name="dados_usuarios_actividades">User data and their activities</string>
     <string name="lista_produtos_categorias">List of products and their categories</string>
     <string name="venda_produtos_efectuadas">Sale of products made</string>
-    <string name="dados_clientes_compras">Customer data and their purchases</string>
+    <string name="dados_clientes_compras">Client data and their purchases</string>
     <string name="casa">Home</string>
     <string name="usuarios">USERS</string>
     <string name="criar_usuario">CREATE USER</string>
@@ -152,7 +152,7 @@
     <string name="termo_condicao">Terms and conditions</string>
     <string name="aceito_termo_condicao">Accepted</string>
     <string name="politica_privacidade">Privacy Policy</string>
-    <string name="conta_cliente_ja_existe">There is already a customer account for this App</string>
+    <string name="conta_cliente_ja_existe">There is already a client account for this App</string>
     <string name="conta">Account</string>
     <string name="ok">OK</string>
     <string name="tentar_novamente">Try again after 1 minute</string>
@@ -214,16 +214,16 @@
     <string name="turn_off_flashlight">turn off flash</string>
     <string name="factura">Invoice</string>
     <string name="nome_cliente">Client name *</string>
-    <string name="criar_cliente">Create Customer</string>
-    <string name="clientes">Customers</string>
+    <string name="criar_cliente">Create Client</string>
+    <string name="clientes">Clients</string>
     <string name="endereco_invalido">Invalid address</string>
-    <string name="cliente_criado">Customer created</string>
-    <string name="cliente_nao_criado">Customer not created</string>
+    <string name="cliente_criado">Client created</string>
+    <string name="cliente_nao_criado">Client not created</string>
     <string name="falha_lista_clientes">Failed to load clients</string>
     <string name="alteracao_nao_feita">Change not made</string>
-    <string name="cliente_eliminado">Deleted customer</string>
-    <string name="cliente_nao_eliminado">Customer not deleted</string>
-    <string name="cliente_nao_encontrado">Customer not found</string>
+    <string name="cliente_eliminado">Deleted clients</string>
+    <string name="cliente_nao_eliminado">Client not deleted</string>
+    <string name="cliente_nao_encontrado">Client not found</string>
     <string name="alterar_cliente">Change Client</string>
     <string name="senha">Password</string>
     <string name="repetir_senha">Repeat password</string>
@@ -291,7 +291,7 @@
     <string name="troco">Thing</string>
     <string name="digite_valor_pago">Enter the amount paid</string>
     <string name="factura_recibo">INVOICE /RECEIPT</string>
-    <string name="clienteupper">CUSTOMER:</string>
+    <string name="clienteupper">CLIENT:</string>
     <string name="desc_prec_qtd_val">Discount Price Qty Value</string>
     <string name="total_desc">Total Discount</string>
     <string name="pago">Payment</string>
@@ -317,7 +317,7 @@
     <string name="sem_dvd">No debt</string>
     <string name="eliminar_cliente">Delete Client</string>
     <string name="dt_vl_dv">Enter the debt amount</string>
-    <string name="dvd_atri_cl_cad">"The debt can only be attributed to the registered customer. "</string>
+    <string name="dvd_atri_cl_cad">"The debt can only be attributed to the registered client. "</string>
     <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ"</string>
     <string name="noa_scan_codbar">It will not be able to access the camera.</string>
     <string name="vds">Sales</string>
@@ -341,15 +341,15 @@
     <string name="liq_div">Settle debt</string>
     <string name="elim_vend">Eliminate Sale</string>
     <string name="enc_div_vend">How much do you want to pay off the debt?</string>
-    <string name="cert_elim_vend">This sale is associated with a user and a customer.\nAre you sure you want to delete this sale?</string>
+    <string name="cert_elim_vend">This sale is associated with a user and a client.\nAre you sure you want to delete this sale?</string>
     <string name="div_n_liq">Unpaid debt</string>
     <string name="div_liq">Debt settled</string>
     <string name="vend_elim">Sale eliminated</string>
     <string name="vend_n_elim">Sale not deleted</string>
-    <string name="cli_nao_enc">Customers not found</string>
+    <string name="cli_nao_enc">Clients not found</string>
     <string name="tem_cert_elim_cli">Are you sure you want to delete this client?</string>
-    <string name="cli_elim">Deleted customer</string>
-    <string name="cli_n_elim">Customer not deleted</string>
+    <string name="cli_elim">Deleted Client</string>
+    <string name="cli_n_elim">Client not deleted</string>
     <string name="cod_qr">QR code</string>
     <string name="pes_ven">Search for Sale(s)</string>
     <string name="no_pos_apl_div">It is not possible to apply debt, the amount paid must be less than the total amount.</string>
@@ -381,9 +381,9 @@
     <string name="tds_vd">All sales</string>
     <string name="vd_dvd">Sales with debt</string>
     <string name="exp_tds_vd">Export all sales.</string>
-    <string name="exp_tds_vd_cli">Export all sales for the selected customer.</string>
+    <string name="exp_tds_vd_cli">Export all sales for the selected client.</string>
     <string name="exp_tds_vd_dvd">Export all sales with debt.</string>
-    <string name="exp_tds_vd_dvd_cli">Export all debt sales of the selected customer.</string>
+    <string name="exp_tds_vd_dvd_cli">Export all debt sales of the selected client.</string>
     <string name="exp_tds_vd_dvd_use">Export all user sales with debt.</string>
     <string name="exp_tds_vd_use">Export all sales of the selected user.</string>
     <string name="acerca">Management and invoicing system created by startup YOGA for:\n
@@ -579,6 +579,9 @@
     <string name="config_rede">Network settings</string>
     <string name="act_aut_biom">Enable biometric authentication</string>
     <string name="err_aut">Authentication error:</string>
+    <string name="exportcli">Export client(s)</string>
+    <string name="importcli">Import client(s)</string>
+    <string name="cli_import">Imported client(s)</string>
     <!-- Generated by Automatic String Resource Translation -->
     <!--          https://asrt.gluege.boerde.de             -->
 </resources>
