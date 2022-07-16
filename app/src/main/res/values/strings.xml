@@ -26,22 +26,22 @@
     </string>
 
     <string name="nome_produto">Nome do Produto</string>
-    <string name="Sobre_Nome">Sobrenome</string>
-    <string name="nifbi">NIF/BI</string>
-    <string name="Numero_Telefone">Número de telefone</string>
-    <string name="Numero_Telefone_Alternativo">Número de telefone alternativo</string>
-    <string name="Email">Email</string>
-    <string name="localizacao_e_endereco">Localização e Endereço do Estabelecimento</string>
+    <string name="Sobre_Nome">Sobrenome*</string>
+    <string name="nifbi">NIF*</string>
+    <string name="Numero_Telefone">Número de telefone*</string>
+    <string name="Numero_Telefone_Alternativo">Número de telefone alternativo*</string>
+    <string name="Email">Email*</string>
+    <string name="localizacao_e_endereco">Localização e Endereço da empresa</string>
     <string name="identificação">Identificação</string>
-    <string name="municipio">Município</string>
-    <string name="bairro">Bairro</string>
-    <string name="rua">Rua</string>
-    <string name="codigopin">Código PIN</string>
+    <string name="municipio">Município*</string>
+    <string name="bairro">Bairro*</string>
+    <string name="rua">Rua*</string>
+    <string name="codigopin">*Código PIN</string>
     <string name="criar_conta">Criar Conta</string>
-    <string name="codigopinnovamente">Repetir código PIN</string>
+    <string name="codigopinnovamente">*Repetir código PIN</string>
     <string name="nome_invalido">Nome não é válido</string>
     <string name="sobrenome_invalido">Sobrenome não é válido</string>
-    <string name="nifbi_invalido">NIF/BI não é válido</string>
+    <string name="nifbi_invalido">NIF não é válido</string>
     <string name="numero_invalido">Número não é válido</string>
     <string name="email_invalido">Email não é válido</string>
     <string name="municipio_invalido">Município não é válido</string>
@@ -49,7 +49,7 @@
     <string name="rua_invalida">Rua não é válida</string>
     <string name="nome_curto">"Nome muito curto "</string>
     <string name="sobrenome_curto">Sobrenome muito curto</string>
-    <string name="nifbi_incompleto">NIF/BI incompleto</string>
+    <string name="nifbi_incompleto">NIF incompleto</string>
     <string name="numero_incompleto">"Número incompleto "</string>
     <string name="senha_invalida">Senha não é válida</string>
     <string name="codigopin_incompleto">O código PIN requer 6 dígitos</string>
@@ -72,7 +72,7 @@
     <string name="casa">Casa</string>
     <string name="usuarios">USUÁRIOS</string>
     <string name="criar_usuario">CRIAR USUÁRIO</string>
-    <string name="provincia">Província:</string>
+    <string name="provincia">Província*:</string>
     <string name="normal">Normal</string>
     <string name="admin">Administrador</string>
     <string name="criar">CRIAR</string>
@@ -182,7 +182,7 @@
     <string name="fechar">Fechar</string>
     <string name="introduza_chave_aqui">Introduza a chave aqui</string>
     <string name="dados_nao_encontrado">Dados não encontrado</string>
-    <string name="dados_empresa">Empresa *</string>
+    <string name="dados_empresa">Empresa*</string>
     <string name="subscricao_pacote">Subscrição de pacote</string>
     <string name="bloquear">Bloquear</string>
     <string name="sair">Sair</string>
@@ -210,7 +210,7 @@
     <string name="nome_categoria">Nome da Categoria *</string>
     <string name="nome_usuario">Nome do Usuário</string>
     <string name="eliminar_usuario">Eliminar Usuário</string>
-    <string name="nome">Nome</string>
+    <string name="nome">Nome*</string>
     <string name="alterar_usuario">Alterar Usuário</string>
     <string name="exportar_importar_produto">Exportar/Importar Produtos</string>
     <string name="exportar_importar_categoria">Exportar/Importar Categorias</string>
@@ -238,8 +238,8 @@
     <string name="cliente_nao_eliminado">Cliente não eliminado(a)</string>
     <string name="cliente_nao_encontrado">Cliente não encontrado(a)</string>
     <string name="alterar_cliente">Alterar Cliente</string>
-    <string name="senha">Senha</string>
-    <string name="repetir_senha">Repetir Senha</string>
+    <string name="senha">Senha*</string>
+    <string name="repetir_senha">Repetir Senha*</string>
     <string name="codigopin_vazio">Digite o código PIN</string>
     <string name="usuario_bloqueado">Usuário bloqueado</string>
     <string name="usuario_desbloqueado">Usuário desbloqueado</string>
@@ -502,7 +502,7 @@
     <string name="nv_vd_ms">Nível de venda mensal (Quantidade)</string>
     <string name="nv_vd_vl">Nível de venda mensal (Valor)</string>
     <string name="equipa">Equipa</string>
-    <string name="cdg_equipa">Código YOGA</string>
+    <string name="cdg_equipa">Código YOGA*</string>
     <string name="cod_eqp_inv">Código YOGA inválido</string>
     <string name="eqp_n_enc">Equipa não encontrada</string>
     <string name="dds_elim">Dados de parceiro eliminados</string>
