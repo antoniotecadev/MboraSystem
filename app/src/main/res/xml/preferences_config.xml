@@ -50,7 +50,7 @@
             android:title="@string/perc_iva"
             app:dialogIcon="@drawable/ic_baseline_store_24"
             app:icon="@drawable/ic_baseline_vertical_align_center_24"
-            app:key="percentagem_iva"
+            app:key="@string/taxa_iva"
             app:title="@string/perc_iva"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
