@@ -183,7 +183,7 @@ public class CadastrarClienteFragment extends Fragment {
         binding.buttonCriarConta.setOnClickListener(v -> {
             try {
                 imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
-                clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeLoja, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei);
+                clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei);
             } catch (InvalidKeySpecException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -260,7 +260,7 @@ public class CadastrarClienteFragment extends Fragment {
         cliente.setTelefone(Objects.requireNonNull(binding.editTextNumeroTelefone.getText()).toString());
         cliente.setTelefonealternativo(Objects.requireNonNull(binding.editTextNumeroTelefoneAlternativo.getText()).toString());
         cliente.setEmail(Objects.requireNonNull(binding.editTextEmail.getText()).toString());
-        cliente.setNomeEmpresa(Objects.requireNonNull(binding.editTextNomeLoja.getText()).toString());
+        cliente.setNomeEmpresa(Objects.requireNonNull(binding.editTextNomeEmpresa.getText()).toString());
         cliente.setProvincia(binding.spinnerProvincias.getSelectedItem().toString());
         cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
         cliente.setBairro(Objects.requireNonNull(binding.editTextBairro.getText()).toString());

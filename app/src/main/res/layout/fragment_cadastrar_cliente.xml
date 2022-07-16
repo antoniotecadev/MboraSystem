@@ -164,14 +164,14 @@
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextNomeLoja"
+                    android:id="@+id/editTextNomeEmpresa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margem_lateral_formulario"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:hint="@string/nome_estab"
+                    android:hint="@string/dados_empresa"
                     android:inputType="textPersonName"/>
 
             </com.google.android.material.textfield.TextInputLayout>
