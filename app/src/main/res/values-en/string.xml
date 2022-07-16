@@ -63,7 +63,7 @@
     <string name="casa">Home</string>
     <string name="usuarios">USERS</string>
     <string name="criar_usuario">CREATE USER</string>
-    <string name="provincia">Province*:</string>
+    <string name="provincia">Province*</string>
     <string name="normal">Normal</string>
     <string name="admin">Administrator</string>
     <string name="criar">TO CREATE</string>
