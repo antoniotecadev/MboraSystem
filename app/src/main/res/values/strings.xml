@@ -27,7 +27,7 @@
 
     <string name="nome_produto">Nome do Produto</string>
     <string name="Sobre_Nome">Sobrenome*</string>
-    <string name="nifbi">NIF*</string>
+    <string name="nifbi">NIF da empresa*</string>
     <string name="Numero_Telefone">Número de telefone*</string>
     <string name="Numero_Telefone_Alternativo">Número de telefone alternativo*</string>
     <string name="Email">Email*</string>
@@ -601,6 +601,7 @@
     <string name="importcli">Importar cliente(s)</string>
     <string name="cli_import">Cliente(s) importado(s)</string>
     <string name="dad_emp">Dados da empresa</string>
+    <string name="ctcs">Contactos</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

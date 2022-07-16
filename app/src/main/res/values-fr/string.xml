@@ -18,7 +18,7 @@
 
     <string name="nome_produto">Nom du produit</string>
     <string name="Sobre_Nome">Nom de famille*</string>
-    <string name="nifbi">NIF*</string>
+    <string name="nifbi">FNI de l\'entreprise*</string>
     <string name="Numero_Telefone">Numéro de téléphone*</string>
     <string name="Numero_Telefone_Alternativo">Autre numéro de téléphone*</string>
     <string name="Email">E-mail*</string>
@@ -32,7 +32,7 @@
     <string name="codigopinnovamente">*Répéter le code PIN</string>
     <string name="nome_invalido">Le nom n\'est pas valide</string>
     <string name="sobrenome_invalido">Le nom de famille n\'est pas valide</string>
-    <string name="nifbi_invalido">NIF n\'est pas valide</string>
+    <string name="nifbi_invalido">FNI n\'est pas valide</string>
     <string name="numero_invalido">Le numéro n\'est pas valide</string>
     <string name="email_invalido">L\'email n\'est pas valide</string>
     <string name="municipio_invalido">La municipalité n\'est pas valide</string>
@@ -40,7 +40,7 @@
     <string name="rua_invalida">La rue n\'est pas valide</string>
     <string name="nome_curto">"Nom très court"</string>
     <string name="sobrenome_curto">Nom de famille très court</string>
-    <string name="nifbi_incompleto">NIF incomplet</string>
+    <string name="nifbi_incompleto">FNI incomplet</string>
     <string name="numero_incompleto">"Numéro incomplet"</string>
     <string name="senha_invalida">Le mot de passe n\'est pas valide</string>
     <string name="codigopin_incompleto">Le code PIN nécessite 6 chiffres</string>
@@ -297,7 +297,7 @@
     <string name="pago">Paiement</string>
     <string name="pagamento">Paiement:</string>
     <string name="operador">Opérateur:</string>
-    <string name="nif">NIF :</string>
+    <string name="nif">FNI :</string>
     <string name="contacto">CONTACT:</string>
     <string name="tel">TÉL :</string>
     <string name="dados_admin_nao">Données d\'administration introuvables</string>

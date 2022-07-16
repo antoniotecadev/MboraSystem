@@ -18,7 +18,7 @@
 
     <string name="nome_produto">Product\'s name</string>
     <string name="Sobre_Nome">Surname*</string>
-    <string name="nifbi">NIF*</string>
+    <string name="nifbi">Company NIF*</string>
     <string name="Numero_Telefone">Phone number*</string>
     <string name="Numero_Telefone_Alternativo">Alternate phone number*</string>
     <string name="Email">Email*</string>
