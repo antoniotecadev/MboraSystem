@@ -40,18 +40,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/ipt"
+        android:title="@string/ipt_pre_def"
         tools:ignore="TouchTargetSizeCheck">
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/array_taxa_iva"
             android:entryValues="@array/array_taxa_iva_valor"
-            android:key="percentagem_iva"
-            android:title="@string/perc_iva"
+            android:key="taxa_iva"
+            android:title="@string/tx_iva_pdf"
             app:dialogIcon="@drawable/ic_baseline_store_24"
             app:icon="@drawable/ic_baseline_vertical_align_center_24"
-            app:key="@string/taxa_iva"
-            app:title="@string/perc_iva"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

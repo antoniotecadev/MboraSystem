@@ -576,7 +576,7 @@ public class Ultilitario {
 
     public static String getPercentagemIva(Activity activity) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        return sharedPreferences.getString("percentagem_iva", "14");
+        return sharedPreferences.getString("taxa_iva", "0");
     }
 
     public static boolean getNaoMostrarNovamente(Activity activity) {
