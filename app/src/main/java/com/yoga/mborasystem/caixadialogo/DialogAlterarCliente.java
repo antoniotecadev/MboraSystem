@@ -66,17 +66,7 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextRua.setText(cliente.getRua());
             binding.editTextIMEI.setText(cliente.getImei());
 
-            //Desabilitar campos
-            binding.editTextNome.setEnabled(false);
-            binding.editTextSobreNome.setEnabled(false);
-            binding.editTextNif.setEnabled(false);
-            binding.editTextNumeroTelefone.setEnabled(false);
-            binding.editTextNumeroTelefoneAlternativo.setEnabled(false);
-            binding.editTextEmail.setEnabled(false);
-            binding.editTextNomeEmpresa.setEnabled(false);
-            binding.textMunicipio.setEnabled(false);
-            binding.editTextBairro.setEnabled(false);
-            binding.editTextRua.setEnabled(false);
+            //Desabilitar campo
             binding.editTextIMEI.setEnabled(false);
         }
 
