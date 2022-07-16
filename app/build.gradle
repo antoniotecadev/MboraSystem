@@ -167,4 +167,7 @@ dependencies {
     //Autenticação biométrica
     implementation "androidx.biometric:biometric:1.1.0"
 
+    //Utilitario comum para java (XSD) - gerar XML
+    implementation 'in.jlibs:jlibs-xsd:3.0.1'
+
 }
