@@ -49,7 +49,7 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
-    private String language = "";
+    String language = "";
     private Cliente cliente;
     private boolean isOpen = false;
     private FragmentHomeBinding binding;
@@ -194,7 +194,7 @@ public class HomeFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_home_ferramenta, menu);
-        menu.findItem(R.id.dialogAlterarCliente).setTitle(requireArguments().getString("nome", ""));
+        menu.findItem(R.id.dialogAlterarCliente).setTitle(getString(R.string.dad_emp));
         if (getArguments() != null) {
             if (!getArguments().getBoolean("master")) {
                 binding.btnUsuario.setEnabled(false);
