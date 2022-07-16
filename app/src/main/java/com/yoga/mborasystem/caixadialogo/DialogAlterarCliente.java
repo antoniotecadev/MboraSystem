@@ -39,6 +39,9 @@ public class DialogAlterarCliente extends DialogFragment {
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
 
+        Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
+        Ultilitario.spinnerMunicipios(requireContext(), binding.spinnerMunicipios);
+
         binding.buttonTermoCondicao.setVisibility(View.GONE);
         binding.checkTermoCondicao.setVisibility(View.GONE);
         binding.buttonCriarConta.setVisibility(View.GONE);
@@ -65,12 +68,14 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextBairro.setText(cliente.getBairro());
             binding.editTextRua.setText(cliente.getRua());
             binding.editTextIMEI.setText(cliente.getImei());
+            binding.textBairros.setVisibility(View.GONE);
+            binding.spinnerBairros.setVisibility(View.GONE);
 
             //Desabilitar campo
             binding.editTextIMEI.setEnabled(false);
         }
 
-        binding.buttonAlterarSenha.setOnClickListener(v-> {
+        binding.buttonAlterarSenha.setOnClickListener(v -> {
             try {
                 clienteViewModel.alterarSenha(binding.editTextSenha, binding.editTextSenhaNovamente);
             } catch (NoSuchAlgorithmException e) {

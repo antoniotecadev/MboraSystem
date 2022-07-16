@@ -79,6 +79,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
@@ -818,4 +819,17 @@ public class Ultilitario {
         }
         return dateFormat.format(d);  // formatted date in string
     }
+
+    public static void spinnerProvincias(Context context, AppCompatSpinner provincias) {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.provincias, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        provincias.setAdapter(adapter);
+    }
+
+    public static void spinnerMunicipios(Context context, AppCompatSpinner municipios) {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.municipios, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        municipios.setAdapter(adapter);
+    }
+
 }

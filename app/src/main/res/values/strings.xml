@@ -603,6 +603,8 @@
     <string name="dad_emp">Dados da empresa</string>
     <string name="ctcs">Contactos</string>
     <string name="website">Website</string>
+    <string name="cdd">Cidade*</string>
+    <string name="paisrgfsc">País (Região fiscal da empresa)*</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
@@ -615,5 +617,8 @@
     <string-array name="array_local_nuvem">
         <item>@string/exportar_local</item>
         <item>@string/exportar_nuvem</item>
+    </string-array>
+    <string-array name="array_pais">
+        <item>Angola</item>
     </string-array>
 </resources>

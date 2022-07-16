@@ -99,18 +99,6 @@ public class CadastrarClienteFragment extends Fragment {
         return criarCliente(inflater, container);
     }
 
-    private void spinnerProvincias() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.provincias, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerProvincias.setAdapter(adapter);
-    }
-
-    private void spinnerMunicipios() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.municipios, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerMunicipios.setAdapter(adapter);
-    }
-
     private void spinnerBairros(String município) {
         String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/" + município.trim().replaceAll("\\s+", "") + "/bairros";
         ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
@@ -142,8 +130,8 @@ public class CadastrarClienteFragment extends Fragment {
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         binding.editTextWebsite.setVisibility(View.GONE);
-        spinnerProvincias();
-        spinnerMunicipios();
+        Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
+        Ultilitario.spinnerMunicipios(requireContext(), binding.spinnerMunicipios);
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
