@@ -141,6 +141,7 @@ public class CadastrarClienteFragment extends Fragment {
 
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
+        binding.editTextWebsite.setVisibility(View.GONE);
         spinnerProvincias();
         spinnerMunicipios();
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
