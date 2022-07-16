@@ -21,16 +21,14 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_config, rootKey);
-        EditTextPreference percentagemIva = findPreference("percentagem_iva");
         ListPreference listaIdioma = findPreference("lista_idioma");
-        assert percentagemIva != null;
-        percentagemIva.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (numero.matcher(newValue.toString()).find() || newValue.toString().length() > 2) {
-                Toast.makeText(getContext(), getString(R.string.numero_invalido), Toast.LENGTH_LONG).show();
-                return false;
-            }
-            return true;
-        });
+//        percentagemIva.setOnPreferenceChangeListener((preference, newValue) -> {
+//            if (numero.matcher(newValue.toString()).find() || newValue.toString().length() > 2) {
+//                Toast.makeText(getContext(), getString(R.string.numero_invalido), Toast.LENGTH_LONG).show();
+//                return false;
+//            }
+//            return true;
+//        });
         assert listaIdioma != null;
         listaIdioma.setOnPreferenceChangeListener((preference, newValue) -> {
             switch (newValue.toString()) {
