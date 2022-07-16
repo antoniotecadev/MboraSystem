@@ -43,6 +43,15 @@
         android:title="@string/ipt_pre_def"
         tools:ignore="TouchTargetSizeCheck">
         <ListPreference
+            android:defaultValue="AOA"
+            android:entries="@array/array_moeda"
+            android:entryValues="@array/array_moeda_valor"
+            android:key="moeda"
+            android:title="@string/md"
+            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:icon="@drawable/ic_baseline_moeda_24"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
             android:defaultValue="0"
             android:entries="@array/array_taxa_iva"
             android:entryValues="@array/array_taxa_iva_valor"

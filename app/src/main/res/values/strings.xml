@@ -629,6 +629,9 @@
     <string-array name="array_moeda">
         <item>Kwanza (Kz)</item>
     </string-array>
+    <string-array name="array_moeda_valor">
+        <item>AOA</item>
+    </string-array>
     <string-array name="array_taxa_iva">
         <item>Isento (0%)</item>
         <item>Taxa (5%)</item>
