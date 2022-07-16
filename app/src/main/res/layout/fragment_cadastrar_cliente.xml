@@ -104,6 +104,36 @@
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextNomeEmpresa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:ems="10"
+                    android:hint="@string/dados_empresa"
+                    android:inputType="textPersonName"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margin_top"
+                android:text="@string/ctcs"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextNumeroTelefone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -153,26 +183,6 @@
                     android:ems="10"
                     android:hint="@string/Email"
                     android:inputType="textEmailAddress"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:boxBackgroundColor="@color/material_on_background_disabled"
-                app:boxStrokeColor="@color/white"
-                app:hintTextColor="@color/white">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextNomeEmpresa"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="@dimen/margem_lateral_formulario"
-                    android:ems="10"
-                    android:hint="@string/dados_empresa"
-                    android:inputType="textPersonName"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
