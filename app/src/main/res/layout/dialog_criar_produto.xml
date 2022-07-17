@@ -41,91 +41,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/material_on_background_disabled"
-                app:boxStrokeColor="@color/white"
-                app:hintTextColor="@color/white">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtPrecoProdutoFornecedor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="@dimen/margem_lateral_formulario"
-                    android:ems="10"
-                    android:hint="@string/preco_fornecedor"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:maxLength="15"
-                    android:text="@string/preco_zero"
-                    android:textSize="24sp">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/btnLimparPrecoFornecedor"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_marginEnd="@dimen/margem_lateral_formulario"
-                android:layout_weight="1"
-                android:textSize="24sp"
-                app:icon="@drawable/ic_baseline_cleaning_services_24" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            app:boxBackgroundColor="@color/material_on_background_disabled"
-            app:boxStrokeColor="@color/white"
-            app:hintTextColor="@color/white">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtPrecoProduto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="@dimen/margem_lateral_formulario"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="@dimen/margem_lateral_formulario"
-                android:ems="10"
-                android:hint="@string/preco"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="15"
-                android:text="@string/preco_zero"
-                android:textSize="24sp"></com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/btnLimparPreco"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_marginEnd="@dimen/margem_lateral_formulario"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                app:icon="@drawable/ic_baseline_cleaning_services_24" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -183,6 +98,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margem_lateral_formulario"
             android:background="?android:attr/listDivider" />
 
             <TextView
@@ -217,6 +133,91 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPrecoProdutoFornecedor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:ems="10"
+                    android:hint="@string/preco_fornecedor"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="15"
+                    android:text="@string/preco_zero"
+                    android:textSize="24sp">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnLimparPrecoFornecedor"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:layout_weight="1"
+                android:textSize="24sp"
+                app:icon="@drawable/ic_baseline_cleaning_services_24" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                app:boxBackgroundColor="@color/material_on_background_disabled"
+                app:boxStrokeColor="@color/white"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPrecoProduto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/margem_lateral_formulario"
+                    android:ems="10"
+                    android:hint="@string/preco"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="15"
+                    android:text="@string/preco_zero"
+                    android:textSize="24sp"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnLimparPreco"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                app:icon="@drawable/ic_baseline_cleaning_services_24" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
