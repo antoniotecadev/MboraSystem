@@ -81,7 +81,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.FileProvider;
-import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -89,7 +88,7 @@ public class Ultilitario {
 
     private static Float parsed;
     private static Locale pt_AO;
-    public static String categoria = "", SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
+    public static String categoria = "";
 
     public static final String MBORASYSTEM = "ryogamborasystem";
     public static boolean isLocal = true;
@@ -97,7 +96,7 @@ public class Ultilitario {
     public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");
     public static Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç0-9\n ]");
     public static final int EXPORTAR_PRODUTO = 1, IMPORTAR_PRODUTO = 2, EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4;
-    public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, LENGTH_TOAST = 100, CREATE_FILE_PRODUTO = 1, CREATE_FILE_CATEGORIA = 2, LENGTH_LONG = 10;
+    public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, LENGTH_TOAST = 100, LENGTH_LONG = 10;
 
     public Ultilitario() {
     }
