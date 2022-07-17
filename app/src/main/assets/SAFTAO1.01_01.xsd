@@ -484,28 +484,6 @@
             </xs:restriction>
         </xs:simpleType>
     </xs:element>
-    <!-- Codigo do tipo de imposto retido -->
-    <xs:element name="WithholdingTaxType">
-        <xs:annotation>
-            <xs:documentation>
-                Neste campo deve ser indicado o tipo de imposto retido, preenchendo- o com:
-                “IRT” - Imposto sobre o rendimento de trabalho;
-                “II” - Imposto industrial;
-                “IS” - Imposto do selo;
-                “IVA” - IVA Cativo;
-                “IPU” - Imposto predial urbano.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-            <xs:restriction base="xs:string">
-                <xs:enumeration value="IRT" />
-                <xs:enumeration value="II" />
-                <xs:enumeration value="IS" />
-                <xs:enumeration value="IVA" />
-                <xs:enumeration value="IPU" />
-            </xs:restriction>
-        </xs:simpleType>
-    </xs:element>
     <!-- ELEMENTOS SIMPLES -->
     <xs:element name="CompanyName" type="SAFAOtextTypeMandatoryMax200Car" />
     <xs:element name="CompanyAddress" type="AddressStructureAO" />
@@ -908,14 +886,6 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element ref="WithholdingTaxType" />
-            <xs:element minOccurs="0" name="WithholdingTaxDescription" type="SAFAOtextTypeMandatoryMax60Car">
-                <xs:annotation>
-                    <xs:documentation>
-                        Deve ser indicado o normativo legal aplicável ou a percentagem de imposto aplicável.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
             <xs:element name="WithholdingTaxAmount" type="SAFmonetaryType">
                 <xs:annotation>
                     <xs:documentation>
