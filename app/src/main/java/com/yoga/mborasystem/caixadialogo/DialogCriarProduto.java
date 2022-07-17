@@ -141,6 +141,15 @@ public class DialogCriarProduto extends DialogFragment {
             }
         });
 
+        String motivoIsencao = Ultilitario.getMotivoIsencao(requireActivity());
+        final String[] motivo_values = getResources().getStringArray(R.array.array_motivo_insecao_valor);
+        for (int i = 0; i <= motivo_values.length; i++) {
+            if (motivoIsencao.equalsIgnoreCase(motivo_values[i])) {
+                binding.spinnerMotivoIsencao.setSelection(i);
+                break;
+            }
+        }
+
         binding.checkIva.setOnCheckedChangeListener((buttonView, isChecked) -> calcularIVA(binding, isChecked));
         setPreco(binding.txtPrecoProduto);
         setPreco(binding.txtPrecoProdutoFornecedor);

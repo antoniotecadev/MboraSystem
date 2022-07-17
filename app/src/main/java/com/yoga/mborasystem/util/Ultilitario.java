@@ -579,6 +579,11 @@ public class Ultilitario {
         return sharedPreferences.getString("taxa_iva", "0");
     }
 
+    public static String getMotivoIsencao(Activity activity) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        return sharedPreferences.getString("motivo_isencao", "M00");
+    }
+
     public static boolean getNaoMostrarNovamente(Activity activity) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         return sharedPreferences.getBoolean("switch_most_nov", false);
