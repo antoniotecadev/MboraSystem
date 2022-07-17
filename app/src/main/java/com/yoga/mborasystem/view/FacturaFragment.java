@@ -250,7 +250,7 @@ public class FacturaFragment extends Fragment {
                 }
             }
         });
-        binding.textTaxa.setText(Ultilitario.getPercentagemIva(requireActivity()) + "%");
+        binding.textTaxa.setText(Ultilitario.getTaxaIva(requireActivity()) + "%");
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
         binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
         binding.textDesconto.addTextChangedListener(new TextWatcher() {

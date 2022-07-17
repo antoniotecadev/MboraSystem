@@ -103,7 +103,7 @@ public class CriarFactura {
             addLineSeparator(document);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.total), Ultilitario.formatPreco(String.valueOf(totalVenda)), font, font);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.valor_base), Ultilitario.formatPreco(String.valueOf(valorBase)), font, font);
-            addNewLineWithLeftAndRight(document, "(" + Ultilitario.getPercentagemIva(activity) + "%)", Ultilitario.formatPreco(String.valueOf(valorIva)), font, font);
+            addNewLineWithLeftAndRight(document, "(" + Ultilitario.getTaxaIva(activity) + "%)", Ultilitario.formatPreco(String.valueOf(valorIva)), font, font);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.desconto), Ultilitario.formatPreco(Objects.requireNonNull(desconto.getText()).toString()), font, font);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.total_desc), Ultilitario.formatPreco(String.valueOf(totalDesconto)), font, font);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.pago), Ultilitario.formatPreco(String.valueOf(valorPago)), font, font);
