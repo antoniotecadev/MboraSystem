@@ -610,6 +610,7 @@
     <string name="tx_iva_pdf">Taxa de IVA Predefinida</string>
     <string name="ipt">Imposto</string>
     <string name="taxa_iva">Taxa do IVA</string>
+    <string name="mtv_pdf_isc">Motivo Predefinido de Isenção</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
@@ -643,5 +644,51 @@
         <item>5</item>
         <item>7</item>
         <item>14</item>
+    </string-array>
+    <string-array name="array_motivo_insecao">
+        <item>IVA – Regime Simplificado</item>
+        <item>Transmissão de bens e serviços não sujeita</item>
+        <item>IVA – Regime de Exclusão	</item>
+        <item>Isento nos termos da alínea a) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea b) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea c) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea d) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea e) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea f) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea g) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea h) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea i) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea j) do nº1 do artigo 12.º do CIVA</item>
+        <item>Isento nos termos da alínea a) do artigo 15.º do CIVA</item>
+        <item>Isento nos termos da alínea b) do artigo 15.º do CIVA</item>
+        <item>Isento nos termos da alínea c) do artigo 15.º do CIVA</item>
+        <item>Isento nos termos da alínea d) do artigo 15.º do CIVA</item>
+        <item>Isento nos termos da alínea e) do artigo 15.º do CIVA</item>
+        <item>Isento nos termos da alínea f) do artigo 15.º do CIVA</item>
+        <item>Isento nos termos da alínea g) do artigo 15.º do CIVA</item>
+        <item>Isento nos termos da alínea h) do artigo 15.º do CIVA</item>
+    </string-array>
+    <string-array name="array_motivo_insecao_valor">
+        <item>M00</item>
+        <item>M02</item>
+        <item>M04</item>
+        <item>M10</item>
+        <item>M11</item>
+        <item>M12</item>
+        <item>M13</item>
+        <item>M14</item>
+        <item>M15</item>
+        <item>M16</item>
+        <item>M17</item>
+        <item>M18</item>
+        <item>M19</item>
+        <item>M30</item>
+        <item>M31</item>
+        <item>M32</item>
+        <item>M33</item>
+        <item>M34</item>
+        <item>M35</item>
+        <item>M36</item>
+        <item>M37</item>
     </string-array>
 </resources>

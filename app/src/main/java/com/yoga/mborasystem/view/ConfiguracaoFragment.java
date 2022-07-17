@@ -22,11 +22,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_config, rootKey);
         ListPreference listaIdioma = findPreference("lista_idioma");
-//        percentagemIva.setOnPreferenceChangeListener((preference, newValue) -> {
-//            if (numero.matcher(newValue.toString()).find() || newValue.toString().length() > 2) {
-//                Toast.makeText(getContext(), getString(R.string.numero_invalido), Toast.LENGTH_LONG).show();
-//                return false;
-//            }
+//        taxaIva.setOnPreferenceChangeListener((preference, newValue) -> {
 //            return true;
 //        });
         assert listaIdioma != null;
