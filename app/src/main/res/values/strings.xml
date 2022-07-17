@@ -614,6 +614,7 @@
     <string name="tp_pd">Tipo</string>
     <string name="tp_un">Unidade</string>
     <string name="serv">Serviço</string>
+    <string name="mtv_isc">Motivo da Isenção</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
@@ -637,10 +638,10 @@
         <item>AOA</item>
     </string-array>
     <string-array name="array_taxa_iva">
-        <item>Isento (0%)</item>
-        <item>Taxa (5%)</item>
-        <item>Taxa (7%)</item>
-        <item>Taxa (14%)</item>
+        <item>IVA - Isento (0%)</item>
+        <item>IVA - Taxa (5%)</item>
+        <item>IVA - Taxa (7%)</item>
+        <item>IVA - Taxa (14%)</item>
     </string-array>
     <string-array name="array_taxa_iva_valor">
         <item>0</item>

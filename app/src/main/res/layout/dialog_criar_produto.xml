@@ -168,7 +168,6 @@
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
                 android:layout_marginEnd="50dp"
                 android:entries="@array/array_tipo"
-                android:entryValues="@array/array_tipo_valor"
                 android:spinnerMode="dropdown" />
 
             <androidx.appcompat.widget.AppCompatSpinner
@@ -180,6 +179,39 @@
                 android:spinnerMode="dropdown" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:text="@string/ipt" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerTaxaImposto"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:entries="@array/array_taxa_iva"
+                android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margem_lateral_formulario"
+            android:text="@string/mtv_isc" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerMotivoIsencao"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:entries="@array/array_motivo_insecao"
+                android:spinnerMode="dropdown" />
 
         <View
             android:layout_width="match_parent"

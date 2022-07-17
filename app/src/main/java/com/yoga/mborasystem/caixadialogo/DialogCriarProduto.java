@@ -124,6 +124,24 @@ public class DialogCriarProduto extends DialogFragment {
             }
         }
 
+        binding.spinnerTaxaImposto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            String[] taxa_values = getResources().getStringArray(R.array.array_taxa_iva_valor);
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String taxa = taxa_values[position];
+                if (taxa.equalsIgnoreCase("0")) {
+                    binding.spinnerMotivoIsencao.setEnabled(true);
+                } else {
+                    binding.spinnerMotivoIsencao.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         binding.checkIva.setOnCheckedChangeListener((buttonView, isChecked) -> calcularIVA(binding, isChecked));
         setPreco(binding.txtPrecoProduto);
         setPreco(binding.txtPrecoProdutoFornecedor);
