@@ -119,11 +119,11 @@
                                                     <xs:element ref="CustomerID" />
                                                     <xs:element minOccurs="0" ref="ShipTo" />
                                                     <xs:element minOccurs="0" ref="ShipFrom" />
-                                                    <xs:element name="Line" maxOccurs="unbounded"
-                                                        minOccurs="0">
+                                                    <xs:element name="Line" maxOccurs="unbounded">
                                                         <xs:complexType>
                                                             <xs:sequence>
                                                                 <xs:element ref="LineNumber" />
+                                                                <xs:element minOccurs="0" maxOccurs="unbounded" name="OrderReferences" type="OrderReferences" />
                                                                 <xs:element ref="ProductCode" />
                                                                 <xs:element ref="ProductDescription" />
                                                                 <xs:element ref="Quantity" />
@@ -640,6 +640,8 @@
             </xs:restriction>
         </xs:simpleType>
     </xs:element>
+    <xs:element name="OriginatingON" type="SAFAOtextTypeMandatoryMax60Car" />
+    <xs:element name="OrderDate" type="SAFdateType" />
     <!-- TIPOS DE DADOS BASE SAFT Angola -->
     <xs:simpleType name="SAFAOtextTypeMandatoryMax200Car">
         <xs:restriction base="xs:string">
@@ -893,6 +895,26 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- Estrutura de Referencias ao documento de origem-->
+    <xs:complexType name="OrderReferences">
+        <xs:annotation>
+            <xs:documentation>
+                Existindo a necessidade de efectuar mais do que uma referência, esta estrutura poderá ser gerada tantas vezes quantas as necessárias.
+                O preenchimento é obrigatório, quando o campo 4.1.4.8. for preenchendo com “NC” – Nota de crédito para um documento de ano económico anterior.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" ref="OriginatingON">
+                <xs:annotation>
+                    <xs:documentation>
+                        Deve ser indicado o tipo, a série e o número do documento que suporta a emissão deste.
+                        Se o documento estiver contido no SAF-T AO deve ser utilizada a estrutura de numeração do campo de origem.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" ref="OrderDate" />
         </xs:sequence>
     </xs:complexType>
     <!-- TIPOS DE DADOS BASE SAFT OCDE-->
