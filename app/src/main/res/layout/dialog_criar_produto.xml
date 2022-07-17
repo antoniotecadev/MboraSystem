@@ -139,6 +139,60 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginEnd="150dp"
+                android:text="@string/tp_pd" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:gravity="end"
+                android:text="@string/tp_un" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerTipo"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginEnd="50dp"
+                android:entries="@array/array_tipo"
+                android:entryValues="@array/array_tipo_valor"
+                android:spinnerMode="dropdown" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerUnidade"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                android:entries="@array/array_unidade"
+                android:spinnerMode="dropdown" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margem_lateral_formulario"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkIva"
             android:layout_width="wrap_content"
