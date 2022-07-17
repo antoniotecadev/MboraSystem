@@ -71,7 +71,7 @@ public class DialogCriarProduto extends DialogFragment {
                 binding.txtPrecoProduto.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 binding.txtPrecoProdutoFornecedor.setText(Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
                 binding.checkIva.setChecked(produto.isIva());
-                binding.spinnerIva.setSelection(produto.getPercentagemIva() == 0 ? Integer.parseInt(Ultilitario.getPercentagemIva(requireActivity())) - 1 : produto.getPercentagemIva() - 1);
+                binding.spinnerIva.setSelection(produto.getPercentagemIva() == 0 ? Integer.parseInt(Ultilitario.getTaxaIva(requireActivity())) - 1 : produto.getPercentagemIva() - 1);
                 binding.txtCodigoBar.setText(produto.getCodigoBarra());
                 binding.switchEstado.setChecked(produto.getEstado() != 1);
                 binding.switchEstado.setText(produto.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
@@ -120,12 +120,15 @@ public class DialogCriarProduto extends DialogFragment {
                 }
 
             } else {
-                binding.spinnerIva.setSelection(Integer.parseInt(Ultilitario.getPercentagemIva(requireActivity())) - 1);
+                binding.spinnerIva.setSelection(Integer.parseInt(Ultilitario.getTaxaIva(requireActivity())) - 1);
             }
         }
 
+        int taxaIva = Integer.parseInt(Ultilitario.getTaxaIva(requireActivity()));
+        binding.spinnerTaxaImposto.setSelection(taxaIva == 14 ? 3 : taxaIva == 7 ? 2 : (taxaIva == 5 ? 1 : 0));
         binding.spinnerTaxaImposto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             String[] taxa_values = getResources().getStringArray(R.array.array_taxa_iva_valor);
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String taxa = taxa_values[position];
