@@ -191,17 +191,16 @@
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
                 app:hintTextColor="@color/white">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextWebsite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="@dimen/margem_lateral_formulario"
-                    android:ems="10"
-                    android:hint="@string/website"
-                    android:inputType="textWebEditText|textUri" />
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/editTextWebsite"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="@dimen/margem_lateral_formulario"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginRight="@dimen/margem_lateral_formulario"-->
+<!--                    android:ems="10"-->
+<!--                    android:hint="@string/website"-->
+<!--                    android:inputType="textWebEditText|textUri" />-->
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -239,17 +238,16 @@
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
                 app:hintTextColor="@color/white">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextCidade"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margem_lateral_formulario"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="@dimen/margem_lateral_formulario"
-                    android:ems="10"
-                    android:hint="@string/cdd"
-                    android:inputType="textEmailAddress" />
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/editTextCidade"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="@dimen/margem_lateral_formulario"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginRight="@dimen/margem_lateral_formulario"-->
+<!--                    android:ems="10"-->
+<!--                    android:hint="@string/cdd"-->
+<!--                    android:inputType="textEmailAddress" />-->
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
