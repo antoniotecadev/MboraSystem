@@ -156,9 +156,12 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
         });
 
-        clienteViewModel.getValido().observe(getViewLifecycleOwner(),operacao -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
-            Ultilitario.alertDialog(getString(R.string.dad_actu), getString(R.string.msg_tel_blo_act_emp), requireContext(), R.drawable.ic_baseline_store_24);
+        clienteViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
+            if (operacao == Ultilitario.Operacao.ACTUALIZAR) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
+                Ultilitario.alertDialog(getString(R.string.dad_actu), getString(R.string.msg_tel_blo_act_emp), requireContext(), R.drawable.ic_baseline_store_24);
+                clienteViewModel.getValido().setValue(Ultilitario.Operacao.NENHUMA);
+            }
         });
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
