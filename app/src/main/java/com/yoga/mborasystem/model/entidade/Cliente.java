@@ -27,8 +27,8 @@ public class Cliente implements Parcelable {
     private String nomeEmpresa;
 
     private String telefonealternativo;
-    @Ignore private String provincia;
-    @Ignore private String municipio;
+    private String provincia;
+    private String municipio;
     private String bairro;
     private String rua;
     private String imei;

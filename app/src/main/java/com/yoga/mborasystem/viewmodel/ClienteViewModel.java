@@ -49,7 +49,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     private byte estado;
     private String codigo;
-    private Bundle bundle;
+    private final Bundle bundle;
     private final Cliente cliente;
     private Disposable disposable;
     private ExecutorService executor;
@@ -156,16 +156,16 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (isCampoVazio(Objects.requireNonNull(rua.getText()).toString()) || letraNumero.matcher(rua.getText().toString()).find()) {
             rua.requestFocus();
             rua.setError(getApplication().getString(R.string.rua_invalida));
-        } else if (isCampoVazio(Objects.requireNonNull(senha.getText()).toString()) || letraNumero.matcher(senha.getText().toString()).find()) {
+        } else if ((isCampoVazio(Objects.requireNonNull(senha.getText()).toString()) || letraNumero.matcher(senha.getText().toString()).find()) && operacao == Ultilitario.Operacao.CRIAR) {
             senha.requestFocus();
             senha.setError(getApplication().getString(R.string.senha_invalida));
-        } else if (isCampoVazio(Objects.requireNonNull(senhaNovamente.getText()).toString()) || letraNumero.matcher(senhaNovamente.getText().toString()).find()) {
+        } else if ((isCampoVazio(Objects.requireNonNull(senhaNovamente.getText()).toString()) || letraNumero.matcher(senhaNovamente.getText().toString()).find()) && operacao == Ultilitario.Operacao.CRIAR) {
             senhaNovamente.requestFocus();
             senhaNovamente.setError(getApplication().getString(R.string.senha_invalida));
-        } else if (!senha.getText().toString().equalsIgnoreCase(senhaNovamente.getText().toString())) {
+        } else if (!senha.getText().toString().equalsIgnoreCase(senhaNovamente.getText().toString()) && operacao == Ultilitario.Operacao.CRIAR) {
             senhaNovamente.requestFocus();
             senhaNovamente.setError(getApplication().getString(R.string.senha_dif));
-        } else if (isCampoVazio(Objects.requireNonNull(codigoEquipa.getText()).toString()) || numero.matcher(codigoEquipa.getText().toString()).find()) {
+        } else if ((isCampoVazio(Objects.requireNonNull(codigoEquipa.getText()).toString()) || numero.matcher(codigoEquipa.getText().toString()).find()) && operacao == Ultilitario.Operacao.CRIAR) {
             codigoEquipa.requestFocus();
             codigoEquipa.setError(getApplication().getString(R.string.cod_eqp_inv));
         } else {
@@ -183,16 +183,41 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setMunicipio(municipio.getSelectedItem().toString());
             cliente.setBairro(bairro.getText().toString());
             cliente.setRua(rua.getText().toString());
-            cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
-            cliente.setImei(imei);
-            cliente.setCodigoEquipa(codigoEquipa.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
+                cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
+                cliente.setImei(imei);
+                cliente.setCodigoEquipa(codigoEquipa.getText().toString());
                 verificarCodigoEquipa(codigoEquipa.getText().toString(), cliente);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
-
+                actualizarEmpresa(cliente);
             }
         }
 
+    }
+
+    private void actualizarEmpresa(Cliente cliente) {
+        Completable.fromAction(() -> clienteRepository.update(cliente))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.dad_actu), R.drawable.ic_toast_feito);
+                        valido.setValue(Ultilitario.Operacao.ACTUALIZAR);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.dad_nao_act) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
     }
 
     public void alterarSenha(TextInputEditText senha, TextInputEditText senhaNovamente) throws NoSuchAlgorithmException, InvalidKeySpecException {

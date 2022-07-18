@@ -9,9 +9,6 @@ import com.yoga.mborasystem.model.entidade.Cliente;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-
 public class ClienteRepository {
 
     Context context;
@@ -39,5 +36,9 @@ public class ClienteRepository {
 
     public void alterarSenha(Cliente cliente) {
         clienteDao.alterarSenha(cliente.getId(), cliente.getSenha());
+    }
+
+    public void update(Cliente c) {
+        clienteDao.update(c.getId(), c.getNome(), c.getSobrenome(), c.getNifbi(), c.getTelefone(), c.getTelefonealternativo(), c.getEmail(), c.getNomeEmpresa(), c.getProvincia(), c.getMunicipio(), c.getBairro(), c.getRua());
     }
 }

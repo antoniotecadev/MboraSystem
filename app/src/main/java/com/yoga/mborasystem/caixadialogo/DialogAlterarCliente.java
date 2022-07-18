@@ -67,13 +67,12 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextNumeroTelefoneAlternativo.setText(cliente.getTelefonealternativo());
             binding.editTextEmail.setText(cliente.getEmail());
             binding.editTextNomeEmpresa.setText(cliente.getNomeEmpresa());
+            Ultilitario.setItemselectedSpinner(requireContext(), R.array.municipios, cliente.getMunicipio(), binding.spinnerMunicipios);
             binding.editTextBairro.setText(cliente.getBairro());
             binding.editTextRua.setText(cliente.getRua());
             binding.editTextIMEI.setText(cliente.getImei());
             binding.textBairros.setVisibility(View.GONE);
             binding.spinnerBairros.setVisibility(View.GONE);
-
-            //Desabilitar campo
             binding.editTextIMEI.setEnabled(false);
         }
 
@@ -81,10 +80,18 @@ public class DialogAlterarCliente extends DialogFragment {
             try {
                 clienteViewModel.alterarSenha(binding.editTextSenha, binding.editTextSenhaNovamente);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        //Actualizar(reutilizando o Button)
+        binding.buttonCriarConta.setOnClickListener(view -> {
+            try {
+                clienteViewModel.validarCliente(Ultilitario.Operacao.ACTUALIZAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, "0");
+            } catch (InvalidKeySpecException e) {
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (NoSuchAlgorithmException e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

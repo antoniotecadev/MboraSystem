@@ -618,6 +618,9 @@
     <string name="preco_cust">Preço de Custo</string>
     <string name="cont_stoc">Controlar Stock</string>
     <string name="actu_dads">Actualizar Dados</string>
+    <string name="dad_actu">Dados actualizados</string>
+    <string name="dad_nao_act">Dados não actualizados</string>
+    <string name="msg_tel_blo_act_emp">Entra em sua conta para obter os dados da empresa actualizado.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

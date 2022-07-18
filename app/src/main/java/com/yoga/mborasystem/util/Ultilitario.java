@@ -347,6 +347,16 @@ public class Ultilitario {
         spinner.setAdapter(itemAdapter);
     }
 
+    public static void setItemselectedSpinner(Context context, int array_values, String value, AppCompatSpinner list){
+        final String[] values = context.getResources().getStringArray(array_values);
+        for (int i = 0; i <= values.length; i++) {
+            if (value.equalsIgnoreCase(values[i])) {
+                list.setSelection(i);
+                break;
+            }
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data) {
         try {

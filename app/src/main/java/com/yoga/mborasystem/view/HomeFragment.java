@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -43,6 +44,7 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import java.util.Locale;
 
@@ -53,6 +55,7 @@ public class HomeFragment extends Fragment {
     private Cliente cliente;
     private boolean isOpen = false;
     private FragmentHomeBinding binding;
+    private ClienteViewModel clienteViewModel;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
     @Override
@@ -65,7 +68,7 @@ public class HomeFragment extends Fragment {
         FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
         assert getArguments() != null;
         cliente = getArguments().getParcelable("cliente");
-
+        clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -152,6 +155,12 @@ public class HomeFragment extends Fragment {
             MainActivity.getProgressBar();
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
         });
+
+        clienteViewModel.getValido().observe(getViewLifecycleOwner(),operacao -> {
+            Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
+            Ultilitario.alertDialog(getString(R.string.dad_actu), getString(R.string.msg_tel_blo_act_emp), requireContext(), R.drawable.ic_baseline_store_24);
+        });
+
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }

@@ -10,18 +10,12 @@ import com.yoga.mborasystem.model.entidade.Cliente;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-
 @Dao
 public interface ClienteDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Cliente cliente);
 
-    //    @Query("SELECT * FROM cliente")
-//    Single<Cliente> clienteExiste();
-//
     @Query("SELECT * FROM cliente LIMIT 1")
     List<Cliente> clienteExiste() throws Exception;
 
@@ -31,4 +25,6 @@ public interface ClienteDao {
     @Query("UPDATE cliente SET senha = :senha WHERE id = :idcliente")
     void alterarSenha(long idcliente, String senha);
 
+    @Query("UPDATE cliente SET nome = :nome, sobrenome = :sobreNome, nifbi = :nif, telefone = :telefone, telefonealternativo = :telefoneAlternativo, email = :email, nomeempresa = :nomeEmpresa, provincia = :provincia, municipio = :municipio, bairro = :bairro, rua = :rua  WHERE id = :id")
+    void update(long id, String nome, String sobreNome, String nif, String telefone, String telefoneAlternativo, String email, String nomeEmpresa, String provincia, String municipio, String bairro, String rua);
 }
