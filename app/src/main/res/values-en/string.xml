@@ -18,11 +18,11 @@
 
     <string name="nome_produto">Product\'s name</string>
     <string name="Sobre_Nome">Surname*</string>
-    <string name="nifbi">Company NIF*</string>
+    <string name="nifbi">Enterprise NIF*</string>
     <string name="Numero_Telefone">Phone number*</string>
     <string name="Numero_Telefone_Alternativo">Alternate phone number*</string>
     <string name="Email">Email*</string>
-    <string name="localizacao_e_endereco">Company location and address</string>
+    <string name="localizacao_e_endereco">Enterprise location and address</string>
     <string name="identificação">Identification</string>
     <string name="municipio">Municipality*</string>
     <string name="bairro">District*</string>
@@ -170,7 +170,7 @@
     <string name="fechar">To close</string>
     <string name="introduza_chave_aqui">Enter the key here</string>
     <string name="dados_nao_encontrado">Data not found</string>
-    <string name="empresa">Company*</string>
+    <string name="empresa">Enterprise*</string>
     <string name="subscricao_pacote">Package subscription</string>
     <string name="bloquear">To block</string>
     <string name="sair">To go out</string>
