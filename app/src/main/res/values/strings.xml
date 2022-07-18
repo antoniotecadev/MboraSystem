@@ -182,7 +182,7 @@
     <string name="fechar">Fechar</string>
     <string name="introduza_chave_aqui">Introduza a chave aqui</string>
     <string name="dados_nao_encontrado">Dados não encontrado</string>
-    <string name="dados_empresa">Empresa*</string>
+    <string name="empresa">Empresa*</string>
     <string name="subscricao_pacote">Subscrição de pacote</string>
     <string name="bloquear">Bloquear</string>
     <string name="sair">Sair</string>

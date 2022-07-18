@@ -170,7 +170,7 @@
     <string name="fechar">Fermer</string>
     <string name="introduza_chave_aqui">Entrez la clé ici</string>
     <string name="dados_nao_encontrado">Données non trouvées</string>
-    <string name="dados_empresa">Entreprise*</string>
+    <string name="empresa">Entreprise*</string>
     <string name="subscricao_pacote">abonnement forfait</string>
     <string name="bloquear">Bloquer</string>
     <string name="sair">Sortir</string>
