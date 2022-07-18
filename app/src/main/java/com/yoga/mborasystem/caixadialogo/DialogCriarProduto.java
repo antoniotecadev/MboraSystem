@@ -120,6 +120,7 @@ public class DialogCriarProduto extends DialogFragment {
                 }
 
             } else {
+                binding.textMontanteIva.setText(getString(R.string.valor) + ": " + Ultilitario.formatPreco("0"));
                 binding.spinnerIva.setSelection(Integer.parseInt(Ultilitario.getTaxaIva(requireActivity())) - 1);
             }
         }
@@ -303,7 +304,7 @@ public class DialogCriarProduto extends DialogFragment {
                 montanteIVA = preco * Float.parseFloat("0.0" + b.spinnerIva.getSelectedItem().toString());
             }
             b.txtPrecoProduto.setText(String.valueOf(preco + montanteIVA));
-            b.textMontanteIva.setText(Ultilitario.formatPreco(String.valueOf((int) montanteIVA)));
+            b.textMontanteIva.setText(getString(R.string.valor) + ": " + Ultilitario.formatPreco(String.valueOf((int) montanteIVA)));
             binding.txtPrecoProduto.setEnabled(false);
             binding.btnLimparPreco.setEnabled(false);
             b.spinnerIva.setEnabled(false);
@@ -317,7 +318,7 @@ public class DialogCriarProduto extends DialogFragment {
             } else {
                 b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1.0" + b.spinnerIva.getSelectedItem().toString())));
             }
-            b.textMontanteIva.setText("");
+            b.textMontanteIva.setText(getString(R.string.valor) + ": " + Ultilitario.formatPreco("0"));
             b.spinnerTaxaImposto.setEnabled(true);
 
         }
