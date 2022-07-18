@@ -338,9 +338,9 @@ public class Ultilitario {
         return Objects.requireNonNull(editText.getText()).toString().replaceAll(",", ".");
     }
 
-    public static void addItemOnSpinner(Spinner spinner, int qtd, Context context) {
+    public static void addItemOnSpinner(Spinner spinner, int qtd, Context context, int inicio) {
         ArrayList<Integer> listaQuantidade = new ArrayList<>();
-        for (int i = 1; i <= qtd; ++i) {
+        for (int i = inicio; i <= qtd; ++i) {
             listaQuantidade.add(i);
         }
         ArrayAdapter<Integer> itemAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listaQuantidade);
