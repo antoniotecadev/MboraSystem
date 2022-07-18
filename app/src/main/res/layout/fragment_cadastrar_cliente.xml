@@ -185,12 +185,12 @@
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:boxBackgroundColor="@color/material_on_background_disabled"
-                app:boxStrokeColor="@color/white"
-                app:hintTextColor="@color/white">
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:boxBackgroundColor="@color/material_on_background_disabled"-->
+<!--                app:boxStrokeColor="@color/white"-->
+<!--                app:hintTextColor="@color/white">-->
 <!--                <com.google.android.material.textfield.TextInputEditText-->
 <!--                    android:id="@+id/editTextWebsite"-->
 <!--                    android:layout_width="match_parent"-->
@@ -201,7 +201,7 @@
 <!--                    android:ems="10"-->
 <!--                    android:hint="@string/website"-->
 <!--                    android:inputType="textWebEditText|textUri" />-->
-            </com.google.android.material.textfield.TextInputLayout>
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <TextView
                 android:id="@+id/textView5"
@@ -232,12 +232,12 @@
                 android:background="@android:color/darker_gray"
                 android:spinnerMode="dialog" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:boxBackgroundColor="@color/material_on_background_disabled"
-                app:boxStrokeColor="@color/white"
-                app:hintTextColor="@color/white">
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:boxBackgroundColor="@color/material_on_background_disabled"-->
+<!--                app:boxStrokeColor="@color/white"-->
+<!--                app:hintTextColor="@color/white">-->
 <!--                <com.google.android.material.textfield.TextInputEditText-->
 <!--                    android:id="@+id/editTextCidade"-->
 <!--                    android:layout_width="match_parent"-->
@@ -248,7 +248,7 @@
 <!--                    android:ems="10"-->
 <!--                    android:hint="@string/cdd"-->
 <!--                    android:inputType="textEmailAddress" />-->
-            </com.google.android.material.textfield.TextInputLayout>
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <TextView
                 android:id="@+id/textMunicipio"
