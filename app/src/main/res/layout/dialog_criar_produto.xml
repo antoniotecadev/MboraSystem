@@ -469,6 +469,17 @@
             android:checked="false"
             android:text="@string/estado_desbloqueado" />
 
+        <Switch
+            android:id="@+id/switch_stock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margem_lateral_formulario"
+            android:layout_marginBottom="@dimen/margem_lateral_formulario"
+            android:layout_marginLeft="@dimen/margem_lateral_formulario"
+            android:layout_marginRight="@dimen/margem_lateral_formulario"
+            android:checked="false"
+            android:text="@string/cont_stoc" />
+
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
