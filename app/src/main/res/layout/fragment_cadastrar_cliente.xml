@@ -418,7 +418,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:enabled="false"
-                android:text="@string/ok"
+                android:text="@string/alt_senha"
                 android:visibility="gone"
                 app:backgroundTint="@android:color/holo_green_light" />
 
@@ -438,6 +438,7 @@
                 android:textColor="@color/black" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextCodEqui"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"

@@ -617,6 +617,7 @@
     <string name="mtv_isc">Motivo da Isenção</string>
     <string name="preco_cust">Preço de Custo</string>
     <string name="cont_stoc">Controlar Stock</string>
+    <string name="actu_dads">Actualizar Dados</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

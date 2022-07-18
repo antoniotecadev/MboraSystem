@@ -44,15 +44,17 @@ public class DialogAlterarCliente extends DialogFragment {
 
         binding.buttonTermoCondicao.setVisibility(View.GONE);
         binding.checkTermoCondicao.setVisibility(View.GONE);
-        binding.buttonCriarConta.setVisibility(View.GONE);
+        binding.buttonCriarConta.setEnabled(true);
+        binding.buttonCriarConta.setText(getString(R.string.actu_dads));
         binding.buttonCancelar.setVisibility(View.VISIBLE);
         binding.editTextIMEI.setVisibility(View.VISIBLE);
         binding.textSenha.setVisibility(View.VISIBLE);
         binding.buttonAlterarSenha.setVisibility(View.VISIBLE);
         binding.buttonAlterarSenha.setEnabled(true);
         binding.textEquipa.setVisibility(View.GONE);
-        binding.editTextCodigoEquipa.setVisibility(View.GONE);
+        binding.editTextCodEqui.setVisibility(View.GONE);
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());
+        binding.divider5.setVisibility(View.GONE);
 
         if (getArguments() != null) {
 
