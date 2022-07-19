@@ -194,6 +194,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:layout_marginTop="@dimen/margem_lateral_formulario"
                 android:text="@string/estado" />
 
             <Switch
@@ -203,6 +204,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:checked="false"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
                 android:text="@string/estado_desbloqueado" />
 
             <View
