@@ -14,11 +14,15 @@ public class ProdutoVenda {
     @PrimaryKey(autoGenerate = true)
     private long id;
     private String nome_produto;
+    private String tipo;
+    private String unidade;
+    private String codigoMotivoIsencao;
     private int preco_total;
     private int quantidade;
     private String codigo_Barra;
     private int preco_fornecedor;
     private boolean iva;
+    private Integer percentagemIva;
     private long idvenda;
     private String data_cria;
 
@@ -32,6 +36,38 @@ public class ProdutoVenda {
 
     public String getNome_produto() {
         return nome_produto;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getUnidade() {
+        return unidade;
+    }
+
+    public void setUnidade(String unidade) {
+        this.unidade = unidade;
+    }
+
+    public String getCodigoMotivoIsencao() {
+        return codigoMotivoIsencao;
+    }
+
+    public void setCodigoMotivoIsencao(String codigoMotivoIsencao) {
+        this.codigoMotivoIsencao = codigoMotivoIsencao;
+    }
+
+    public Integer getPercentagemIva() {
+        return percentagemIva;
+    }
+
+    public void setPercentagemIva(Integer percentagemIva) {
+        this.percentagemIva = percentagemIva;
     }
 
     public void setNome_produto(String nome_produto) {
