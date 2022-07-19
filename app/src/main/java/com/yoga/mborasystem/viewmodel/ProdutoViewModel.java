@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -270,7 +269,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         return produtoRepository.getProdutos();
     }
 
-    public void validarProdutoFiltro(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoFiltro(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
@@ -335,7 +334,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoEstado(long idcat, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoEstado(long idcat, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else {
@@ -368,7 +367,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoNomePrecoEstado(long idcat, TextInputEditText idprodnome, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoNomePrecoEstado(long idcat, TextInputEditText idprodnome, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
@@ -389,7 +388,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoNomeCodBarEstado(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoNomeCodBarEstado(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
@@ -406,7 +405,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoCodBarPrecoEstado(long idcat, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoCodBarPrecoEstado(long idcat, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
@@ -463,7 +462,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoNomeEstado(long idcat, TextInputEditText idprodnome, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoNomeEstado(long idcat, TextInputEditText idprodnome, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
@@ -496,7 +495,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoPrecoEstado(long idcat, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoPrecoEstado(long idcat, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
@@ -513,7 +512,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void validarProdutoCodBarEstado(long idcat, TextInputEditText codigoBar, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estadoProd, AlertDialog dialog) {
+    public void validarProdutoCodBarEstado(long idcat, TextInputEditText codigoBar, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat))) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
