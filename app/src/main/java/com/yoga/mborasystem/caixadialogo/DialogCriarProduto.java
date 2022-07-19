@@ -71,7 +71,7 @@ public class DialogCriarProduto extends DialogFragment {
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_tipo, produto.getTipo(), binding.spinnerTipo);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_unidade, produto.getUnidade(), binding.spinnerUnidade);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_taxa_iva_valor, String.valueOf(produto.getPercentagemIva()), binding.spinnerTaxaImposto);
-                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_motivo_insecao_valor, produto.getPercentagemIva() > 0 ? "M00" : produto.getCodigoMotivoIsencao(), binding.spinnerMotivoIsencao);
+                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_motivo_isecao_valor, produto.getPercentagemIva() > 0 ? "M00" : produto.getCodigoMotivoIsencao(), binding.spinnerMotivoIsecao);
                 binding.txtPrecoProduto.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 binding.txtPrecoProdutoFornecedor.setText(Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
                 binding.checkIva.setChecked(produto.isIva());
@@ -128,7 +128,7 @@ public class DialogCriarProduto extends DialogFragment {
                 binding.textMontanteIva.setText(getString(R.string.valor) + ": " + Ultilitario.formatPreco("0"));
                 binding.spinnerIva.setSelection(Integer.parseInt(Ultilitario.getTaxaIva(requireActivity())) - 1);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_taxa_iva_valor, Ultilitario.getTaxaIva(requireActivity()), binding.spinnerTaxaImposto);
-                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_motivo_insecao_valor, Ultilitario.getMotivoIsencao(requireActivity()), binding.spinnerMotivoIsencao);
+                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_motivo_isecao_valor, Ultilitario.getMotivoIsencao(requireActivity()), binding.spinnerMotivoIsecao);
             }
         }
 
@@ -138,7 +138,7 @@ public class DialogCriarProduto extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String taxa = taxa_values[position];
-                binding.spinnerMotivoIsencao.setEnabled(taxa.equals("0"));
+                binding.spinnerMotivoIsecao.setEnabled(taxa.equals("0"));
                 binding.spinnerIva.setSelection(Integer.parseInt(taxa));
                 binding.checkIva.setEnabled(Integer.parseInt(taxa) != 0);
             }
@@ -240,11 +240,11 @@ public class DialogCriarProduto extends DialogFragment {
         return dialog;
     }
 
-    private String getCodigoMotivoIsencao() {
-        final String[] motivo = getResources().getStringArray(R.array.array_motivo_insecao);
-        final String[] codigo = getResources().getStringArray(R.array.array_motivo_insecao_valor);
+    private String getCodigoMotivoIsecao() {
+        final String[] motivo = getResources().getStringArray(R.array.array_motivo_isecao);
+        final String[] codigo = getResources().getStringArray(R.array.array_motivo_isecao_valor);
         for (int i = 0; i <= motivo.length; i++) {
-            if (binding.spinnerMotivoIsencao.getSelectedItem().toString().equalsIgnoreCase(motivo[i])) {
+            if (binding.spinnerMotivoIsecao.getSelectedItem().toString().equalsIgnoreCase(motivo[i])) {
                 return codigo[i];
             }
         }
@@ -259,11 +259,11 @@ public class DialogCriarProduto extends DialogFragment {
     }
 
     private void createProduto(long idcategoria) {
-        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsencao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, dialog, !binding.switchContinuar.isChecked(), idcategoria);
+        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, dialog, !binding.switchContinuar.isChecked(), idcategoria);
     }
 
     private void updateProduto(long idproduto, long idcategoria) {
-        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsencao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, idcategoria, dialog);
+        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, idcategoria, dialog);
     }
 
     private void deleteProduto(Produto produto) {

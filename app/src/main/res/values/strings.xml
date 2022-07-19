@@ -655,7 +655,7 @@
         <item>7</item>
         <item>14</item>
     </string-array>
-    <string-array name="array_motivo_insecao">
+    <string-array name="array_motivo_isecao">
         <item>IVA – Regime Simplificado</item>
         <item>Transmissão de bens e serviços não sujeita</item>
         <item>IVA – Regime de Exclusão	</item>
@@ -678,7 +678,7 @@
         <item>Isento nos termos da alínea g) do artigo 15.º do CIVA</item>
         <item>Isento nos termos da alínea h) do artigo 15.º do CIVA</item>
     </string-array>
-    <string-array name="array_motivo_insecao_valor">
+    <string-array name="array_motivo_isecao_valor">
         <item>M00</item>
         <item>M02</item>
         <item>M04</item>

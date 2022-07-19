@@ -122,11 +122,11 @@
             android:text="@string/mtv_isc" />
 
             <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinnerMotivoIsencao"
+                android:id="@+id/spinnerMotivoIsecao"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
-                android:entries="@array/array_motivo_insecao"
+                android:entries="@array/array_motivo_isecao"
                 android:spinnerMode="dropdown" />
 
         <View

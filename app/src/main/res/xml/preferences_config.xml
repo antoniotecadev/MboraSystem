@@ -62,8 +62,8 @@
             app:useSimpleSummaryProvider="true" />
         <ListPreference
             android:defaultValue="M00"
-            android:entries="@array/array_motivo_insecao"
-            android:entryValues="@array/array_motivo_insecao_valor"
+            android:entries="@array/array_motivo_isecao"
+            android:entryValues="@array/array_motivo_isecao_valor"
             android:key="motivo_isencao"
             android:title="@string/mtv_pdf_isc"
             app:dialogIcon="@drawable/ic_baseline_store_24"

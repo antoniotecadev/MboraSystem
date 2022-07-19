@@ -78,7 +78,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         return listaProdutosImport;
     }
 
-    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsencao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer taxaIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, Boolean continuar, long idcategoria) {
+    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsecao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer taxaIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, Boolean continuar, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -101,7 +101,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             produto.setNome(nome.getText().toString());
             produto.setTipo(tipo.getSelectedItem().toString());
             produto.setUnidade(unidade.getSelectedItem().toString());
-            produto.setCodigoMotivoIsencao(taxaIva > 0 ? "" : codigoMotivoIsencao);
+            produto.setCodigoMotivoIsencao(taxaIva > 0 ? "" : codigoMotivoIsecao);
             produto.setPreco(Ultilitario.removerKZ(preco));
             produto.setPrecofornecedor(Ultilitario.removerKZ(precofornecedor));
             produto.setQuantidade(Integer.parseInt(quantidade.getText().toString()));
@@ -129,12 +129,12 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void criarProduto(EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsencao, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, boolean c, long idcategoria) {
-        validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, tipo, unidade, codigoMotivoIsencao, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, stock, dialog, c, idcategoria);
+    public void criarProduto(EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsecao, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, boolean c, long idcategoria) {
+        validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, tipo, unidade, codigoMotivoIsecao, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, stock, dialog, c, idcategoria);
     }
 
-    public void actualizarProduto(long id, EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsencao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, long idcategoria, AlertDialog dialog) {
-        validarProduto(Ultilitario.Operacao.ACTUALIZAR, id, nome, tipo, unidade, codigoMotivoIsencao, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, stock, dialog, false, idcategoria);
+    public void actualizarProduto(long id, EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsecao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, long idcategoria, AlertDialog dialog) {
+        validarProduto(Ultilitario.Operacao.ACTUALIZAR, id, nome, tipo, unidade, codigoMotivoIsecao, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, stock, dialog, false, idcategoria);
     }
 
     private int contar = 0;
