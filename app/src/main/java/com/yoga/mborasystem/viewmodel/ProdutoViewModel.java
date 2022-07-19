@@ -11,6 +11,8 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -76,7 +78,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         return listaProdutosImport;
     }
 
-    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, Boolean continuar, long idcategoria) {
+    public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsencao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer taxaIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, Boolean continuar, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -97,14 +99,18 @@ public class ProdutoViewModel extends AndroidViewModel {
         } else {
             MainActivity.getProgressBar();
             produto.setNome(nome.getText().toString());
+            produto.setTipo(tipo.getSelectedItem().toString());
+            produto.setUnidade(unidade.getSelectedItem().toString());
+            produto.setCodigoMotivoIsencao(taxaIva > 0 ? "" : codigoMotivoIsencao);
             produto.setPreco(Ultilitario.removerKZ(preco));
             produto.setPrecofornecedor(Ultilitario.removerKZ(precofornecedor));
             produto.setQuantidade(Integer.parseInt(quantidade.getText().toString()));
             produto.setCodigoBarra(codigoBarra.getText().toString());
             produto.setIva(checkIva.isChecked());
             produto.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
+            produto.setStock(stock.isChecked());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
-                produto.setPercentagemIva(percentagemIva == 1 ? 0 : percentagemIva);
+                produto.setPercentagemIva(taxaIva);
                 produto.setIdcategoria(idcategoria);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 criarProduto(produto, dialog, continuar, idcategoria);
@@ -115,7 +121,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 codigoBarra.setText("");
                 nome.requestFocus();
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
-                produto.setPercentagemIva(checkIva.isChecked() ? (percentagemIva == 1 ? 0 : percentagemIva) : 0);
+                produto.setPercentagemIva(checkIva.isChecked() ? (taxaIva == 1 ? 0 : taxaIva) : 0);
                 produto.setId(id);
                 produto.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 actualizarProduto(produto, dialog);
@@ -123,12 +129,12 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    public void criarProduto(EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, boolean c, long idcategoria) {
-        validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, dialog, c, idcategoria);
+    public void criarProduto(EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsencao, TextInputEditText preco, TextInputEditText precofornecedor, TextInputEditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, boolean c, long idcategoria) {
+        validarProduto(Ultilitario.Operacao.CRIAR, 0, nome, tipo, unidade, codigoMotivoIsencao, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, stock, dialog, c, idcategoria);
     }
 
-    public void actualizarProduto(long id, EditText nome, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, long idcategoria, AlertDialog dialog) {
-        validarProduto(Ultilitario.Operacao.ACTUALIZAR, id, nome, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, dialog, false, idcategoria);
+    public void actualizarProduto(long id, EditText nome, AppCompatSpinner tipo, AppCompatSpinner unidade, String codigoMotivoIsencao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer percentagemIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, long idcategoria, AlertDialog dialog) {
+        validarProduto(Ultilitario.Operacao.ACTUALIZAR, id, nome, tipo, unidade, codigoMotivoIsencao, preco, precofornecedor, quantidade, codigoBarra, checkIva, percentagemIva, estado, stock, dialog, false, idcategoria);
     }
 
     private int contar = 0;
@@ -554,9 +560,9 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void restaurarProduto(int estado, long idproduto, boolean todosProdutoss) {
+    public void restaurarProduto(int estado, long idproduto, boolean todosProdutos) {
         MainActivity.dismissProgressBar();
-        Completable.fromAction(() -> produtoRepository.restaurarProduto(estado, idproduto, todosProdutoss))
+        Completable.fromAction(() -> produtoRepository.restaurarProduto(estado, idproduto, todosProdutos))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -568,7 +574,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        if (todosProdutoss) {
+                        if (todosProdutos) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prods_rests), R.drawable.ic_toast_feito);
                             consultarProdutos(0, false, null, true);
                         } else {

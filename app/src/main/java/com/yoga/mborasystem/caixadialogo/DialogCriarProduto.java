@@ -237,6 +237,17 @@ public class DialogCriarProduto extends DialogFragment {
         return dialog;
     }
 
+    private String getCodigoMotivoIsencao() {
+        final String[] motivo = getResources().getStringArray(R.array.array_motivo_insecao);
+        final String[] codigo = getResources().getStringArray(R.array.array_motivo_insecao_valor);
+        for (int i = 0; i <= motivo.length; i++) {
+            if (binding.spinnerMotivoIsencao.getSelectedItem().toString().equalsIgnoreCase(motivo[i])) {
+                return codigo[i];
+            }
+        }
+        return "";
+    }
+
     private void scanearCodigoBar(int camera) {
         intentIntegrator.setPrompt(getString(R.string.alinhar_codigo_barra));
         intentIntegrator.setOrientationLocked(false);
@@ -245,11 +256,11 @@ public class DialogCriarProduto extends DialogFragment {
     }
 
     private void createProduto(long idcategoria) {
-        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, dialog, !binding.switchContinuar.isChecked(), idcategoria);
+        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsencao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, dialog, !binding.switchContinuar.isChecked(), idcategoria);
     }
 
     private void updateProduto(long idproduto, long idcategoria) {
-        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, idcategoria, dialog);
+        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsencao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, idcategoria, dialog);
     }
 
     private void deleteProduto(Produto produto) {

@@ -22,6 +22,9 @@ public class Produto implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private long id;
     private String nome;
+    private String tipo;
+    private String unidade;
+    private String codigoMotivoIsencao;
     private int preco;
     private int precofornecedor;
     private int quantidade;
@@ -29,6 +32,7 @@ public class Produto implements Parcelable {
     private boolean iva;
     private Integer percentagemIva;
     private int estado;
+    private boolean stock;
     private long idcategoria;
 
     private String data_cria;
@@ -43,6 +47,9 @@ public class Produto implements Parcelable {
     protected Produto(Parcel in) {
         id = in.readLong();
         nome = in.readString();
+        tipo = in.readString();
+        unidade = in.readString();
+        codigoMotivoIsencao = in.readString();
         preco = in.readInt();
         precofornecedor = in.readInt();
         quantidade = in.readInt();
@@ -50,6 +57,7 @@ public class Produto implements Parcelable {
         iva = in.readByte() != 0;
         percentagemIva = in.readInt();
         estado = in.readInt();
+        stock = in.readByte() != 0;
         idcategoria = in.readLong();
         data_cria = in.readString();
         data_modifica = in.readString();
@@ -90,6 +98,30 @@ public class Produto implements Parcelable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getUnidade() {
+        return unidade;
+    }
+
+    public void setUnidade(String unidade) {
+        this.unidade = unidade;
+    }
+
+    public String getCodigoMotivoIsencao() {
+        return codigoMotivoIsencao;
+    }
+
+    public void setCodigoMotivoIsencao(String codigoMotivoIsencao) {
+        this.codigoMotivoIsencao = codigoMotivoIsencao;
     }
 
     public int getPreco() {
@@ -180,6 +212,14 @@ public class Produto implements Parcelable {
         this.iva = iva;
     }
 
+    public boolean isStock() {
+        return stock;
+    }
+
+    public void setStock(boolean stock) {
+        this.stock = stock;
+    }
+
     public Integer getPercentagemIva() {
         return percentagemIva;
     }
@@ -197,6 +237,9 @@ public class Produto implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(nome);
+        dest.writeString(tipo);
+        dest.writeString(unidade);
+        dest.writeString(codigoMotivoIsencao);
         dest.writeInt(preco);
         dest.writeInt(precofornecedor);
         dest.writeInt(quantidade);
@@ -204,6 +247,7 @@ public class Produto implements Parcelable {
         dest.writeByte((byte) (iva ? 1 : 0));
         dest.writeInt(percentagemIva);
         dest.writeInt(estado);
+        dest.writeByte((byte) (stock ? 1 : 0));
         dest.writeLong(idcategoria);
         dest.writeString(data_cria);
         dest.writeString(data_modifica);
