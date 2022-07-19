@@ -123,7 +123,7 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) || letrasNIFBI.matcher(nif.getText().toString()).find()) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_invalido));
-        } else if (nif.length() < 14) {
+        } else if (nif.length() < 10) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_incompleto));
         } else if (isNumeroValido(Objects.requireNonNull(telefone.getText()).toString())) {
@@ -144,7 +144,7 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (isCampoVazio(Objects.requireNonNull(nomeEmpresa.getText()).toString()) || letras.matcher(nomeEmpresa.getText().toString()).find()) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_invalido));
-        } else if (nomeEmpresa.length() < 5) {
+        } else if (nomeEmpresa.length() < 4) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_curto));
         } else if (isCampoVazio(Objects.requireNonNull(municipio.getSelectedItem().toString()))) {
