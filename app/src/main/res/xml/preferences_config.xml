@@ -11,12 +11,22 @@
         app:dialogIcon="@drawable/ic_baseline_store_24"
         app:icon="@drawable/ic_baseline_translate_24"
         app:useSimpleSummaryProvider="true" />
+    <PreferenceCategory
+        android:title="@string/view"
+        tools:ignore="TouchTargetSizeCheck">
     <SwitchPreference
         android:defaultValue="false"
         android:key="switch_most_nov"
         android:title="@string/n_most_nov_config"
         app:icon="@android:drawable/ic_menu_view"
         app:useSimpleSummaryProvider="true" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch_qr_code"
+            android:title="@string/ocult_qrcode"
+            app:icon="@android:drawable/ic_menu_view"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/config_rede"
         tools:ignore="TouchTargetSizeCheck">
@@ -54,6 +64,20 @@
             android:title="@string/slogan"
             app:dialogIcon="@drawable/ic_baseline_store_24"
             app:icon="@drawable/ic_baseline_short_text_24"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:key="nib"
+            android:title="@string/nib"
+            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:icon="@drawable/ic_baseline_credit_card_24"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:key="iban"
+            android:title="@string/iban"
+            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:icon="@drawable/ic_baseline_credit_card_24"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

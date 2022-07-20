@@ -624,6 +624,10 @@
     <string name="dds_cmc">Dados Comerciais</string>
     <string name="nm_cmc">Nome Comercial</string>
     <string name="slogan">Slogan</string>
+    <string name="nib">NIB</string>
+    <string name="iban">IBAN</string>
+    <string name="ocult_qrcode">Ocultar Código Qr na Factura</string>
+    <string name="view">Visualização</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
