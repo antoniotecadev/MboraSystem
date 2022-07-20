@@ -60,8 +60,8 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            android:key="slogan"
-            android:title="@string/slogan"
+            android:key="textrodape"
+            android:title="@string/text_rdp_fact"
             app:dialogIcon="@drawable/ic_baseline_store_24"
             app:icon="@drawable/ic_baseline_short_text_24"
             app:useSimpleSummaryProvider="true" />
