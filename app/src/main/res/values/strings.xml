@@ -623,7 +623,7 @@
     <string name="msg_tel_blo_act_emp">Entra em sua conta para obter os dados da empresa actualizado.</string>
     <string name="dds_cmc">Dados Comerciais</string>
     <string name="nm_cmc">Nome Comercial</string>
-    <string name="nib">NIB</string>
+    <string name="nib">NIB (Conta Bancária)</string>
     <string name="iban">IBAN</string>
     <string name="ocult_qrcode">Ocultar Código Qr na Factura</string>
     <string name="view">Visualização</string>
