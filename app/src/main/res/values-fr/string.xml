@@ -248,7 +248,7 @@
     <string name="lucro_negativo">! bénéfice négatif</string>
     <string name="possivel_lucro_percentagem">En pourcentage :</string>
     <string name="possivel_receita">Recette possible :</string>
-    <string name="iva">TVA (14%)</string>
+    <string name="iva">TVA</string>
     <string name="montante_iva">T.V.A.</string>
     <string name="categorias_produtos">Catégories et leurs produits</string>
     <string name="adicionar_produto">ajouter un produit</string>

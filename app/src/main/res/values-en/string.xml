@@ -248,7 +248,7 @@
     <string name="lucro_negativo">! negative profit</string>
     <string name="possivel_lucro_percentagem">In percentage:</string>
     <string name="possivel_receita">Possible recipe:</string>
-    <string name="iva">VAT(14%)</string>
+    <string name="iva">VAT</string>
     <string name="montante_iva">VAT</string>
     <string name="categorias_produtos">Categories and their products</string>
     <string name="adicionar_produto">Add product</string>

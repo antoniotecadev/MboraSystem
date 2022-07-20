@@ -364,7 +364,7 @@ public class ListProdutoFragment extends Fragment {
             TextView referenciaProduto = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
             CardView entrarProduto = viewHolder.itemView.findViewById(R.id.btnEntrar);
             nomeProduto.setText(produto.getNome());
-            precoProduto.setText(context.getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
+            precoProduto.setText(context.getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
             precoProdutoFronecedor.setText(context.getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
             quantidadeProduto.setText(context.getText(R.string.quantidade) + ": " + produto.getQuantidade());
             codigoBarraProduto.setText(context.getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + produto.getData_elimina() : ""));

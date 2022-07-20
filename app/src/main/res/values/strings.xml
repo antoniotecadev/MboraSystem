@@ -261,7 +261,7 @@
     <string name="lucro_negativo">! lucro negativo</string>
     <string name="possivel_lucro_percentagem">Em percentagem:</string>
     <string name="possivel_receita">Possível receita:</string>
-    <string name="iva">IVA(14%)</string>
+    <string name="iva">IVA</string>
     <string name="montante_iva">IVA</string>
     <string name="categorias_produtos">Categorias e seus produtos</string>
     <string name="adicionar_produto">Adicionar produto</string>
