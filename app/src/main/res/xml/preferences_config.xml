@@ -40,6 +40,24 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/dds_cmc"
+        tools:ignore="TouchTargetSizeCheck">
+        <EditTextPreference
+            android:key="nomecomercial"
+            android:title="@string/nm_cmc"
+            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:icon="@drawable/ic_baseline_store_mall_comercial_24"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:key="slogan"
+            android:title="@string/slogan"
+            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:icon="@drawable/ic_baseline_short_text_24"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/ipt_pre_def"
         tools:ignore="TouchTargetSizeCheck">
         <ListPreference
