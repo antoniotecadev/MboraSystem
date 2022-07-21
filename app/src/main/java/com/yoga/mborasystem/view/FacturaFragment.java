@@ -403,7 +403,7 @@ public class FacturaFragment extends Fragment {
                 if (valorPago > 0 || binding.checkboxSemValorPago.isChecked()) {
                     String[] nomeIDcliente;
                     if (binding.txtNomeCliente.getText().toString().trim().isEmpty()) {
-                        nomeIDcliente = TextUtils.split("*****", "-");
+                        nomeIDcliente = TextUtils.split(getString(R.string.csm_fnl), "-");
                     } else {
                         nomeIDcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
                     }

@@ -226,7 +226,7 @@
         <fragment
             android:id="@+id/facturaFragment"
             android:name="com.yoga.mborasystem.view.FacturaFragment"
-            android:label="@string/factura"
+            android:label="@string/fctrc"
             tools:layout="@layout/fragment_factura">
             <action
                 android:id="@+id/action_facturaFragment_to_dialogVendaEfectuada"

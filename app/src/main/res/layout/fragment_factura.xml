@@ -74,7 +74,7 @@
                     android:completionHint="@string/nome_cliente"
                     android:completionThreshold="1"
                     android:digits="@string/nome_cli_carac_aceite"
-                    android:hint="@string/cliente"
+                    android:hint="@string/csm_fnl"
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName|text"
                     tools:ignore="SpeakableTextPresentCheck"></androidx.appcompat.widget.AppCompatAutoCompleteTextView>
