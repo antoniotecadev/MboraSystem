@@ -27,8 +27,8 @@ public class VendaRepository {
         vendaDao = appDataBase.vendaDao();
     }
 
-    public void insert(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
-        vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
+    public long insert(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+        return vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
     }
 
     public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario, boolean isLixeira) {

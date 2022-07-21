@@ -38,11 +38,12 @@ public class DialogVendaEfectuada extends DialogFragment {
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
         int total = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getPrecoTotal();
+        long idvenda = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getIdvenda();
         binding.textViewTotal.setText(getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
 
-        binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(true));
+        binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(idvenda));
 
-        binding.btnImprimir.setOnClickListener(v -> vendaViewModel.getPrintLiveData().setValue(true));
+        binding.btnImprimir.setOnClickListener(v -> vendaViewModel.getPrintLiveData().setValue(idvenda));
 
         binding.btnAbrirWhatsApp.setOnClickListener(v -> {
             String numeroWhatsApp = Objects.requireNonNull(binding.numeroWhatsApp.getText()).toString();

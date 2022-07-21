@@ -128,7 +128,7 @@ public abstract class VendaDao {
     public abstract LiveData<List<ProdutoVenda>> getProdutoMenosVendido(String data);
 
     @Transaction
-    public void insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
+    public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
         long idvenda = insert(venda);
         for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
@@ -142,6 +142,7 @@ public abstract class VendaDao {
             produtoVenda.setData_cria(venda.getData_cria());
             insert(produtoVenda);
         }
+        return idvenda;
     }
 
     public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario) {

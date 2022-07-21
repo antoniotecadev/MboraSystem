@@ -28,8 +28,6 @@ import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.view.FacturaFragmentDirections;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,7 +36,6 @@ import java.util.concurrent.Executors;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -62,19 +59,20 @@ public class VendaViewModel extends AndroidViewModel {
         clienteRepository = new ClienteRepository(getApplication());
     }
 
+    MutableLiveData<Long> guardarPdf, imprimir;
     MutableLiveData<Event<Boolean>> exportLocal;
-    MutableLiveData<Boolean> imprimir, guardarPdf, selectedData;
+    MutableLiveData<Boolean> selectedData;
     MutableLiveData<String> enviarWhatsApp;
     MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento;
 
-    public MutableLiveData<Boolean> getPrintLiveData() {
+    public MutableLiveData<Long> getPrintLiveData() {
         if (imprimir == null) {
             imprimir = new MutableLiveData<>();
         }
         return imprimir;
     }
 
-    public MutableLiveData<Boolean> getGuardarPdfLiveData() {
+    public MutableLiveData<Long> getGuardarPdfLiveData() {
         if (guardarPdf == null) {
             guardarPdf = new MutableLiveData<>();
         }
@@ -183,13 +181,15 @@ public class VendaViewModel extends AndroidViewModel {
         return valido;
     }
 
+    private long idvenda;
+
     @SuppressLint("CheckResult")
-    public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String codigoQr, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
+    public long cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String ReferenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
         venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
         venda.setQuantidade(quantidade);
         venda.setValor_base(valorBase);
-        venda.setCodigo_qr(codigoQr);
+        venda.setCodigo_qr(ReferenciaFactura);
         venda.setValor_iva(valorIva);
         venda.setPagamento(formaPagamento);
         venda.setTotal_desconto(totalDesconto);
@@ -200,7 +200,9 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
-        Completable.fromAction(() -> vendaRepository.insert(venda, produtos, precoTotalUnit))
+        Completable.fromAction(() -> {
+            idvenda = vendaRepository.insert(venda, produtos, precoTotalUnit);
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new CompletableObserver() {
@@ -212,7 +214,7 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada().setPrecoTotal(totalVenda);
+                        FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada().setPrecoTotal(totalVenda).setIdvenda(idvenda);
                         Navigation.findNavController(view).navigate(action);
                     }
 
@@ -222,6 +224,7 @@ public class VendaViewModel extends AndroidViewModel {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_nao_efectuada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
+        return idvenda;
     }
 
     @SuppressLint("CheckResult")
