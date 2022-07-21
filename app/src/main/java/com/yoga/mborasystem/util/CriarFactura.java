@@ -14,6 +14,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -39,8 +41,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.Objects;
-
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 public class CriarFactura {
 
@@ -82,7 +82,7 @@ public class CriarFactura {
             Font titleFont = new Font(Font.FontFamily.HELVETICA, 40.0f, Font.BOLD, BaseColor.BLACK);
             addNewItem(document, cliente.getNomeEmpresa(), Element.ALIGN_CENTER, titleFont);
             Font bairroRuaFont = new Font(Font.FontFamily.HELVETICA, 36.0f, Font.NORMAL, BaseColor.BLACK);
-            addNewItem(document, cliente.getBairro() + "\n" + cliente.getRua(), Element.ALIGN_CENTER, bairroRuaFont);
+            addNewItem(document, cliente.getRua() + "\n" + cliente.getMunicipio() + " - " + cliente.getBairro() + "\n" + cliente.getProvincia(), Element.ALIGN_CENTER, bairroRuaFont);
             addLineSpace(document);
             Font font = new Font(Font.FontFamily.HELVETICA, 36.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, context.getString(R.string.nif) + " " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
