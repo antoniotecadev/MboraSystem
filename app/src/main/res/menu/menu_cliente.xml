@@ -5,13 +5,13 @@
     <item
         android:id="@+id/app_bar_search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="@string/pesquisar_produto"
+        android:title="@string/pes_cli"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
         android:id="@+id/criarClienteCantina"
         android:icon="@drawable/ic_baseline_add_box_24"
-        android:title="@string/criar_produto"
+        android:title="@string/criar_cliente"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
         android:id="@+id/exportarcliente"
