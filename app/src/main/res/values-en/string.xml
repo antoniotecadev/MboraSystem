@@ -197,7 +197,7 @@
     <string name="nome_categoria">Category Name *</string>
     <string name="nome_usuario">Username</string>
     <string name="eliminar_usuario">Delete User</string>
-    <string name="nome">Name*</string>
+    <string name="nome">Name</string>
     <string name="alterar_usuario">Change User</string>
     <string name="exportar_importar_produto">Export/Import Products</string>
     <string name="exportar_importar_categoria">Export/Import Categories</string>

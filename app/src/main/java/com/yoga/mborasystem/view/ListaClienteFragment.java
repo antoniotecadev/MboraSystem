@@ -218,7 +218,7 @@ public class ListaClienteFragment extends Fragment {
         SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.nome) + " " + getString(R.string.ou) + " " + getString(R.string.telefone));
+        searchView.setQueryHint(getString(R.string.nome) + ", " + getString(R.string.telefone));
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.onActionViewExpanded();
         menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
