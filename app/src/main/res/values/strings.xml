@@ -210,7 +210,7 @@
     <string name="nome_categoria">Nome da Categoria *</string>
     <string name="nome_usuario">Nome do Usuário</string>
     <string name="eliminar_usuario">Eliminar Usuário</string>
-    <string name="nome">Nome</string>
+    <string name="nome">Nome*</string>
     <string name="alterar_usuario">Alterar Usuário</string>
     <string name="exportar_importar_produto">Exportar/Importar Produtos</string>
     <string name="exportar_importar_categoria">Exportar/Importar Categorias</string>
