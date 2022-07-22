@@ -440,7 +440,7 @@ public class FacturaFragment extends Fragment {
         vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), idvenda -> {
             if (idvenda > 0) {
                 if (!ReferenciaFactura.isEmpty()) {
-                    facturaPath = ReferenciaFactura + "_" + idvenda + "_" + Ultilitario.getDateCurrent() + ".pdf";
+                    facturaPath = ReferenciaFactura + "_" + idvenda + ".pdf";
                     CriarFactura.getPemissionAcessStoregeExternal(true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, ReferenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
@@ -452,7 +452,7 @@ public class FacturaFragment extends Fragment {
         vendaViewModel.getPrintLiveData().observe(getViewLifecycleOwner(), idvenda -> {
             if (idvenda > 0) {
                 if (!ReferenciaFactura.isEmpty()) {
-                    facturaPath = ReferenciaFactura + "_" + idvenda + "_" + Ultilitario.getDateCurrent() + ".pdf";
+                    facturaPath = ReferenciaFactura + "_" + idvenda + ".pdf";
                     CriarFactura.getPemissionAcessStoregeExternal(false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, ReferenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal);
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
