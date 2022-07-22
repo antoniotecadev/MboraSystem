@@ -106,7 +106,7 @@ public class DocumentoFragment extends Fragment {
         SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.fich));
+        searchView.setQueryHint(getString(R.string.nm) + ", " + getString(R.string.referencia));
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.onActionViewExpanded();
         menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -133,7 +133,7 @@ public class DocumentoFragment extends Fragment {
                 if (newText.isEmpty()) {
                     getDocumentos(null, false, "", false);
                 } else {
-                    getDocumentos(newText, true, "", false);
+                    getDocumentos(newText.replace("/", "_"), true, "", false);
                 }
                 return false;
             }
@@ -216,7 +216,7 @@ public class DocumentoFragment extends Fragment {
             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
             String[] refFact = TextUtils.split(documento.getNome(), "_");
             nomeDocumento.setText(refFact[0].trim() + "/" + refFact[1].trim());
-            descricao.setText(Ultilitario.converterData(documento.getData_cria(), true) + " - " + formatSize(documento.getTamanho()));
+            descricao.setText(documento.getNome() + "\n" + Ultilitario.converterData(documento.getData_cria(), true) + " - " + formatSize(documento.getTamanho()));
             viewHolder.itemView.setOnClickListener(this::abrirDocumentoPDF);
             registerForContextMenu(menu);
             menu.setOnClickListener(View::showContextMenu);

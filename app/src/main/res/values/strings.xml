@@ -630,6 +630,7 @@
     <string name="text_rdp_fact">Texto Rodapé  (Factura)</string>
     <string name="fctrc">Facturação</string>
     <string name="csm_fnl">Consumidor Final</string>
+    <string name="nm">Nome</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
