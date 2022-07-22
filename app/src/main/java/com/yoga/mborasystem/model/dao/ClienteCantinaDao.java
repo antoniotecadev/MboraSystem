@@ -21,7 +21,7 @@ public interface ClienteCantinaDao {
     @Query("SELECT * FROM clientecantina WHERE estado != 3 ORDER BY id DESC")
     Flowable<List<ClienteCantina>> getClientesCantina();
 
-    @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR telefone LIKE '%' || :search || '%')")
+    @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR telefone LIKE '%' || :search || '%' OR nif LIKE '%' || :search || '%')")
     Flowable<List<ClienteCantina>> searchCliente(String search);
 
     @Query("UPDATE clientecantina SET nome = :nome, telefone = :telefone, email = :email, endereco = :endereco, estado = :estado, data_modifica = :dataModif WHERE id = :id")
