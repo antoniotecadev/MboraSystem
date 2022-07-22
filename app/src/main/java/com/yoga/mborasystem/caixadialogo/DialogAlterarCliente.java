@@ -74,6 +74,8 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.textBairros.setVisibility(View.GONE);
             binding.spinnerBairros.setVisibility(View.GONE);
             binding.editTextIMEI.setEnabled(false);
+            binding.editTextNome.setEnabled(false);
+            binding.editTextSobreNome.setEnabled(false);
         }
 
         binding.buttonAlterarSenha.setOnClickListener(v -> {
