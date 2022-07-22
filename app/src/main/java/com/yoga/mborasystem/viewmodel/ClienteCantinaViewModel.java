@@ -59,12 +59,12 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
-    public void criarCliente(TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        validarCliente(0, Ultilitario.Operacao.CRIAR, nomeCliente, telefone, email, endereco, dialog);
+    public void criarCliente(TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
+        validarCliente(0, Ultilitario.Operacao.CRIAR, nif, nomeCliente, telefone, email, endereco, dialog);
     }
 
-    public void actualizarCliente(long idcliente, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        validarCliente(idcliente, Ultilitario.Operacao.ACTUALIZAR, nomeCliente, telefone, email, endereco, dialog);
+    public void actualizarCliente(long idcliente, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
+        validarCliente(idcliente, Ultilitario.Operacao.ACTUALIZAR, nif, nomeCliente, telefone, email, endereco, dialog);
     }
 
     private MutableLiveData<List<ClienteCantina>> listaClientesCantina;
@@ -94,8 +94,11 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return listaClienteExport;
     }
 
-    private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
+    private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
+        if (isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) && Ultilitario.letraNumero.matcher(nif.getText().toString()).find()) {
+            nif.requestFocus();
+            nif.setError(getApplication().getString(R.string.nifbi_invalido));
+        } else if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
             nomeCliente.requestFocus();
             nomeCliente.setError(getApplication().getString(R.string.nome_invalido));
         } else if ((!isCampoVazio(Objects.requireNonNull(telefone.getText()).toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
@@ -109,6 +112,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             endereco.setError(getApplication().getString(R.string.endereco_invalido));
         } else {
             MainActivity.getProgressBar();
+            clienteCantina.setNif(nif.getText().toString());
             clienteCantina.setNome(nomeCliente.getText().toString());
             clienteCantina.setTelefone(telefone.getText().toString());
             clienteCantina.setEmail(email.getText().toString());

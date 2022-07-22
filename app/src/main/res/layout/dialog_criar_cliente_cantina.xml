@@ -18,6 +18,50 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="@color/material_on_background_disabled"
+                    app:boxStrokeColor="@color/white"
+                    app:hintTextColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtNIF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginLeft="@dimen/margem_lateral_formulario"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:ems="10"
+                        android:hint="@string/nif"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnValidarNIF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:text="@string/vldr"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                android:background="?android:attr/listDivider" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -34,7 +78,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:digits="@string/nome_cli_carac_aceite"
                     android:ems="10"
-                    android:hint="@string/nm"
+                    android:hint="@string/nome"
                     android:inputType="textPersonName" />
 
             </com.google.android.material.textfield.TextInputLayout>

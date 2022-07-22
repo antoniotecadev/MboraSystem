@@ -17,6 +17,7 @@ public class ClienteCantina {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
+    private String nif;
     private String nome;
     private String telefone;
     private String email;
@@ -36,6 +37,14 @@ public class ClienteCantina {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getNif() {
+        return nif;
+    }
+
+    public void setNif(String nif) {
+        this.nif = nif;
     }
 
     public String getNome() {

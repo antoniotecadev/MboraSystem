@@ -632,6 +632,7 @@
     <string name="csm_fnl">Consumidor Final</string>
     <string name="nm">Nome</string>
     <string name="eml">Email</string>
+    <string name="vldr">Validar</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

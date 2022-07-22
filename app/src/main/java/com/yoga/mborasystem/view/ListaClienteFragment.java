@@ -108,7 +108,7 @@ public class ListaClienteFragment extends Fragment {
 
                             TextView nomeCliente = viewHolder.itemView.findViewById(R.id.txtNomeCliente);
                             TextView telefoneCliente = viewHolder.itemView.findViewById(R.id.txtTelefone);
-                            TextView dataCira = viewHolder.itemView.findViewById(R.id.textDataCriacao);
+                            TextView dataCria = viewHolder.itemView.findViewById(R.id.textDataCriacao);
                             TextView dataModifica = viewHolder.itemView.findViewById(R.id.textDataModificacao);
                             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
 
@@ -123,8 +123,8 @@ public class ListaClienteFragment extends Fragment {
                             });
 
                             nomeCliente.setText(cliente.getNome());
-                            telefoneCliente.setText(cliente.getTelefone());
-                            dataCira.setText(getString(R.string.data_cria) + ": " + cliente.getData_cria());
+                            telefoneCliente.setText(getString(R.string.tel) + " " + cliente.getTelefone() + " | " + getString(R.string.nif) + " " + cliente.getNif());
+                            dataCria.setText(getString(R.string.data_cria) + ": " + cliente.getData_cria());
                             if (cliente.getData_modifica() != null) {
                                 dataModifica.setVisibility(View.VISIBLE);
                                 dataModifica.setText(getString(R.string.data_modifica) + ": " + cliente.getData_modifica());
@@ -143,7 +143,7 @@ public class ListaClienteFragment extends Fragment {
                                     if (getArguments().getBoolean("master")) {
                                         menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
                                             MainActivity.getProgressBar();
-                                            ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId(), cliente.getEmail(), cliente.getEndereco());
+                                            ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId(), cliente.getEmail(), cliente.getEndereco(), cliente.getNif());
                                             Navigation.findNavController(requireView()).navigate(direction);
                                             return false;
                                         });
@@ -267,7 +267,7 @@ public class ListaClienteFragment extends Fragment {
 
     private void criarCliente() {
         MainActivity.getProgressBar();
-        ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0, "", "");
+        ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina("", "", 0, "", "", "");
         Navigation.findNavController(requireView()).navigate(direction);
     }
 

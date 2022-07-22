@@ -198,7 +198,7 @@ public class FacturaFragment extends Fragment {
 
         binding.btnCriarCliente.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            Navigation.findNavController(requireView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0, "", ""));
+            Navigation.findNavController(requireView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0, "", "",""));
             binding.txtNomeCliente.setText("");
         });
 

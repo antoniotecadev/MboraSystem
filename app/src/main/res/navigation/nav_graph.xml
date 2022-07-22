@@ -280,6 +280,9 @@
             <argument
                 android:name="endereco"
                 app:argType="string" />
+            <argument
+                android:name="nif"
+                app:argType="string" />
         </dialog>
         <fragment
             android:id="@+id/vendaFragment"
