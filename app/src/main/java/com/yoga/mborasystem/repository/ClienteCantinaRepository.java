@@ -61,6 +61,7 @@ public class ClienteCantinaRepository {
                 clienteCantina.setTelefone(cli[1]);
                 clienteCantina.setEmail(cli[2]);
                 clienteCantina.setEndereco(cli[3]);
+                clienteCantina.setNif(cli[4]);
                 clienteCantina.setEstado(Ultilitario.UM);
                 clienteCantina.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 clienteCantinaDao.insert(clienteCantina);
