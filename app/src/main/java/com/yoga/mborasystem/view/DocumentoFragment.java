@@ -348,8 +348,8 @@ public class DocumentoFragment extends Fragment {
 
         private void detalhes(String[] refFact) {
             Ultilitario.alertDialog(getString(R.string.det), getString(R.string.nome_fich) + ": " + documento.getNome()
-                            + "\n" + getString(R.string.tipo_fich) + ": " + documento.getTipo()
                             + "\n" + getString(R.string.referencia) + ": " + refFact[0].trim() + "/" + refFact[1].trim()
+                            + "\n" + getString(R.string.tipo_fich) + ": " + documento.getTipo()
                             + "\n" + getString(R.string.tama_fich) + ": " + formatSize(documento.getTamanho())
                             + "\n" + getString(R.string.data_modifica) + ": " + Ultilitario.converterData(documento.getData_modifica(), true)
                             + "\n" + getString(R.string.caminho) + ": " + documento.getCaminho()
