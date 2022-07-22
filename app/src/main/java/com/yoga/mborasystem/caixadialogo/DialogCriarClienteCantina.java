@@ -1,9 +1,17 @@
 package com.yoga.mborasystem.caixadialogo;
 
-import android.app.Dialog;
-import android.os.Bundle;
-import android.view.View;
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.gson.JsonObject;
+import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogCriarClienteCantinaBinding;
@@ -12,6 +20,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,6 +70,47 @@ public class DialogCriarClienteCantina extends DialogFragment {
             binding.buttonCriarCliente.setVisibility(View.GONE);
             binding.buttonEliminarCliente.setVisibility(View.VISIBLE);
         }
+
+        binding.btnValidarNIF.setOnClickListener(v -> {
+            StringBuilder sb = new StringBuilder();
+            if (isNetworkConnected(requireContext())) {
+                if (internetIsConnected()) {
+                    if (Ultilitario.letraNumero.matcher(binding.txtNIF.getText().toString()).find() || binding.txtNIF.length() > 13) {
+                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.nif_bi) + " " + getString(R.string.ivld), R.drawable.ic_toast_erro);
+                    } else {
+                        MainActivity.getProgressBar();
+                        Ion.with(requireActivity())
+                                .load("https://api.gov.ao/consultarBI/v2/?bi=" + binding.txtNIF.getText().toString().toUpperCase())
+                                .asJsonArray()
+                                .setCallback((e, jsonElements) -> {
+                                    try {
+                                        if (jsonElements.size() == 0) {
+                                            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dados_nao_encontrado), R.drawable.ic_toast_erro);
+                                        } else {
+                                            JsonObject cliente = jsonElements.get(0).getAsJsonObject();
+                                            sb.append(getString(R.string.nm)).append(": ").append("\n").append(cliente.get("FIRST_NAME").getAsString()).append(" ").append(cliente.get("LAST_NAME").getAsString()).append("\n")
+                                                    .append(getString(R.string.rsdc)).append(": ").append("\n").append(cliente.get("RESIDENCE_ADDRESS")).append("\n").append(cliente.get("RESIDENCE_NEIGHBOR"))
+                                                    .append("\n").append(cliente.get("RESIDENCE_MUNICIPALITY_NAME")).append("\n").append(cliente.get("RESIDENCE_PROVINCE_NAME")).append("\n")
+                                                    .append(getString(R.string.nif_bi)).append(": ").append("\n").append(cliente.get("ID_NUMBER")).append("\n");
+                                            Ultilitario.alertDialog(getString(R.string.nif_bi) + " " + getString(R.string.vld), sb.toString(), requireContext(), R.drawable.ic_baseline_done_24);
+                                        }
+                                    } catch (Exception exception) {
+                                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.erro) + "\n" + exception.getMessage(), R.drawable.ic_toast_erro);
+                                    } finally {
+                                        MainActivity.dismissProgressBar();
+                                    }
+                                });
+                    }
+                } else {
+                    Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                    MainActivity.dismissProgressBar();
+                }
+            } else {
+                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+                MainActivity.dismissProgressBar();
+            }
+        });
+
         binding.buttonCriarCliente.setOnClickListener(v -> clienteCantinaViewModel.criarCliente(binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog));
 
         binding.buttonGuardar.setOnClickListener(v -> clienteCantinaViewModel.actualizarCliente(idcliente, binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog));
