@@ -79,6 +79,7 @@
                     android:digits="@string/nome_cli_carac_aceite"
                     android:ems="10"
                     android:hint="@string/nome"
+                    android:imeOptions="actionNext"
                     android:inputType="textPersonName" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -99,6 +100,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/telefone"
+                    android:imeOptions="actionNext"
                     android:inputType="phone" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -119,6 +121,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/eml"
+                    android:imeOptions="actionNext"
                     android:inputType="textEmailAddress" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -138,6 +141,7 @@
                         android:ems="10"
                         android:hint="@string/endereco"
                         android:inputType="textMultiLine|text"
+                        android:imeOptions="actionDone"
                         android:lines="5" />
 
                 </com.google.android.material.textfield.TextInputLayout>
