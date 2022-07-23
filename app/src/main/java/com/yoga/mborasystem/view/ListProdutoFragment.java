@@ -142,7 +142,7 @@ public class ListProdutoFragment extends Fragment {
                     dt.append(produto.getNome()).append(",").append(produto.getPreco()).append(",").append(produto.getPrecofornecedor()).append(",").append(produto.getQuantidade()).append(",").append(produto.getCodigoBarra()).append(",").append(produto.isIva()).append(",").append(produto.getEstado()).append(",").append(produto.getIdcategoria()).append("\n");
                 }
                 data = dt;
-                exportarProdutos(this.categoria, tipo == 0 ? Ultilitario.isLocal : false);
+                exportarProdutos(this.categoria, tipo == 0 && Ultilitario.isLocal);
             }
         }));
 
