@@ -16,7 +16,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface ProdutoDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Produto produto);
 
     @Query("UPDATE produtos SET nome = :nome, tipo = :tipo, unidade = :unidade, preco = :preco, precofornecedor = :precofor, quantidade = :quanti, codigoBarra = :codbar, iva = :iva, percentagemIva = :percentagemIva, codigoMotivoIsencao = :codigoMotivoIsencao, estado = :est, data_modifica = :data WHERE id = :id")

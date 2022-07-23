@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface ClienteDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Cliente cliente);
 
     @Query("SELECT * FROM cliente LIMIT 1")

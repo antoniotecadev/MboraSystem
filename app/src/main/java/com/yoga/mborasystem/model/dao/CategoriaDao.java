@@ -15,7 +15,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface CategoriaDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Categoria categoria);
 
     @Query("UPDATE categorias SET categoria = :nome, descricao = :desc, estado = :est, data_modifica = :data WHERE id = :id")

@@ -15,7 +15,7 @@ import io.reactivex.Single;
 @Dao
 public interface UsuarioDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Usuario usuario);
 
     @Query("SELECT * FROM usuarios WHERE estado != 3 ORDER BY id DESC")

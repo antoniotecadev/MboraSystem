@@ -15,7 +15,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface ClienteCantinaDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ClienteCantina clienteCantina);
 
     @Query("SELECT * FROM clientecantina WHERE estado != 3 ORDER BY id DESC")
