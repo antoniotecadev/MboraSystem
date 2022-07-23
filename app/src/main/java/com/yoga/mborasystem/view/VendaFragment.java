@@ -178,9 +178,7 @@ public class VendaFragment extends Fragment {
             } else {
                 executor = Executors.newSingleThreadExecutor();
                 isLocal = aBoolean;
-                executor.execute(() -> {
-                    vendaViewModel.getVendasPorDataExport(this.data);
-                });
+                executor.execute(() -> vendaViewModel.getVendasPorDataExport(this.data));
             }
         }));
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
@@ -373,11 +371,7 @@ public class VendaFragment extends Fragment {
                         MainActivity.dismissProgressBar();
                     }
                 } else {
-                    if (permanente) {
-                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false);
-                    } else {
-                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, false, false);
-                    }
+                    vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
                 }
             }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
