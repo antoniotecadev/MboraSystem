@@ -59,20 +59,20 @@ public class VendaViewModel extends AndroidViewModel {
         clienteRepository = new ClienteRepository(getApplication());
     }
 
-    MutableLiveData<Long> guardarPdf, imprimir;
+    MutableLiveData<Event<Long>> guardarPdf, imprimir;
     MutableLiveData<Event<Boolean>> exportLocal;
     MutableLiveData<Boolean> selectedData;
     MutableLiveData<String> enviarWhatsApp;
     MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento;
 
-    public MutableLiveData<Long> getPrintLiveData() {
+    public MutableLiveData<Event<Long>> getPrintLiveData() {
         if (imprimir == null) {
             imprimir = new MutableLiveData<>();
         }
         return imprimir;
     }
 
-    public MutableLiveData<Long> getGuardarPdfLiveData() {
+    public MutableLiveData<Event<Long>> getGuardarPdfLiveData() {
         if (guardarPdf == null) {
             guardarPdf = new MutableLiveData<>();
         }

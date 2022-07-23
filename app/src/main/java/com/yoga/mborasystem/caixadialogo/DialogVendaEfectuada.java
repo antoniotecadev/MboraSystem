@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogVendaEfectuadaBinding;
+import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
@@ -43,9 +44,9 @@ public class DialogVendaEfectuada extends DialogFragment {
         String data = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getData();
         binding.textViewTotal.setText("FR 00V" + TextUtils.split(data, "-")[2].trim() + "/" + idvenda + "\n" + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
 
-        binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(idvenda));
+        binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(new Event<>(idvenda)));
 
-        binding.btnImprimir.setOnClickListener(v -> vendaViewModel.getPrintLiveData().setValue(idvenda));
+        binding.btnImprimir.setOnClickListener(v -> vendaViewModel.getPrintLiveData().setValue(new Event<>(idvenda)));
 
         binding.btnAbrirWhatsApp.setOnClickListener(v -> {
             String numeroWhatsApp = Objects.requireNonNull(binding.numeroWhatsApp.getText()).toString();

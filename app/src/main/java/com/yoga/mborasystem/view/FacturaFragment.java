@@ -1,5 +1,8 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
@@ -24,6 +27,18 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.snackbar.Snackbar;
@@ -71,21 +86,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
-
 public class FacturaFragment extends Fragment {
 
     private Bundle bundle;
@@ -101,7 +101,7 @@ public class FacturaFragment extends Fragment {
     private ArrayList<String> listaCategoria;
     private ProdutoViewModel produtoViewModel;
     private GroupAdapter adapter, adapterFactura;
-    private String resultCodeBar, referenciaFactura, facturaPath, dataEmissao = "";
+    private String resultCodeBar, referenciaFactura = "", facturaPath, dataEmissao = "";
     private ArrayList<ClienteCantina> clienteCantina;
     private ClienteCantinaViewModel clienteCantinaViewModel;
     @SuppressLint("StaticFieldLeak")
@@ -459,8 +459,7 @@ public class FacturaFragment extends Fragment {
         vendaViewModel.getDataAdminMaster();
         vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente.get(0));
 
-//        vendaViewModel.getGuardarPdfLiveData().setValue(false);
-        vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), idvenda -> {
+        vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> {
             if (idvenda > 0) {
                 if (!referenciaFactura.isEmpty()) {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
@@ -469,10 +468,9 @@ public class FacturaFragment extends Fragment {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
             }
-        });
+        }));
 
-//        vendaViewModel.getPrintLiveData().setValue(false);
-        vendaViewModel.getPrintLiveData().observe(getViewLifecycleOwner(), idvenda -> {
+        vendaViewModel.getPrintLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> {
             if (idvenda > 0) {
                 if (!referenciaFactura.isEmpty()) {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
@@ -481,7 +479,7 @@ public class FacturaFragment extends Fragment {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
             }
-        });
+        }));
 
         vendaViewModel.getEnviarWhatsAppLiveData().setValue("");
         vendaViewModel.getEnviarWhatsAppLiveData().observe(getViewLifecycleOwner(), numero -> {
