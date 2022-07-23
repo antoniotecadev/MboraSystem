@@ -62,7 +62,7 @@ public class VendaViewModel extends AndroidViewModel {
     MutableLiveData<Event<Long>> guardarPdf, imprimir;
     MutableLiveData<Event<Boolean>> exportLocal;
     MutableLiveData<Boolean> selectedData;
-    MutableLiveData<String> enviarWhatsApp;
+    MutableLiveData<Event<String>> enviarWhatsApp;
     MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento;
 
     public MutableLiveData<Event<Long>> getPrintLiveData() {
@@ -79,7 +79,7 @@ public class VendaViewModel extends AndroidViewModel {
         return guardarPdf;
     }
 
-    public MutableLiveData<String> getEnviarWhatsAppLiveData() {
+    public MutableLiveData<Event<String>> getEnviarWhatsAppLiveData() {
         if (enviarWhatsApp == null) {
             enviarWhatsApp = new MutableLiveData<>();
         }
@@ -95,9 +95,9 @@ public class VendaViewModel extends AndroidViewModel {
         return dataAdminMaster;
     }
 
-    MutableLiveData<AlertDialog> dialog;
+    MutableLiveData<Event<AlertDialog>> dialog;
 
-    public MutableLiveData<AlertDialog> getAlertDialogLiveData() {
+    public MutableLiveData<Event<AlertDialog>> getAlertDialogLiveData() {
         if (dialog == null) {
             dialog = new MutableLiveData<>();
         }

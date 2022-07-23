@@ -54,10 +54,10 @@ public class DialogVendaEfectuada extends DialogFragment {
                 binding.numeroWhatsApp.requestFocus();
                 binding.inputLayoutNumeroWhatsapp.setError(getString(R.string.digite_numero_w));
             } else {
-                vendaViewModel.getEnviarWhatsAppLiveData().setValue(numeroWhatsApp);
+                vendaViewModel.getEnviarWhatsAppLiveData().setValue(new Event<>(numeroWhatsApp));
             }
         });
-        binding.btnFechar.setOnClickListener(v -> vendaViewModel.getAlertDialogLiveData().setValue(dialog));
+        binding.btnFechar.setOnClickListener(v -> vendaViewModel.getAlertDialogLiveData().setValue(new Event<>(dialog)));
         return dialog;
     }
 

@@ -481,8 +481,7 @@ public class FacturaFragment extends Fragment {
             }
         }));
 
-        vendaViewModel.getEnviarWhatsAppLiveData().setValue("");
-        vendaViewModel.getEnviarWhatsAppLiveData().observe(getViewLifecycleOwner(), numero -> {
+        vendaViewModel.getEnviarWhatsAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(numero -> {
             if (!numero.isEmpty()) {
                 if (facturaPath.isEmpty()) {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.enviar_w_primeiro), R.drawable.ic_toast_erro);
@@ -490,9 +489,8 @@ public class FacturaFragment extends Fragment {
                     Ultilitario.openWhatsApp(getActivity(), numero);
                 }
             }
-        });
-        vendaViewModel.getAlertDialogLiveData().setValue(null);
-        vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), alertDialog -> {
+        }));
+        vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(alertDialog -> {
             if (alertDialog != null && !Ultilitario.getNaoMostrarNovamente(requireActivity())) {
                 if (facturaPath.isEmpty()) {
                     new AlertDialog.Builder(requireContext())
@@ -510,7 +508,7 @@ public class FacturaFragment extends Fragment {
                     fecharAlertDialog(alertDialog);
 
             }
-        });
+        }));
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
