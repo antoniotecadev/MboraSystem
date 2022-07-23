@@ -184,7 +184,7 @@ public class VendaViewModel extends AndroidViewModel {
     private long idvenda;
 
     @SuppressLint("CheckResult")
-    public long cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String ReferenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, View view) {
+    public long cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String ReferenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
         venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
         venda.setQuantidade(quantidade);
@@ -197,7 +197,7 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setDivida(valorDivida);
         venda.setValor_pago(valorPago);
         venda.setEstado(Ultilitario.UM);
-        venda.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+        venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
         Completable.fromAction(() -> {
@@ -214,7 +214,7 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada().setPrecoTotal(totalVenda).setIdvenda(idvenda);
+                        FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada(venda.getData_cria()).setPrecoTotal(totalVenda).setIdvenda(idvenda);
                         Navigation.findNavController(view).navigate(action);
                     }
 

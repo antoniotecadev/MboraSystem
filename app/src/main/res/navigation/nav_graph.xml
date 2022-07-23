@@ -245,6 +245,9 @@
             <action
                 android:id="@+id/action_facturaFragment_to_calculadoraFragment"
                 app:destination="@id/calculadoraFragment" />
+            <action
+                android:id="@+id/action_facturaFragment_to_datePickerFragment"
+                app:destination="@id/datePickerFragment" />
         </fragment>
         <dialog
             android:id="@+id/dialogVendaEfectuada"
@@ -259,6 +262,9 @@
                 android:name="idvenda"
                 app:argType="long"
                 android:defaultValue="0L" />
+            <argument
+                android:name="data"
+                app:argType="string" />
         </dialog>
         <dialog
             android:id="@+id/dialogCriarClienteCantina"

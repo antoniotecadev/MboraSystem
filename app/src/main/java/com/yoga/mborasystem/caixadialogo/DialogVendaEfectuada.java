@@ -3,6 +3,7 @@ package com.yoga.mborasystem.caixadialogo;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogVendaEfectuadaBinding;
@@ -39,7 +40,8 @@ public class DialogVendaEfectuada extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
         int total = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getPrecoTotal();
         long idvenda = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getIdvenda();
-        binding.textViewTotal.setText("FR 00V2022/" + idvenda + "\n" + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
+        String data = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getData();
+        binding.textViewTotal.setText("FR 00V" + TextUtils.split(data, "-")[2].trim() + "/" + idvenda + "\n" + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
 
         binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(idvenda));
 
