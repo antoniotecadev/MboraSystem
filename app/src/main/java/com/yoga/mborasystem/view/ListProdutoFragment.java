@@ -453,14 +453,9 @@ public class ListProdutoFragment extends Fragment {
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
             alert.setTitle(titulo);
             alert.setMessage(getString(mensagem));
-
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        if (permanente) {
-                            produtoViewModel.eliminarProduto(produto, false, null, false);
-                        } else {
-                            produtoViewModel.eliminarProduto(produto, true, null, false);
-                        }
+                        produtoViewModel.eliminarProduto(produto, !permanente, null, false);
                     }
             ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
