@@ -233,7 +233,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:text="@string/taxa"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -273,7 +274,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/textValor"
