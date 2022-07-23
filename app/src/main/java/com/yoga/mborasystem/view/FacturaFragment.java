@@ -848,7 +848,7 @@ public class FacturaFragment extends Fragment {
                 Button btnRemover = viewHolder.itemView.findViewById(R.id.btnRemover);
                 Ultilitario.addItemOnSpinner(qt, 255, getContext(), 1);
                 prod.setText(produto.getNome());
-                ref.setText("MS" + produto.getId() + " " + (produto.isIva() ? getText(R.string.montante_iva) + "(" + produto.getPercentagemIva() + "%)" : ""));
+                ref.setText("MS" + produto.getId() + " " + (getText(R.string.montante_iva) + "(" + produto.getPercentagemIva() + "%)"));
                 pr.setText(getText(R.string.preco) + " " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 qt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
