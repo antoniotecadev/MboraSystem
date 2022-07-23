@@ -225,7 +225,7 @@ public class VendaFragment extends Fragment {
         @Override
         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
             TextView nomeCliente = viewHolder.itemView.findViewById(R.id.textCliente);
-            TextView codigoQr = viewHolder.itemView.findViewById(R.id.textCodBar);
+            TextView referencia = viewHolder.itemView.findViewById(R.id.textReferencia);
             TextView quantidade = viewHolder.itemView.findViewById(R.id.textQtProd);
             TextView total = viewHolder.itemView.findViewById(R.id.textTotVend);
             TextView desconto = viewHolder.itemView.findViewById(R.id.textDesc);
@@ -245,7 +245,7 @@ public class VendaFragment extends Fragment {
             }
 
             nomeCliente.setText(venda.getNome_cliente());
-            codigoQr.setText(venda.getCodigo_qr());
+            referencia.setText(venda.getCodigo_qr() + "/" + venda.getId());
             quantidade.setText(String.valueOf(venda.getQuantidade()));
             total.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
             desconto.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto())));
@@ -405,7 +405,7 @@ public class VendaFragment extends Fragment {
         SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem menuItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.cod_qr));
+        searchView.setQueryHint(getString(R.string.referencia));
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.onActionViewExpanded();
         menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
