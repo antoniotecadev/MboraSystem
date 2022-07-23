@@ -19,8 +19,8 @@ public interface ProdutoDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Produto produto);
 
-    @Query("UPDATE produtos SET nome = :nome, preco = :preco, precofornecedor = :precofor, quantidade = :quanti, codigoBarra = :codbar, iva = :iva, percentagemIva = :percentagemIva, estado = :est, data_modifica = :data WHERE id = :id")
-    void update(String nome, int preco, int precofor, int quanti, String codbar, boolean iva, int percentagemIva, int est, String data, long id);
+    @Query("UPDATE produtos SET nome = :nome, tipo = :tipo, unidade = :unidade, preco = :preco, precofornecedor = :precofor, quantidade = :quanti, codigoBarra = :codbar, iva = :iva, percentagemIva = :percentagemIva, codigoMotivoIsencao = :codigoMotivoIsencao, estado = :est, data_modifica = :data WHERE id = :id")
+    void update(String nome, String tipo, String unidade, int preco, int precofor, int quanti, String codbar, boolean iva, int percentagemIva, String codigoMotivoIsencao, int est, String data, long id);
 
     @Delete
     void delete(Produto produto);

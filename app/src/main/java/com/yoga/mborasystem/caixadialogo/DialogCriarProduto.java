@@ -71,7 +71,7 @@ public class DialogCriarProduto extends DialogFragment {
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_tipo, produto.getTipo(), binding.spinnerTipo);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_unidade, produto.getUnidade(), binding.spinnerUnidade);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_taxa_iva_valor, String.valueOf(produto.getPercentagemIva()), binding.spinnerTaxaImposto);
-                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_motivo_isecao_valor, produto.getPercentagemIva() > 0 ? "M00" : produto.getCodigoMotivoIsencao(), binding.spinnerMotivoIsecao);
+                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_motivo_isecao_valor, produto.getCodigoMotivoIsencao(), binding.spinnerMotivoIsecao);
                 binding.txtPrecoProduto.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 binding.txtPrecoProdutoFornecedor.setText(Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
                 binding.checkIva.setChecked(produto.isIva());

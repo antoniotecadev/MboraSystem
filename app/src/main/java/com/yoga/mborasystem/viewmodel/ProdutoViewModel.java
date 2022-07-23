@@ -100,7 +100,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             produto.setNome(nome.getText().toString());
             produto.setTipo(tipo.getSelectedItem().toString());
             produto.setUnidade(unidade.getSelectedItem().toString());
-            produto.setCodigoMotivoIsencao(taxaIva > 0 ? "" : codigoMotivoIsecao);
+            produto.setCodigoMotivoIsencao(codigoMotivoIsecao);
             produto.setPreco(Ultilitario.removerKZ(preco));
             produto.setPrecofornecedor(Ultilitario.removerKZ(precofornecedor));
             produto.setQuantidade(Integer.parseInt(quantidade.getText().toString()));
