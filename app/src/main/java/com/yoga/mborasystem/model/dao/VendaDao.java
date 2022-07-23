@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.model.dao;
 
+import android.text.TextUtils;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -42,17 +44,17 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0  ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaCliDiv(long idcliente);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :codQr || '%'")
-    abstract Flowable<List<Venda>> searchVenda(String codQr);
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :referencia || '%'")
+    abstract Flowable<List<Venda>> searchVenda(String referencia);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%'")
-    abstract Flowable<List<Venda>> searchVendaDiv(String codQr);
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%'")
+    abstract Flowable<List<Venda>> searchVendaDiv(String referencia);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :codQr || '%' AND idclicant = :idcliente")
-    abstract Flowable<List<Venda>> searchVenda(String codQr, long idcliente);
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
+    abstract Flowable<List<Venda>> searchVenda(String referencia, long idcliente);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%' AND idclicant = :idcliente")
-    abstract Flowable<List<Venda>> searchVendaCliDiv(String codQr, long idcliente);
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
+    abstract Flowable<List<Venda>> searchVendaCliDiv(String referencia, long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
     abstract Flowable<List<Venda>> getVenda(String data);
@@ -81,8 +83,8 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado = 3 ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaLixeira();
 
-    @Query("SELECT * FROM vendas WHERE estado = 3 AND codigo_qr LIKE '%' || :codQr || '%'")
-    abstract Flowable<List<Venda>> searchVendaLixeira(String codQr);
+    @Query("SELECT * FROM vendas WHERE estado = 3 AND codigo_qr LIKE '%' || :referencia || '%'")
+    abstract Flowable<List<Venda>> searchVendaLixeira(String referencia);
 
     @Delete
     abstract void deleteVenda(Venda venda);
@@ -99,8 +101,8 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaDataUsuario(String data, long idusuario);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND codigo_qr LIKE '%' || :codQr || '%' ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaUsuario(String codQr, long idusuario);
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaUsuario(String referencia, long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0  ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaDivUsuario(long idusuario);
@@ -108,8 +110,8 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
     abstract Flowable<List<Venda>> getVendaDataDivUsuario(String data, long idusuario);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :codQr || '%' ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaDivUsuario(String codQr, long idusuario);
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
+    abstract Flowable<List<Venda>> getVendaDivUsuario(String referencia, long idusuario);
 
     @Query("UPDATE vendas SET estado = :est WHERE id = :id")
     public abstract void restaurarVendas(int est, long id);
@@ -183,21 +185,21 @@ public abstract class VendaDao {
         return getVendaVazia();
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario) {
+    public Flowable<List<Venda>> getSearchVendas(String referencia, long idcliente, boolean isDivida, long idusuario) {
         if (idusuario == 0) {
             if (idcliente == 0 && !isDivida) {
-                return searchVenda(codQr);
+                return searchVenda(referencia);
             } else if (idcliente > 0 && !isDivida) {
-                return searchVenda(codQr, idcliente);
+                return searchVenda(referencia, idcliente);
             } else if (idcliente == 0) {
-                return searchVendaDiv(codQr);
+                return searchVendaDiv(referencia);
             } else if (idcliente > 0) {
-                return searchVendaCliDiv(codQr, idcliente);
+                return searchVendaCliDiv(referencia, idcliente);
             }
         } else if (isDivida) {
-            return getVendaDivUsuario(codQr, idusuario);
+            return getVendaDivUsuario(referencia, idusuario);
         } else {
-            return getVendaUsuario(codQr, idusuario);
+            return getVendaUsuario(referencia, idusuario);
         }
         return getVendaVazia();
     }
@@ -206,8 +208,8 @@ public abstract class VendaDao {
         return getVendaLixeira();
     }
 
-    public Flowable<List<Venda>> searchVendasLixeira(String codQr) {
-        return searchVendaLixeira(codQr);
+    public Flowable<List<Venda>> searchVendasLixeira(String referencia) {
+        return searchVendaLixeira(referencia);
     }
 
     public void deleteVendas(Venda venda) {

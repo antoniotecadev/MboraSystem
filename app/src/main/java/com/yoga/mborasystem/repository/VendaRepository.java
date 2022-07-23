@@ -47,11 +47,11 @@ public class VendaRepository {
         return vendaDao.getVendaExport(data);
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String codQr, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
+    public Flowable<List<Venda>> getSearchVendas(String referencia, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
         if (isLixeira) {
-            return vendaDao.searchVendasLixeira(codQr);
+            return vendaDao.searchVendasLixeira(referencia);
         } else {
-            return vendaDao.getSearchVendas(codQr, idcliente, isDivida, idusuario);
+            return vendaDao.getSearchVendas(referencia, idcliente, isDivida, idusuario);
         }
     }
 
