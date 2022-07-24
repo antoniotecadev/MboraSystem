@@ -149,13 +149,18 @@ public class ProdutoRepository {
             for (String pt : produtos) {
                 String[] prod = pt.split(",");
                 produto.setNome(prod[0]);
-                produto.setPreco(Integer.parseInt(prod[1]));
-                produto.setPrecofornecedor(Integer.parseInt(prod[2]));
-                produto.setQuantidade(Integer.parseInt(prod[3]));
-                produto.setCodigoBarra(prod[4]);
-                produto.setIva(Boolean.parseBoolean(prod[5]));
-                produto.setEstado(Integer.parseInt(prod[6]));
-                produto.setIdcategoria(vemCat ? Long.parseLong(prod[7]) : idcategoria);
+                produto.setTipo(prod[1]);
+                produto.setUnidade(prod[2]);
+                produto.setCodigoMotivoIsencao(prod[3]);
+                produto.setPercentagemIva(Integer.valueOf(prod[4]));
+                produto.setPreco(Integer.parseInt(prod[5]));
+                produto.setPrecofornecedor(Integer.parseInt(prod[6]));
+                produto.setQuantidade(Integer.parseInt(prod[7]));
+                produto.setCodigoBarra(prod[8]);
+                produto.setIva(Boolean.parseBoolean(prod[9]));
+                produto.setEstado(Integer.parseInt(prod[10]));
+                produto.setStock(Boolean.parseBoolean(prod[11]));
+                produto.setIdcategoria(vemCat ? Long.parseLong(prod[12]) : idcategoria);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 produtoDao.insert(produto);
             }
