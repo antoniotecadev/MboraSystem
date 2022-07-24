@@ -456,6 +456,7 @@ public class ListProdutoFragment extends Fragment {
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         MainActivity.getProgressBar();
                         produtoViewModel.eliminarProduto(produto, !permanente, null, false);
+                        produtoViewModel.consultarProdutos(idcategoria, false, null, isLixeira);
                     }
             ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
