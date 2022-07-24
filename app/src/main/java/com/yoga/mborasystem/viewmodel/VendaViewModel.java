@@ -214,7 +214,7 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada(venda.getData_cria()).setPrecoTotal(totalVenda).setIdvenda(idvenda);
+                        FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada(referenciaFactura).setPrecoTotal(totalVenda).setIdvenda(idvenda);
                         Navigation.findNavController(view).navigate(action);
                     }
 

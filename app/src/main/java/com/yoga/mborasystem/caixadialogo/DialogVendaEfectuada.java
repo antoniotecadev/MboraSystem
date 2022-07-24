@@ -41,8 +41,8 @@ public class DialogVendaEfectuada extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
         int total = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getPrecoTotal();
         long idvenda = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getIdvenda();
-        String data = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getData();
-        binding.textViewTotal.setText("FR 00V" + TextUtils.split(data, "-")[2].trim() + "/" + idvenda + "\n" + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
+        String referencia = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getReferencia();
+        binding.textViewTotal.setText(referencia + "/" + idvenda + "\n" + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
 
         binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(new Event<>(idvenda)));
 
