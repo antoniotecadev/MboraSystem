@@ -141,7 +141,7 @@ public abstract class VendaDao {
             produtoVenda.setNome_produto(produto.getValue().getNome());
             produtoVenda.setQuantidade(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco());
             produtoVenda.setPreco_total(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())));
-            produtoVenda.setCodigo_Barra(venda.getCodigo_qr());
+            produtoVenda.setCodigo_Barra(venda.getCodigo_qr() + "/" + idvenda);
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
             produtoVenda.setIva(produto.getValue().isIva());
             produtoVenda.setIdvenda(idvenda);
