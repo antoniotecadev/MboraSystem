@@ -129,10 +129,14 @@ public abstract class VendaDao {
             ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas WHERE data_cria = :data GROUP BY nome_produto ORDER BY sum(quantidade) ASC LIMIT 3")
     public abstract LiveData<List<ProdutoVenda>> getProdutoMenosVendido(String data);
 
+    @Query("UPDATE vendas SET codigo_qr = :ref WHERE id = :idvenda")
+    public abstract void updateReferencia(String ref, long idvenda);
+
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
         long idvenda = insert(venda);
+        updateReferencia(venda.getCodigo_qr() + "/" + idvenda, idvenda);
         for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
             produtoVenda.setNome_produto(produto.getValue().getNome());
             produtoVenda.setQuantidade(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco());

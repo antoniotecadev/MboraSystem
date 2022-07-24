@@ -245,7 +245,7 @@ public class VendaFragment extends Fragment {
             }
 
             nomeCliente.setText(venda.getNome_cliente());
-            referencia.setText(venda.getCodigo_qr() + "/" + venda.getId());
+            referencia.setText(venda.getCodigo_qr());
             quantidade.setText(String.valueOf(venda.getQuantidade()));
             total.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
             desconto.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto())));
