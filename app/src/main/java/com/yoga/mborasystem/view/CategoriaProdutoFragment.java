@@ -370,11 +370,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        if (permanente) {
-                            categoriaProdutoViewModel.eliminarCategoria(categoria, false, false);
-                        } else {
-                            categoriaProdutoViewModel.eliminarCategoria(categoria, true, false);
-                        }
+                        categoriaProdutoViewModel.eliminarCategoria(categoria, !permanente, false);
                         categoriaProdutoViewModel.consultarCategorias(null, isLixeira);
                     }
             ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
