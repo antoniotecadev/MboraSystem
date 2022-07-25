@@ -109,7 +109,6 @@ public class ListProdutoFragment extends Fragment {
             binding.btnCriarProdutoFragment.setVisibility(View.GONE);
         }
 
-
         produtoViewModel.consultarProdutos(this.idcategoria, false, null, isLixeira);
         produtoViewModel.getListaProdutos().observe(getViewLifecycleOwner(), produtos -> {
             binding.chipQuantidadeProduto.setText(produtos.size() + "");
@@ -130,8 +129,7 @@ public class ListProdutoFragment extends Fragment {
                 createProduto(idcategoria, categoria);
             }
         });
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira)
-        );
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira));
 
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
             StringBuilder dt = new StringBuilder();
@@ -324,7 +322,9 @@ public class ListProdutoFragment extends Fragment {
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
             if (isEliminar) {
-                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(null, false, null, true));
+                Produto prod = new Produto();
+                prod.setIdcategoria(idcategoria);
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(prod, false, null, true, true));
             } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, 0, true));
             }
@@ -442,7 +442,7 @@ public class ListProdutoFragment extends Fragment {
                     .setTitle(getString(R.string.eliminar) + " (" + produto.getNome() + ")")
                     .setMessage(getString(R.string.tem_certeza_eliminar_produto))
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, false, null, false))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, false, null, false, true))
                     .show();
         }
 
@@ -455,8 +455,7 @@ public class ListProdutoFragment extends Fragment {
             alert.setMessage(getString(mensagem));
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        produtoViewModel.eliminarProduto(produto, !permanente, null, false);
-                        produtoViewModel.consultarProdutos(idcategoria, false, null, isLixeira);
+                        produtoViewModel.eliminarProduto(produto, !permanente, null, false, false);
                     }
             ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();

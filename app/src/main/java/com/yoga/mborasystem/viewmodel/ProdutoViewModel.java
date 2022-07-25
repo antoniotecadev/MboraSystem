@@ -112,7 +112,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                 produto.setPercentagemIva(taxaIva);
                 produto.setIdcategoria(idcategoria);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                criarProduto(produto, dialog, continuar, idcategoria);
+                criarProduto(produto, dialog, continuar);
                 nome.setText("");
                 preco.setText(getApplication().getText(R.string.preco_zero));
                 precofornecedor.setText(getApplication().getText(R.string.preco_zero));
@@ -139,7 +139,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     private int contar = 0;
 
     @SuppressLint("CheckResult")
-    private void criarProduto(Produto produto, AlertDialog dialog, Boolean continuar, long idcategoria) {
+    private void criarProduto(Produto produto, AlertDialog dialog, Boolean continuar) {
         Completable.fromAction(() -> produtoRepository.insert(produto))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -153,10 +153,10 @@ public class ProdutoViewModel extends AndroidViewModel {
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_criado) + " " + ++contar, R.drawable.ic_toast_feito);
-                        if (continuar) {
+                        if (continuar && dialog != null) {
                             dialog.dismiss();
                         }
-                        consultarProdutos(idcategoria, false, null, false);
+                        consultarProdutos(produto.getIdcategoria(), false, null, false);
                     }
 
                     @Override
@@ -182,7 +182,10 @@ public class ProdutoViewModel extends AndroidViewModel {
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.alteracao_feita), R.drawable.ic_toast_feito);
-                        dialog.dismiss();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                        consultarProdutos(produto.getIdcategoria(), false, null, false);
                     }
 
                     @SuppressLint("CheckResult")
@@ -199,7 +202,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarProduto(Produto produto, boolean isLixeira, Dialog dialog, boolean eliminarTodasLixeira) {
+    public void eliminarProduto(Produto produto, boolean isLixeira, Dialog dialog, boolean eliminarTodasLixeira, boolean consultarProdutoLixeira) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> produtoRepository.delete(produto, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
@@ -221,18 +224,13 @@ public class ProdutoViewModel extends AndroidViewModel {
                         if (dialog != null) {
                             dialog.dismiss();
                         }
-                        if (isLixeira) {
-                            consultarProdutos(produto.getIdcategoria(), false, null, false);
-                        }
+                        consultarProdutos(produto.getIdcategoria(), false, null, consultarProdutoLixeira);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_eliminado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        if (isLixeira) {
-                            consultarProdutos(produto.getIdcategoria(), false, null, false);
-                        }
                     }
                 });
     }
@@ -575,18 +573,16 @@ public class ProdutoViewModel extends AndroidViewModel {
                         MainActivity.dismissProgressBar();
                         if (todosProdutos) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prods_rests), R.drawable.ic_toast_feito);
-                            consultarProdutos(0, false, null, true);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_rest), R.drawable.ic_toast_feito);
-                            consultarProdutos(0, false, null, true);
                         }
+                        consultarProdutos(0, false, null, true);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.prod_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        consultarProdutos(0, false, null, true);
                     }
                 });
     }

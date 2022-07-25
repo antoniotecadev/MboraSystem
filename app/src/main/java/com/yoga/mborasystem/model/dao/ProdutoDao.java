@@ -12,6 +12,7 @@ import com.yoga.mborasystem.model.entidade.Produto;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 @Dao
 public interface ProdutoDao {
@@ -32,13 +33,13 @@ public interface ProdutoDao {
     void deleteAllProdutoLixeira(int estado);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getProdutos(long idcat);
+    Maybe<List<Produto>> getProdutos(long idcat);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     List<Produto> getProdutosExport(long idcat) throws Exception;
 
     @Query("SELECT * FROM produtos WHERE estado = 3 ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getProdutosLixeira();
+    Maybe<List<Produto>> getProdutosLixeira();
 
     @Query("SELECT count(id) FROM produtos WHERE estado != 3")
     LiveData<Long> getProdutos();

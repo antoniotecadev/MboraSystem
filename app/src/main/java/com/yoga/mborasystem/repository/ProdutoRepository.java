@@ -16,7 +16,9 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 public class ProdutoRepository {
     private final ProdutoDao produtoDao;
@@ -47,7 +49,7 @@ public class ProdutoRepository {
         }
     }
 
-    public Flowable<List<Produto>> getProdutos(long idcat, boolean isLixeira) {
+    public Maybe<List<Produto>> getProdutos(long idcat, boolean isLixeira) {
         if (isLixeira) {
             return produtoDao.getProdutosLixeira();
         } else {
