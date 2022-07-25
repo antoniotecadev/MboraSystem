@@ -409,7 +409,7 @@ public class ListProdutoFragment extends Fragment {
                                 caixaDialogo(produto, getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
                                 return false;
                             });
-                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                            menu.add(getString(R.string.eliminar_produto)).setOnMenuItemClickListener(item -> {
                                 caixaDialogo(produto, getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
                                 return false;
                             });
