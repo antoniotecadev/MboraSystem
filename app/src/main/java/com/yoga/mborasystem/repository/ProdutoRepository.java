@@ -16,7 +16,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 
