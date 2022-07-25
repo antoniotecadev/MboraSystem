@@ -11,7 +11,6 @@ import com.yoga.mborasystem.model.entidade.Produto;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 
 @Dao
@@ -51,10 +50,10 @@ public interface ProdutoDao {
 //    LiveData<Long> getQuantidadeProduto(long idcategoria);
 
     @Query("SELECT * FROM produtos WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
-    Flowable<List<Produto>> searchProdutos(String search);
+    Maybe<List<Produto>> searchProdutos(String search);
 
     @Query("SELECT * FROM produtos WHERE estado = 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
-    Flowable<List<Produto>> searchProdutosLixeira(String search);
+    Maybe<List<Produto>> searchProdutosLixeira(String search);
 
     @Query("UPDATE produtos SET estado = :est WHERE id = :id")
     void restaurarProduto(int est, long id);
@@ -63,47 +62,47 @@ public interface ProdutoDao {
     void restaurarTodosProdutos(int est);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND codigoBarra = :codigoBar ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar);
+    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax);
+    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND codigoBarra = :codigoBar AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd);
+    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd);
 }

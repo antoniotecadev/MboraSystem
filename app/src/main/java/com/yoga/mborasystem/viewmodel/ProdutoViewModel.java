@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -523,7 +524,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    private void filtrar(Flowable<List<Produto>> listProduto, AlertDialog dialog) {
+    private void filtrar(Maybe<List<Produto>> listProduto, AlertDialog dialog) {
         MainActivity.getProgressBar();
         compositeDisposable.add(listProduto
                 .subscribeOn(Schedulers.io())

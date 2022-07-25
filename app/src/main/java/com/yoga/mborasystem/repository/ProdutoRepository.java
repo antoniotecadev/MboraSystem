@@ -16,7 +16,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 
 public class ProdutoRepository {
@@ -68,7 +67,7 @@ public class ProdutoRepository {
         return produtoDao.getPrecoFornecedor();
     }
 
-    public Flowable<List<Produto>> searchProdutos(String produto, boolean isLixeira) {
+    public Maybe<List<Produto>> searchProdutos(String produto, boolean isLixeira) {
         if (isLixeira) {
             return produtoDao.searchProdutosLixeira(produto);
         } else {
@@ -84,63 +83,63 @@ public class ProdutoRepository {
         }
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar, precoMin, precoMax, estadoProd);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome) {
         return produtoDao.getFilterProdutos(idcat, idprodnome);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutos(idcat, precoMin, precoMax);
     }
 
-    public Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar) {
+    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar) {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, estadoProd);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar, precoMin, precoMax);
     }
 
-    public Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutosCodBar(idcat, idprodnome, precoMin, precoMax, estadoProd);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar, estadoProd);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, codigoBar, precoMin, precoMax, estadoProd);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, precoMin, precoMax);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, estadoProd);
     }
 
-    public Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax) {
+    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar, precoMin, precoMax);
     }
 
-    public Flowable<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, precoMin, precoMax, estadoProd);
     }
 
-    public Flowable<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd) {
+    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd) {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar, estadoProd);
     }
 
