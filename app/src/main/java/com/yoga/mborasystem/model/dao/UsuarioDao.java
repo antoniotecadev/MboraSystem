@@ -1,21 +1,20 @@
 package com.yoga.mborasystem.model.dao;
 
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+
 import com.yoga.mborasystem.model.entidade.Usuario;
 
 import java.util.List;
 
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
 import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 @Dao
 public interface UsuarioDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insert(Usuario usuario);
 
     @Query("SELECT * FROM usuarios WHERE estado != 3 ORDER BY id DESC")

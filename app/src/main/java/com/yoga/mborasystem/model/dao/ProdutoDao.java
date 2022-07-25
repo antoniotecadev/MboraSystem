@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -16,7 +15,7 @@ import io.reactivex.Maybe;
 @Dao
 public interface ProdutoDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insert(Produto produto);
 
     @Query("UPDATE produtos SET nome = :nome, tipo = :tipo, unidade = :unidade, preco = :preco, precofornecedor = :precofor, quantidade = :quanti, codigoBarra = :codbar, iva = :iva, percentagemIva = :percentagemIva, codigoMotivoIsencao = :codigoMotivoIsencao, estado = :est, data_modifica = :data WHERE id = :id")

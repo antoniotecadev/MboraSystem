@@ -1,21 +1,20 @@
 package com.yoga.mborasystem.model.dao;
 
-import com.yoga.mborasystem.model.entidade.ClienteCantina;
-
-import java.util.List;
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import com.yoga.mborasystem.model.entidade.ClienteCantina;
+
+import java.util.List;
 
 import io.reactivex.Flowable;
 
 @Dao
 public interface ClienteCantinaDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insert(ClienteCantina clienteCantina);
 
     @Query("SELECT * FROM clientecantina WHERE estado != 3 ORDER BY id DESC")
