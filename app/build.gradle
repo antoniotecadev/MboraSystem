@@ -32,8 +32,10 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation":
-                                     "$projectDir/schemas".toString()]
+                arguments += [
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
             }
         }
 
@@ -84,7 +86,7 @@ dependencies {
     implementation 'com.github.ybq:android-SpinKit:1.4.0'
 
     //  Component
-    def nav_version = "2.4.2"
+    def nav_version = "2.5.0"
 
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
@@ -93,12 +95,12 @@ dependencies {
     apply plugin: "androidx.navigation.safeargs"
 
     // Room DataBase
-    def room_version = "2.3.0-rc01"
+    def room_version = "2.4.0"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // optional - RxJava support for Room
-    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "androidx.room:room-rxjava3:$room_version"
 
     // Glide
 //    implementation"com.github.bumptech.glide: glide: 4.12.0"
@@ -108,7 +110,7 @@ dependencies {
     implementation "com.xwray:groupie:2.9.0"
 
     // Paging library
-    def paging_version = "3.0.0-beta01"
+    def paging_version = "3.1.1"
     implementation "androidx.paging:paging-runtime:$paging_version"
 
     // alternatively - without Android dependencies for tests
@@ -120,12 +122,12 @@ dependencies {
     // optional - RxJava3 support
     implementation "androidx.paging:paging-rxjava3:$paging_version"
 
-    // RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     // RxAndroid
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    // RxJava
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
 
-    def lifecycle_version = "2.3.0"
+    def lifecycle_version = "2.5.0"
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     // LiveData
@@ -149,7 +151,7 @@ dependencies {
     implementation 'com.koushikdutta.ion:ion:3.1.0'
 
     //Configuração
-    implementation 'androidx.preference:preference:1.1.0-alpha04'
+    implementation 'androidx.preference:preference:1.2.0'
 
     //Localização do dispositivo
     implementation 'com.google.android.gms:play-services-location:19.0.1'
