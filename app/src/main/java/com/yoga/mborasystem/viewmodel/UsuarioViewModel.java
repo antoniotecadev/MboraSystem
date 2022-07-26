@@ -7,11 +7,14 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
@@ -26,19 +29,14 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class UsuarioViewModel extends AndroidViewModel {
 
