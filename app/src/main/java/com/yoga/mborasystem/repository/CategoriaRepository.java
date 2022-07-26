@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class CategoriaRepository {
 
