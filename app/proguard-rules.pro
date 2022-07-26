@@ -28,3 +28,6 @@
 -keep class javax.script.** { *; }
 -keep class com.sun.script.javascript.** { *; }
 -keep class org.mozilla.javascript.** { *; }
+
+#RxJava
+-dontwarn java.ultil.concurrent.Flow*
