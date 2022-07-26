@@ -1,13 +1,9 @@
 package com.yoga.mborasystem.repository;
 
-import android.app.Application;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Handler;
 
 import androidx.lifecycle.LiveData;
 
-import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.ProdutoDao;
 import com.yoga.mborasystem.model.entidade.Produto;

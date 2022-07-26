@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 
@@ -32,7 +31,6 @@ import java.util.regex.Pattern;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
