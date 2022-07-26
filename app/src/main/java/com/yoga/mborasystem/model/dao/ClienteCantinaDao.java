@@ -9,7 +9,7 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 
 @Dao
 public interface ClienteCantinaDao {
