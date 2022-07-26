@@ -143,30 +143,26 @@ public class ProdutoRepository {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar, estadoProd);
     }
 
-    public void importarProdutos(List<String> produtos, Application context, Handler handler, boolean vemCat, Long idcategoria) {
+    public void importarProdutos(List<String> produtos, boolean vemCat, Long idcategoria) {
         Produto produto = new Produto();
-        try {
-            for (String pt : produtos) {
-                String[] prod = pt.split(",");
-                produto.setNome(prod[0]);
-                produto.setTipo(prod[1]);
-                produto.setUnidade(prod[2]);
-                produto.setCodigoMotivoIsencao(prod[3]);
-                produto.setPercentagemIva(Integer.valueOf(prod[4]));
-                produto.setPreco(Integer.parseInt(prod[5]));
-                produto.setPrecofornecedor(Integer.parseInt(prod[6]));
-                produto.setQuantidade(Integer.parseInt(prod[7]));
-                produto.setCodigoBarra(prod[8]);
-                produto.setIva(Boolean.parseBoolean(prod[9]));
-                produto.setEstado(Integer.parseInt(prod[10]));
-                produto.setStock(Boolean.parseBoolean(prod[11]));
-                produto.setIdcategoria(vemCat ? Long.parseLong(prod[12]) : idcategoria);
-                produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                produtoDao.insert(produto);
-            }
-            handler.post(() -> Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.produto_importado), R.drawable.ic_toast_feito));
-        } catch (Exception e) {
-            handler.post(() -> Ultilitario.showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.ficheiro_certo), R.drawable.ic_toast_erro));
+        for (String pt : produtos) {
+            String[] prod = pt.split(",");
+            produto.setId(0);
+            produto.setNome(prod[0]);
+            produto.setTipo(prod[1]);
+            produto.setUnidade(prod[2]);
+            produto.setCodigoMotivoIsencao(prod[3]);
+            produto.setPercentagemIva(Integer.valueOf(prod[4]));
+            produto.setPreco(Integer.parseInt(prod[5]));
+            produto.setPrecofornecedor(Integer.parseInt(prod[6]));
+            produto.setQuantidade(Integer.parseInt(prod[7]));
+            produto.setCodigoBarra(prod[8]);
+            produto.setIva(Boolean.parseBoolean(prod[9]));
+            produto.setEstado(Integer.parseInt(prod[10]));
+            produto.setStock(Boolean.parseBoolean(prod[11]));
+            produto.setIdcategoria(vemCat ? Long.parseLong(prod[12]) : idcategoria);
+            produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+            produtoDao.insert(produto);
         }
     }
 }

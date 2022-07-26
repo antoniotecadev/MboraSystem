@@ -589,8 +589,27 @@ public class ProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void importarProdutos(List<String> produtos, Handler handler, boolean vemCat, Long idcategoria) {
-        produtoRepository.importarProdutos(produtos, getApplication(), handler, vemCat, idcategoria);
+    public void importarProdutos(List<String> produtos, boolean vemCat, Long idcategoria) {
+        Completable.fromAction(() -> produtoRepository.importarProdutos(produtos, vemCat, idcategoria))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_importado), R.drawable.ic_toast_feito);
+                        consultarProdutos(idcategoria, false, null, false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.ficheiro_certo) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
     }
 
     @Override

@@ -510,7 +510,6 @@ public class ListProdutoFragment extends Fragment {
 
     public void readTextFromUri(Uri uri) throws IOException {
         executor = Executors.newSingleThreadExecutor();
-        Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
             List<String> produtos = new ArrayList<>();
             try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
@@ -526,7 +525,7 @@ public class ListProdutoFragment extends Fragment {
             } catch (IOException e) {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
-            produtoViewModel.importarProdutos(produtos, handler, false, this.idcategoria);
+            produtoViewModel.importarProdutos(produtos, false, this.idcategoria);
         });
     }
 
