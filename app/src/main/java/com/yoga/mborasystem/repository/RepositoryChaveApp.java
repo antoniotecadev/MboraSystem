@@ -8,7 +8,7 @@ import com.yoga.mborasystem.model.entidade.ChaveApp;
 
 import java.lang.ref.WeakReference;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 public class RepositoryChaveApp {
 
