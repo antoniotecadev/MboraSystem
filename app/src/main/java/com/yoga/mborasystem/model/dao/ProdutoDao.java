@@ -10,7 +10,7 @@ import com.yoga.mborasystem.model.entidade.Produto;
 
 import java.util.List;
 
-import io.reactivex.Maybe;
+import io.reactivex.rxjava3.core.Maybe;
 
 @Dao
 public interface ProdutoDao {

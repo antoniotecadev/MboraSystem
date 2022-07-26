@@ -12,7 +12,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import io.reactivex.Maybe;
+import io.reactivex.rxjava3.core.Maybe;
 
 public class ProdutoRepository {
     private final ProdutoDao produtoDao;
