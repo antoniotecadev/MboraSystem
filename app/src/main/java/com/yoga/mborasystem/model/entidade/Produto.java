@@ -11,6 +11,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
+
 @Keep
 @Entity(tableName = "produtos", indices = {@Index(value = {"idcategoria"})},
         foreignKeys = @ForeignKey(entity = Categoria.class, parentColumns = "id", childColumns = "idcategoria", onDelete = CASCADE))
@@ -21,6 +22,7 @@ public class Produto implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
+
     private String nome;
     private String tipo;
     private String unidade;

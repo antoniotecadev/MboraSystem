@@ -111,6 +111,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             produto.setStock(stock.isChecked());
             produto.setIdcategoria(idcategoria);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
+                produto.setId(0);
                 produto.setPercentagemIva(taxaIva);
                 produto.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 criarProduto(produto, dialog, continuar);
