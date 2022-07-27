@@ -175,4 +175,7 @@ dependencies {
     //Utilitario comum para java (XSD) - gerar XML
     implementation 'in.jlibs:jlibs-xsd:3.0.1'
 
+    // AutoDispose - Descartar assinaturas de RxJava
+    implementation 'com.uber.autodispose2:autodispose-androidx-lifecycle:2.1.1'
+
 }
