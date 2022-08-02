@@ -228,15 +228,15 @@ public class ListProdutoFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void exportarProdutos(String nomeFicheiro, boolean isLocal) {
+    private void exportarProdutos(String nomeCategoria, boolean isLocal) {
         if (isLocal) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), data, "produtos.csv", nomeCategoria, Ultilitario.getDateCurrent());
             } else {
                 Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         } else {
-            Ultilitario.exportarNuvem(getContext(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+            Ultilitario.exportarNuvem(getContext(), data, nomeCategoria + Ultilitario.getDateCurrent() + "_produtos.csv", nomeCategoria, Ultilitario.getDateCurrent());
         }
     }
 
@@ -270,26 +270,25 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void exportarProduto() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor = Executors.newSingleThreadExecutor();
         new android.app.AlertDialog.Builder(requireContext())
                 .setIcon(R.drawable.ic_baseline_store_24)
                 .setTitle(R.string.exportar)
-                .setSingleChoiceItems(R.array.array_local_nuvem, 3, (dialogInterface, i) -> {
-                    executor = Executors.newSingleThreadExecutor();
-                    Handler handler = new Handler(Looper.getMainLooper());
+                .setSingleChoiceItems(R.array.array_local_nuvem, 0, (dialogInterface, i) -> {
                     switch (i) {
                         case 0:
                             tipo = 0;
-                            exportarProdutos(executor, handler, dialogInterface);
                             break;
                         case 1:
                             tipo = 1;
-                            exportarProdutos(executor, handler, dialogInterface);
                             break;
                         default:
                             break;
                     }
                 })
-                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
+                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> exportarProdutos(executor, handler, dialogInterface)).show();
     }
 
     public void exportarProdutos(ExecutorService executor, Handler handler, DialogInterface dialogInterface) {

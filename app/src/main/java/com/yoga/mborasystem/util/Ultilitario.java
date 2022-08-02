@@ -348,7 +348,7 @@ public class Ultilitario {
         spinner.setAdapter(itemAdapter);
     }
 
-    public static void setItemselectedSpinner(Context context, int array_values, String value, AppCompatSpinner list){
+    public static void setItemselectedSpinner(Context context, int array_values, String value, AppCompatSpinner list) {
         final String[] values = context.getResources().getStringArray(array_values);
         for (int i = 0; i <= values.length; i++) {
             if (value.equalsIgnoreCase(values[i])) {
@@ -406,6 +406,7 @@ public class Ultilitario {
             Uri path = FileProvider.getUriForFile(context, "com.yoga.mborasystem", filelocation);
             Intent fileIntent = new Intent(Intent.ACTION_SEND);
             fileIntent.setType("text/csv");
+            fileIntent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data);
             fileIntent.putExtra(Intent.EXTRA_SUBJECT, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data);
             fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             fileIntent.putExtra(Intent.EXTRA_STREAM, path);
