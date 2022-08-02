@@ -121,7 +121,7 @@ public class FacturaFragment extends Fragment {
                 resultCodeBar = result.getText();
                 barcodeView.setStatusText(result.getText() + "\n" + getString(R.string.ja_scaneado));
                 beepManager.playBeepSoundAndVibrate();
-                produtoViewModel.searchProduto(resultCodeBar, false);
+//                produtoViewModel.searchProduto(resultCodeBar, false);
                 Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false, null, "", "");
             }
             //Added preview of scanned barcode
@@ -953,7 +953,7 @@ public class FacturaFragment extends Fragment {
                 if (newText.isEmpty()) {
                     produtoViewModel.consultarProdutos(idc, false, null, false);
                 } else {
-                    produtoViewModel.searchProduto(newText, false);
+//                    produtoViewModel.searchProduto(newText, false);
                 }
                 return false;
             }

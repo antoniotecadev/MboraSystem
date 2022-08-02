@@ -16,7 +16,8 @@
       android:clickable="true"
       android:foreground="?attr/selectableItemBackground"
       app:cardBackgroundColor="?attr/colorButtonNormal"
-      app:cardElevation="6dp">
+      app:cardElevation="6dp"
+      android:focusable="true">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -90,12 +91,12 @@
             android:id="@+id/txtReferenciaProduto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/estado_produto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

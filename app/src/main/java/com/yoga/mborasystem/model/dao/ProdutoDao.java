@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.model.dao;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,8 +10,6 @@ import androidx.room.Query;
 import com.yoga.mborasystem.model.entidade.Produto;
 
 import java.util.List;
-
-import io.reactivex.rxjava3.core.Maybe;
 
 @Dao
 public interface ProdutoDao {
@@ -30,14 +29,14 @@ public interface ProdutoDao {
     @Query("DELETE FROM produtos WHERE estado = :estado")
     void deleteAllProdutoLixeira(int estado);
 
-    @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getProdutos(long idcat);
+    @Query("SELECT * FROM produtos WHERE idcategoria = :idcategoria AND estado != 3 ORDER BY produtos.id DESC")
+    PagingSource<Integer, Produto> getProdutos(long idcategoria);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     List<Produto> getProdutosExport(long idcat) throws Exception;
 
     @Query("SELECT * FROM produtos WHERE estado = 3 ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getProdutosLixeira();
+    PagingSource<Integer, Produto> getProdutosLixeira();
 
     @Query("SELECT count(id) FROM produtos WHERE estado != 3")
     LiveData<Long> getProdutos();
@@ -45,14 +44,17 @@ public interface ProdutoDao {
     @Query("SELECT * FROM produtos WHERE estado != 3")
     LiveData<List<Produto>> getPrecoFornecedor();
 
-//    @Query("SELECT COUNT(id) FROM produtos  WHERE idcategoria = :idcategoria AND estado = 1")
-//    LiveData<Long> getQuantidadeProduto(long idcategoria);
+    @Query("SELECT COUNT(id) FROM produtos  WHERE idcategoria = :idcategoria AND estado != 3")
+    LiveData<Long> getQuantidadeProduto(long idcategoria);
 
-    @Query("SELECT * FROM produtos WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
-    Maybe<List<Produto>> searchProdutos(String search);
+    @Query("SELECT COUNT(id) FROM produtos  WHERE estado = 3")
+    LiveData<Long> getQuantidadeProdutoLixeira();
 
-    @Query("SELECT * FROM produtos WHERE estado = 3 AND (nome LIKE '%' || :search || '%' OR codigoBarra LIKE '%' || :search || '%') ")
-    Maybe<List<Produto>> searchProdutosLixeira(String search);
+    @Query("SELECT * FROM produtos WHERE idcategoria = :idcategoria AND estado != 3 AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
+    PagingSource<Integer, Produto> searchProdutos(long idcategoria, String produto);
+
+    @Query("SELECT * FROM produtos WHERE estado = 3 AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
+    PagingSource<Integer, Produto> searchProdutosLixeira(String produto);
 
     @Query("UPDATE produtos SET estado = :est WHERE id = :id")
     void restaurarProduto(int est, long id);
@@ -61,47 +63,47 @@ public interface ProdutoDao {
     void restaurarTodosProdutos(int est);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND codigoBarra = :codigoBar ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar);
+    PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String codigoBar);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax);
+    PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND codigoBarra = :codigoBar AND estado = :estadoProd ORDER BY produtos.id DESC")
-    Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd);
+    PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd);
 }

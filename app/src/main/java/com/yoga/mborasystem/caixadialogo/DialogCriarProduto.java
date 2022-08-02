@@ -260,14 +260,17 @@ public class DialogCriarProduto extends DialogFragment {
     }
 
     private void createProduto(long idcategoria) {
+        produtoViewModel.crud = true;
         produtoViewModel.criarProduto(binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, dialog, !binding.switchContinuar.isChecked(), idcategoria);
     }
 
     private void updateProduto(long idproduto, long idcategoria) {
+        produtoViewModel.crud = true;
         produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, idcategoria, dialog);
     }
 
     private void deleteProduto(Produto produto) {
+        produtoViewModel.crud = true;
         produto.setId(produto.getId());
         produto.setEstado(Ultilitario.TRES);
         produto.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
@@ -275,7 +278,7 @@ public class DialogCriarProduto extends DialogFragment {
         alert.setTitle(getString(R.string.env_lx) + " (" + produto.getNome() + ")");
         alert.setMessage(getString(R.string.env_prod_lix));
         alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
-        alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, true, dialog, false, false));
+        alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, true, dialog, false));
         alert.show();
     }
 

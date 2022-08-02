@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 
@@ -12,8 +13,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelKt;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.PagingSource;
+import androidx.paging.rxjava3.PagingRx;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -29,18 +37,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableObserver;
-import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ProdutoViewModel extends AndroidViewModel {
 
+    public boolean crud;
     private final Produto produto;
     private Disposable disposable;
+    private LifecycleOwner lifecycleOwner;
+    public Flowable<PagingData<Produto>> flowable;
     private final ProdutoRepository produtoRepository;
     private final CompositeDisposable compositeDisposable;
 
@@ -60,6 +73,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<List<Produto>> listaProdutos;
+    private MutableLiveData<PagingData<Produto>> listaProdutospaging;
     private MutableLiveData<Event<List<Produto>>> listaProdutosImport;
 
     public MutableLiveData<List<Produto>> getListaProdutos() {
@@ -67,6 +81,13 @@ public class ProdutoViewModel extends AndroidViewModel {
             listaProdutos = new MutableLiveData<>();
         }
         return listaProdutos;
+    }
+
+    public MutableLiveData<PagingData<Produto>> getListaProdutosPaging() {
+        if (listaProdutospaging == null) {
+            listaProdutospaging = new MutableLiveData<>();
+        }
+        return listaProdutospaging;
     }
 
     public MutableLiveData<Event<List<Produto>>> getListaProdutosisExport() {
@@ -95,7 +116,6 @@ public class ProdutoViewModel extends AndroidViewModel {
         } else if (isCampoVazio(String.valueOf(idcategoria)) || numero.matcher(String.valueOf(idcategoria)).find()) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.idcategoria_nao_encontrado), R.drawable.ic_toast_erro);
         } else {
-            MainActivity.getProgressBar();
             produto.setNome(nome.getText().toString());
             produto.setTipo(tipo.getSelectedItem().toString());
             produto.setUnidade(unidade.getSelectedItem().toString());
@@ -143,7 +163,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         Completable.fromAction(() -> produtoRepository.insert(produto))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -151,17 +171,14 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_criado) + " " + ++contar, R.drawable.ic_toast_feito);
                         if (continuar && dialog != null) {
                             dialog.dismiss();
                         }
-                        consultarProdutos(produto.getIdcategoria(), false, null, false);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_criado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -172,7 +189,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         Completable.fromAction(() -> produtoRepository.update(produto))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -180,18 +197,15 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.alteracao_feita), R.drawable.ic_toast_feito);
                         if (dialog != null) {
                             dialog.dismiss();
                         }
-                        consultarProdutos(produto.getIdcategoria(), false, null, false);
                     }
 
                     @SuppressLint("CheckResult")
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         if (Objects.requireNonNull(e.getMessage()).contains("UNIQUE")) {
                             Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.produto_existe) + " ou " + getApplication().getString(R.string.codigobarra_existe), R.drawable.ic_toast_erro);
                         } else {
@@ -202,12 +216,11 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarProduto(Produto produto, boolean isLixeira, Dialog dialog, boolean eliminarTodasLixeira, boolean consultarProdutoLixeira) {
-        MainActivity.getProgressBar();
+    public void eliminarProduto(Produto produto, boolean isLixeira, Dialog dialog, boolean eliminarTodasLixeira) {
         Completable.fromAction(() -> produtoRepository.delete(produto, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -215,7 +228,6 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         if (!isLixeira || eliminarTodasLixeira) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.pds_elim) : getApplication().getString(R.string.produto_eliminado), R.drawable.ic_toast_feito);
                         } else {
@@ -224,12 +236,10 @@ public class ProdutoViewModel extends AndroidViewModel {
                         if (dialog != null) {
                             dialog.dismiss();
                         }
-                        consultarProdutos(produto.getIdcategoria(), false, null, consultarProdutoLixeira);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.produto_nao_eliminado) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -240,23 +250,40 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public void consultarProdutos(long idcategoria, boolean isExport, SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
-        MainActivity.getProgressBar();
-        compositeDisposable.add(produtoRepository.getProdutos(idcategoria, isLixeira)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> {
-                    if (isExport) {
-                        getListaProdutosisExport().setValue(new Event<>(produtos));
+
+    }
+
+    public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
+        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(10), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText));
+        flowable = PagingRx.getFlowable(pager);
+        PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
+        Handler handler = new Handler();
+        flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
+                .subscribe(produto -> {
+                    if (crud) {
+                        getListaProdutosPaging().postValue(produto);
                     } else {
-                        getListaProdutos().setValue(produtos);
+                        getListaProdutosPaging().setValue(produto);
                     }
-                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                    MainActivity.dismissProgressBar();
-                }, throwable -> {
-                    MainActivity.dismissProgressBar();
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                }));
+                }, throwable -> handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+    }
+
+    private void filtrar(PagingSource<Integer, Produto> listProduto, AlertDialog dialog) {
+        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(15, 15, false, 20), () -> listProduto);
+        flowable = PagingRx.getFlowable(pager);
+        PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
+        flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this.lifecycleOwner)))
+                .subscribe(produto -> {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    getListaProdutosPaging().postValue(produto);
+                }, throwable -> { });
+    }
+
+    public LiveData<Long> getQuantidadeProduto(long idcategoria, boolean isLixeira) {
+        return produtoRepository.getQuantidadeProduto(idcategoria, isLixeira);
     }
 
     public LiveData<List<Produto>> getPrecoFornecedor() {
@@ -523,46 +550,17 @@ public class ProdutoViewModel extends AndroidViewModel {
         }
     }
 
-    private void filtrar(Maybe<List<Produto>> listProduto, AlertDialog dialog) {
-        MainActivity.getProgressBar();
-        compositeDisposable.add(listProduto
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> {
-                    getListaProdutos().setValue(produtos);
-                    if (!produtos.isEmpty()) {
-                        dialog.dismiss();
-                    }
-                    MainActivity.dismissProgressBar();
-                }, throwable -> {
-                    MainActivity.dismissProgressBar();
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                }));
-    }
-
-//    public LiveData<Long> consultarQuantidadeProduto(long idcategoria) {
-//        return produtoRepository.getQuantidadeProduto(idcategoria);
-//    }
-
     @SuppressLint("SetTextI18n")
     public void codigoBarra(String result, TextInputEditText codigoBarra) {
         codigoBarra.setText(result);
     }
 
-    public void searchProduto(String produto, boolean isLixeira) {
-        compositeDisposable.add(produtoRepository.searchProdutos(produto, isLixeira)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> getListaProdutos().setValue(produtos), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
-    }
-
     @SuppressLint("CheckResult")
     public void restaurarProduto(int estado, long idproduto, boolean todosProdutos) {
-        MainActivity.dismissProgressBar();
         Completable.fromAction(() -> produtoRepository.restaurarProduto(estado, idproduto, todosProdutos))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -570,18 +568,15 @@ public class ProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         if (todosProdutos) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prods_rests), R.drawable.ic_toast_feito);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.prod_rest), R.drawable.ic_toast_feito);
                         }
-                        consultarProdutos(0, false, null, true);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.prod_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -591,7 +586,7 @@ public class ProdutoViewModel extends AndroidViewModel {
         Completable.fromAction(() -> produtoRepository.importarProdutos(produtos, vemCat, idcategoria))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         disposable = d;
@@ -600,7 +595,6 @@ public class ProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.produto_importado), R.drawable.ic_toast_feito);
-                        consultarProdutos(idcategoria, false, null, false);
                     }
 
                     @Override
@@ -613,11 +607,11 @@ public class ProdutoViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
+        if (disposable.isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
-            compositeDisposable.clear();
+        if (compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
         }
     }
 

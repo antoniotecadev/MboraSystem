@@ -3,6 +3,7 @@ package com.yoga.mborasystem.repository;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
 
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.ProdutoDao;
@@ -11,8 +12,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-
-import io.reactivex.rxjava3.core.Maybe;
 
 public class ProdutoRepository {
     private final ProdutoDao produtoDao;
@@ -43,11 +42,27 @@ public class ProdutoRepository {
         }
     }
 
-    public Maybe<List<Produto>> getProdutos(long idcat, boolean isLixeira) {
+    public LiveData<Long> getQuantidadeProduto(long idcategoria, boolean isLixeira) {
         if (isLixeira) {
-            return produtoDao.getProdutosLixeira();
+            return produtoDao.getQuantidadeProdutoLixeira();
         } else {
-            return produtoDao.getProdutos(idcat);
+            return produtoDao.getQuantidadeProduto(idcategoria);
+        }
+    }
+
+    public PagingSource<Integer, Produto> getProdutos(long idcategoria, boolean isLixeira, boolean isSearch, String produto) {
+        if (isLixeira) {
+            if (isSearch) {
+                return produtoDao.searchProdutosLixeira(produto);
+            } else {
+                return produtoDao.getProdutosLixeira();
+            }
+        } else {
+            if (isSearch) {
+                return produtoDao.searchProdutos(idcategoria, produto);
+            } else {
+                return produtoDao.getProdutos(idcategoria);
+            }
         }
     }
 
@@ -63,14 +78,6 @@ public class ProdutoRepository {
         return produtoDao.getPrecoFornecedor();
     }
 
-    public Maybe<List<Produto>> searchProdutos(String produto, boolean isLixeira) {
-        if (isLixeira) {
-            return produtoDao.searchProdutosLixeira(produto);
-        } else {
-            return produtoDao.searchProdutos(produto);
-        }
-    }
-
     public void restaurarProduto(int estado, long idproduto, boolean todosProdutoss) {
         if (todosProdutoss) {
             produtoDao.restaurarTodosProdutos(estado);
@@ -79,63 +86,63 @@ public class ProdutoRepository {
         }
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar, precoMin, precoMax, estadoProd);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome) {
         return produtoDao.getFilterProdutos(idcat, idprodnome);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutos(idcat, precoMin, precoMax);
     }
 
-    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar) {
+    public PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String codigoBar) {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, estadoProd);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar, precoMin, precoMax);
     }
 
-    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String idprodnome, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutosCodBar(idcat, idprodnome, precoMin, precoMax, estadoProd);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar, estadoProd);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String codigoBar, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, codigoBar, precoMin, precoMax, estadoProd);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, precoMin, precoMax);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, String codigoBar) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, codigoBar);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, String idprodnome, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, idprodnome, estadoProd);
     }
 
-    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax) {
+    public PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String codigoBar, int precoMin, int precoMax) {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar, precoMin, precoMax);
     }
 
-    public Maybe<List<Produto>> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutos(long idcat, int precoMin, int precoMax, int estadoProd) {
         return produtoDao.getFilterProdutos(idcat, precoMin, precoMax, estadoProd);
     }
 
-    public Maybe<List<Produto>> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd) {
+    public PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd) {
         return produtoDao.getFilterProdutosCodBar(idcat, codigoBar, estadoProd);
     }
 

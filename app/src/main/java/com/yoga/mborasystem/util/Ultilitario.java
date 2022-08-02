@@ -209,7 +209,7 @@ public class Ultilitario {
         });
     }
 
-    public static void naoEncontrado(Context context, GroupAdapter adapter, int m) {
+    public static GroupAdapter naoEncontrado(Context context, GroupAdapter adapter, int m) {
         adapter.add(new Item<GroupieViewHolder>() {
             @Override
             public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
@@ -222,6 +222,7 @@ public class Ultilitario {
                 return R.layout.fragment_vazio;
             }
         });
+        return adapter;
     }
 
     public static String generateKey(char[] senhaPin) throws NoSuchAlgorithmException, InvalidKeySpecException {

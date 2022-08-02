@@ -19,28 +19,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.paging.PagingDataAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
-import com.xwray.groupie.GroupieViewHolder;
-import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.FragmentProdutoBinding;
 import com.yoga.mborasystem.databinding.FragmentProdutoListBinding;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.util.EventObserver;
@@ -58,6 +58,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("rawtypes")
 public class ListProdutoFragment extends Fragment {
 
     private int tipo;
@@ -70,32 +71,29 @@ public class ListProdutoFragment extends Fragment {
     private GroupAdapter adapter;
     private ProdutoViewModel produtoViewModel;
     private FragmentProdutoListBinding binding;
-
+    private ProdutoAdapter pagingAdapter;
     private ExecutorService executor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         bundle = new Bundle();
         data = new StringBuilder();
         adapter = new GroupAdapter();
+        pagingAdapter = new ProdutoAdapter(new ProdutoComparator());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n"})
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProdutoListBinding.inflate(inflater, container, false);
-
         isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
         isMaster = ListProdutoFragmentArgs.fromBundle(getArguments()).getIsMaster();
-
-        binding.recyclerViewListaProduto.setAdapter(adapter);
+        binding.recyclerViewListaProduto.setAdapter(pagingAdapter);
         binding.recyclerViewListaProduto.setHasFixedSize(true);
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
-
         if (getArguments() != null) {
             long idcategoria = getArguments().getLong("idcategoria");
             String categoria = getArguments().getString("categoria");
@@ -103,35 +101,31 @@ public class ListProdutoFragment extends Fragment {
             this.categoria = categoria;
             requireActivity().setTitle(this.categoria);
         }
-
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.prod) + ")");
             binding.btnCriarProdutoFragment.setVisibility(View.GONE);
         }
-
-        produtoViewModel.consultarProdutos(this.idcategoria, false, null, isLixeira);
-        produtoViewModel.getListaProdutos().observe(getViewLifecycleOwner(), produtos -> {
-            binding.chipQuantidadeProduto.setText(produtos.size() + "");
-            adapter.clear();
-            if (produtos.isEmpty()) {
-                vazio = true;
-                Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
-            } else {
-                vazio = false;
-                for (Produto produto : produtos) {
-                    adapter.add(new ProdutoListPageAdapter(produto, getContext()));
-                }
-            }
+        produtoViewModel.getQuantidadeProduto(this.idcategoria, isLixeira).observe(getViewLifecycleOwner(), quantidade -> {
+//            binding.recyclerViewListaProduto.smoothScrollToPosition(0);
+            vazio = quantidade == 0;
+            binding.chipQuantidadeProduto.setText(String.valueOf(quantidade));
+            binding.recyclerViewListaProduto.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : pagingAdapter);
+        });
+        produtoViewModel.crud = false;
+        produtoViewModel.consultarProdutos(this.idcategoria, null, isLixeira, false, getViewLifecycleOwner());
+        produtoViewModel.getListaProdutosPaging().observe(getViewLifecycleOwner(), produtoPagingData -> {
+            Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
+            pagingAdapter.submitData(getLifecycle(), produtoPagingData);
         });
 
-        binding.btnCriarProdutoFragment.setOnClickListener(v -> {
+        binding.btnCriarProdutoFragment.setOnClickListener(v ->
+        {
             if (!categoria.isEmpty()) {
                 createProduto(idcategoria, categoria);
             }
         });
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira));
-
-        produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
+        produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod ->
+        {
             StringBuilder dt = new StringBuilder();
             if (prod.isEmpty()) {
                 Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
@@ -143,6 +137,93 @@ public class ListProdutoFragment extends Fragment {
                 exportarProdutos(this.categoria, tipo == 0 && Ultilitario.isLocal);
             }
         }));
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_pesquisa_criar_produto, menu);
+                if (getArguments() != null) {
+                    if (!getArguments().getBoolean("master")) {
+                        menu.findItem(R.id.dialogCriarProduto).setVisible(false);
+                        binding.btnCriarProdutoFragment.setVisibility(View.GONE);
+                    }
+                }
+                if (isLixeira) {
+                    menu.findItem(R.id.dialogCriarProduto).setVisible(false);
+                    menu.findItem(R.id.dialogFiltrarProduto).setVisible(false);
+                    menu.findItem(R.id.btnScannerBack).setVisible(false);
+                    menu.findItem(R.id.exportarproduto).setVisible(false);
+                    menu.findItem(R.id.importarproduto).setVisible(false);
+                } else {
+                    menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
+                    menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
+                }
+                SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+                MenuItem menuItem = menu.findItem(R.id.app_bar_search);
+                SearchView searchView = (SearchView) menuItem.getActionView();
+                searchView.setQueryHint(getString(R.string.prod) + ", " + getString(R.string.codigo_bar));
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
+                searchView.onActionViewExpanded();
+                menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        produtoViewModel.crud = false;
+                        produtoViewModel.consultarProdutos(idcategoria, null, isLixeira, false, getViewLifecycleOwner());
+                        return true;
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (newText.isEmpty()) {
+                            produtoViewModel.crud = false;
+                            produtoViewModel.consultarProdutos(idcategoria, null, isLixeira, false, getViewLifecycleOwner());
+                        } else {
+                            produtoViewModel.crud = true;
+                            produtoViewModel.consultarProdutos(idcategoria, newText, isLixeira, true, getViewLifecycleOwner());
+                        }
+                        return false;
+                    }
+                });
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.dialogCriarProduto) {
+                    if (!categoria.isEmpty()) {
+                        createProduto(idcategoria, categoria);
+                    }
+                } else if (itemId == R.id.dialogFiltrarProduto) {
+                    filtrarProduto(idcategoria);
+                } else if (itemId == R.id.btnScannerBack) {
+                    scanearCodigoQr();
+                } else if (itemId == R.id.exportarproduto) {
+                    exportarProduto();
+                } else if (itemId == R.id.importarproduto) {
+                    importarProdutos();
+                } else if (itemId == R.id.btnEliminarTodosLixo) {
+                    dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.elim_pds), getString(R.string.tem_cert_elim_pds), true);
+                } else if (itemId == R.id.btnRestaurarTodosLixo) {
+                    dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.rest_pds), getString(R.string.rest_tdos_prods), false);
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
+
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            produtoViewModel.crud = false;
+            produtoViewModel.consultarProdutos(this.idcategoria, null, isLixeira, false, getViewLifecycleOwner());
+        });
 
         return binding.getRoot();
     }
@@ -168,7 +249,6 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void createProduto(long id, String categoria) {
-        MainActivity.getProgressBar();
         bundle.clear();
         bundle.putLong("idcategoria", id);
         bundle.putString("categoria", categoria);
@@ -176,7 +256,6 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void filtrarProduto(long id) {
-        MainActivity.getProgressBar();
         bundle.clear();
         bundle.putLong("idcategoria", id);
         Navigation.findNavController(requireView()).navigate(R.id.action_listProdutoFragment_to_dialogFiltrarProduto2, bundle);
@@ -224,96 +303,8 @@ public class ListProdutoFragment extends Fragment {
         dialogInterface.dismiss();
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_pesquisa_criar_produto, menu);
-        if (getArguments() != null) {
-            if (!getArguments().getBoolean("master")) {
-                menu.findItem(R.id.dialogCriarProduto).setVisible(false);
-                binding.btnCriarProdutoFragment.setVisibility(View.GONE);
-            }
-        }
-        if (isLixeira) {
-            menu.findItem(R.id.dialogCriarProduto).setVisible(false);
-            menu.findItem(R.id.dialogFiltrarProduto).setVisible(false);
-            menu.findItem(R.id.btnScannerBack).setVisible(false);
-            menu.findItem(R.id.exportarproduto).setVisible(false);
-            menu.findItem(R.id.importarproduto).setVisible(false);
-        } else {
-            menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
-            menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
-        }
-        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-        MenuItem menuItem = menu.findItem(R.id.app_bar_search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.prod) + ", " + getString(R.string.codigo_bar));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-        searchView.onActionViewExpanded();
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira);
-                return true;
-            }
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    produtoViewModel.consultarProdutos(idcategoria, false, binding.mySwipeRefreshLayout, isLixeira);
-                } else {
-                    produtoViewModel.searchProduto(newText, isLixeira);
-                }
-                return false;
-            }
-        });
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.dialogCriarProduto:
-                if (!categoria.isEmpty()) {
-                    createProduto(idcategoria, categoria);
-                }
-                break;
-            case R.id.dialogFiltrarProduto:
-                filtrarProduto(idcategoria);
-                break;
-            case R.id.btnScannerBack:
-                scanearCodigoQr();
-                break;
-            case R.id.exportarproduto:
-                exportarProduto();
-                break;
-            case R.id.importarproduto:
-                importarProdutos();
-                break;
-            case R.id.btnEliminarTodosLixo:
-                dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.elim_pds), getString(R.string.tem_cert_elim_pds), true);
-                break;
-            case R.id.btnRestaurarTodosLixo:
-                dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.rest_pds), getString(R.string.rest_tdos_prods), false);
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void dialogEliminarReataurarTodasProdutosLixeira(String titulo, String msg, boolean isEliminar) {
+        produtoViewModel.crud = true;
         if (vazio) {
             Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
         } else {
@@ -324,7 +315,7 @@ public class ListProdutoFragment extends Fragment {
             if (isEliminar) {
                 Produto prod = new Produto();
                 prod.setIdcategoria(idcategoria);
-                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(prod, false, null, true, true));
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(prod, false, null, true));
             } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, 0, true));
             }
@@ -340,130 +331,142 @@ public class ListProdutoFragment extends Fragment {
         }
     }
 
-    public class ProdutoListPageAdapter extends Item<GroupieViewHolder> {
+    class ProdutoAdapter extends PagingDataAdapter<Produto, ProdutoAdapter.ProdutoViewHolder> {
 
-        private final Produto produto;
-        private final Context context;
-        @SuppressLint("UseSwitchCompatOrMaterialCode")
-        private Switch estadoProduto;
+        public ProdutoAdapter(@NonNull DiffUtil.ItemCallback<Produto> diffCallback) {
+            super(diffCallback);
+        }
 
-        public ProdutoListPageAdapter(Produto produto, Context context) {
-            this.produto = produto;
-            this.context = context;
+        @NonNull
+        @Override
+        public ProdutoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ProdutoViewHolder(FragmentProdutoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         }
 
         @SuppressLint("SetTextI18n")
         @Override
-        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            TextView nomeProduto = viewHolder.itemView.findViewById(R.id.txtNomeProduto);
-            TextView precoProduto = viewHolder.itemView.findViewById(R.id.txtPrecoProduto);
-            TextView precoProdutoFronecedor = viewHolder.itemView.findViewById(R.id.txtPrecoProdutoFornecedor);
-            TextView quantidadeProduto = viewHolder.itemView.findViewById(R.id.txtQuantidadeProduto);
-            TextView codigoBarraProduto = viewHolder.itemView.findViewById(R.id.txtCodigoBarProduto);
-            estadoProduto = viewHolder.itemView.findViewById(R.id.estado_produto);
-            TextView referenciaProduto = viewHolder.itemView.findViewById(R.id.txtReferenciaProduto);
-            CardView entrarProduto = viewHolder.itemView.findViewById(R.id.btnEntrar);
-            nomeProduto.setText(produto.getNome());
-            precoProduto.setText(context.getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
-            precoProdutoFronecedor.setText(context.getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
-            quantidadeProduto.setText(context.getText(R.string.quantidade) + ": " + produto.getQuantidade());
-            codigoBarraProduto.setText(context.getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + produto.getData_elimina() : ""));
-            referenciaProduto.setText(context.getText(R.string.referencia) + ": MSP" + produto.getId());
-            if (produto.getEstado() == Ultilitario.UM) {
-                estadoProduto.setChecked(true);
-                estadoProduto.setTextColor(Color.BLUE);
-                estadoProduto.setText(context.getString(R.string.estado_desbloqueado));
-            } else {
-                estadoProduto.setChecked(false);
-                estadoProduto.setTextColor(Color.RED);
-                estadoProduto.setText(context.getString(R.string.estado_bloqueado));
-            }
-            if (isLixeira) {
-                entrarProduto.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                    menu.setHeaderTitle(produto.getNome());
-                    if (getArguments() != null) {
-                        if (getArguments().getBoolean("master") || isMaster) {
-                            menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                                restaurarProduto();
-                                return false;
-                            });
-                            menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                                dialogEliminarProduto();
-                                return false;
-                            });
+        public void onBindViewHolder(@NonNull ProdutoViewHolder h, int position) {
+            Produto produto = getItem(position);
+            if (produto != null) {
+                h.binding.txtNomeProduto.setText(produto.getNome());
+                h.binding.txtPrecoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
+                h.binding.txtPrecoProdutoFornecedor.setText(getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
+                h.binding.txtQuantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
+                h.binding.txtCodigoBarProduto.setText(getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + produto.getData_elimina() : ""));
+                h.binding.txtReferenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());
+                if (produto.getEstado() == Ultilitario.UM) {
+                    h.binding.estadoProduto.setChecked(true);
+                    h.binding.estadoProduto.setTextColor(Color.BLUE);
+                    h.binding.estadoProduto.setText(getString(R.string.estado_desbloqueado));
+                } else {
+                    h.binding.estadoProduto.setChecked(false);
+                    h.binding.estadoProduto.setTextColor(Color.RED);
+                    h.binding.estadoProduto.setText(getString(R.string.estado_bloqueado));
+                }
+                h.binding.btnEntrar.setOnClickListener(v -> entrarProduto(getItem(position)));
+                if (isLixeira) {
+                    h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                        menu.setHeaderTitle(produto.getNome());
+                        if (getArguments() != null) {
+                            if (getArguments().getBoolean("master") || isMaster) {
+                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                                    restaurarProduto(produto.getNome(), produto.getId());
+                                    return false;
+                                });
+                                menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                                    dialogEliminarProduto(produto.getNome(), produto);
+                                    return false;
+                                });
+                            }
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
-                    }
-                });
-            } else {
-                entrarProduto.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                    menu.setHeaderTitle(produto.getNome());
-                    menu.add(getString(R.string.editar)).setOnMenuItemClickListener(item -> {
-                        entrarProduto();
-                        return false;
                     });
-                    if (getArguments() != null) {
-                        if (getArguments().getBoolean("master") || isMaster) {
-                            menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(produto, getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
-                                return false;
-                            });
-                            menu.add(getString(R.string.eliminar_produto)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(produto, getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
-                                return false;
-                            });
+                } else {
+                    h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                        menu.setHeaderTitle(produto.getNome());
+                        menu.add(getString(R.string.editar)).setOnMenuItemClickListener(item -> {
+                            entrarProduto(getItem(position));
+                            return false;
+                        });
+                        if (getArguments() != null) {
+                            if (getArguments().getBoolean("master") || isMaster) {
+                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+                                    caixaDialogo(produto, getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
+                                    return false;
+                                });
+                                menu.add(getString(R.string.eliminar_produto)).setOnMenuItemClickListener(item -> {
+                                    caixaDialogo(produto, getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
+                                    return false;
+                                });
+                            }
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
-                    }
-                });
-                entrarProduto.setOnClickListener(v -> entrarProduto());
+                    });
+                }
             }
         }
 
-        private void entrarProduto() {
+        public class ProdutoViewHolder extends RecyclerView.ViewHolder {
+            FragmentProdutoBinding binding;
+
+            public ProdutoViewHolder(@NonNull FragmentProdutoBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+
+        private void entrarProduto(Produto produto) {
             bundle.clear();
             bundle.putParcelable("produto", produto);
             bundle.putBoolean("master", requireArguments().getBoolean("master"));
             Navigation.findNavController(requireView()).navigate(R.id.action_listProdutoFragment_to_dialogCriarProduto, bundle);
         }
 
-        private void restaurarProduto() {
+        private void restaurarProduto(String nome, long idproduto) {
+            produtoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.rest) + " (" + produto.getNome() + ")")
+                    .setTitle(getString(R.string.rest) + " (" + nome + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, produto.getId(), false))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, idproduto, false))
                     .show();
         }
 
-        private void dialogEliminarProduto() {
+        private void dialogEliminarProduto(String nome, Produto produto) {
+            produtoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.eliminar) + " (" + produto.getNome() + ")")
+                    .setTitle(getString(R.string.eliminar) + " (" + nome + ")")
                     .setMessage(getString(R.string.tem_certeza_eliminar_produto))
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, false, null, false, true))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, false, null, false))
                     .show();
         }
 
         private void caixaDialogo(Produto produto, String titulo, int mensagem, boolean permanente) {
+            produtoViewModel.crud = true;
             produto.setId(produto.getId());
             produto.setEstado(Ultilitario.TRES);
             produto.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
             alert.setTitle(titulo);
             alert.setMessage(getString(mensagem));
-            alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                        MainActivity.getProgressBar();
-                        produtoViewModel.eliminarProduto(produto, !permanente, null, false, false);
-                    }
+            alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> produtoViewModel.eliminarProduto(produto, !permanente, null, false)
             ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
         }
+    }
+
+    static class ProdutoComparator extends DiffUtil.ItemCallback<Produto> {
 
         @Override
-        public int getLayout() {
-            return R.layout.fragment_produto;
+        public boolean areItemsTheSame(@NonNull Produto oldItem, @NonNull Produto newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Produto oldItem, @NonNull Produto newItem) {
+            return oldItem.getId() == newItem.getId();
         }
     }
 
@@ -472,12 +475,12 @@ public class ListProdutoFragment extends Fragment {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
-                    produtoViewModel.searchProduto(r.getContents(), isLixeira);
+                    produtoViewModel.crud = true;
+                    produtoViewModel.consultarProdutos(idcategoria, r.getContents(), isLixeira, true, getViewLifecycleOwner());
                 } else {
                     Toast.makeText(requireActivity(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
                 }
             });
-
     ActivityResultLauncher<Intent> exportProductActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -490,7 +493,6 @@ public class ListProdutoFragment extends Fragment {
                     }
                 }
             });
-
     ActivityResultLauncher<Intent> importProductActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -525,6 +527,7 @@ public class ListProdutoFragment extends Fragment {
             } catch (IOException e) {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
+            produtoViewModel.crud = true;
             produtoViewModel.importarProdutos(produtos, false, this.idcategoria);
         });
     }
