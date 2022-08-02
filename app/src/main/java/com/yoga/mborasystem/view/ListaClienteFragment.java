@@ -193,7 +193,7 @@ public class ListaClienteFragment extends Fragment {
     private void exportarClientes(String nomeFicheiro, boolean isLocal) {
         if (isLocal) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Ultilitario.exportarLocal(exportClientActivityResultLauncher, getActivity(), "clientes.csv", nomeFicheiro, Ultilitario.getDateCurrent());
+                Ultilitario.exportarLocal(exportClientActivityResultLauncher, getActivity(), nomeFicheiro, Ultilitario.getDateCurrent());
             } else {
                 Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }

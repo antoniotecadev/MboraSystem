@@ -360,7 +360,7 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, String ficheiro, String nomeFicheiro, String data) {
+    public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, String nomeFicheiro, String data) {
         try {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);

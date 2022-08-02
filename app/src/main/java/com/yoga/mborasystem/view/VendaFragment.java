@@ -192,7 +192,7 @@ public class VendaFragment extends Fragment {
                 dataBuilder = dt;
                 if (isLocal) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), "vendas.csv", getString(R.string.vendas), this.data);
+                        Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), getString(R.string.vendas), this.data);
                     } else {
                         Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
