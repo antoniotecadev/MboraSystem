@@ -253,7 +253,7 @@ public class ProdutoViewModel extends AndroidViewModel {
 
     public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
-        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(10), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText));
+        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(20), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText));
         flowable = PagingRx.getFlowable(pager);
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         Handler handler = new Handler();
