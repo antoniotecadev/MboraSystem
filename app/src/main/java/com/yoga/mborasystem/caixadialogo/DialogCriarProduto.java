@@ -109,6 +109,10 @@ public class DialogCriarProduto extends DialogFragment {
                     binding.btnEliminarProduto.setVisibility(View.VISIBLE);
                 } else {
                     binding.txtNomeProduto.setEnabled(false);
+                    binding.spinnerTipo.setEnabled(false);
+                    binding.spinnerUnidade.setEnabled(false);
+                    binding.spinnerTaxaImposto.setEnabled(false);
+                    binding.spinnerMotivoIsecao.setEnabled(false);
                     binding.txtPrecoProduto.setEnabled(false);
                     binding.txtPrecoProdutoFornecedor.setEnabled(false);
                     binding.txtQuantidadeProduto.setEnabled(false);
@@ -122,6 +126,7 @@ public class DialogCriarProduto extends DialogFragment {
                     binding.btnScannerBack.setVisibility(View.GONE);
                     binding.divider11.setVisibility(View.GONE);
                     binding.switchEstado.setEnabled(false);
+                    binding.switchStock.setEnabled(false);
                     binding.buttonFechar.setText(getText(R.string.fechar));
                 }
 
