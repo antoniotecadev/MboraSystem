@@ -336,6 +336,7 @@ public class Ultilitario {
         return Integer.parseInt(Objects.requireNonNull(editText.getText()).toString().replaceAll(",", "").replaceAll("Kz", "").replaceAll("\\s+", ""));
     }
 
+    @SuppressWarnings("NonAsciiCharacters")
     public static String trocarVírgulaPorPonto(TextInputEditText editText) {
         return Objects.requireNonNull(editText.getText()).toString().replaceAll(",", ".");
     }
@@ -384,7 +385,6 @@ public class Ultilitario {
         try {
             csv = activity.getContentResolver().openFileDescriptor(uri, "w");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         FileOutputStream fileOutputStream = new FileOutputStream(Objects.requireNonNull(csv).getFileDescriptor());
@@ -537,6 +537,7 @@ public class Ultilitario {
         i.setColorFilter(Color.rgb(r, g, b));
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("MissingPermission")
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
