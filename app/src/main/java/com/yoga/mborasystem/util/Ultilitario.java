@@ -209,6 +209,7 @@ public class Ultilitario {
         });
     }
 
+    @SuppressWarnings("rawtypes")
     public static GroupAdapter naoEncontrado(Context context, GroupAdapter adapter, int m) {
         adapter.add(new Item<GroupieViewHolder>() {
             @Override
@@ -762,10 +763,7 @@ public class Ultilitario {
         final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
         final String[] selectionArgs = new String[]{dir.getPath() + "/MboraSystem/" + filePath};
         MediaScannerConnection.scanFile(context, selectionArgs, new String[]{mimeType},
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
-                    }
-                });
+                (path, uri) -> { });
     }
 
     public static class Documento {
