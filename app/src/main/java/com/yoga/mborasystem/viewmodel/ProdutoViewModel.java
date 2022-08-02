@@ -268,7 +268,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     private void filtrar(PagingSource<Integer, Produto> listProduto, AlertDialog dialog) {
-        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(15, 15, false, 20), () -> listProduto);
+        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(20), () -> listProduto);
         flowable = PagingRx.getFlowable(pager);
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this.lifecycleOwner)))
