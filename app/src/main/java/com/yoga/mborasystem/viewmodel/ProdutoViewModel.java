@@ -26,7 +26,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
-import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.repository.ProdutoRepository;
@@ -184,7 +183,6 @@ public class ProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    @SuppressLint("CheckResult")
     private void actualizarProduto(Produto produto, AlertDialog dialog) {
         Completable.fromAction(() -> produtoRepository.update(produto))
                 .subscribeOn(Schedulers.io())
