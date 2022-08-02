@@ -231,7 +231,7 @@ public class ListProdutoFragment extends Fragment {
     private void exportarProdutos(String nomeCategoria, boolean isLocal) {
         if (isLocal) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), data, "produtos.csv", nomeCategoria, Ultilitario.getDateCurrent());
+                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), "produtos.csv", nomeCategoria, Ultilitario.getDateCurrent());
             } else {
                 Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }

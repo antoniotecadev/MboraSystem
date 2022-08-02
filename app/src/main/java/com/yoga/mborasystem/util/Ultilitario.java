@@ -360,11 +360,8 @@ public class Ultilitario {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data) {
+    public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, String ficheiro, String nomeFicheiro, String data) {
         try {
-            FileOutputStream out = activity.openFileOutput(ficheiro, Context.MODE_PRIVATE);
-            out.write((dataStringBuilder.toString()).getBytes());
-            out.close();
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/csv");
