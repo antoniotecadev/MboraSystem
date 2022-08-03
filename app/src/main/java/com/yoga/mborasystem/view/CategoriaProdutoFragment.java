@@ -31,6 +31,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.xwray.groupie.GroupAdapter;
@@ -38,6 +39,7 @@ import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.FragmentCategoriaBinding;
 import com.yoga.mborasystem.databinding.FragmentCategoriaProdutoBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -54,14 +56,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class CategoriaProdutoFragment extends Fragment {
 
     private boolean vazio;
-    private Random random;
     private Bundle bundle;
     private StringBuilder data;
     private GroupAdapter adapter;
@@ -70,8 +70,8 @@ public class CategoriaProdutoFragment extends Fragment {
     private FragmentCategoriaProdutoBinding binding;
     private ArrayList<String> stringList, stringListDesc;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
-
     private ExecutorService executor;
+    CategoriaAdapter categoriaAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,27 +98,36 @@ public class CategoriaProdutoFragment extends Fragment {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.cat) + ")");
             binding.btncriarCategoriaDialog.setVisibility(View.GONE);
         }
+
         binding.btncriarCategoriaDialog.setOnClickListener(v -> criarCategoria());
-        binding.recyclerViewCategoriaProduto.setAdapter(adapter);
         binding.recyclerViewCategoriaProduto.setHasFixedSize(true);
         binding.recyclerViewCategoriaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         categoriaProdutoViewModel.consultarCategorias(null, isLixeira);
+
+//        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
+//            adapter.clear();
+//            if (categorias.isEmpty()) {
+//                Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada);
+//            } else {
+//                stringList.clear();
+//                for (Categoria categoria : categorias) {
+//                    stringList.add(categoria.getId() + " - " + categoria.getCategoria());
+//                    stringListDesc.add(categoria.getDescricao());
+//                    adapter.add(new ItemCategoria(categoria));
+//                }
+//            }
+//        });
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
-            adapter.clear();
             if (categorias.isEmpty()) {
                 vazio = true;
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada);
             } else {
                 vazio = false;
-                stringList.clear();
-                random = new Random();
-                for (Categoria categoria : categorias) {
-                    stringList.add(categoria.getId() + " - " + categoria.getCategoria());
-                    stringListDesc.add(categoria.getDescricao());
-                    adapter.add(new ItemCategoria(categoria));
-                }
+                categoriaAdapter = new CategoriaAdapter(categorias);
+                binding.recyclerViewCategoriaProduto.setAdapter(categoriaAdapter);
             }
         });
+
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
             StringBuilder dt = new StringBuilder();
             if (prod.isEmpty()) {
@@ -277,61 +286,61 @@ public class CategoriaProdutoFragment extends Fragment {
         }
     }
 
-    class ItemCategoria extends Item<GroupieViewHolder> {
-        private final Categoria categoria;
+    class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder> {
 
-        public ItemCategoria(Categoria categoria) {
+        private List<Categoria> categoria;
+
+        public CategoriaAdapter(List<Categoria> categoria) {
             this.categoria = categoria;
         }
 
-        @SuppressLint("SetTextI18n")
+        @NonNull
         @Override
-        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            TextView nome = viewHolder.itemView.findViewById(R.id.txtNomeCategoria);
-            TextView descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
-            ImageView img = viewHolder.itemView.findViewById(R.id.imgCategoriaProduto);
-            ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
+        public CategoriaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new CategoriaViewHolder(FragmentCategoriaBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        }
 
-            Ultilitario.colorRandomImage(img, random);
+        @Override
+        public void onBindViewHolder(@NonNull CategoriaViewHolder h, int position) {
+            Categoria ct = categoria.get(position);
 
-            nome.setText(categoria.getCategoria() + " | " + categoria.getId());
-            descricao.setText(categoria.getDescricao() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + categoria.getData_elimina() : ""));
-            if (categoria.getEstado() == Ultilitario.DOIS) {
-                descricao.setTextColor(Color.RED);
-                descricao.setText(getString(R.string.desactivado));
+            h.binding.txtNomeCategoria.setText(ct.getCategoria());
+            h.binding.txtDescricao.setText(ct.getDescricao() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + ct.getData_elimina() : ""));
+            if (ct.getEstado() == Ultilitario.DOIS) {
+                h.binding.txtDescricao.setTextColor(Color.RED);
+                h.binding.txtDescricao.setText(getString(R.string.desactivado));
             }
-            registerForContextMenu(menu);
+            registerForContextMenu(h.binding.imgBtnMenu);
             if (!isLixeira) {
-                viewHolder.itemView.setOnClickListener(v -> {
+                h.itemView.setOnClickListener(v -> {
                     MainActivity.getProgressBar();
-                    v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-                    listaProdutos(categoria.getId(), categoria.getCategoria());
+                    listaProdutos(ct.getId(), ct.getCategoria());
                 });
             }
-            menu.setOnClickListener(View::showContextMenu);
-            viewHolder.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
+            h.binding.imgBtnMenu.setOnClickListener(View::showContextMenu);
+            h.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
                 menu1.setHeaderIcon(R.drawable.ic_baseline_store_24);
-                menu1.setHeaderTitle(categoria.getCategoria());
+                menu1.setHeaderTitle(ct.getCategoria());
                 if (!isLixeira) {
                     menu1.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
                         MainActivity.getProgressBar();
-                        listaProdutos(categoria.getId(), categoria.getCategoria());
+                        listaProdutos(ct.getId(), ct.getCategoria());
                         return false;
                     });//groupId, itemId, order, title
                     if (getArguments() != null) {
                         if (getArguments().getBoolean("master")) {
                             menu1.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(item -> {
                                 MainActivity.getProgressBar();
-                                bundle.putParcelable("categoria", categoria);
+                                bundle.putParcelable("categoria", ct);
                                 Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
                                 return false;
                             });
                             menu1.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(categoria, getString(R.string.env_lx) + " (" + categoria.getCategoria() + ")", R.string.env_cat_lixe, false);
+                                caixaDialogo(ct, getString(R.string.env_lx) + " (" + ct.getCategoria() + ")", R.string.env_cat_lixe, false);
                                 return false;
                             });
                             menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(categoria, getString(R.string.elim_cat_perm) + " (" + categoria.getCategoria() + ")", R.string.env_cat_n_lix, true);
+                                caixaDialogo(ct, getString(R.string.elim_cat_perm) + " (" + ct.getCategoria() + ")", R.string.env_cat_n_lix, true);
                                 return false;
                             });
                         }
@@ -342,11 +351,11 @@ public class CategoriaProdutoFragment extends Fragment {
                     if (getArguments() != null) {
                         if (getArguments().getBoolean("master") || isMaster) {
                             menu1.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                                restaurarCategoria();
+                                restaurarCategoria(ct.getCategoria(), ct.getId());
                                 return false;
                             });
                             menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                                dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria));
+                                dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria), ct.getCategoria(), ct);
                                 return false;
                             });
                         }
@@ -354,8 +363,21 @@ public class CategoriaProdutoFragment extends Fragment {
                         Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
                     }
                 }
-
             });
+        }
+
+        @Override
+        public int getItemCount() {
+            return categoria.size();
+        }
+
+        private class CategoriaViewHolder extends RecyclerView.ViewHolder {
+            FragmentCategoriaBinding binding;
+
+            public CategoriaViewHolder(@NonNull FragmentCategoriaBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
         }
 
         private void caixaDialogo(Categoria categoria, String titulo, int mensagem, boolean permanente) {
@@ -365,7 +387,6 @@ public class CategoriaProdutoFragment extends Fragment {
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
             alert.setTitle(titulo);
             alert.setMessage(getString(mensagem));
-
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         MainActivity.getProgressBar();
                         categoriaProdutoViewModel.eliminarCategoria(categoria, !permanente, false);
@@ -375,33 +396,29 @@ public class CategoriaProdutoFragment extends Fragment {
                     .show();
         }
 
-        @Override
-        public int getLayout() {
-            return R.layout.fragment_categoria;
-        }
-
         private void listaProdutos(long id, String categoria) {
             bundle.putLong("idcategoria", id);
             bundle.putString("categoria", categoria);
             Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_listProdutoFragment, bundle);
         }
 
-        private void dialogEliminarCategoria(String msg) {
+        private void dialogEliminarCategoria(String msg, String categoria, Categoria ct) {
             new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.eliminar_categoria) + " (" + categoria.getCategoria() + ")")
+                    .setTitle(getString(R.string.eliminar_categoria) + " (" + categoria + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(categoria, !isLixeira, false))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(ct, !isLixeira, false))
                     .show();
         }
 
-        private void restaurarCategoria() {
+        private void restaurarCategoria(String categoria, long idcategoria) {
             new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.rest) + " (" + categoria.getCategoria() + ")")
+                    .setTitle(getString(R.string.rest) + " (" + categoria + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, categoria.getId(), false))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, idcategoria, false))
                     .show();
         }
+
     }
 
     @Override
