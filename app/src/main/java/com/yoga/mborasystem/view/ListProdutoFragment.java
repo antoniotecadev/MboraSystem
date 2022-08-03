@@ -499,12 +499,19 @@ public class ListProdutoFragment extends Fragment {
                     Uri uri;
                     if (data != null) {
                         uri = data.getData();
-                        try {
-                            readTextFromUri(uri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                        new AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                                .setTitle(getString(R.string.importar))
+                                .setMessage(uri.getPath())
+                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                    try {
+                                        readTextFromUri(uri);
+                                    } catch (IOException e) {
+                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .show();
                     }
                 }
             });
