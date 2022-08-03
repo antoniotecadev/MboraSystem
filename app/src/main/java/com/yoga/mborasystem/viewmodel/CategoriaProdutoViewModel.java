@@ -21,7 +21,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -47,6 +46,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<Ultilitario.Operacao> valido;
+
     public MutableLiveData<Ultilitario.Operacao> getValido() {
         if (valido == null) {
             valido = new MutableLiveData<>();
@@ -72,6 +72,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
             categoria.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
             switch (operacao) {
                 case CRIAR:
+                    categoria.setId(0);
                     categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                     criarCategoria(categoria, dialog);
                     break;
@@ -100,7 +101,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         Completable.fromAction(() -> categoriaRepository.insert(categoria))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -116,11 +117,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        if (Objects.requireNonNull(e.getMessage()).contains("UNIQUE")) {
-                            Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.categoria_existe), R.drawable.ic_toast_erro);
-                        } else {
-                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_criada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        }
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_criada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
@@ -157,7 +154,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         Completable.fromAction(() -> categoriaRepository.update(categoria))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -173,11 +170,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        if (Objects.requireNonNull(e.getMessage()).contains("UNIQUE")) {
-                            Ultilitario.showToast(getApplication(), Color.rgb(255, 187, 51), getApplication().getString(R.string.categoria_existe), R.drawable.ic_toast_erro);
-                        } else {
-                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_renomeada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        }
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_renomeada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
@@ -188,7 +181,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         Completable.fromAction(() -> categoriaRepository.restaurarCategoria(estado, idcategoria, todasCategorias))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -199,10 +192,8 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                         MainActivity.dismissProgressBar();
                         if (todasCategorias) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cats_rests), R.drawable.ic_toast_feito);
-                            consultarCategorias(null, true);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_rest), R.drawable.ic_toast_feito);
-                            consultarCategorias(null, true);
                         }
                     }
 
@@ -210,7 +201,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cat_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        consultarCategorias(null, true);
                     }
                 });
     }
@@ -221,7 +211,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         Completable.fromAction(() -> categoriaRepository.delete(cat, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -241,9 +231,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_eliminada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        if (!isLixeira) {
-                            consultarCategorias(null, false);
-                        }
                     }
                 });
     }
@@ -255,11 +242,11 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
+        if (disposable.isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
-            compositeDisposable.clear();
+        if (compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
         }
     }
 }
