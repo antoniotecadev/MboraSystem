@@ -273,7 +273,7 @@ public class ListProdutoFragment extends Fragment {
         Handler handler = new Handler(Looper.getMainLooper());
         executor = Executors.newSingleThreadExecutor();
         new android.app.AlertDialog.Builder(requireContext())
-                .setIcon(R.drawable.ic_baseline_store_24)
+                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
                 .setTitle(R.string.exportar)
                 .setSingleChoiceItems(R.array.array_local_nuvem, 0, (dialogInterface, i) -> {
                     switch (i) {
