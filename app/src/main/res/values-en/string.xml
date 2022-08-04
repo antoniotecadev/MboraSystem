@@ -111,7 +111,7 @@
     <string name="alinhar_codigo_barra">Align barcode to scan</string>
     <string name="continuar_criar_produto">Continue creating product</string>
     <string name="descricao">Description *</string>
-    <string name="descricao_invalida">Description is not valid\nDo not use special characters</string>
+    <string name="descricao_invalida">Description is not valid</string>
     <string name="bazar">Bazaar</string>
     <string name="bebidas">Drinks</string>
     <string name="charcutaria_lacticios">Delicatessen/Dairy products</string>

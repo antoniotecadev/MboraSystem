@@ -59,10 +59,10 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, long idcategoria) {
-        if (isCampoVazio(nome.getText().toString()) || Ultilitario.letras.matcher(nome.getText().toString()).find()) {
+        if (isCampoVazio(nome.getText().toString())) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
-        } else if (isCampoVazio(descricao.getText().toString()) || Ultilitario.letras.matcher(descricao.getText().toString()).find()) {
+        } else if (isCampoVazio(descricao.getText().toString())) {
             descricao.requestFocus();
             descricao.setError(getApplication().getString(R.string.descricao_invalida));
         } else {

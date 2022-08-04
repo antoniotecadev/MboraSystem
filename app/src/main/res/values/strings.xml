@@ -121,7 +121,7 @@
     <string name="alinhar_codigo_barra">Alinhar código de barras para fazer a leitura</string>
     <string name="continuar_criar_produto">Continuar a criar produto</string>
     <string name="descricao">Descrição *</string>
-    <string name="descricao_invalida">Descrição não é válida\nNão use caracteres especias</string>
+    <string name="descricao_invalida">Descrição não é válida</string>
     <string name="bazar">Bazar</string>
     <string name="bebidas">Bebidas</string>
     <string name="charcutaria_lacticios">Charcutaria/Lacticínios</string>
