@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Maybe;
 
 public class CategoriaRepository {
 
@@ -63,7 +64,7 @@ public class CategoriaRepository {
         }
     }
 
-    public Flowable<List<Categoria>> searchCategorias(String categoria, boolean isLixeira) {
+    public Maybe<List<Categoria>> searchCategorias(String categoria, boolean isLixeira) {
         if (isLixeira) {
             return categoriaDao.searchCategoriasLixeira(categoria);
         } else {

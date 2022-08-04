@@ -10,6 +10,7 @@ import com.yoga.mborasystem.model.entidade.Categoria;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Maybe;
 
 @Dao
 public interface CategoriaDao {
@@ -36,10 +37,10 @@ public interface CategoriaDao {
     Flowable<List<Categoria>> getCategoriasLixeira();
 
     @Query("SELECT * FROM categorias WHERE estado != 3 AND categoria LIKE '%' || :search || '%'")
-    Flowable<List<Categoria>> searchCategorias(String search);
+    Maybe<List<Categoria>> searchCategorias(String search);
 
     @Query("SELECT * FROM categorias WHERE estado = 3 AND categoria LIKE '%' || :search || '%'")
-    Flowable<List<Categoria>> searchCategoriasLixeira(String search);
+    Maybe<List<Categoria>> searchCategoriasLixeira(String search);
 
     @Query("UPDATE categorias SET estado = :est WHERE id = :id")
     void restaurarCategoria(int est, long id);
