@@ -222,7 +222,7 @@ public class FacturaFragment extends Fragment {
         binding.recyclerViewFactura.setAdapter(adapterFactura);
         binding.recyclerViewFactura.setLayoutManager(new LinearLayoutManager(getContext()));
         categoriaProdutoViewModel.consultarCategorias(null, false);
-        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
+        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new EventObserver<>(categorias -> {
             if (!categorias.isEmpty() && listaCategoria.isEmpty()) {
                 for (Categoria categoria : categorias) {
                     if (categoria.getEstado() != Ultilitario.DOIS)
@@ -231,7 +231,7 @@ public class FacturaFragment extends Fragment {
                 listCategoriaAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listaCategoria);
                 binding.spinnerCategorias.setAdapter(listCategoriaAdapter);
             }
-        });
+        }));
         binding.spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

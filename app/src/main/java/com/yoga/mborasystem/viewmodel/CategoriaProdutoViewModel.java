@@ -17,6 +17,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.repository.CategoriaRepository;
+import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.List;
@@ -54,6 +55,15 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         return valido;
     }
 
+    private MutableLiveData<Event<List<Categoria>>> listaCategorias;
+
+    public MutableLiveData<Event<List<Categoria>>> getListaCategorias() {
+        if (listaCategorias == null) {
+            listaCategorias = new MutableLiveData<>();
+        }
+        return listaCategorias;
+    }
+
     private boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
@@ -85,15 +95,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     break;
             }
         }
-    }
-
-    private MutableLiveData<List<Categoria>> listaCategorias;
-
-    public MutableLiveData<List<Categoria>> getListaCategorias() {
-        if (listaCategorias == null) {
-            listaCategorias = new MutableLiveData<>();
-        }
-        return listaCategorias;
     }
 
     @SuppressLint("CheckResult")
@@ -128,7 +129,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categorias -> {
-                    getListaCategorias().setValue(categorias);
+                    getListaCategorias().setValue(new Event<>(categorias));
                     getValido().setValue(Ultilitario.Operacao.NENHUMA);
                     Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
                     MainActivity.dismissProgressBar();
@@ -144,7 +145,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categorias -> {
-                    getListaCategorias().setValue(categorias);
+                    getListaCategorias().setValue(new Event<>(categorias));
                     getValido().setValue(Ultilitario.Operacao.NENHUMA);
                 }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }

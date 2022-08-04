@@ -27,7 +27,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -76,6 +78,7 @@ public class CategoriaProdutoFragment extends Fragment {
         adapter = new GroupAdapter();
         stringList = new ArrayList<>();
         stringListDesc = new ArrayList<>();
+        categoriaAdapter = new CategoriaAdapter(new CategoriaComparator());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
         setHasOptionsMenu(true);
@@ -95,6 +98,7 @@ public class CategoriaProdutoFragment extends Fragment {
         }
 
         binding.btncriarCategoriaDialog.setOnClickListener(v -> criarCategoria());
+        binding.recyclerViewCategoriaProduto.setAdapter(categoriaAdapter);
         binding.recyclerViewCategoriaProduto.setHasFixedSize(true);
         binding.recyclerViewCategoriaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         categoriaProdutoViewModel.consultarCategorias(null, isLixeira);
@@ -112,17 +116,16 @@ public class CategoriaProdutoFragment extends Fragment {
 //                }
 //            }
 //        });
-        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
+        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new EventObserver<>(categorias -> {
             if (categorias.isEmpty()) {
-                Toast.makeText(requireContext(), "vazio", Toast.LENGTH_SHORT).show();
                 vazio = true;
                 binding.recyclerViewCategoriaProduto.setAdapter(Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada));
             } else {
                 vazio = false;
-                categoriaAdapter = new CategoriaAdapter(categorias);
                 binding.recyclerViewCategoriaProduto.setAdapter(categoriaAdapter);
+                categoriaAdapter.submitList(categorias);
             }
-        });
+        }));
 
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
             StringBuilder dt = new StringBuilder();
@@ -282,12 +285,11 @@ public class CategoriaProdutoFragment extends Fragment {
         }
     }
 
-    class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder> {
+    //    class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder> {
+    class CategoriaAdapter extends ListAdapter<Categoria, CategoriaAdapter.CategoriaViewHolder> {
 
-        private List<Categoria> categoria;
-
-        public CategoriaAdapter(List<Categoria> categoria) {
-            this.categoria = categoria;
+        public CategoriaAdapter(@NonNull DiffUtil.ItemCallback<Categoria> diffCallback) {
+            super(diffCallback);
         }
 
         @NonNull
@@ -298,7 +300,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull CategoriaViewHolder h, int position) {
-            Categoria ct = categoria.get(position);
+            Categoria ct = getItem(position);
 
             h.binding.txtNomeCategoria.setText(ct.getCategoria());
             h.binding.txtDescricao.setText(ct.getDescricao() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + ct.getData_elimina() : ""));
@@ -362,11 +364,6 @@ public class CategoriaProdutoFragment extends Fragment {
             });
         }
 
-        @Override
-        public int getItemCount() {
-            return categoria.size();
-        }
-
         private class CategoriaViewHolder extends RecyclerView.ViewHolder {
             FragmentCategoriaBinding binding;
 
@@ -415,6 +412,19 @@ public class CategoriaProdutoFragment extends Fragment {
                     .show();
         }
 
+    }
+
+    static class CategoriaComparator extends DiffUtil.ItemCallback<Categoria> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Categoria oldItem, @NonNull Categoria newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Categoria oldItem, @NonNull Categoria newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
     }
 
     @Override
