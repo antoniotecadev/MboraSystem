@@ -3,13 +3,17 @@ package com.yoga.mborasystem.view;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,12 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 import com.yoga.mborasystem.viewmodel.LoginViewModel;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +49,20 @@ import androidx.navigation.Navigation;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
 import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+
+import org.apache.xerces.xs.XSModel;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.stream.StreamResult;
+
+import jlibs.xml.sax.XMLDocument;
+import jlibs.xml.xsd.XSInstance;
+import jlibs.xml.xsd.XSParser;
 
 public class LoginFragment extends Fragment {
 
@@ -90,6 +114,52 @@ public class LoginFragment extends Fragment {
                 .build();
     }
 
+    public static Document loadXsdDocument(String inputName, Context context) {
+        final String filename = inputName;
+
+        InputStream inputStream = null;
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(
+                    new InputStreamReader(context.getAssets().open(filename), "UTF-8"));
+            inputStream = context.getResources().getAssets().open(filename);
+            Log.i("SAF-T", inputStream + "\n\nAvailable: " + inputStream.available());
+
+            // do reading, usually loop until end of file reading
+            String mLine;
+            while ((mLine = reader.readLine()) != null) {
+//                Log.i("SAF-T", mLine);
+            }
+        } catch (IOException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                    inputStream.close();
+                } catch (IOException e) {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(false);
+        factory.setIgnoringElementContentWhitespace(true);
+        factory.setIgnoringComments(true);
+        Document doc = null;
+
+        try {
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final File inputFile = new File(filename);
+            doc = builder.parse(inputStream);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        return doc;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,10 +242,58 @@ public class LoginFragment extends Fragment {
         binding.btn8.setOnClickListener(v -> digitarCodigoPin(8));
         binding.btn9.setOnClickListener(v -> digitarCodigoPin(9));
         binding.btn0.setOnClickListener(v -> digitarCodigoPin(0));
-        binding.btnApagar.setOnClickListener(v -> limparCodigoPin());
-        binding.btnMenu.setOnClickListener(v -> {
+        binding.btnApagar.setOnClickListener(v -> {
             MainActivity.getProgressBar();
             Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
+        });
+        binding.btnMenu.setOnClickListener(v -> {
+//            MainActivity.getProgressBar();
+//            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
+
+            try {
+                Uri uri = Uri.fromFile(new File("assets/filexsd/SAFTAO1.01_01.xsd"));
+                String filename = "filexsd/";
+                String[] s = requireContext().getResources().getAssets().list(filename);
+                Log.i("SAF-T", getXSDCacheFile(requireContext()).getAbsolutePath());
+
+
+                // instance.
+
+//                final Document doc = loadXsdDocument(filename, requireContext());
+
+                // Find the docs root element and use it to find the targetNamespace
+//                final Element rootElem = doc.getDocumentElement();
+//                String targetNamespace = null;
+//                if (rootElem != null && rootElem.getNodeName().equals("xs:schema")) {
+//                    targetNamespace = rootElem.getAttribute("targetNamespace");
+//                }
+
+                // Parse the file into an XSModel object
+                XSModel xsModel = new XSParser().parse(getXSDCacheFile(requireContext()).getAbsolutePath());
+
+
+                // Define defaults for the XML generation
+                XSInstance instance = new XSInstance();
+                instance.minimumElementsGenerated = 1;
+                instance.maximumElementsGenerated = 1;
+                instance.generateDefaultAttributes = true;
+                instance.generateOptionalAttributes = true;
+                instance.maximumRecursionDepth = 0;
+                instance.generateAllChoices = true;
+                instance.showContentModel = true;
+                instance.generateOptionalElements = true;
+
+                // Build the sample xml doc
+                // Replace first param to XMLDoc with a file input stream to write to file
+                QName rootElement = new QName("urn:OECD:StandardAuditFile-Tax:AO_1.01_01", "AuditFile");
+                XMLDocument sampleXml = new XMLDocument(new StreamResult(System.out), true, 4, null);
+                instance.generate(xsModel, rootElement, sampleXml);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
         });
 
         clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), cliente -> {
@@ -203,6 +321,30 @@ public class LoginFragment extends Fragment {
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
+    }
+
+    public static File getXSDCacheFile(Context context) throws IOException {
+        File cacheFile = new File(context.getCacheDir(), "SAFTAO1.01_01.xsd");
+        try {
+            InputStream inputStream = context.getAssets().open("SAFTAO1.01_01.xsd");
+            try {
+                FileOutputStream outputStream = new FileOutputStream(cacheFile);
+                try {
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = inputStream.read(buf)) > 0) {
+                        outputStream.write(buf, 0, len);
+                    }
+                } finally {
+                    outputStream.close();
+                }
+            } finally {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            throw new IOException("Could not open robot png", e);
+        }
+        return cacheFile;
     }
 
     private void digitarCodigoPin(Integer digito) {
