@@ -15,10 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -35,8 +32,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.xwray.groupie.GroupAdapter;
-import com.xwray.groupie.GroupieViewHolder;
-import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCategoriaBinding;
@@ -308,7 +303,7 @@ public class CategoriaProdutoFragment extends Fragment {
             h.binding.txtDescricao.setText(ct.getDescricao() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + ct.getData_elimina() : ""));
             if (ct.getEstado() == Ultilitario.DOIS) {
                 h.binding.txtDescricao.setTextColor(Color.RED);
-                h.binding.txtDescricao.setText(getString(R.string.desactivado));
+                h.binding.txtDescricao.setText(getString(R.string.estado_bloqueado));
             }
             registerForContextMenu(h.binding.imgBtnMenu);
             if (!isLixeira) {
