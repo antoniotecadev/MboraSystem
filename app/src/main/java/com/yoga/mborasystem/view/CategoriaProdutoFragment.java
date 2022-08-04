@@ -114,8 +114,9 @@ public class CategoriaProdutoFragment extends Fragment {
 //        });
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
             if (categorias.isEmpty()) {
+                Toast.makeText(requireContext(), "vazio", Toast.LENGTH_SHORT).show();
                 vazio = true;
-                Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada);
+                binding.recyclerViewCategoriaProduto.setAdapter(Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada));
             } else {
                 vazio = false;
                 categoriaAdapter = new CategoriaAdapter(categorias);
