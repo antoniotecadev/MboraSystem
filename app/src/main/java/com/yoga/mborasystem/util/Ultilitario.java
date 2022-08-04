@@ -211,6 +211,7 @@ public class Ultilitario {
 
     @SuppressWarnings("rawtypes")
     public static GroupAdapter naoEncontrado(Context context, GroupAdapter adapter, int m) {
+        adapter.clear();
         adapter.add(new Item<GroupieViewHolder>() {
             @Override
             public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
