@@ -119,10 +119,8 @@ public class CategoriaProdutoFragment extends Fragment {
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new EventObserver<>(categorias -> {
             if (categorias.isEmpty()) {
                 vazio = true;
-                binding.recyclerViewCategoriaProduto.setAdapter(Ultilitario.naoEncontrado(getContext(), adapter, R.string.categoria_nao_encontrada));
             } else {
                 vazio = false;
-                binding.recyclerViewCategoriaProduto.setAdapter(categoriaAdapter);
                 categoriaAdapter.submitList(categorias);
             }
         }));
