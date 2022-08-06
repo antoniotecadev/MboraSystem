@@ -251,8 +251,7 @@ public class ProdutoViewModel extends AndroidViewModel {
 
     public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
-        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(20), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText));
-        flowable = PagingRx.getFlowable(pager);
+        flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText)));
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(produto -> {
@@ -265,8 +264,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     private void filtrar(PagingSource<Integer, Produto> listProduto, AlertDialog dialog) {
-        Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(20), () -> listProduto);
-        flowable = PagingRx.getFlowable(pager);
+        flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> listProduto));
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this.lifecycleOwner)))
                 .subscribe(produto -> {

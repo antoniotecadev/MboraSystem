@@ -111,8 +111,7 @@ public class ListProdutoFragment extends Fragment {
             binding.chipQuantidadeProduto.setText(String.valueOf(quantidade));
             binding.recyclerViewListaProduto.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : pagingAdapter);
         });
-        produtoViewModel.crud = false;
-        produtoViewModel.consultarProdutos(this.idcategoria, null, isLixeira, false, getViewLifecycleOwner());
+        consultarProdutos(false, null, false);
         produtoViewModel.getListaProdutosPaging().observe(getViewLifecycleOwner(), produtoPagingData -> {
             Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
             pagingAdapter.submitData(getLifecycle(), produtoPagingData);
@@ -171,8 +170,7 @@ public class ListProdutoFragment extends Fragment {
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-                        produtoViewModel.crud = false;
-                        produtoViewModel.consultarProdutos(idcategoria, null, isLixeira, false, getViewLifecycleOwner());
+                        consultarProdutos(false, null, false);
                         return true;
                     }
                 });
@@ -185,11 +183,9 @@ public class ListProdutoFragment extends Fragment {
                     @Override
                     public boolean onQueryTextChange(String newText) {
                         if (newText.isEmpty()) {
-                            produtoViewModel.crud = false;
-                            produtoViewModel.consultarProdutos(idcategoria, null, isLixeira, false, getViewLifecycleOwner());
+                            consultarProdutos(false, null, false);
                         } else {
-                            produtoViewModel.crud = true;
-                            produtoViewModel.consultarProdutos(idcategoria, newText, isLixeira, true, getViewLifecycleOwner());
+                            consultarProdutos(true, newText, true);
                         }
                         return false;
                     }
@@ -219,12 +215,7 @@ public class ListProdutoFragment extends Fragment {
                 return false;
             }
         }, getViewLifecycleOwner());
-
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-            produtoViewModel.crud = false;
-            produtoViewModel.consultarProdutos(this.idcategoria, null, isLixeira, false, getViewLifecycleOwner());
-        });
-
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarProdutos(false, null, false));
         return binding.getRoot();
     }
 
@@ -328,6 +319,11 @@ public class ListProdutoFragment extends Fragment {
                 Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void consultarProdutos(boolean iScrud, String produto, boolean isPesquisa) {
+        produtoViewModel.crud = iScrud;
+        produtoViewModel.consultarProdutos(idcategoria, produto, isLixeira, isPesquisa, getViewLifecycleOwner());
     }
 
     class ProdutoAdapter extends PagingDataAdapter<Produto, ProdutoAdapter.ProdutoViewHolder> {
@@ -474,8 +470,7 @@ public class ListProdutoFragment extends Fragment {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
-                    produtoViewModel.crud = true;
-                    produtoViewModel.consultarProdutos(idcategoria, r.getContents(), isLixeira, true, getViewLifecycleOwner());
+                    consultarProdutos(true, r.getContents(), true);
                 } else {
                     Toast.makeText(requireActivity(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
                 }
