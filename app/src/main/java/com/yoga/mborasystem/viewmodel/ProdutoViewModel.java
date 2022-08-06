@@ -256,7 +256,6 @@ public class ProdutoViewModel extends AndroidViewModel {
         Pager<Integer, Produto> pager = new Pager<>(new PagingConfig(20), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText));
         flowable = PagingRx.getFlowable(pager);
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
-        Handler handler = new Handler();
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(produto -> {
                     if (crud) {
@@ -264,7 +263,9 @@ public class ProdutoViewModel extends AndroidViewModel {
                     } else {
                         getListaProdutosPaging().setValue(produto);
                     }
-                }, throwable -> handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+                }, throwable -> {
+                    new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro));
+                });
     }
 
     private void filtrar(PagingSource<Integer, Produto> listProduto, AlertDialog dialog) {
