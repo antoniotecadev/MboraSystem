@@ -57,6 +57,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("rawtypes")
 public class CategoriaProdutoFragment extends Fragment {
 
     private boolean vazio;
@@ -99,6 +100,13 @@ public class CategoriaProdutoFragment extends Fragment {
 
         recyclerViewConfig(binding.recyclerViewCategoriaProduto, categoriaAdapter);
         binding.btncriarCategoriaDialog.setOnClickListener(v -> criarCategoria());
+
+        categoriaProdutoViewModel.getQuantidadeCategoria(isLixeira).observe(getViewLifecycleOwner(), quantidade -> {
+//            binding.recyclerViewListaProduto.smoothScrollToPosition(0);
+            vazio = quantidade == 0;
+            binding.chipQuantidadeCategoria.setText(String.valueOf(quantidade));
+            binding.recyclerViewCategoriaProduto.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : categoriaAdapter);
+        });
 
         consultarCategorias(false, null, false);
         categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {

@@ -11,6 +11,7 @@ import android.widget.Switch;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelKt;
 import androidx.paging.Pager;
@@ -127,6 +128,9 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    public LiveData<Long> getQuantidadeCategoria(boolean isLixeira) {
+        return categoriaRepository.getQuantidadeCategoria(isLixeira);
+    }
     @SuppressLint("CheckResult")
     public void renomearCategoria(Categoria categoria, AlertDialog dialog) {
         Completable.fromAction(() -> categoriaRepository.update(categoria))

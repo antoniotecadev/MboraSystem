@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagingSource;
 
 import com.yoga.mborasystem.R;
@@ -67,6 +68,14 @@ public class CategoriaRepository {
             } else {
                 return categoriaDao.getCategorias();
             }
+        }
+    }
+
+    public LiveData<Long> getQuantidadeCategoria(boolean isLixeira) {
+        if (isLixeira) {
+            return categoriaDao.getQuantidadeCategoriaLixeira();
+        } else {
+            return categoriaDao.getQuantidadeCategoria();
         }
     }
 

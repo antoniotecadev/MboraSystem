@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.model.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -43,5 +44,11 @@ public interface CategoriaDao {
 
     @Query("UPDATE categorias SET estado = :est")
     void restaurarCategoria(int est);
+
+    @Query("SELECT COUNT(id) FROM categorias  WHERE estado != 3")
+    LiveData<Long> getQuantidadeCategoria();
+
+    @Query("SELECT COUNT(id) FROM categorias  WHERE estado = 3")
+    LiveData<Long> getQuantidadeCategoriaLixeira();
 
 }
