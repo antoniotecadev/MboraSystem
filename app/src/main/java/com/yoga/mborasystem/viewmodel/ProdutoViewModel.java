@@ -54,13 +54,11 @@ public class ProdutoViewModel extends AndroidViewModel {
     private LifecycleOwner lifecycleOwner;
     public Flowable<PagingData<Produto>> flowable;
     private final ProdutoRepository produtoRepository;
-    private final CompositeDisposable compositeDisposable;
 
     public ProdutoViewModel(@NonNull Application application) {
         super(application);
         produto = new Produto();
         disposable = new CompositeDisposable();
-        compositeDisposable = new CompositeDisposable();
         produtoRepository = new ProdutoRepository(getApplication());
     }
 
@@ -263,9 +261,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                     } else {
                         getListaProdutosPaging().setValue(produto);
                     }
-                }, throwable -> {
-                    new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro));
-                });
+                }, throwable -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     private void filtrar(PagingSource<Integer, Produto> listProduto, AlertDialog dialog) {
@@ -608,9 +604,6 @@ public class ProdutoViewModel extends AndroidViewModel {
         super.onCleared();
         if (disposable.isDisposed()) {
             disposable.dispose();
-        }
-        if (compositeDisposable.isDisposed()) {
-            compositeDisposable.dispose();
         }
     }
 
