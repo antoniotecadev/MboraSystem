@@ -143,9 +143,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         disposable = categoriaRepository.categoriasSpinner()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categorias -> {
-                    getListaCategoriasSpinner().setValue(new Event<>(categorias));
-                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro));
+                .subscribe(categorias -> getListaCategoriasSpinner().setValue(new Event<>(categorias)), e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro));
     }
 
     public LiveData<Long> getQuantidadeCategoria(boolean isLixeira) {
