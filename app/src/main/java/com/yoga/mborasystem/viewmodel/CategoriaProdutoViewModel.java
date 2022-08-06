@@ -7,11 +7,10 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelKt;
 import androidx.paging.Pager;
@@ -19,7 +18,6 @@ import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
 
-import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.repository.CategoriaRepository;
@@ -42,7 +40,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
     public boolean crud;
     private Disposable disposable;
-    private Lifecycle lifecycleOwner;
     private final Categoria categoria;
     private final CategoriaRepository categoriaRepository;
 
@@ -118,9 +115,8 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void consultarCategorias(String categoria, boolean isLixeira, boolean isPesquisa, Lifecycle lifecycleOwner) {
-        this.lifecycleOwner = lifecycleOwner;
-        Flowable<PagingData<Categoria>> flowable = PagingRx.getFlowable(new Pager(new PagingConfig(20), () -> categoriaRepository.getCategorias(isLixeira, isPesquisa, categoria)));
+    public void consultarCategorias(String categoria, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner) {
+        Flowable<PagingData<Categoria>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> categoriaRepository.getCategorias(isLixeira, isPesquisa, categoria)));
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(categorias -> {
@@ -128,9 +124,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                         getListaCategorias().postValue(categorias);
                     else
                         getListaCategorias().setValue(categorias);
-                }, e -> {
-                    new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro));
-                });
+                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     @SuppressLint("CheckResult")

@@ -8,11 +8,6 @@ import androidx.room.Query;
 
 import com.yoga.mborasystem.model.entidade.Categoria;
 
-import java.util.List;
-
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Maybe;
-
 @Dao
 public interface CategoriaDao {
 
