@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.widget.Toast;
 
+import androidx.paging.PagingSource;
+
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.CategoriaDao;
@@ -12,11 +14,7 @@ import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.Map;
-
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Maybe;
 
 public class CategoriaRepository {
 
@@ -56,19 +54,19 @@ public class CategoriaRepository {
         }
     }
 
-    public Flowable<List<Categoria>> getCategorias(boolean isLixeira) {
+    public PagingSource<Integer, Categoria> getCategorias(boolean isLixeira, boolean isSearch, String produto) {
         if (isLixeira) {
-            return categoriaDao.getCategoriasLixeira();
+            if (isSearch) {
+                return categoriaDao.searchCategoriasLixeira(produto);
+            } else {
+                return categoriaDao.getCategoriasLixeira();
+            }
         } else {
-            return categoriaDao.getCategorias();
-        }
-    }
-
-    public Maybe<List<Categoria>> searchCategorias(String categoria, boolean isLixeira) {
-        if (isLixeira) {
-            return categoriaDao.searchCategoriasLixeira(categoria);
-        } else {
-            return categoriaDao.searchCategorias(categoria);
+            if (isSearch) {
+                return categoriaDao.searchCategorias(produto);
+            } else {
+                return categoriaDao.getCategorias();
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.model.dao;
 
+import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -31,16 +32,16 @@ public interface CategoriaDao {
     void deleteAllCategoriaLixeira(int estado);
 
     @Query("SELECT * FROM categorias WHERE estado != 3 ORDER BY id DESC")
-    Flowable<List<Categoria>> getCategorias();
+    PagingSource<Integer, Categoria> getCategorias();
 
     @Query("SELECT * FROM categorias WHERE estado = 3 ORDER BY id DESC")
-    Flowable<List<Categoria>> getCategoriasLixeira();
+    PagingSource<Integer, Categoria> getCategoriasLixeira();
 
-    @Query("SELECT * FROM categorias WHERE estado != 3 AND categoria LIKE '%' || :search || '%'")
-    Maybe<List<Categoria>> searchCategorias(String search);
+    @Query("SELECT * FROM categorias WHERE estado != 3 AND categoria LIKE '%' || :categoria || '%'")
+    PagingSource<Integer, Categoria> searchCategorias(String categoria);
 
-    @Query("SELECT * FROM categorias WHERE estado = 3 AND categoria LIKE '%' || :search || '%'")
-    Maybe<List<Categoria>> searchCategoriasLixeira(String search);
+    @Query("SELECT * FROM categorias WHERE estado = 3 AND categoria LIKE '%' || :categoria || '%'")
+    PagingSource<Integer, Categoria> searchCategoriasLixeira(String categoria);
 
     @Query("UPDATE categorias SET estado = :est WHERE id = :id")
     void restaurarCategoria(int est, long id);

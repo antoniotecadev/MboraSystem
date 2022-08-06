@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
@@ -97,11 +98,8 @@ public class CategoriaProdutoFragment extends Fragment {
             binding.btncriarCategoriaDialog.setVisibility(View.GONE);
         }
 
+        recyclerViewConfig(binding.recyclerViewCategoriaProduto, categoriaAdapter);
         binding.btncriarCategoriaDialog.setOnClickListener(v -> criarCategoria());
-        binding.recyclerViewCategoriaProduto.setAdapter(categoriaAdapter);
-        binding.recyclerViewCategoriaProduto.setHasFixedSize(true);
-        binding.recyclerViewCategoriaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
-        categoriaProdutoViewModel.consultarCategorias(null, isLixeira);
 
 //        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
 //            adapter.clear();
@@ -116,14 +114,12 @@ public class CategoriaProdutoFragment extends Fragment {
 //                }
 //            }
 //        });
-        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new EventObserver<>(categorias -> {
-            if (categorias.isEmpty()) {
-                vazio = true;
-            } else {
-                vazio = false;
-                categoriaAdapter.submitList(categorias);
-            }
-        }));
+
+        consultarCategorias(false, null, false);
+        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), categorias -> {
+            categoriaAdapter.submitData(getLifecycle(), categorias);
+            Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
+        });
 
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
             StringBuilder dt = new StringBuilder();
@@ -137,8 +133,14 @@ public class CategoriaProdutoFragment extends Fragment {
                 exportarProdutos(Ultilitario.categoria, Ultilitario.isLocal);
             }
         }));
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout, isLixeira));
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarCategorias(false, null, false));
         return binding.getRoot();
+    }
+
+    private void recyclerViewConfig(RecyclerView recyclerView, CategoriaAdapter adapter) {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
     }
 
     private void exportarProdutos(String nomeFicheiro, boolean isLocal) {
@@ -154,7 +156,6 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     private void criarCategoria() {
-        MainActivity.getProgressBar();
         Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
     }
 
@@ -202,7 +203,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                newTextIsEmpty();
+                consultarCategorias(false, null, false);
                 return true;
             }
         });
@@ -215,17 +216,18 @@ public class CategoriaProdutoFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    newTextIsEmpty();
+                    consultarCategorias(false, null, false);
                 } else {
-                    categoriaProdutoViewModel.searchCategoria(newText, isLixeira);
+                    consultarCategorias(true, newText, true);
                 }
                 return false;
             }
         });
     }
 
-    private void newTextIsEmpty() {
-        categoriaProdutoViewModel.consultarCategorias(binding.mySwipeRefreshLayout, isLixeira);
+    private void consultarCategorias(boolean isCrud, String categoria, boolean isPesquisa) {
+        categoriaProdutoViewModel.crud = isCrud;
+        categoriaProdutoViewModel.consultarCategorias(categoria, isLixeira, isPesquisa, getLifecycle());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -233,6 +235,9 @@ public class CategoriaProdutoFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         switch (item.getItemId()) {
+            case R.id.dialogCriarCategoria:
+                Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
+                break;
             case R.id.exportarproduto:
                 exportarImportar(Ultilitario.EXPORTAR_PRODUTO);
                 break;
@@ -259,6 +264,7 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     private void dialogEliminarReataurarTodasCategoriasLixeira(String titulo, String msg, boolean isEliminar) {
+        categoriaProdutoViewModel.crud = true;
         if (vazio) {
             Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
         } else {
@@ -284,7 +290,7 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     //    class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder> {
-    class CategoriaAdapter extends ListAdapter<Categoria, CategoriaAdapter.CategoriaViewHolder> {
+    class CategoriaAdapter extends PagingDataAdapter<Categoria, CategoriaAdapter.CategoriaViewHolder> {
 
         public CategoriaAdapter(@NonNull DiffUtil.ItemCallback<Categoria> diffCallback) {
             super(diffCallback);
@@ -326,7 +332,6 @@ public class CategoriaProdutoFragment extends Fragment {
                     if (getArguments() != null) {
                         if (getArguments().getBoolean("master")) {
                             menu1.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(item -> {
-                                MainActivity.getProgressBar();
                                 bundle.putParcelable("categoria", ct);
                                 Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
                                 return false;
@@ -379,9 +384,8 @@ public class CategoriaProdutoFragment extends Fragment {
             alert.setTitle(titulo);
             alert.setMessage(getString(mensagem));
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                        MainActivity.getProgressBar();
+                        categoriaProdutoViewModel.crud = true;
                         categoriaProdutoViewModel.eliminarCategoria(categoria, !permanente, false);
-                        categoriaProdutoViewModel.consultarCategorias(null, isLixeira);
                     }
             ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
@@ -394,6 +398,7 @@ public class CategoriaProdutoFragment extends Fragment {
         }
 
         private void dialogEliminarCategoria(String msg, String categoria, Categoria ct) {
+            categoriaProdutoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.eliminar_categoria) + " (" + categoria + ")")
                     .setMessage(msg)
@@ -403,6 +408,7 @@ public class CategoriaProdutoFragment extends Fragment {
         }
 
         private void restaurarCategoria(String categoria, long idcategoria) {
+            categoriaProdutoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.rest) + " (" + categoria + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())

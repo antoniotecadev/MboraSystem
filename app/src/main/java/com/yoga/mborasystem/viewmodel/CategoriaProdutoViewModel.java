@@ -7,57 +7,55 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MutableLiveData;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.lifecycle.ViewModelKt;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.rxjava3.PagingRx;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.repository.CategoriaRepository;
-import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 
-import java.util.List;
 import java.util.Map;
 
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CategoriaProdutoViewModel extends AndroidViewModel {
 
-    private final Categoria categoria;
+    public boolean crud;
     private Disposable disposable;
-    private final CompositeDisposable compositeDisposable;
+    private Lifecycle lifecycleOwner;
+    private final Categoria categoria;
     private final CategoriaRepository categoriaRepository;
 
     public CategoriaProdutoViewModel(Application application) {
         super(application);
         categoria = new Categoria();
         disposable = new CompositeDisposable();
-        compositeDisposable = new CompositeDisposable();
         categoriaRepository = new CategoriaRepository(application);
     }
 
-    private MutableLiveData<Ultilitario.Operacao> valido;
+    private MutableLiveData<PagingData<Categoria>> listaCategorias;
 
-    public MutableLiveData<Ultilitario.Operacao> getValido() {
-        if (valido == null) {
-            valido = new MutableLiveData<>();
-        }
-        return valido;
-    }
-
-    private MutableLiveData<Event<List<Categoria>>> listaCategorias;
-
-    public MutableLiveData<Event<List<Categoria>>> getListaCategorias() {
+    public MutableLiveData<PagingData<Categoria>> getListaCategorias() {
         if (listaCategorias == null) {
             listaCategorias = new MutableLiveData<>();
         }
@@ -76,7 +74,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
             descricao.requestFocus();
             descricao.setError(getApplication().getString(R.string.descricao_invalida));
         } else {
-            MainActivity.getProgressBar();
             categoria.setCategoria(nome.getText().toString());
             categoria.setDescricao(descricao.getText().toString());
             categoria.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
@@ -110,44 +107,30 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.categoria_criada), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_criada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
 
-    public void consultarCategorias(SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
-        MainActivity.getProgressBar();
-        compositeDisposable.add(categoriaRepository.getCategorias(isLixeira)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+    public void consultarCategorias(String categoria, boolean isLixeira, boolean isPesquisa, Lifecycle lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
+        Flowable<PagingData<Categoria>> flowable = PagingRx.getFlowable(new Pager(new PagingConfig(20), () -> categoriaRepository.getCategorias(isLixeira, isPesquisa, categoria)));
+        PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
+        flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(categorias -> {
-                    getListaCategorias().setValue(new Event<>(categorias));
-                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                    MainActivity.dismissProgressBar();
+                    if (crud)
+                        getListaCategorias().postValue(categorias);
+                    else
+                        getListaCategorias().setValue(categorias);
                 }, e -> {
-                    MainActivity.dismissProgressBar();
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                }));
-    }
-
-    public void searchCategoria(String categoria, boolean isLixeira) {
-        compositeDisposable.add(categoriaRepository.searchCategorias(categoria, isLixeira)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categorias -> {
-                    getListaCategorias().setValue(new Event<>(categorias));
-                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                    new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro));
+                });
     }
 
     @SuppressLint("CheckResult")
@@ -163,14 +146,12 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_alter), R.drawable.ic_toast_feito);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_renomeada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -178,7 +159,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void restaurarCategoria(int estado, long idcategoria, boolean todasCategorias) {
-        MainActivity.getProgressBar();
         Completable.fromAction(() -> categoriaRepository.restaurarCategoria(estado, idcategoria, todasCategorias))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -190,7 +170,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         if (todasCategorias) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cats_rests), R.drawable.ic_toast_feito);
                         } else {
@@ -200,7 +179,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cat_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -208,7 +186,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void eliminarCategoria(Categoria cat, boolean isLixeira, boolean eliminarTodasLixeira) {
-        MainActivity.getProgressBar();
         Completable.fromAction(() -> categoriaRepository.delete(cat, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -220,7 +197,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         if (!isLixeira || eliminarTodasLixeira) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.cts_elims) : getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
                         } else {
@@ -230,7 +206,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.categoria_nao_eliminada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -245,9 +220,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         super.onCleared();
         if (disposable.isDisposed()) {
             disposable.dispose();
-        }
-        if (compositeDisposable.isDisposed()) {
-            compositeDisposable.dispose();
         }
     }
 }

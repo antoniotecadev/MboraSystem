@@ -51,11 +51,17 @@ public class DialogCriarCategoria extends DialogFragment {
                     binding.textDataModifica.setVisibility(View.VISIBLE);
                     binding.textDataModifica.setText(getText(R.string.data_modifica) + ": " + categoria.getData_modifica());
                 }
-                binding.btnCriarCategoria.setOnClickListener(v -> categoriaProdutoViewModel.validarCategoria(Ultilitario.Operacao.ACTUALIZAR, binding.nomeCategoria, binding.descricao, binding.switchEstado, dialog, categoria.getId()));
+                binding.btnCriarCategoria.setOnClickListener(v -> {
+                    categoriaProdutoViewModel.crud = true;
+                    categoriaProdutoViewModel.validarCategoria(Ultilitario.Operacao.ACTUALIZAR, binding.nomeCategoria, binding.descricao, binding.switchEstado, dialog, categoria.getId());
+                });
             }
         } else {
             builder.setTitle(R.string.nova_categoria);
-            binding.btnCriarCategoria.setOnClickListener(v -> categoriaProdutoViewModel.validarCategoria(Ultilitario.Operacao.CRIAR, binding.nomeCategoria, binding.descricao, binding.switchEstado, dialog, 0));
+            binding.btnCriarCategoria.setOnClickListener(v -> {
+                categoriaProdutoViewModel.crud = true;
+                categoriaProdutoViewModel.validarCategoria(Ultilitario.Operacao.CRIAR, binding.nomeCategoria, binding.descricao, binding.switchEstado, dialog, 0);
+            });
         }
 
         builder.setView(binding.getRoot());
