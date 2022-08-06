@@ -221,12 +221,11 @@ public class FacturaFragment extends Fragment {
         binding.recyclerViewFacturaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewFactura.setAdapter(adapterFactura);
         binding.recyclerViewFactura.setLayoutManager(new LinearLayoutManager(getContext()));
-        categoriaProdutoViewModel.consultarCategorias(null, false);
-        categoriaProdutoViewModel.getListaCategorias().observe(getViewLifecycleOwner(), new EventObserver<>(categorias -> {
+        categoriaProdutoViewModel.categoriasSpinner();
+        categoriaProdutoViewModel.getListaCategoriasSpinner().observe(getViewLifecycleOwner(), new EventObserver<>(categorias -> {
             if (!categorias.isEmpty() && listaCategoria.isEmpty()) {
                 for (Categoria categoria : categorias) {
-                    if (categoria.getEstado() != Ultilitario.DOIS)
-                        listaCategoria.add(categoria.getId() + " - " + categoria.getCategoria());
+                    listaCategoria.add(categoria.getId() + " - " + categoria.getCategoria());
                 }
                 listCategoriaAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listaCategoria);
                 binding.spinnerCategorias.setAdapter(listCategoriaAdapter);

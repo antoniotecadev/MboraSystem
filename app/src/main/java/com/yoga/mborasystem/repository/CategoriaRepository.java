@@ -15,7 +15,10 @@ import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Map;
+
+import io.reactivex.rxjava3.core.Maybe;
 
 public class CategoriaRepository {
 
@@ -77,6 +80,10 @@ public class CategoriaRepository {
         } else {
             return categoriaDao.getQuantidadeCategoria();
         }
+    }
+
+    public Maybe<List<Categoria>> categoriasSpinner(){
+        return categoriaDao.getCategoriasSpinner();
     }
 
     public void importarCategorias(Map<String, String> categorias, Context context, Handler handler) {

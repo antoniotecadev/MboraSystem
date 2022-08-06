@@ -22,8 +22,10 @@ import androidx.paging.rxjava3.PagingRx;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.repository.CategoriaRepository;
+import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import java.util.List;
 import java.util.Map;
 
 import autodispose2.AutoDispose;
@@ -58,6 +60,15 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
             listaCategorias = new MutableLiveData<>();
         }
         return listaCategorias;
+    }
+
+    private MutableLiveData<Event<List<Categoria>>> listaCategoriasSpinner;
+
+    public MutableLiveData<Event<List<Categoria>>> getListaCategoriasSpinner() {
+        if (listaCategoriasSpinner == null) {
+            listaCategoriasSpinner = new MutableLiveData<>();
+        }
+        return listaCategoriasSpinner;
     }
 
     private boolean isCampoVazio(String valor) {
@@ -128,9 +139,19 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    public void categoriasSpinner() {
+        disposable = categoriaRepository.categoriasSpinner()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categorias -> {
+                    getListaCategoriasSpinner().setValue(new Event<>(categorias));
+                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro));
+    }
+
     public LiveData<Long> getQuantidadeCategoria(boolean isLixeira) {
         return categoriaRepository.getQuantidadeCategoria(isLixeira);
     }
+
     @SuppressLint("CheckResult")
     public void renomearCategoria(Categoria categoria, AlertDialog dialog) {
         Completable.fromAction(() -> categoriaRepository.update(categoria))

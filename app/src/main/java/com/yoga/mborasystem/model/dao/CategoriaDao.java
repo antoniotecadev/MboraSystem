@@ -9,6 +9,10 @@ import androidx.room.Query;
 
 import com.yoga.mborasystem.model.entidade.Categoria;
 
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Maybe;
+
 @Dao
 public interface CategoriaDao {
 
@@ -50,5 +54,8 @@ public interface CategoriaDao {
 
     @Query("SELECT COUNT(id) FROM categorias  WHERE estado = 3")
     LiveData<Long> getQuantidadeCategoriaLixeira();
+
+    @Query("SELECT * FROM categorias WHERE estado = 1  ORDER BY id DESC")
+    Maybe<List<Categoria>> getCategoriasSpinner();
 
 }
