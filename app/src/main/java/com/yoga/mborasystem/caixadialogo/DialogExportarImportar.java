@@ -202,12 +202,11 @@ public class DialogExportarImportar extends DialogFragment {
                     categorias.put(categoria[0], categoria[1]);
                 }
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                handler.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
             } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                handler.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
             }
+            categoriaProdutoViewModel.crud = true;
             categoriaProdutoViewModel.importarCategorias(categorias, handler);
         });
     }

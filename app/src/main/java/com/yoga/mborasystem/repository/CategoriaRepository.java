@@ -82,8 +82,8 @@ public class CategoriaRepository {
         }
     }
 
-    public Maybe<List<Categoria>> categoriasSpinner(){
-        return categoriaDao.getCategoriasSpinner();
+    public Maybe<List<Categoria>> categoriasSpinner(boolean isFactura) {
+        return categoriaDao.getCategoriasSpinner(1, isFactura ? 1 : 3);
     }
 
     public void importarCategorias(Map<String, String> categorias, Context context, Handler handler) {

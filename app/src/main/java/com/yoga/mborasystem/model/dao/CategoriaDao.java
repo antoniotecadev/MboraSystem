@@ -55,7 +55,7 @@ public interface CategoriaDao {
     @Query("SELECT COUNT(id) FROM categorias  WHERE estado = 3")
     LiveData<Long> getQuantidadeCategoriaLixeira();
 
-    @Query("SELECT * FROM categorias WHERE estado = 1  ORDER BY id DESC")
-    Maybe<List<Categoria>> getCategoriasSpinner();
+    @Query("SELECT * FROM categorias WHERE estado BETWEEN :inicio AND :fim ORDER BY id DESC")
+    Maybe<List<Categoria>> getCategoriasSpinner(int inicio, int fim);
 
 }

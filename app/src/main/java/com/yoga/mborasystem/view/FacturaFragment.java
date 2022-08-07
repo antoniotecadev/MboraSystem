@@ -221,7 +221,7 @@ public class FacturaFragment extends Fragment {
         binding.recyclerViewFacturaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewFactura.setAdapter(adapterFactura);
         binding.recyclerViewFactura.setLayoutManager(new LinearLayoutManager(getContext()));
-        categoriaProdutoViewModel.categoriasSpinner();
+        categoriaProdutoViewModel.categoriasSpinner(true, 0, null);
         categoriaProdutoViewModel.getListaCategoriasSpinner().observe(getViewLifecycleOwner(), new EventObserver<>(categorias -> {
             if (!categorias.isEmpty() && listaCategoria.isEmpty()) {
                 for (Categoria categoria : categorias) {

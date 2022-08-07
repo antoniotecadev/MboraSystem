@@ -67,7 +67,6 @@ public class CategoriaProdutoFragment extends Fragment {
     private boolean isLixeira, isMaster;
     private ProdutoViewModel produtoViewModel;
     private FragmentCategoriaProdutoBinding binding;
-    private ArrayList<String> stringList, stringListDesc;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
     private ExecutorService executor;
     CategoriaAdapter categoriaAdapter;
@@ -78,8 +77,6 @@ public class CategoriaProdutoFragment extends Fragment {
         bundle = new Bundle();
         data = new StringBuilder();
         adapter = new GroupAdapter();
-        stringList = new ArrayList<>();
-        stringListDesc = new ArrayList<>();
         categoriaAdapter = new CategoriaAdapter(new CategoriaComparator());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
@@ -234,10 +231,7 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     private void exportarImportar(int typeOperetion) {
-        bundle.putInt("typeoperation", typeOperetion);
-        bundle.putStringArrayList("categorias", stringList);
-        bundle.putStringArrayList("descricao", stringListDesc);
-        Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogExportarImportar, bundle);
+        categoriaProdutoViewModel.categoriasSpinner(false, typeOperetion, requireView());
     }
 
     private void consultarCategorias(boolean isCrud, String categoria, boolean isPesquisa) {
@@ -420,9 +414,9 @@ public class CategoriaProdutoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (bundle != null) {
+        if (bundle != null)
             bundle.clear();
-        }
+
         if (executor != null)
             executor.shutdownNow();
     }

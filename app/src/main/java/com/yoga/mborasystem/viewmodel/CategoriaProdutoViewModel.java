@@ -3,8 +3,10 @@ package com.yoga.mborasystem.viewmodel;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 
@@ -14,6 +16,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelKt;
+import androidx.navigation.Navigation;
 import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
@@ -25,6 +28,7 @@ import com.yoga.mborasystem.repository.CategoriaRepository;
 import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,12 +46,15 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class CategoriaProdutoViewModel extends AndroidViewModel {
 
     public boolean crud;
+    private final Bundle bundle;
     private Disposable disposable;
     private final Categoria categoria;
+    private ArrayList<String> categoriaList, descricaoList;
     private final CategoriaRepository categoriaRepository;
 
     public CategoriaProdutoViewModel(Application application) {
         super(application);
+        bundle = new Bundle();
         categoria = new Categoria();
         disposable = new CompositeDisposable();
         categoriaRepository = new CategoriaRepository(application);
@@ -139,11 +146,26 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
-    public void categoriasSpinner() {
-        disposable = categoriaRepository.categoriasSpinner()
+    public void categoriasSpinner(boolean isFactura, int operacao, View view) {
+        disposable = categoriaRepository.categoriasSpinner(isFactura)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categorias -> getListaCategoriasSpinner().setValue(new Event<>(categorias)), e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro));
+                .subscribe(categorias -> {
+                    if (isFactura)
+                        getListaCategoriasSpinner().setValue(new Event<>(categorias));
+                    else {
+                        categoriaList = new ArrayList<>();
+                        descricaoList = new ArrayList<>();
+                        for (Categoria c : categorias) {
+                            categoriaList.add(c.getId() + "-" + c.getCategoria());
+                            descricaoList.add(c.getDescricao());
+                        }
+                        bundle.putInt("typeoperation", operacao);
+                        bundle.putStringArrayList("categorias", categoriaList);
+                        bundle.putStringArrayList("descricao", descricaoList);
+                        Navigation.findNavController(view).navigate(R.id.action_categoriaProdutoFragment_to_dialogExportarImportar, bundle);
+                    }
+                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro));
     }
 
     public LiveData<Long> getQuantidadeCategoria(boolean isLixeira) {
@@ -235,8 +257,10 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable.isDisposed()) {
+        if (disposable.isDisposed())
             disposable.dispose();
-        }
+
+        if (bundle != null)
+            bundle.clear();
     }
 }
