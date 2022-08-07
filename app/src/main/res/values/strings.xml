@@ -88,6 +88,7 @@
     <string name="tipo">Tipo:</string>
     <string name="desactivado">Desactivado</string>
     <string name="estado_desbloqueado">Desbloqueado</string>
+    <string name="risc_text">&lt;s&gt;%1$s&lt;/s&gt;</string>
     <string name="estado_bloqueado">Bloqueado</string>
     <string name="salvar_alteracao">Salvar Alteração</string>
     <string name="falha_lista_usuario">Falha ao carregar lista de usuários</string>

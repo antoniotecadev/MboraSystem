@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -287,7 +288,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 h.binding.txtNomeCategoria.setText(ct.getCategoria());
                 h.binding.txtDescricao.setText(ct.getDescricao() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + ct.getData_elimina() : ""));
                 if (ct.getEstado() == Ultilitario.DOIS) {
-                    h.binding.txtDescricao.setTextColor(Color.RED);
+                    h.binding.txtNomeCategoria.setText(Html.fromHtml(getString(R.string.risc_text, ct.getCategoria())));
                     h.binding.txtDescricao.setText(getString(R.string.estado_bloqueado));
                 }
                 registerForContextMenu(h.binding.imgBtnMenu);
@@ -461,7 +462,6 @@ public class CategoriaProdutoFragment extends Fragment {
                 try {
                     readTextFromUri(uri);
                 } catch (IOException e) {
-                    e.printStackTrace();
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
