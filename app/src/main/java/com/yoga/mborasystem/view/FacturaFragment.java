@@ -33,6 +33,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -88,7 +89,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 @SuppressWarnings("rawtypes")
 public class FacturaFragment extends Fragment {
 
@@ -129,9 +129,6 @@ public class FacturaFragment extends Fragment {
                 consultarProdutos(idc, true, resultCodeBar, true);
                 Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false, null, "", "");
             }
-            //Added preview of scanned barcode
-//            ImageView imageView = findViewById(R.id.barcodePreview);
-//            imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
         }
 
         @Override
@@ -142,7 +139,6 @@ public class FacturaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         iva = new HashMap<>();
         bundle = new Bundle();
         valor = new HashMap<>();
@@ -402,12 +398,14 @@ public class FacturaFragment extends Fragment {
             try {
                 Date date1 = sdf.parse(Ultilitario.getDateCurrent());
                 Date date2 = sdf.parse(data);
-                if (date1.compareTo(date2) >= 0) {
-                    dataEmissao = data;
-                    Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.dat_ems) + ": " + data, R.drawable.ic_toast_feito);
-                } else {
-                    dataEmissao = "";
-                    Ultilitario.alertDialog(getString(R.string.dat_nao_sel), getString(R.string.dat_ems_nao_dat_act), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                if (date1 != null) {
+                    if (date1.compareTo(date2) >= 0) {
+                        dataEmissao = data;
+                        Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.dat_ems) + ": " + data, R.drawable.ic_toast_feito);
+                    } else {
+                        dataEmissao = "";
+                        Ultilitario.alertDialog(getString(R.string.dat_nao_sel), getString(R.string.dat_ems_nao_dat_act), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    }
                 }
             } catch (ParseException e) {
                 dataEmissao = "";
@@ -425,7 +423,6 @@ public class FacturaFragment extends Fragment {
                     } else {
                         nomeIDcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
                     }
-//                    codigoQr = System.currentTimeMillis() / 1000 + "" + getCodigoDeBarra();
                     referenciaFactura = "FR 00V" + (dataEmissao.isEmpty() ? TextUtils.split(Ultilitario.getDateCurrent(), "-")[2].trim() : TextUtils.split(dataEmissao, "-")[2].trim());
                     if (binding.checkboxDivida.isChecked()) {
                         if (valorDivida > 0) {
@@ -504,6 +501,59 @@ public class FacturaFragment extends Fragment {
 
             }
         }));
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_factura, menu);
+                SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+                MenuItem menuItem = menu.findItem(R.id.app_bar_search);
+                SearchView searchView = (SearchView) menuItem.getActionView();
+                searchView.setQueryHint(getString(R.string.prod) + " " + getString(R.string.ou) + " " + getString(R.string.codigo_bar));
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
+                searchView.onActionViewExpanded();
+                menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        consultarProdutos(idc, false, null, false);
+                        return true;
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (newText.isEmpty()) {
+                            consultarProdutos(idc, false, null, false);
+                        } else {
+                            consultarProdutos(idc, true, newText, true);
+                        }
+                        return false;
+                    }
+                });
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.calculadoraFragmentItem) {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_facturaFragment_to_calculadoraFragment);
+                } else if (itemId == R.id.itemData) {
+                    FacturaFragmentDirections.ActionFacturaFragmentToDatePickerFragment direction = FacturaFragmentDirections.actionFacturaFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
+                    Navigation.findNavController(requireView()).navigate(direction);
+                }
+                return NavigationUI.onNavDestinationSelected(menuItem, navController);
+            }
+        }, getViewLifecycleOwner());
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
@@ -695,10 +745,6 @@ public class FacturaFragment extends Fragment {
         }
     }
 
-    private String getCodigoDeBarra() {
-        return String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
-    }
-
     class ProdutoFacturaAdapter extends PagingDataAdapter<Produto, ProdutoFacturaAdapter.ProdutoFacturaViewHolder> {
         private TextView totaluni;
 
@@ -712,6 +758,7 @@ public class FacturaFragment extends Fragment {
             return new ProdutoFacturaViewHolder(FragmentListaProdutoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ProdutoFacturaViewHolder h, int position) {
             Produto produto = getItem(position);
@@ -919,64 +966,6 @@ public class FacturaFragment extends Fragment {
         public boolean areContentsTheSame(@NonNull Produto oldItem, @NonNull Produto newItem) {
             return oldItem.getId() == newItem.getId();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        switch (item.getItemId()) {
-            case R.id.calculadoraFragmentItem:
-                Navigation.findNavController(requireView()).navigate(R.id.action_facturaFragment_to_calculadoraFragment);
-                break;
-            case R.id.itemData:
-                FacturaFragmentDirections.ActionFacturaFragmentToDatePickerFragment direction = FacturaFragmentDirections.actionFacturaFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
-                Navigation.findNavController(requireView()).navigate(direction);
-                break;
-            default:
-                break;
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_factura, menu);
-        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-        MenuItem menuItem = menu.findItem(R.id.app_bar_search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.prod) + " " + getString(R.string.ou) + " " + getString(R.string.codigo_bar));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-        searchView.onActionViewExpanded();
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                consultarProdutos(idc, false, null, false);
-                return true;
-            }
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    consultarProdutos(idc, false, null, false);
-                } else {
-                    consultarProdutos(idc, true, newText, true);
-                }
-                return false;
-            }
-        });
     }
 
     private String mensagem;
