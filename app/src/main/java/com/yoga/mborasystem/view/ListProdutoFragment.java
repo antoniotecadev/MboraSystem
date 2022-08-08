@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -354,6 +355,7 @@ public class ListProdutoFragment extends Fragment {
                     h.binding.estadoProduto.setTextColor(Color.BLUE);
                     h.binding.estadoProduto.setText(getString(R.string.estado_desbloqueado));
                 } else {
+                    h.binding.txtNomeProduto.setText(Html.fromHtml(getString(R.string.risc_text, produto.getNome())));
                     h.binding.estadoProduto.setChecked(false);
                     h.binding.estadoProduto.setTextColor(Color.RED);
                     h.binding.estadoProduto.setText(getString(R.string.estado_bloqueado));
