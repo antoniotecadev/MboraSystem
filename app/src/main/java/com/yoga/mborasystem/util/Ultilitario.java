@@ -622,6 +622,18 @@ public class Ultilitario {
         return sharedPreferences.getBoolean("autenticacaobiometrica", true);
     }
 
+    public static boolean getHiddenFloatButton(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean("hiddenfloatbutton", false);
+    }
+
+    public static void setHiddenFloatButton(Context context, boolean switchHidden) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("hiddenfloatbutton", switchHidden);
+        editor.apply();
+    }
+
     public static String monthInglesFrances(String data) {
         Map<String, String> listMonth = new HashMap<>();
         listMonth.put("january", "janeiro");

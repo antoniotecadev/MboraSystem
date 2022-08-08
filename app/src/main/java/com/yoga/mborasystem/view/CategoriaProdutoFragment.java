@@ -88,6 +88,13 @@ public class CategoriaProdutoFragment extends Fragment {
         });
         binding.floatingActionButtonCima.setOnClickListener(view -> binding.recyclerViewCategoriaProduto.smoothScrollToPosition(0));
         binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewCategoriaProduto.smoothScrollToPosition(quantidade));
+        binding.switchOcultarFloatCimaBaixo.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                ocultarFloatButtonCimaBaixo(true, View.GONE);
+            else
+                ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
+        });
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getHiddenFloatButton(requireContext()));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarCategorias(false, null, false));
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
@@ -165,6 +172,12 @@ public class CategoriaProdutoFragment extends Fragment {
             }
         }, getViewLifecycleOwner());
         return binding.getRoot();
+    }
+
+    private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
+        Ultilitario.setHiddenFloatButton(requireContext(), switchHidden);
+        binding.floatingActionButtonCima.setVisibility(view);
+        binding.floatingActionButtonBaixo.setVisibility(view);
     }
 
     private void recyclerViewConfig(RecyclerView recyclerView, CategoriaAdapter adapter) {
