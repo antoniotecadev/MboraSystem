@@ -62,7 +62,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("rawtypes")
 public class ListProdutoFragment extends Fragment {
 
-    private int tipo;
+    private int tipo, quantidade;
     private boolean vazio;
     private Bundle bundle;
     private Long idcategoria;
@@ -108,6 +108,7 @@ public class ListProdutoFragment extends Fragment {
         }
         produtoViewModel.getQuantidadeProduto(this.idcategoria, isLixeira).observe(getViewLifecycleOwner(), quantidade -> {
 //            binding.recyclerViewListaProduto.smoothScrollToPosition(0);
+            this.quantidade = quantidade.intValue();
             vazio = quantidade == 0;
             binding.chipQuantidadeProduto.setText(String.valueOf(quantidade));
             binding.recyclerViewListaProduto.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : pagingAdapter);
@@ -124,6 +125,8 @@ public class ListProdutoFragment extends Fragment {
                 createProduto(idcategoria, categoria);
             }
         });
+        binding.floatingActionButtonCima.setOnClickListener(view -> binding.recyclerViewListaProduto.smoothScrollToPosition(0));
+        binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewListaProduto.smoothScrollToPosition(quantidade));
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod ->
         {
             StringBuilder dt = new StringBuilder();
