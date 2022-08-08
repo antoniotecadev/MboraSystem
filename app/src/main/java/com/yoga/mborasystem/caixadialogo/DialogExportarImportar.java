@@ -49,6 +49,7 @@ public class DialogExportarImportar extends DialogFragment {
     private ArrayList<String> categorias, descricoes;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
     private StringBuilder data;
+    private long idcategoria;
 
     private ExecutorService executor;
 
@@ -129,9 +130,9 @@ public class DialogExportarImportar extends DialogFragment {
         if (getArguments() != null) {
             categorias = getArguments().getStringArrayList("categorias");
             descricoes = getArguments().getStringArrayList("descricao");
+            String[] idcategoria = TextUtils.split(binding.spinnerCategoria.getSelectedItem().toString(), "-");
             switch (getArguments().getInt("typeoperation")) {
                 case Ultilitario.EXPORTAR_PRODUTO:
-                    String[] idcategoria = TextUtils.split(binding.spinnerCategoria.getSelectedItem().toString(), "-");
                     Ultilitario.isLocal = isLocal;
                     Ultilitario.categoria = idcategoria[1].trim();
                     produtoViewModel.consultarProdutos(Long.parseLong(idcategoria[0].trim()), true, null, false);
@@ -172,7 +173,7 @@ public class DialogExportarImportar extends DialogFragment {
 
     private void importarProdutos() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Ultilitario.importarCategoriasProdutosClientes(null, getActivity());
+            Ultilitario.importarCategoriasProdutosClientes(null, requireActivity());
         } else {
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
@@ -218,12 +219,19 @@ public class DialogExportarImportar extends DialogFragment {
                     Uri uri;
                     if (data != null) {
                         uri = data.getData();
-                        try {
-                            readTextFromUri(uri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                        new AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                                .setTitle(getString(R.string.importar))
+                                .setMessage(uri.getPath())
+                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                    try {
+                                        readTextFromUri(uri);
+                                    } catch (IOException e) {
+                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .show();
                     }
                 }
             });
