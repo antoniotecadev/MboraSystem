@@ -94,7 +94,7 @@ public class CategoriaProdutoFragment extends Fragment {
             else
                 ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
         });
-        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getHiddenFloatButton(requireContext()));
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getHiddenFloatButton(requireContext(), "categoria"));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarCategorias(false, null, false));
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
@@ -175,7 +175,7 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
-        Ultilitario.setHiddenFloatButton(requireContext(), switchHidden);
+        Ultilitario.setHiddenFloatButton(requireContext(), switchHidden, "categoria");
         binding.floatingActionButtonCima.setVisibility(view);
         binding.floatingActionButtonBaixo.setVisibility(view);
     }
