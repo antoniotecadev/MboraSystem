@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/app_bar_search"
@@ -24,11 +24,18 @@
         android:title="@string/scan_bar"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
-        android:id="@+id/exportarproduto"
-        android:title="@string/exportar_produto" />
-    <item
-        android:id="@+id/importarproduto"
-        android:title="@string/importar_produto" />
+        android:id="@+id/exinpProduto"
+        android:title="@string/exportar_importar_produto"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/exportarproduto"
+                android:title="@string/exportar_produto" />
+            <item
+                android:id="@+id/importarproduto"
+                android:title="@string/importar_produto" />
+        </menu>
+    </item>
     <item
         android:id="@+id/btnEliminarTodosLixo"
         android:icon="@drawable/ic_eliminar"
