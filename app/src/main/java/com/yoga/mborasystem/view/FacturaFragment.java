@@ -38,7 +38,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.paging.PagingDataAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.snackbar.Snackbar;
@@ -59,6 +62,7 @@ import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentFacturaBinding;
+import com.yoga.mborasystem.databinding.FragmentListaProdutoBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
@@ -85,7 +89,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-
+@SuppressWarnings("rawtypes")
 public class FacturaFragment extends Fragment {
 
     private Bundle bundle;
@@ -100,7 +104,8 @@ public class FacturaFragment extends Fragment {
     private FragmentFacturaBinding binding;
     private ArrayList<String> listaCategoria;
     private ProdutoViewModel produtoViewModel;
-    private GroupAdapter adapter, adapterFactura;
+    private ProdutoFacturaAdapter pagingAdapter;
+    private GroupAdapter adapterFactura;
     private String resultCodeBar, referenciaFactura = "", facturaPath, dataEmissao = "";
     private ArrayList<ClienteCantina> clienteCantina;
     private ClienteCantinaViewModel clienteCantinaViewModel;
@@ -121,7 +126,7 @@ public class FacturaFragment extends Fragment {
                 resultCodeBar = result.getText();
                 barcodeView.setStatusText(result.getText() + "\n" + getString(R.string.ja_scaneado));
                 beepManager.playBeepSoundAndVibrate();
-//                produtoViewModel.searchProduto(resultCodeBar, false);
+                consultarProdutos(idc, true, resultCodeBar, true);
                 Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false, null, "", "");
             }
             //Added preview of scanned barcode
@@ -146,8 +151,8 @@ public class FacturaFragment extends Fragment {
         posicao = new HashMap<>();
         produtos = new HashMap<>();
         itemView = new HashMap<>();
-        adapter = new GroupAdapter();
         precoTotal = new HashMap<>();
+        pagingAdapter = new ProdutoFacturaAdapter(new ProdutoFacturaComparator());
         listaCategoria = new ArrayList<>();
         adapterFactura = new GroupAdapter();
         clienteCantina = new ArrayList<>();
@@ -217,7 +222,7 @@ public class FacturaFragment extends Fragment {
         binding.btnScannerBack.setOnClickListener(v -> abrirCamera());
         binding.btnClose.setOnClickListener(v -> fecharCamera());
         binding.btnScannerFront.setOnClickListener(v -> abrirCamera());
-        binding.recyclerViewFacturaProduto.setAdapter(adapter);
+        binding.recyclerViewFacturaProduto.setAdapter(pagingAdapter);
         binding.recyclerViewFacturaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewFactura.setAdapter(adapterFactura);
         binding.recyclerViewFactura.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -236,24 +241,15 @@ public class FacturaFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] idcategoria = TextUtils.split(parent.getItemAtPosition(position).toString(), "-");
                 idc = Long.parseLong(idcategoria[0].trim());
-                produtoViewModel.consultarProdutos(idc, false, null, false);
+                consultarProdutos(idc, false, null, false);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        produtoViewModel.getListaProdutos().observe(getViewLifecycleOwner(), produtos -> {
-            adapter.clear();
-            if (produtos.isEmpty()) {
-                Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.produto_nao_encontrada), R.drawable.ic_toast_erro);
-            } else {
-                for (Produto produto : produtos) {
-                    if (produto.getEstado() != Ultilitario.DOIS)
-                        adapter.add(new ItemProduto(produto));
-                }
-            }
-        });
+        consultarProdutos(0, false, null, false);
+        produtoViewModel.getListaProdutosPaging().observe(getViewLifecycleOwner(), produtoPagingData -> pagingAdapter.submitData(getLifecycle(), produtoPagingData));
         binding.textTaxa.setText(Ultilitario.getTaxaIva(requireActivity()) + "%");
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
         binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
@@ -402,7 +398,7 @@ public class FacturaFragment extends Fragment {
         checkValorFormaPagamento(binding.checkboxTransferenciaBancario, binding.transfValorPago);
 
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
             try {
                 Date date1 = sdf.parse(Ultilitario.getDateCurrent());
                 Date date2 = sdf.parse(data);
@@ -512,6 +508,11 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void consultarProdutos(long idcategoria, boolean iScrud, String produto, boolean isPesquisa) {
+        produtoViewModel.crud = iScrud;
+        produtoViewModel.consultarProdutos(idcategoria, produto, false, isPesquisa, getViewLifecycleOwner());
+    }
+
     private void fecharAlertDialog(AlertDialog alertDialog) {
         restaurar();
         alertDialog.dismiss();
@@ -555,7 +556,7 @@ public class FacturaFragment extends Fragment {
         Ultilitario.zerarPreco(binding.cartaoValorPago);
         Ultilitario.zerarPreco(binding.depValorPago);
         Ultilitario.zerarPreco(binding.transfValorPago);
-        produtoViewModel.consultarProdutos(idc, false, null, false);
+        consultarProdutos(idc, false, null, false);
     }
 
     private void abrirCamera() {
@@ -698,53 +699,60 @@ public class FacturaFragment extends Fragment {
         return String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
     }
 
-    public class ItemProduto extends Item<GroupieViewHolder> {
-        private final Produto produto;
+    class ProdutoFacturaAdapter extends PagingDataAdapter<Produto, ProdutoFacturaAdapter.ProdutoFacturaViewHolder> {
         private TextView totaluni;
 
-        public ItemProduto(Produto produto) {
-            this.produto = produto;
+        public ProdutoFacturaAdapter(@NonNull DiffUtil.ItemCallback<Produto> diffCallback) {
+            super(diffCallback);
         }
 
-        @SuppressLint("SetTextI18n")
+        @NonNull
         @Override
-        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            TextView nome = viewHolder.itemView.findViewById(R.id.txtProduto);
-            TextView precorefcod = viewHolder.itemView.findViewById(R.id.txtPreco);
-            nome.setText(produto.getNome());
-            precorefcod.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " - MS" + produto.getId() + " - " + produto.getCodigoBarra());
-            itemView.put(produto.getId(), viewHolder.itemView);
-            if (estado.get(produto.getId()) != null && Objects.requireNonNull(estado.get(produto.getId()))) {
-                viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
-            } else {
-                viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            }
-            viewHolder.itemView.setOnClickListener(this::addProduto);
-            if (addScaner) {
-                addScaner = false;
-                adicionarProduto(produto.getId(), produto, viewHolder.itemView, true);
-                habilitarDesabilitarButtonEfectuarVenda();
-            }
+        public ProdutoFacturaAdapter.ProdutoFacturaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ProdutoFacturaViewHolder(FragmentListaProdutoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        }
 
-            viewHolder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                menu.setHeaderTitle(produto.getNome());
-                menu.add(getString(R.string.adicionar_produto)).setOnMenuItemClickListener(item -> {
-                    addProduto(v);
-                    return false;
+        @Override
+        public void onBindViewHolder(@NonNull ProdutoFacturaViewHolder h, int position) {
+            Produto produto = getItem(position);
+            if (produto != null && produto.getEstado() != Ultilitario.DOIS) {
+                h.binding.txtProduto.setText(produto.getNome());
+                h.binding.txtPreco.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " - MS" + produto.getId() + " - " + produto.getCodigoBarra());
+                itemView.put(produto.getId(), h.itemView);
+                if (estado.get(produto.getId()) != null && Objects.requireNonNull(estado.get(produto.getId())))
+                    h.itemView.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
+                else
+                    h.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                h.itemView.setOnClickListener(v -> addProduto(v, produto, produto.getId(), produto.getNome()));
+                if (addScaner) {
+                    addScaner = false;
+                    adicionarProduto(produto.getId(), produto, h.itemView, true);
+                    habilitarDesabilitarButtonEfectuarVenda();
+                }
+                h.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                    menu.setHeaderTitle(produto.getNome());
+                    menu.add(getString(R.string.adicionar_produto)).setOnMenuItemClickListener(item -> {
+                        addProduto(v, produto, produto.getId(), produto.getNome());
+                        return false;
+                    });
                 });
-            });
+            }
         }
 
-        @Override
-        public int getLayout() {
-            return R.layout.fragment_lista_produto;
+        public class ProdutoFacturaViewHolder extends RecyclerView.ViewHolder {
+            FragmentListaProdutoBinding binding;
+
+            public ProdutoFacturaViewHolder(@NonNull FragmentListaProdutoBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
         }
 
-        private void addProduto(View v) {
-            if (produtos.containsKey(produto.getId())) {
-                removerProduto(produto.getId(), v, produto.getNome(), true);
+        private void addProduto(View v, Produto produto, long idproduto, String nomeproduto) {
+            if (produtos.containsKey(idproduto)) {
+                removerProduto(idproduto, v, nomeproduto, true);
             } else {
-                adicionarProduto(produto.getId(), produto, v, true);
+                adicionarProduto(idproduto, produto, v, true);
                 habilitarDesabilitarButtonEfectuarVenda();
             }
         }
@@ -898,7 +906,19 @@ public class FacturaFragment extends Fragment {
                 return R.layout.fragment_lista_factura;
             }
         }
+    }
 
+    static class ProdutoFacturaComparator extends DiffUtil.ItemCallback<Produto> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Produto oldItem, @NonNull Produto newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Produto oldItem, @NonNull Produto newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
     }
 
     @Override
@@ -937,7 +957,7 @@ public class FacturaFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                produtoViewModel.consultarProdutos(idc, false, null, false);
+                consultarProdutos(idc, false, null, false);
                 return true;
             }
         });
@@ -950,9 +970,9 @@ public class FacturaFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    produtoViewModel.consultarProdutos(idc, false, null, false);
+                    consultarProdutos(idc, false, null, false);
                 } else {
-//                    produtoViewModel.searchProduto(newText, false);
+                    consultarProdutos(idc, true, newText, true);
                 }
                 return false;
             }

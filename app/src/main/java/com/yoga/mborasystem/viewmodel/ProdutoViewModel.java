@@ -22,7 +22,6 @@ import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingSource;
 import androidx.paging.rxjava3.PagingRx;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
@@ -69,16 +68,8 @@ public class ProdutoViewModel extends AndroidViewModel {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
 
-    private MutableLiveData<List<Produto>> listaProdutos;
     private MutableLiveData<PagingData<Produto>> listaProdutospaging;
     private MutableLiveData<Event<List<Produto>>> listaProdutosImport;
-
-    public MutableLiveData<List<Produto>> getListaProdutos() {
-        if (listaProdutos == null) {
-            listaProdutos = new MutableLiveData<>();
-        }
-        return listaProdutos;
-    }
 
     public MutableLiveData<PagingData<Produto>> getListaProdutosPaging() {
         if (listaProdutospaging == null) {
@@ -243,10 +234,6 @@ public class ProdutoViewModel extends AndroidViewModel {
 
     public void exportarProdutos(long idcategoria) throws Exception {
         getListaProdutosisExport().postValue(new Event<>(produtoRepository.getProdutosExport(idcategoria)));
-    }
-
-    public void consultarProdutos(long idcategoria, boolean isExport, SwipeRefreshLayout mySwipeRefreshLayout, boolean isLixeira) {
-
     }
 
     public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner) {
