@@ -107,7 +107,6 @@ public class ListProdutoFragment extends Fragment {
             binding.btnCriarProdutoFragment.setVisibility(View.GONE);
         }
         produtoViewModel.getQuantidadeProduto(this.idcategoria, isLixeira).observe(getViewLifecycleOwner(), quantidade -> {
-//            binding.recyclerViewListaProduto.smoothScrollToPosition(0);
             this.quantidade = quantidade.intValue();
             vazio = quantidade == 0;
             binding.chipQuantidadeProduto.setText(String.valueOf(quantidade));

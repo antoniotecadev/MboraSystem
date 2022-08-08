@@ -42,11 +42,12 @@ public class CategoriaProdutoFragment extends Fragment {
 
     private boolean vazio;
     private Bundle bundle;
+    private int quantidade;
     private GroupAdapter adapter;
     private boolean isLixeira, isMaster;
     private FragmentCategoriaProdutoBinding binding;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
-    CategoriaAdapter categoriaAdapter;
+    private CategoriaAdapter categoriaAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class CategoriaProdutoFragment extends Fragment {
         binding.btncriarCategoriaDialog.setOnClickListener(v -> criarCategoria());
 
         categoriaProdutoViewModel.getQuantidadeCategoria(isLixeira).observe(getViewLifecycleOwner(), quantidade -> {
-//            binding.recyclerViewListaProduto.smoothScrollToPosition(0);
+            this.quantidade = quantidade.intValue();
             vazio = quantidade == 0;
             binding.chipQuantidadeCategoria.setText(String.valueOf(quantidade));
             binding.recyclerViewCategoriaProduto.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : categoriaAdapter);
@@ -85,7 +86,8 @@ public class CategoriaProdutoFragment extends Fragment {
             categoriaAdapter.submitData(getLifecycle(), categorias);
             Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
         });
-
+        binding.floatingActionButtonCima.setOnClickListener(view -> binding.recyclerViewCategoriaProduto.smoothScrollToPosition(0));
+        binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewCategoriaProduto.smoothScrollToPosition(quantidade));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarCategorias(false, null, false));
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override

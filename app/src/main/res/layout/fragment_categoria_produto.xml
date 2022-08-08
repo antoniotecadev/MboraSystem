@@ -59,4 +59,28 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/floatingActionButtonCima"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal|end"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="62dp"
+      android:backgroundTint="@color/cor_castanha"
+      android:src="@android:drawable/arrow_up_float"
+      app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonBaixo"
+      app:layout_constraintEnd_toEndOf="parent" />
+
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/floatingActionButtonBaixo"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal|end"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="62dp"
+      android:backgroundTint="@color/cor_castanha"
+      android:src="@android:drawable/arrow_down_float"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
