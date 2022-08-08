@@ -10,28 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
-
-import com.yoga.mborasystem.R;
-import com.yoga.mborasystem.databinding.DialogExportarImportarBinding;
-import com.yoga.mborasystem.util.Ultilitario;
-import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
-import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -41,15 +21,30 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.DialogExportarImportarBinding;
+import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class DialogExportarImportar extends DialogFragment {
 
     private AlertDialog dialog;
-    private ProdutoViewModel produtoViewModel;
     private DialogExportarImportarBinding binding;
+    private ArrayList<Integer> estado;
     private ArrayList<String> categorias, descricoes;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
     private StringBuilder data;
-    private long idcategoria;
 
     private ExecutorService executor;
 
@@ -58,23 +53,11 @@ public class DialogExportarImportar extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         data = new StringBuilder();
         binding = DialogExportarImportarBinding.inflate(getLayoutInflater());
-        produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setIcon(R.drawable.ic_baseline_store_24);
+        builder.setIcon(R.drawable.ic_baseline_insert_drive_file_24);
         if (getArguments() != null) {
-            categorias = getArguments().getStringArrayList("categorias");
-            ArrayAdapter<String> adapterCategorias = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, categorias);
-            binding.spinnerCategoria.setAdapter(adapterCategorias);
             switch (getArguments().getInt("typeoperation")) {
-                case Ultilitario.EXPORTAR_PRODUTO:
-                    builder.setTitle(getString(R.string.exportar_produto));
-                    viewItemProduto(R.string.exportar_nuvem, false);
-                    break;
-                case Ultilitario.IMPORTAR_PRODUTO:
-                    builder.setTitle(getString(R.string.importar_produto));
-                    viewItemProduto(R.string.importar, true);
-                    break;
                 case Ultilitario.EXPORTAR_CATEGORIA:
                     builder.setTitle(getString(R.string.exportar_categoria));
                     viewItemCategoria(R.string.exportar_nuvem, true);
@@ -96,52 +79,24 @@ public class DialogExportarImportar extends DialogFragment {
         return dialog;
     }
 
-    private void viewItemProduto(int textButton, boolean isImport) {
-        if (isImport) {
-            visibleGone(View.GONE, false);
-        } else {
-            visibleGone(View.VISIBLE, true);
-        }
-        binding.btnExportarImportarNuvem.setText(getString(textButton));
-    }
-
     private void viewItemCategoria(int textButton, boolean isExport) {
-        binding.textView.setVisibility(View.GONE);
-        if (isExport) {
-            visibleGone(View.VISIBLE, false);
-        } else {
-            visibleGone(View.GONE, false);
-        }
+        if (isExport)
+            visibleGone(View.VISIBLE);
+        else
+            visibleGone(View.GONE);
         binding.btnExportarImportarNuvem.setText(getString(textButton));
     }
 
-    private void visibleGone(int view, boolean isSpinnerCategoria) {
+    private void visibleGone(int view) {
         binding.btnExportarImportarLocal.setVisibility(view);
-        if (isSpinnerCategoria) {
-            binding.textView.setVisibility(view);
-            binding.spinnerCategoria.setVisibility(View.VISIBLE);
-        } else {
-            binding.textView.setVisibility(View.GONE);
-            binding.spinnerCategoria.setVisibility(View.GONE);
-        }
     }
 
     private void importarExportar(boolean isLocal) {
         if (getArguments() != null) {
+            estado = getArguments().getIntegerArrayList("estado");
             categorias = getArguments().getStringArrayList("categorias");
             descricoes = getArguments().getStringArrayList("descricao");
-            String[] idcategoria = TextUtils.split(binding.spinnerCategoria.getSelectedItem().toString(), "-");
             switch (getArguments().getInt("typeoperation")) {
-                case Ultilitario.EXPORTAR_PRODUTO:
-                    Ultilitario.isLocal = isLocal;
-                    Ultilitario.categoria = idcategoria[1].trim();
-                    produtoViewModel.consultarProdutos(Long.parseLong(idcategoria[0].trim()), true, null, false);
-                    dialog.dismiss();
-                    break;
-                case Ultilitario.IMPORTAR_PRODUTO:
-                    importarProdutos();
-                    dialog.dismiss();
-                    break;
                 case Ultilitario.EXPORTAR_CATEGORIA:
                     exportarCategorias(isLocal);
                     break;
@@ -157,7 +112,7 @@ public class DialogExportarImportar extends DialogFragment {
     private void exportarCategorias(boolean isLocal) {
         StringBuilder data = new StringBuilder();
         for (int i = 0; i < categorias.size(); i++) {
-            data.append(categorias.get(i).split("-")[1]).append(",").append(descricoes.get(i)).append("\n");
+            data.append(categorias.get(i)).append(",").append(descricoes.get(i)).append(",").append(estado.get(i)).append("\n");
         }
         this.data = data;
         if (isLocal) {
@@ -168,14 +123,6 @@ public class DialogExportarImportar extends DialogFragment {
             }
         } else {
             Ultilitario.exportarNuvem(getContext(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
-        }
-    }
-
-    private void importarProdutos() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Ultilitario.importarCategoriasProdutosClientes(null, requireActivity());
-        } else {
-            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
     }
 
@@ -192,15 +139,13 @@ public class DialogExportarImportar extends DialogFragment {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
-            //Background work here
-            Map<String, String> categorias = new HashMap<>();
+            List<String> categorias = new ArrayList<>();
             try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
                  BufferedReader reader = new BufferedReader(
                          new InputStreamReader(Objects.requireNonNull(inputStream)))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    String[] categoria = line.split(",");
-                    categorias.put(categoria[0], categoria[1]);
+                    categorias.add(line);
                 }
             } catch (FileNotFoundException e) {
                 handler.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
@@ -208,7 +153,7 @@ public class DialogExportarImportar extends DialogFragment {
                 handler.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
             }
             categoriaProdutoViewModel.crud = true;
-            categoriaProdutoViewModel.importarCategorias(categorias, handler);
+            categoriaProdutoViewModel.importarCategorias(categorias, handler, dialog);
         });
     }
 

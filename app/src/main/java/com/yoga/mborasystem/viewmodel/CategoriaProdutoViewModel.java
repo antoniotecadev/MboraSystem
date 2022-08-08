@@ -30,7 +30,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import autodispose2.AutoDispose;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
@@ -49,6 +48,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     private final Bundle bundle;
     private Disposable disposable;
     private final Categoria categoria;
+    private ArrayList<Integer> estado;
     private ArrayList<String> categoriaList, descricaoList;
     private final CategoriaRepository categoriaRepository;
 
@@ -154,13 +154,16 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                     if (isFactura)
                         getListaCategoriasSpinner().setValue(new Event<>(categorias));
                     else {
+                        estado = new ArrayList<>();
                         categoriaList = new ArrayList<>();
                         descricaoList = new ArrayList<>();
                         for (Categoria c : categorias) {
-                            categoriaList.add(c.getId() + "-" + c.getCategoria());
+                            estado.add(c.getEstado());
+                            categoriaList.add(c.getCategoria());
                             descricaoList.add(c.getDescricao());
                         }
                         bundle.putInt("typeoperation", operacao);
+                        bundle.putIntegerArrayList("estado", estado);
                         bundle.putStringArrayList("categorias", categoriaList);
                         bundle.putStringArrayList("descricao", descricaoList);
                         Navigation.findNavController(view).navigate(R.id.action_categoriaProdutoFragment_to_dialogExportarImportar, bundle);
@@ -250,8 +253,8 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                 });
     }
 
-    public void importarCategorias(Map<String, String> categorias, Handler handler) {
-        categoriaRepository.importarCategorias(categorias, getApplication(), handler);
+    public void importarCategorias(List<String> categorias, Handler handler, AlertDialog dialog) {
+        categoriaRepository.importarCategorias(categorias, getApplication(), handler, dialog);
     }
 
     @Override

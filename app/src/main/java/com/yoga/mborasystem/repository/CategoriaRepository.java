@@ -3,11 +3,14 @@ package com.yoga.mborasystem.repository;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.paging.PagingSource;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.CategoriaDao;
@@ -16,7 +19,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.rxjava3.core.Maybe;
 
@@ -86,18 +88,21 @@ public class CategoriaRepository {
         return categoriaDao.getCategoriasSpinner(1, isFactura ? 1 : 2);
     }
 
-    public void importarCategorias(Map<String, String> categorias, Context context, Handler handler) {
+    public void importarCategorias(List<String> categorias, Context context, Handler handler, AlertDialog dialog) {
 
         Categoria categoria = new Categoria();
         try {
-            for (String ct : categorias.keySet()) {
-                categoria.setCategoria(ct);
-                categoria.setDescricao(categorias.get(ct));
-                categoria.setEstado(1);
+            for (String ct : categorias) {
+                String[] cat = ct.split(",");
+                categoria.setId(0);
+                categoria.setCategoria(cat[0]);
+                categoria.setDescricao(cat[1]);
+                categoria.setEstado(Integer.parseInt(cat[2]));
                 categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 categoriaDao.insert(categoria);
             }
-            handler.post(() -> Toast.makeText(context, R.string.cats_impo, Toast.LENGTH_LONG).show());
+            dialog.dismiss();
+            handler.post(() -> Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.cats_impo), R.drawable.ic_toast_feito));
         } catch (Exception e) {
             handler.post(() -> Ultilitario.showToast(context, Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
         }

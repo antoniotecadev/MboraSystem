@@ -23,32 +23,6 @@
                 android:layout_marginTop="@dimen/margem_lateral_formulario"
                 android:background="?android:attr/listDivider" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margem_lateral_formulario"
-                android:layout_marginTop="@dimen/margem_lateral_formulario"
-                android:layout_marginEnd="@dimen/margem_lateral_formulario"
-                android:text="@string/categorias"
-                android:textColor="#000000"
-                android:textSize="18sp" />
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinnerCategoria"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginStart="@dimen/margem_lateral_formulario"
-                android:layout_marginEnd="@dimen/margem_lateral_formulario"
-                android:spinnerMode="dropdown" />
-
-            <View
-                android:id="@+id/divider1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/margem_lateral_formulario"
-                android:background="?android:attr/listDivider" />
-
             <Button
                 android:id="@+id/btnExportarImportarLocal"
                 android:layout_width="match_parent"

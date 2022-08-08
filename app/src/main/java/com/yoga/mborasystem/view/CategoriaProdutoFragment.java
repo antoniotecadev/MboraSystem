@@ -1,13 +1,8 @@
 package com.yoga.mborasystem.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -19,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.MenuProvider;
@@ -41,45 +34,26 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCategoriaBinding;
 import com.yoga.mborasystem.databinding.FragmentCategoriaProdutoBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
-import com.yoga.mborasystem.model.entidade.Produto;
-import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
-import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @SuppressWarnings("rawtypes")
 public class CategoriaProdutoFragment extends Fragment {
 
     private boolean vazio;
     private Bundle bundle;
-    private StringBuilder data;
     private GroupAdapter adapter;
     private boolean isLixeira, isMaster;
-    private ProdutoViewModel produtoViewModel;
     private FragmentCategoriaProdutoBinding binding;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
-    private ExecutorService executor;
     CategoriaAdapter categoriaAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
-        data = new StringBuilder();
         adapter = new GroupAdapter();
         categoriaAdapter = new CategoriaAdapter(new CategoriaComparator());
-        produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
     }
 
@@ -112,18 +86,6 @@ public class CategoriaProdutoFragment extends Fragment {
             Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
         });
 
-        produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod -> {
-            StringBuilder dt = new StringBuilder();
-            if (prod.isEmpty()) {
-                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
-            } else {
-                for (Produto produto : prod) {
-                    dt.append(produto.getNome()).append(",").append(produto.getTipo()).append(",").append(produto.getUnidade()).append(",").append(produto.getCodigoMotivoIsencao()).append(",").append(produto.getPercentagemIva()).append(",").append(produto.getPreco()).append(",").append(produto.getPrecofornecedor()).append(",").append(produto.getQuantidade()).append(",").append(produto.getCodigoBarra()).append(",").append(produto.isIva()).append(",").append(produto.getEstado()).append(",").append(produto.isStock()).append(",").append(produto.getIdcategoria()).append("\n");
-                }
-                data = dt;
-                exportarProdutos(Ultilitario.categoria, Ultilitario.isLocal);
-            }
-        }));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarCategorias(false, null, false));
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
@@ -135,14 +97,12 @@ public class CategoriaProdutoFragment extends Fragment {
                     } else {
                         menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
                         menu.findItem(R.id.exinpCategoria).setVisible(false);
-                        menu.findItem(R.id.exinpProduto).setVisible(false);
                         binding.btncriarCategoriaDialog.setVisibility(View.GONE);
                     }
                 } else {
                     Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
                 }
                 if (isLixeira) {
-                    menu.findItem(R.id.exinpProduto).setVisible(false);
                     menu.findItem(R.id.exinpCategoria).setVisible(false);
                 } else {
                     menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
@@ -190,10 +150,6 @@ public class CategoriaProdutoFragment extends Fragment {
                 int itemId = menuItem.getItemId();
                 if (itemId == R.id.dialogCriarCategoria) {
                     Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
-                } else if (itemId == R.id.exportarproduto) {
-                    exportarImportar(Ultilitario.EXPORTAR_PRODUTO);
-                } else if (itemId == R.id.importarproduto) {
-                    exportarImportar(Ultilitario.IMPORTAR_PRODUTO);
                 } else if (itemId == R.id.exportarcategoria) {
                     exportarImportar(Ultilitario.EXPORTAR_CATEGORIA);
                 } else if (itemId == R.id.importarcategoria) {
@@ -213,18 +169,6 @@ public class CategoriaProdutoFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-    }
-
-    private void exportarProdutos(String nomeFicheiro, boolean isLocal) {
-        if (isLocal) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), nomeFicheiro, Ultilitario.getDateCurrent());
-            } else {
-                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-        } else {
-            Ultilitario.exportarNuvem(getContext(), data, "produtos.csv", nomeFicheiro, Ultilitario.getDateCurrent());
-        }
     }
 
     private void criarCategoria() {
@@ -417,9 +361,6 @@ public class CategoriaProdutoFragment extends Fragment {
         binding = null;
         if (bundle != null)
             bundle.clear();
-
-        if (executor != null)
-            executor.shutdownNow();
     }
 
     @Override
@@ -427,57 +368,4 @@ public class CategoriaProdutoFragment extends Fragment {
         super.onStart();
         MainActivity.dismissProgressBar();
     }
-
-    public void readTextFromUri(Uri uri) throws IOException {
-        executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            List<String> produtos = new ArrayList<>();
-            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
-                 BufferedReader reader = new BufferedReader(
-                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    produtos.add(line);
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            produtoViewModel.importarProdutos(produtos, true, 0L);
-        });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-        if (requestCode == Ultilitario.QUATRO && resultCode == Activity.RESULT_OK) {
-            Uri uri;
-            if (resultData != null) {
-                uri = resultData.getData();
-                try {
-                    readTextFromUri(uri);
-                } catch (IOException e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    ActivityResultLauncher<Intent> exportProductActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent resultData = result.getData();
-                    Uri uri;
-                    if (resultData != null) {
-                        uri = resultData.getData();
-                        Ultilitario.alterDocument(uri, data, requireActivity());
-                        data.delete(0, data.length());
-                    }
-                }
-            });
 }
