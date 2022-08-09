@@ -50,7 +50,7 @@ public class ProdutoRepository {
         }
     }
 
-    public PagingSource<Integer, Produto> getProdutos(long idcategoria, boolean isLixeira, boolean isSearch, String produto) {
+    public PagingSource<Integer, Produto> getProdutos(long idcategoria, boolean isLixeira, boolean isSearch, String produto, boolean isFactura, boolean isTodosProdutos) {
         if (isLixeira) {
             if (isSearch) {
                 return produtoDao.searchProdutosLixeira(produto);
@@ -58,10 +58,23 @@ public class ProdutoRepository {
                 return produtoDao.getProdutosLixeira();
             }
         } else {
-            if (isSearch) {
-                return produtoDao.searchProdutos(idcategoria, produto);
+            if (!isFactura) {
+                if (isSearch)
+                    return produtoDao.searchProdutos(idcategoria, produto);
+                else
+                    return produtoDao.getProdutos(idcategoria);
             } else {
-                return produtoDao.getProdutos(idcategoria);
+                if (isSearch)
+                    if (isTodosProdutos)
+                        return produtoDao.searchTodosProdutos(produto);
+                    else
+                        return produtoDao.searchProdutos(idcategoria, produto);
+                else {
+                    if (isTodosProdutos)
+                        return produtoDao.getTodosProdutos();
+                    else
+                        return produtoDao.getProdutos(idcategoria);
+                }
             }
         }
     }

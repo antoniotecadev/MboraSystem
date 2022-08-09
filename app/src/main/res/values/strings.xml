@@ -642,6 +642,7 @@
     <string name="dat_ems">Data de emissão</string>
     <string name="dat_ems_nao_dat_act">Data de emissão não pode ser maior que a data actual.</string>
     <string name="dat_nao_sel">Data não seleccionada</string>
+    <string name="cst_tds_prod">Consultar todos produtos</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

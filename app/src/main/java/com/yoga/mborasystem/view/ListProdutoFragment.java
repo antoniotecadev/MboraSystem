@@ -132,7 +132,7 @@ public class ListProdutoFragment extends Fragment {
             else
                 ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
         });
-        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getHiddenFloatButton(requireContext(), "produto"));
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "produto"));
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod ->
         {
             StringBuilder dt = new StringBuilder();
@@ -230,7 +230,7 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
-        Ultilitario.setHiddenFloatButton(requireContext(), switchHidden, "produto");
+        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "produto");
         binding.floatingActionButtonCima.setVisibility(view);
         binding.floatingActionButtonBaixo.setVisibility(view);
     }
@@ -339,7 +339,7 @@ public class ListProdutoFragment extends Fragment {
 
     private void consultarProdutos(boolean iScrud, String produto, boolean isPesquisa) {
         produtoViewModel.crud = iScrud;
-        produtoViewModel.consultarProdutos(idcategoria, produto, isLixeira, isPesquisa, getViewLifecycleOwner());
+        produtoViewModel.consultarProdutos(idcategoria, produto, isLixeira, isPesquisa, getViewLifecycleOwner(), false, false);
     }
 
     class ProdutoAdapter extends PagingDataAdapter<Produto, ProdutoAdapter.ProdutoViewHolder> {

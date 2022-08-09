@@ -622,15 +622,15 @@ public class Ultilitario {
         return sharedPreferences.getBoolean("autenticacaobiometrica", true);
     }
 
-    public static boolean getHiddenFloatButton(Context context, String idhidden) {
+    public static boolean getBooleanPreference(Context context, String idvalue) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean(idhidden, false);
+        return sharedPreferences.getBoolean(idvalue, false);
     }
 
-    public static void setHiddenFloatButton(Context context, boolean switchHidden, String idhidden) {
+    public static void setBooleanPreference(Context context, boolean value, String idvalue) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(idhidden, switchHidden);
+        editor.putBoolean(idvalue, value);
         editor.apply();
     }
 

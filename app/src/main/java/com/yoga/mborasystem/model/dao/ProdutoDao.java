@@ -62,6 +62,12 @@ public interface ProdutoDao {
     @Query("UPDATE produtos SET estado = :est")
     void restaurarTodosProdutos(int est);
 
+    @Query("SELECT * FROM produtos WHERE estado != 3 ORDER BY produtos.id DESC")
+    PagingSource<Integer, Produto> getTodosProdutos();
+
+    @Query("SELECT * FROM produtos WHERE estado != 3 AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
+    PagingSource<Integer, Produto> searchTodosProdutos(String produto);
+
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")
     PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd);
 

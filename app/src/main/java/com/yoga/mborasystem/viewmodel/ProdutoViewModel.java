@@ -236,9 +236,9 @@ public class ProdutoViewModel extends AndroidViewModel {
         getListaProdutosisExport().postValue(new Event<>(produtoRepository.getProdutosExport(idcategoria)));
     }
 
-    public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner) {
+    public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner, boolean isFactura, boolean isTodosProdutos) {
         this.lifecycleOwner = lifecycleOwner;
-        flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText)));
+        flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText, isFactura, isTodosProdutos)));
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(produto -> {
@@ -259,7 +259,8 @@ public class ProdutoViewModel extends AndroidViewModel {
                         dialog.dismiss();
                     }
                     getListaProdutosPaging().postValue(produto);
-                }, throwable -> { });
+                }, throwable -> {
+                });
     }
 
     public LiveData<Long> getQuantidadeProduto(long idcategoria, boolean isLixeira) {

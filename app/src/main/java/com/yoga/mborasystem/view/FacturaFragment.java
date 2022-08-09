@@ -89,11 +89,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 @SuppressWarnings("rawtypes")
 public class FacturaFragment extends Fragment {
 
     private Bundle bundle;
-    private boolean addScaner;
+    private boolean addScaner, load;
     private Cliente cliente;
     private long idc, idcliente;
     private BeepManager beepManager;
@@ -237,14 +238,21 @@ public class FacturaFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] idcategoria = TextUtils.split(parent.getItemAtPosition(position).toString(), "-");
                 idc = Long.parseLong(idcategoria[0].trim());
-                consultarProdutos(idc, false, null, false);
+                if (load)
+                    consultarProdutos(idc, false, null, false);
+                load = true;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        consultarProdutos(0, false, null, false);
+        binding.checkboxTodosProdutos.setChecked(Ultilitario.getBooleanPreference(requireContext(), "checkboxTodosProdutos"));
+        binding.checkboxTodosProdutos.setOnCheckedChangeListener((compoundButton, b) -> {
+            Ultilitario.setBooleanPreference(requireContext(), b, "checkboxTodosProdutos");
+            consultarProdutos(idc, false, null, false);
+        });
+        consultarProdutos(idc, false, null, false);
         produtoViewModel.getListaProdutosPaging().observe(getViewLifecycleOwner(), produtoPagingData -> pagingAdapter.submitData(getLifecycle(), produtoPagingData));
         binding.textTaxa.setText(Ultilitario.getTaxaIva(requireActivity()) + "%");
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
@@ -560,7 +568,7 @@ public class FacturaFragment extends Fragment {
 
     private void consultarProdutos(long idcategoria, boolean iScrud, String produto, boolean isPesquisa) {
         produtoViewModel.crud = iScrud;
-        produtoViewModel.consultarProdutos(idcategoria, produto, false, isPesquisa, getViewLifecycleOwner());
+        produtoViewModel.consultarProdutos(idcategoria, produto, false, isPesquisa, getViewLifecycleOwner(), true, Ultilitario.getBooleanPreference(requireContext(), "checkboxTodosProdutos"));
     }
 
     private void fecharAlertDialog(AlertDialog alertDialog) {
@@ -1047,5 +1055,4 @@ public class FacturaFragment extends Fragment {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.noa_scan_codbar), R.drawable.ic_toast_erro);
                 }
             });
-
 }
