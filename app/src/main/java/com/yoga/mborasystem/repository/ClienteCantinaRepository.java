@@ -61,6 +61,7 @@ public class ClienteCantinaRepository {
         try {
             for (String cl : clientes) {
                 String[] cli = cl.split(",");
+                clienteCantina.setId(0);
                 clienteCantina.setNome(cli[0]);
                 clienteCantina.setTelefone(cli[1]);
                 clienteCantina.setEmail(cli[2]);

@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 @SuppressWarnings("rawtypes")
 public class ListaClienteFragment extends Fragment {
 
@@ -294,26 +295,26 @@ public class ListaClienteFragment extends Fragment {
     }
 
     private void exportarCliente() {
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
         new android.app.AlertDialog.Builder(requireContext())
                 .setIcon(R.drawable.ic_baseline_store_24)
                 .setTitle(R.string.exportar)
                 .setSingleChoiceItems(R.array.array_local_nuvem, 3, (dialogInterface, i) -> {
-                    executor = Executors.newSingleThreadExecutor();
-                    Handler handler = new Handler(Looper.getMainLooper());
                     switch (i) {
                         case 0:
                             tipo = 0;
-                            exportarClientes(executor, handler, dialogInterface);
                             break;
                         case 1:
                             tipo = 1;
-                            exportarClientes(executor, handler, dialogInterface);
                             break;
                         default:
                             break;
                     }
                 })
-                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
+                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> exportarClientes(executor, handler, dialogInterface)).show();
+
     }
 
     public void exportarClientes(ExecutorService executor, Handler handler, DialogInterface dialogInterface) {
@@ -347,12 +348,19 @@ public class ListaClienteFragment extends Fragment {
                     Uri uri;
                     if (data != null) {
                         uri = data.getData();
-                        try {
-                            readTextFromUri(uri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                        new AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                                .setTitle(getString(R.string.importar))
+                                .setMessage(uri.getPath())
+                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                    try {
+                                        readTextFromUri(uri);
+                                    } catch (IOException e) {
+                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .show();
                     }
                 }
             });
@@ -375,6 +383,7 @@ public class ListaClienteFragment extends Fragment {
             } catch (IOException e) {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
+            clienteCantinaViewModel.crud = true;
             clienteCantinaViewModel.importarClientes(clientes, handler);
         });
     }
