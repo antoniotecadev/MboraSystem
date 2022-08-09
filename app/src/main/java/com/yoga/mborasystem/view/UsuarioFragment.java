@@ -49,6 +49,7 @@ public class UsuarioFragment extends Fragment {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
