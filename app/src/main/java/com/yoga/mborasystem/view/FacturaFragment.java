@@ -770,7 +770,7 @@ public class FacturaFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ProdutoFacturaViewHolder h, int position) {
             Produto produto = getItem(position);
-            if (produto != null && produto.getEstado() != Ultilitario.DOIS) {
+            if (produto != null) {
                 h.binding.txtProduto.setText(produto.getNome());
                 h.binding.txtPreco.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " - MS" + produto.getId() + " - " + produto.getCodigoBarra());
                 itemView.put(produto.getId(), h.itemView);

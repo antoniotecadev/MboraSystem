@@ -29,8 +29,8 @@ public interface ProdutoDao {
     @Query("DELETE FROM produtos WHERE estado = :estado")
     void deleteAllProdutoLixeira(int estado);
 
-    @Query("SELECT * FROM produtos WHERE idcategoria = :idcategoria AND estado != 3 ORDER BY produtos.id DESC")
-    PagingSource<Integer, Produto> getProdutos(long idcategoria);
+    @Query("SELECT * FROM produtos WHERE idcategoria = :idcategoria AND estado NOT IN(:priEst, :segEst) ORDER BY produtos.id DESC")
+    PagingSource<Integer, Produto> getProdutos(long idcategoria, int priEst, int segEst);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND estado != 3 ORDER BY produtos.id DESC")
     List<Produto> getProdutosExport(long idcat) throws Exception;
@@ -50,8 +50,8 @@ public interface ProdutoDao {
     @Query("SELECT COUNT(id) FROM produtos  WHERE estado = 3")
     LiveData<Long> getQuantidadeProdutoLixeira();
 
-    @Query("SELECT * FROM produtos WHERE idcategoria = :idcategoria AND estado != 3 AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
-    PagingSource<Integer, Produto> searchProdutos(long idcategoria, String produto);
+    @Query("SELECT * FROM produtos WHERE idcategoria = :idcategoria AND estado NOT IN(:priEst, :segEst) AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
+    PagingSource<Integer, Produto> searchProdutos(long idcategoria, String produto, int priEst, int segEst);
 
     @Query("SELECT * FROM produtos WHERE estado = 3 AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
     PagingSource<Integer, Produto> searchProdutosLixeira(String produto);
@@ -62,10 +62,10 @@ public interface ProdutoDao {
     @Query("UPDATE produtos SET estado = :est")
     void restaurarTodosProdutos(int est);
 
-    @Query("SELECT * FROM produtos WHERE estado != 3 ORDER BY produtos.id DESC")
+    @Query("SELECT * FROM produtos WHERE estado NOT IN(2,3) ORDER BY produtos.id DESC")
     PagingSource<Integer, Produto> getTodosProdutos();
 
-    @Query("SELECT * FROM produtos WHERE estado != 3 AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
+    @Query("SELECT * FROM produtos WHERE estado NOT IN(2,3) AND (nome LIKE '%' || :produto || '%' OR codigoBarra LIKE '%' || :produto || '%') ")
     PagingSource<Integer, Produto> searchTodosProdutos(String produto);
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND (id = :idprodnome OR nome LIKE '%' ||  :idprodnome || '%') AND codigoBarra = :codigoBar AND (preco BETWEEN :precoMin AND :precoMax) AND estado = :estadoProd ORDER BY produtos.id DESC")

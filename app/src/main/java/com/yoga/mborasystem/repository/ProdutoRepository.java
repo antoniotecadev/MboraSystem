@@ -60,20 +60,20 @@ public class ProdutoRepository {
         } else {
             if (!isFactura) {
                 if (isSearch)
-                    return produtoDao.searchProdutos(idcategoria, produto);
+                    return produtoDao.searchProdutos(idcategoria, produto, 3, 3);
                 else
-                    return produtoDao.getProdutos(idcategoria);
+                    return produtoDao.getProdutos(idcategoria, 3, 3);
             } else {
                 if (isSearch)
                     if (isTodosProdutos)
                         return produtoDao.searchTodosProdutos(produto);
                     else
-                        return produtoDao.searchProdutos(idcategoria, produto);
+                        return produtoDao.searchProdutos(idcategoria, produto, 2, 3);
                 else {
                     if (isTodosProdutos)
                         return produtoDao.getTodosProdutos();
                     else
-                        return produtoDao.getProdutos(idcategoria);
+                        return produtoDao.getProdutos(idcategoria, 2, 3);
                 }
             }
         }
