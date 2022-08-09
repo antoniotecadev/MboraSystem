@@ -782,7 +782,6 @@ public class FacturaFragment extends Fragment {
                 if (addScaner) {
                     addScaner = false;
                     adicionarProduto(produto.getId(), produto, h.itemView, true);
-                    habilitarDesabilitarButtonEfectuarVenda();
                 }
                 h.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                     menu.setHeaderTitle(produto.getNome());
@@ -819,7 +818,6 @@ public class FacturaFragment extends Fragment {
                 removerProduto(idproduto, v, nomeproduto, true);
             } else {
                 adicionarProduto(idproduto, produto, v, true);
-                habilitarDesabilitarButtonEfectuarVenda();
             }
         }
 
