@@ -518,13 +518,13 @@ public class Ultilitario {
             } catch (IOException e) {
                 Ultilitario.showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
             }
-            return activity.getString(R.string.expo_concl) + "\n" + uri;
+            return activity.getString(R.string.expo_concl) + "\n" + uri.getPath();
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Ultilitario.showToast(activity.getBaseContext(), Color.rgb(102, 153, 0), activity.getBaseContext().getString(R.string.cats_impo), R.drawable.ic_toast_feito);
+            Ultilitario.showToast(activity.getBaseContext(), Color.rgb(102, 153, 0), s, R.drawable.ic_toast_feito);
         }
     }
 
