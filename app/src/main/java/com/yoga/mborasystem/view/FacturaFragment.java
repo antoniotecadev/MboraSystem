@@ -159,7 +159,7 @@ public class FacturaFragment extends Fragment {
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -253,7 +253,14 @@ public class FacturaFragment extends Fragment {
             consultarProdutos(idc, false, null, false);
         });
         consultarProdutos(idc, false, null, false);
-        produtoViewModel.getListaProdutosPaging().observe(getViewLifecycleOwner(), produtoPagingData -> pagingAdapter.submitData(getLifecycle(), produtoPagingData));
+        produtoViewModel.getListaProdutosPaging().observe(getViewLifecycleOwner(), produtoPagingData -> {
+            pagingAdapter.submitData(getLifecycle(), produtoPagingData);
+            Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
+        });
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            consultarProdutos(idc, false, null, false);
+            pagingAdapter.notifyDataSetChanged();
+        });
         binding.textTaxa.setText(Ultilitario.getTaxaIva(requireActivity()) + "%");
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
         binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
