@@ -6,9 +6,13 @@ import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
@@ -20,13 +24,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 
 public class DialogCriarClienteCantina extends DialogFragment {
 
@@ -111,12 +108,16 @@ public class DialogCriarClienteCantina extends DialogFragment {
             }
         });
 
-        binding.buttonCriarCliente.setOnClickListener(v -> clienteCantinaViewModel.criarCliente(binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog));
+        binding.buttonCriarCliente.setOnClickListener(v -> {
+            clienteCantinaViewModel.crud = true;
+            clienteCantinaViewModel.criarCliente(binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog);
+        });
 
-        binding.buttonGuardar.setOnClickListener(v -> clienteCantinaViewModel.actualizarCliente(idcliente, binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog));
-
+        binding.buttonGuardar.setOnClickListener(v -> {
+            clienteCantinaViewModel.crud = true;
+            clienteCantinaViewModel.actualizarCliente(idcliente, binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog);
+        });
         binding.buttonEliminarCliente.setOnClickListener(v -> deleteClient(idcliente, Objects.requireNonNull(binding.editTextNome.getText()).toString()));
-
 
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());
 
@@ -128,6 +129,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
     }
 
     private void deleteClient(long idcliente, String nome) {
+        clienteCantinaViewModel.crud = true;
         clienteCantina.setId(idcliente);
         clienteCantina.setEstado(Ultilitario.TRES);
         new AlertDialog.Builder(requireContext())

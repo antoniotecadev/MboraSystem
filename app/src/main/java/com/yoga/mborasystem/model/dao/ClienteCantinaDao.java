@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.model.dao;
 
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,8 +11,6 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Flowable;
-
 @Dao
 public interface ClienteCantinaDao {
 
@@ -18,10 +18,10 @@ public interface ClienteCantinaDao {
     void insert(ClienteCantina clienteCantina);
 
     @Query("SELECT * FROM clientecantina WHERE estado != 3 ORDER BY id DESC")
-    Flowable<List<ClienteCantina>> getClientesCantina();
+    PagingSource<Integer, ClienteCantina> getClientesCantina();
 
-    @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :search || '%' OR telefone LIKE '%' || :search || '%' OR nif LIKE '%' || :search || '%')")
-    Flowable<List<ClienteCantina>> searchCliente(String search);
+    @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :cliente || '%' OR telefone LIKE '%' || :cliente || '%' OR nif LIKE '%' || :cliente || '%')")
+    PagingSource<Integer, ClienteCantina> searchCliente(String cliente);
 
     @Query("UPDATE clientecantina SET nome = :nome, telefone = :telefone, email = :email, endereco = :endereco, estado = :estado, data_modifica = :dataModif WHERE id = :id")
     void update(String nome, String telefone, String email, String endereco, int estado, String dataModif, long id);
@@ -31,5 +31,8 @@ public interface ClienteCantinaDao {
 
     @Query("SELECT * FROM clientecantina ORDER BY clientecantina.id DESC")
     List<ClienteCantina> getClientesExport() throws Exception;
+
+    @Query("SELECT COUNT(id) FROM clientecantina  WHERE estado != 3")
+    LiveData<Long> getQuantidadeCliente();
 
 }

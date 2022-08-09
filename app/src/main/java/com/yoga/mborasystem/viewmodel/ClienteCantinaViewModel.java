@@ -8,6 +8,18 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelKt;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.rxjava3.PagingRx;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -19,21 +31,19 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ClienteCantinaViewModel extends AndroidViewModel {
 
+    public boolean crud;
     private Disposable disposable;
     private final ClienteCantina clienteCantina;
     private final CompositeDisposable compositeDisposable;
@@ -67,22 +77,13 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         validarCliente(idcliente, Ultilitario.Operacao.ACTUALIZAR, nif, nomeCliente, telefone, email, endereco, dialog);
     }
 
-    private MutableLiveData<List<ClienteCantina>> listaClientesCantina;
+    private MutableLiveData<PagingData<ClienteCantina>> listaClientesCantina;
 
-    public MutableLiveData<List<ClienteCantina>> getListaClientesCantina() {
+    public MutableLiveData<PagingData<ClienteCantina>> getListaClientesCantina() {
         if (listaClientesCantina == null) {
             listaClientesCantina = new MutableLiveData<>();
         }
         return listaClientesCantina;
-    }
-
-    private MutableLiveData<Ultilitario.Operacao> valido;
-
-    public MutableLiveData<Ultilitario.Operacao> getValido() {
-        if (valido == null) {
-            valido = new MutableLiveData<>();
-        }
-        return valido;
     }
 
     private MutableLiveData<Event<List<ClienteCantina>>> listaClienteExport;
@@ -136,7 +137,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         Completable.fromAction(() -> clienteCantinaRepository.insert(clienteCantina))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -157,25 +158,20 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 });
     }
 
-    public void consultarClientesCantina(SwipeRefreshLayout mySwipeRefreshLayout) {
-        compositeDisposable.add(clienteCantinaRepository.getClientesCantina()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(clientesCantina -> {
-                    getListaClientesCantina().setValue(clientesCantina);
-                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+    public void consultarClientesCantina(LifecycleOwner lifecycleOwner, boolean isSearch, String cliente) {
+        Flowable<PagingData<ClienteCantina>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> clienteCantinaRepository.getClientesCantina(isSearch, cliente)));
+        PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
+        flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
+                .subscribe(clientes -> {
+                    if (crud)
+                        getListaClientesCantina().postValue(clientes);
+                    else
+                        getListaClientesCantina().setValue(clientes);
+                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
-    public void searchCliente(String cliente) {
-        compositeDisposable.add(clienteCantinaRepository.searchCliente(cliente)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(clientes -> {
-                    getListaClientesCantina().setValue(clientes);
-                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+    public LiveData<Long> getQuantidadeCliente() {
+        return clienteCantinaRepository.getQuantidadeCliente();
     }
 
     @SuppressLint("CheckResult")
@@ -183,7 +179,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         Completable.fromAction(() -> clienteCantinaRepository.update(clienteCantina.getNome(), clienteCantina.getTelefone(), clienteCantina.getEmail(), clienteCantina.getEndereco(), clienteCantina.getEstado(), clienteCantina.getData_modifica(), clienteCantina.getId()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -210,7 +206,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         Completable.fromAction(() -> clienteCantinaRepository.delete(clienteCantina))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -245,11 +241,11 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
+        if (disposable.isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
-            compositeDisposable.clear();
+        if (compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
         }
     }
 

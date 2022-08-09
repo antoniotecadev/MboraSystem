@@ -5,6 +5,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
+
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.ClienteCantinaDao;
@@ -13,8 +16,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-
-import io.reactivex.rxjava3.core.Flowable;
 
 public class ClienteCantinaRepository {
 
@@ -30,12 +31,15 @@ public class ClienteCantinaRepository {
         clienteCantinaDao.insert(clienteCantina);
     }
 
-    public Flowable<List<ClienteCantina>> getClientesCantina() {
-        return clienteCantinaDao.getClientesCantina();
+    public PagingSource<Integer, ClienteCantina> getClientesCantina(boolean isSearch, String cliente) {
+        if (isSearch)
+            return clienteCantinaDao.searchCliente(cliente);
+        else
+            return clienteCantinaDao.getClientesCantina();
     }
 
-    public Flowable<List<ClienteCantina>> searchCliente(String cliente) {
-        return clienteCantinaDao.searchCliente(cliente);
+    public LiveData<Long> getQuantidadeCliente() {
+        return clienteCantinaDao.getQuantidadeCliente();
     }
 
     public void update(String nome, String telefone, String email, String endereco, int estado, String dataModif, long id) {

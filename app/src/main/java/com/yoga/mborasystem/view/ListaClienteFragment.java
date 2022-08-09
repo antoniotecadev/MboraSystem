@@ -18,17 +18,27 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.paging.PagingDataAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.xwray.groupie.GroupAdapter;
-import com.xwray.groupie.GroupieViewHolder;
-import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.FragmentClienteBinding;
 import com.yoga.mborasystem.databinding.FragmentListaClienteBinding;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.util.EventObserver;
@@ -43,20 +53,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ListaClienteFragment extends Fragment {
 
@@ -65,6 +63,7 @@ public class ListaClienteFragment extends Fragment {
     private GroupAdapter adapter;
     private ExecutorService executor;
     private ClienteCantina clienteCantina;
+    private ClienteAdapter clienteAdapter;
     private FragmentListaClienteBinding binding;
     private ClienteCantinaViewModel clienteCantinaViewModel;
 
@@ -74,6 +73,7 @@ public class ListaClienteFragment extends Fragment {
         data = new StringBuilder();
         adapter = new GroupAdapter();
         clienteCantina = new ClienteCantina();
+        clienteAdapter = new ClienteAdapter(new ClienteComparator());
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
     }
 
@@ -85,91 +85,19 @@ public class ListaClienteFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentListaClienteBinding.inflate(inflater, container, false);
 
-        binding.recyclerViewListaCliente.setAdapter(adapter);
+        binding.recyclerViewListaCliente.setAdapter(clienteAdapter);
+        binding.recyclerViewListaCliente.setHasFixedSize(true);
         binding.recyclerViewListaCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.btnCriarCliente.setOnClickListener(v -> criarCliente());
-
-        clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout);
+        clienteCantinaViewModel.getQuantidadeCliente().observe(getViewLifecycleOwner(), quantidade -> {
+            binding.chipQuantidadeCliente.setText(String.valueOf(quantidade));
+            binding.recyclerViewListaCliente.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : clienteAdapter);
+        });
+        consultarClientes(false, false, null);
         clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientes -> {
-            binding.chipQuantidadeCliente.setText(clientes.size() + "");
-            adapter.clear();
-            if (clientes.isEmpty()) {
-                Ultilitario.naoEncontrado(getContext(), adapter, R.string.cli_nao_enc);
-            } else {
-                Random random = new Random();
-                for (ClienteCantina cliente : clientes)
-                    adapter.add(new Item<GroupieViewHolder>() {
-
-                        @Override
-                        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-                            ImageView i = viewHolder.itemView.findViewById(R.id.imgCliente);
-                            Ultilitario.colorRandomImage(i, random);
-
-                            TextView nomeCliente = viewHolder.itemView.findViewById(R.id.txtNomeCliente);
-                            TextView telefoneCliente = viewHolder.itemView.findViewById(R.id.txtTelefone);
-                            TextView dataCria = viewHolder.itemView.findViewById(R.id.textDataCriacao);
-                            TextView dataModifica = viewHolder.itemView.findViewById(R.id.textDataModificacao);
-                            ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
-
-                            viewHolder.itemView.setOnClickListener(v -> {
-                                MainActivity.getProgressBar();
-                                v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-
-                                ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
-                                Navigation.findNavController(requireView()).navigate(direction);
-
-                                new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.parseColor("#FFFFFF")), 1000);
-                            });
-
-                            nomeCliente.setText(cliente.getNome());
-                            telefoneCliente.setText(getString(R.string.tel) + " " + cliente.getTelefone() + " | " + getString(R.string.nif) + " " + cliente.getNif());
-                            dataCria.setText(getString(R.string.data_cria) + ": " + cliente.getData_cria());
-                            if (cliente.getData_modifica() != null) {
-                                dataModifica.setVisibility(View.VISIBLE);
-                                dataModifica.setText(getString(R.string.data_modifica) + ": " + cliente.getData_modifica());
-                            }
-
-                            registerForContextMenu(menu);
-                            menu.setOnClickListener(View::showContextMenu);
-                            viewHolder.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
-                                menu1.setHeaderTitle(cliente.getNome());
-                                menu1.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
-                                    ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(cliente.getId()).setNomeCliente(cliente.getNome());
-                                    Navigation.findNavController(requireView()).navigate(direction);
-                                    return false;
-                                });//groupId, itemId, order, title
-                                if (getArguments() != null) {
-                                    if (getArguments().getBoolean("master")) {
-                                        menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
-                                            MainActivity.getProgressBar();
-                                            ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(cliente.getNome(), cliente.getTelefone(), cliente.getId(), cliente.getEmail(), cliente.getEndereco(), cliente.getNif());
-                                            Navigation.findNavController(requireView()).navigate(direction);
-                                            return false;
-                                        });
-                                        menu1.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
-                                            clienteCantina.setId(cliente.getId());
-                                            clienteCantina.setEstado(Ultilitario.TRES);
-                                            new AlertDialog.Builder(requireContext())
-                                                    .setTitle(getString(R.string.eliminar) + " (" + cliente.getNome() + ")")
-                                                    .setMessage(getString(R.string.tem_cert_elim_cli))
-                                                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                                                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
-                                                    .show();
-                                            return false;
-                                        });
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public int getLayout() {
-                            return R.layout.fragment_cliente;
-                        }
-                    });
-            }
-
+            clienteAdapter.submitData(getLifecycle(), clientes);
+            Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
         });
 
         clienteCantinaViewModel.getListaClientesExport().observe(getViewLifecycleOwner(), new EventObserver<>(cliente -> {
@@ -185,9 +113,16 @@ public class ListaClienteFragment extends Fragment {
             }
         }));
 
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout));
-
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            consultarClientes(false, false, null);
+            clienteAdapter.notifyDataSetChanged();
+        });
         return binding.getRoot();
+    }
+
+    private void consultarClientes(boolean isCrud, boolean isPesquisa, String cliente) {
+        clienteCantinaViewModel.crud = isCrud;
+        clienteCantinaViewModel.consultarClientesCantina(getViewLifecycleOwner(), isPesquisa, cliente);
     }
 
     private void exportarClientes(String nomeFicheiro, boolean isLocal) {
@@ -210,6 +145,95 @@ public class ListaClienteFragment extends Fragment {
         }
     }
 
+    class ClienteAdapter extends PagingDataAdapter<ClienteCantina, ClienteAdapter.ClienteViewHolder> {
+        public ClienteAdapter(@NonNull DiffUtil.ItemCallback<ClienteCantina> diffCallback) {
+            super(diffCallback);
+        }
+
+        @NonNull
+        @Override
+        public ClienteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ClienteViewHolder(FragmentClienteBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ClienteViewHolder h, int position) {
+            ClienteCantina ct = getItem(position);
+            if (ct != null) {
+                h.itemView.setOnClickListener(v -> {
+                    MainActivity.getProgressBar();
+                    v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
+
+                    ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
+                    Navigation.findNavController(requireView()).navigate(direction);
+
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.parseColor("#FFFFFF")), 1000);
+                });
+                h.binding.txtNomeCliente.setText(ct.getNome());
+                h.binding.txtTelefone.setText(getString(R.string.tel) + " " + ct.getTelefone() + " | " + getString(R.string.nif) + " " + ct.getNif());
+                h.binding.textDataCriacao.setText(getString(R.string.data_cria) + ": " + ct.getData_cria());
+                if (ct.getData_modifica() != null) {
+                    h.binding.textDataModificacao.setVisibility(View.VISIBLE);
+                    h.binding.textDataModificacao.setText(getString(R.string.data_modifica) + ": " + ct.getData_modifica());
+                }
+                registerForContextMenu(h.binding.imgBtnMenu);
+                h.binding.imgBtnMenu.setOnClickListener(View::showContextMenu);
+                h.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
+                    menu1.setHeaderTitle(ct.getNome());
+                    menu1.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
+                        ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
+                        Navigation.findNavController(requireView()).navigate(direction);
+                        return false;
+                    });//groupId, itemId, order, title
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master")) {
+                            menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
+                                MainActivity.getProgressBar();
+                                ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(ct.getNome(), ct.getTelefone(), ct.getId(), ct.getEmail(), ct.getEndereco(), ct.getNif());
+                                Navigation.findNavController(requireView()).navigate(direction);
+                                return false;
+                            });
+                            menu1.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
+                                clienteCantina.setId(ct.getId());
+                                clienteCantina.setEstado(Ultilitario.TRES);
+                                new AlertDialog.Builder(requireContext())
+                                        .setTitle(getString(R.string.eliminar) + " (" + ct.getNome() + ")")
+                                        .setMessage(getString(R.string.tem_cert_elim_cli))
+                                        .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                                        .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
+                                        .show();
+                                return false;
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        private class ClienteViewHolder extends RecyclerView.ViewHolder {
+            FragmentClienteBinding binding;
+
+            public ClienteViewHolder(@NonNull FragmentClienteBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+
+    }
+
+    static class ClienteComparator extends DiffUtil.ItemCallback<ClienteCantina> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull ClienteCantina oldItem, @NonNull ClienteCantina newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull ClienteCantina oldItem, @NonNull ClienteCantina newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -229,7 +253,7 @@ public class ListaClienteFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout);
+                consultarClientes(false, false, null);
                 return true;
             }
         });
@@ -242,9 +266,9 @@ public class ListaClienteFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    clienteCantinaViewModel.consultarClientesCantina(binding.mySwipeRefreshLayout);
+                    consultarClientes(false, false, null);
                 } else {
-                    clienteCantinaViewModel.searchCliente(newText);
+                    consultarClientes(true, true, newText);
                 }
                 return false;
             }

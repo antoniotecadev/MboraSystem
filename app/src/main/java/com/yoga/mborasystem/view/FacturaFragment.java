@@ -723,15 +723,15 @@ public class FacturaFragment extends Fragment {
     }
 
     private void getListClientesCantina() {
-        clienteCantinaViewModel.consultarClientesCantina(null);
-        clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientesCantina -> {
-            clienteCantina.clear();
-            for (ClienteCantina cliente : clientesCantina) {
-                clienteCantina.add(new ClienteCantina(cliente.getId(), cliente.getNome(), cliente.getTelefone(), cliente.getEmail(), cliente.getEndereco()));
-            }
-            AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(requireContext(), clienteCantina);
-            binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);
-        });
+//        clienteCantinaViewModel.consultarClientesCantina(null);
+//        clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientesCantina -> {
+//            clienteCantina.clear();
+//            for (ClienteCantina cliente : clientesCantina) {
+//                clienteCantina.add(new ClienteCantina(cliente.getId(), cliente.getNome(), cliente.getTelefone(), cliente.getEmail(), cliente.getEndereco()));
+//            }
+//            AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(requireContext(), clienteCantina);
+//            binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);
+//        });
     }
 
     private void openCamera() {
