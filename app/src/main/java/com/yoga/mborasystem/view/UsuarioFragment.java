@@ -10,6 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -18,16 +28,7 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentUsuarioListBinding;
 import com.yoga.mborasystem.model.entidade.Usuario;
 import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
+@SuppressWarnings("rawtypes")
 public class UsuarioFragment extends Fragment {
 
     private Bundle bundle;
@@ -40,7 +41,6 @@ public class UsuarioFragment extends Fragment {
         super.onCreate(savedInstanceState);
         adapter = new GroupAdapter();
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -63,28 +63,27 @@ public class UsuarioFragment extends Fragment {
             for (Usuario usuario : usuarios)
                 adapter.add(new ItemUsuario(usuario));
         });
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (getArguments() != null) {
-            if (getArguments().getBoolean("master")) {
-                inflater.inflate(R.menu.menu_criar_usuario, menu);
-            } else {
-                binding.criarUsuarioFragment.setVisibility(View.GONE);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                if (getArguments() != null) {
+                    if (getArguments().getBoolean("master")) {
+                        menuInflater.inflate(R.menu.menu_criar_usuario, menu);
+                    } else {
+                        binding.criarUsuarioFragment.setVisibility(View.GONE);
+                    }
+                } else {
+                    binding.criarUsuarioFragment.setVisibility(View.INVISIBLE);
+                }
             }
-        } else {
-            binding.criarUsuarioFragment.setVisibility(View.INVISIBLE);
-        }
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                return NavigationUI.onNavDestinationSelected(menuItem, navController);
+            }
+        }, getViewLifecycleOwner());
+        return binding.getRoot();
     }
 
     class ItemUsuario extends Item<GroupieViewHolder> {
