@@ -216,12 +216,8 @@ public class ListaClienteFragment extends Fragment {
             if (ct != null) {
                 h.itemView.setOnClickListener(v -> {
                     MainActivity.getProgressBar();
-                    v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-
                     ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
                     Navigation.findNavController(requireView()).navigate(direction);
-
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.parseColor("#FFFFFF")), 1000);
                 });
                 h.binding.txtNomeCliente.setText(ct.getNome());
                 h.binding.txtTelefone.setText(getString(R.string.tel) + " " + ct.getTelefone() + " | " + getString(R.string.nif) + " " + ct.getNif());
