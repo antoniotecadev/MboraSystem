@@ -119,7 +119,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             clienteCantina.setEmail(email.getText().toString());
             clienteCantina.setEndereco(endereco.getText().toString());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
-                clienteCantina.setId(Ultilitario.ZERO);
+                clienteCantina.setId(0);
                 clienteCantina.setEstado(Ultilitario.UM);
                 clienteCantina.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
                 criarClienteCantina(clienteCantina, dialog);
