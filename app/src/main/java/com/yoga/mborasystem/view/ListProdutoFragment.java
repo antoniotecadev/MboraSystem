@@ -85,7 +85,7 @@ public class ListProdutoFragment extends Fragment {
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
     }
 
-    @SuppressLint({"SetTextI18n"})
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -225,7 +225,10 @@ public class ListProdutoFragment extends Fragment {
                 return false;
             }
         }, getViewLifecycleOwner());
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarProdutos(false, null, false));
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            consultarProdutos(false, null, false);
+            pagingAdapter.notifyDataSetChanged();
+        });
         return binding.getRoot();
     }
 

@@ -58,6 +58,7 @@ public class CategoriaProdutoFragment extends Fragment {
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,7 +96,10 @@ public class CategoriaProdutoFragment extends Fragment {
                 ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
         });
         binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "categoria"));
-        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> consultarCategorias(false, null, false));
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            consultarCategorias(false, null, false);
+            categoriaAdapter.notifyDataSetChanged();
+        });
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
