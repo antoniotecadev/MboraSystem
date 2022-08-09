@@ -8,6 +8,15 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
 
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/mySwipeRefreshLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toTopOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/recyclerViewListaUsuario"
       android:name="com.yoga.mborasystem.view.UsuarioFragment"
@@ -16,6 +25,7 @@
       app:layoutManager="LinearLayoutManager"
       tools:context=".view.UsuarioFragment"
       tools:listitem="@layout/fragment_usuario"/>
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
   <com.google.android.material.floatingactionbutton.FloatingActionButton
       android:id="@+id/criarUsuarioFragment"

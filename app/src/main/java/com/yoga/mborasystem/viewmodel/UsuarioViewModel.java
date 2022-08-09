@@ -239,7 +239,7 @@ public class UsuarioViewModel extends AndroidViewModel {
     }
 
     public void consultarUsuarios(LifecycleOwner lifecycleOwner) {
-        Flowable<PagingData<Usuario>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), ()-> usuarioRepository.getUsuarios()));
+        Flowable<PagingData<Usuario>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), usuarioRepository::getUsuarios));
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(categorias -> {

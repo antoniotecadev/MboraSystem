@@ -65,13 +65,19 @@ public class UsuarioFragment extends Fragment {
         });
 
         consultarUsuarios();
-        usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> usuarioAdapter.submitData(getLifecycle(), usuarios));
+        usuarioViewModel.getListaUsuarios().observe(getViewLifecycleOwner(), usuarios -> {
+            usuarioAdapter.submitData(getLifecycle(), usuarios);
+            Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
+        });
 
         usuarioViewModel.getQuantidadeUsuario().observe(getViewLifecycleOwner(), quantidade -> {
             requireActivity().setTitle(getString(R.string.usuarios) + " = " + quantidade);
             binding.recyclerViewListaUsuario.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : usuarioAdapter);
         });
-
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
+            consultarUsuarios();
+            usuarioAdapter.notifyDataSetChanged();
+        });
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
