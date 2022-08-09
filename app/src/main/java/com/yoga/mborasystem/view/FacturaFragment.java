@@ -796,7 +796,7 @@ public class FacturaFragment extends Fragment {
                             });
                         }
                     }
-                    menu.add(getString(R.string.adicionar_produto)).setOnMenuItemClickListener(item -> {
+                    menu.add(getString(produtos.containsKey(produto.getId()) ? R.string.rvr_car : R.string.adicionar_produto)).setOnMenuItemClickListener(item -> {
                         addProduto(v, produto, produto.getId(), produto.getNome());
                         return false;
                     });
