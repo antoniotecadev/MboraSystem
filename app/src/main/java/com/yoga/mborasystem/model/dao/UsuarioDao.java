@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.model.dao;
 
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,8 +11,6 @@ import com.yoga.mborasystem.model.entidade.Usuario;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Flowable;
-
 @Dao
 public interface UsuarioDao {
 
@@ -18,7 +18,10 @@ public interface UsuarioDao {
     void insert(Usuario usuario);
 
     @Query("SELECT * FROM usuarios WHERE estado != 3 ORDER BY id DESC")
-    Flowable<List<Usuario>> getUsuarios();
+    PagingSource<Integer, Usuario> getUsuarios();
+
+    @Query("SELECT COUNT(id) FROM usuarios  WHERE estado != 3")
+    LiveData<Long> getQuantidadeUsuario();
 
     @Query("UPDATE usuarios SET nome = :nome, telefone = :tel, endereco = :end, estado = :est, data_modifica = :data WHERE id = :id")
     void update(String nome, String tel, String end, int est, String data, long id);

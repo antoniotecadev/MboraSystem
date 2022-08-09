@@ -91,16 +91,14 @@ public class DialogCriarUsuario extends DialogFragment {
             try {
                 createUser();
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
         binding.buttonGuardar.setOnClickListener(v -> {
             try {
                 updateUser();
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -110,15 +108,17 @@ public class DialogCriarUsuario extends DialogFragment {
     }
 
     private void createUser() throws NoSuchAlgorithmException {
+        usuarioViewModel.crud = true;
         usuarioViewModel.criarUsuario(binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEndereco, binding.switchEstado, binding.editTextCodigoPin, binding.editTextCodigoPinNovamente, dialog);
     }
 
     private void updateUser() throws NoSuchAlgorithmException {
+        usuarioViewModel.crud = true;
         usuarioViewModel.actualizarUsuario(usuario.getId(), binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEndereco, binding.switchEstado, binding.editTextCodigoPin, binding.editTextCodigoPinNovamente, dialog);
     }
 
     private void deleteUser() {
-        usuario.setId(usuario.getId());
+        usuarioViewModel.crud = true;
         new AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")")
                 .setMessage(getString(R.string.tem_certeza_eliminar_usuario))

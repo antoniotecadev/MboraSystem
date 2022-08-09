@@ -14,7 +14,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelKt;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.rxjava3.PagingRx;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
@@ -24,15 +31,17 @@ import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -40,17 +49,16 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class UsuarioViewModel extends AndroidViewModel {
 
+    public boolean crud;
     private final Usuario usuario;
     private Disposable disposable;
     private ExecutorService executor;
     private final UsuarioRepository usuarioRepository;
-    private final CompositeDisposable compositeDisposable;
 
     public UsuarioViewModel(Application application) {
         super(application);
         usuario = new Usuario();
         disposable = new CompositeDisposable();
-        compositeDisposable = new CompositeDisposable();
         usuarioRepository = new UsuarioRepository(getApplication());
     }
 
@@ -70,9 +78,9 @@ public class UsuarioViewModel extends AndroidViewModel {
         validarUsuario(Ultilitario.Operacao.ACTUALIZAR, id, nome, telefone, endereco, estado, codigoPin, codigoPinNovamente, dialog);
     }
 
-    private MutableLiveData<List<Usuario>> listaUsuarios;
+    private MutableLiveData<PagingData<Usuario>> listaUsuarios;
 
-    public MutableLiveData<List<Usuario>> getListaUsuarios() {
+    public MutableLiveData<PagingData<Usuario>> getListaUsuarios() {
         if (listaUsuarios == null) {
             listaUsuarios = new MutableLiveData<>();
         }
@@ -131,7 +139,7 @@ public class UsuarioViewModel extends AndroidViewModel {
         Completable.fromAction(() -> usuarioRepository.insert(us))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -157,7 +165,7 @@ public class UsuarioViewModel extends AndroidViewModel {
         Completable.fromAction(() -> usuarioRepository.update(usuario, isCodigoPin))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -200,13 +208,14 @@ public class UsuarioViewModel extends AndroidViewModel {
             }
         });
     }
+
     @SuppressLint("CheckResult")
     public void eliminarUsuario(Usuario usuario, Dialog dg) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> usuarioRepository.delete(usuario))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -229,21 +238,27 @@ public class UsuarioViewModel extends AndroidViewModel {
                 });
     }
 
-    public void consultarUsuarios() {
-        compositeDisposable.add(usuarioRepository.getUsuarios()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(usuarios -> getListaUsuarios().setValue(usuarios), e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+    public void consultarUsuarios(LifecycleOwner lifecycleOwner) {
+        Flowable<PagingData<Usuario>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), ()-> usuarioRepository.getUsuarios()));
+        PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
+        flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
+                .subscribe(categorias -> {
+                    if (crud)
+                        getListaUsuarios().postValue(categorias);
+                    else
+                        getListaUsuarios().setValue(categorias);
+                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+    }
+
+    public LiveData<Long> getQuantidadeUsuario() {
+        return usuarioRepository.getQuantidadeUsuario();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
+        if (disposable.isDisposed()) {
             disposable.dispose();
-        }
-        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
-            compositeDisposable.clear();
         }
         if (executor != null)
             executor.shutdownNow();
