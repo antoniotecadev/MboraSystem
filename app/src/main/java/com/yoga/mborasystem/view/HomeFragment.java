@@ -29,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
     private Cliente cliente;
     private boolean isOpen = false;
     private FragmentHomeBinding binding;
+    private String idioma, codigoIdioma;
     private ClienteViewModel clienteViewModel;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
@@ -75,7 +77,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         Toolbar toolbar = binding.toolbar;
         toolbar.inflateMenu(R.menu.menu_bloquear);
@@ -132,8 +133,7 @@ public class HomeFragment extends Fragment {
                     break;
             }
             MainActivity.drawerLayout.closeDrawer(GravityCompat.START);
-            return NavigationUI.onNavDestinationSelected(item, navController)
-                    || super.onOptionsItemSelected(item);
+            return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
@@ -163,6 +163,118 @@ public class HomeFragment extends Fragment {
                 clienteViewModel.getValido().setValue(Ultilitario.Operacao.NENHUMA);
             }
         });
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_home_ferramenta, menu);
+                menu.findItem(R.id.dialogAlterarCliente).setTitle(getString(R.string.dad_emp));
+                if (getArguments() != null) {
+                    if (!getArguments().getBoolean("master")) {
+                        binding.btnUsuario.setEnabled(false);
+                        binding.btnDashboard.setEnabled(false);
+                        binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
+                        binding.btnDashboard.setCardBackgroundColor(Color.GRAY);
+                        menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
+                        menu.findItem(R.id.estadoCliente).setEnabled(false);
+                        menu.findItem(R.id.config).setEnabled(false);
+                    } else {
+                        menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
+                    }
+                }
+                Locale primaryLocale;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    primaryLocale = getResources().getConfiguration().getLocales().get(0);
+                    String locale = primaryLocale.getDisplayLanguage();
+                    language = primaryLocale.getLanguage();
+                    menu.findItem(R.id.idioma).setTitle(locale);
+                } else {
+                    menu.findItem(R.id.idioma).setTitle("");
+                }
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                assert getArguments() != null;
+                switch (menuItem.getItemId()) {
+                    case R.id.idioma:
+                        new AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_store_24)
+                                .setTitle(R.string.alt_idm)
+                                .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(requireContext()), (dialogInterface, i) -> {
+                                    switch (i) {
+                                        case 0:
+                                            idioma = "Francês";
+                                            codigoIdioma = "fr";
+                                            break;
+                                        case 1:
+                                            idioma = "Inglês";
+                                            codigoIdioma = "en";
+                                            break;
+                                        case 2:
+                                            idioma = "Português";
+                                            codigoIdioma = "pt";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false)).show();
+                        break;
+                    case R.id.dialogAlterarCliente:
+                        if (getArguments() != null) {
+                            bundle.putParcelable("cliente", cliente);
+                            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
+                        }
+                        break;
+                    case R.id.estadoCliente:
+                        if (getArguments() != null) {
+                            MainActivity.getProgressBar();
+                            if (isNetworkConnected(requireContext())) {
+                                if (internetIsConnected()) {
+                                    estadoConta(cliente.getImei());
+                                } else {
+                                    Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                                    MainActivity.dismissProgressBar();
+                                }
+                            } else {
+                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+                                MainActivity.dismissProgressBar();
+                            }
+                        }
+                        break;
+                    case R.id.gerarCodigoQr:
+                        if (getArguments() != null)
+                            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa());
+                        break;
+                    case R.id.config:
+                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
+                        break;
+                    case R.id.termosCondicoes:
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));
+                        break;
+                    case R.id.politicaPrivacidade:
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/politicaprivacidade")));
+                        break;
+                    case R.id.dialogAlterarCodigoPin:
+                        if (getArguments() != null) {
+                            bundle.putLong("idusuario", getArguments().getLong("idusuario"));
+                            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
+                        }
+                        break;
+                    case R.id.acercaMborasytem:
+                        acercaMboraSystem();
+                        break;
+                    case R.id.itemSair:
+                        sairApp();
+                        break;
+                    default:
+                }
+                return NavigationUI.onNavDestinationSelected(menuItem, navController);
+            }
+        }, getViewLifecycleOwner());
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
@@ -200,121 +312,6 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
         }
         return bundle;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_home_ferramenta, menu);
-        menu.findItem(R.id.dialogAlterarCliente).setTitle(getString(R.string.dad_emp));
-        if (getArguments() != null) {
-            if (!getArguments().getBoolean("master")) {
-                binding.btnUsuario.setEnabled(false);
-                binding.btnDashboard.setEnabled(false);
-                binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
-                binding.btnDashboard.setCardBackgroundColor(Color.GRAY);
-                menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
-                menu.findItem(R.id.estadoCliente).setEnabled(false);
-                menu.findItem(R.id.config).setEnabled(false);
-            } else {
-                menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
-            }
-        }
-        Locale primaryLocale;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            primaryLocale = getResources().getConfiguration().getLocales().get(0);
-            String locale = primaryLocale.getDisplayLanguage();
-            language = primaryLocale.getLanguage();
-            menu.findItem(R.id.idioma).setTitle(locale);
-        } else {
-            menu.findItem(R.id.idioma).setTitle("");
-        }
-    }
-
-    private String idioma, codigoIdioma;
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        assert getArguments() != null;
-        switch (item.getItemId()) {
-            case R.id.idioma:
-                new AlertDialog.Builder(requireContext())
-                        .setIcon(R.drawable.ic_baseline_store_24)
-                        .setTitle(R.string.alt_idm)
-                        .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(requireContext()), (dialogInterface, i) -> {
-                            switch (i) {
-                                case 0:
-                                    idioma = "Francês";
-                                    codigoIdioma = "fr";
-                                    break;
-                                case 1:
-                                    idioma = "Inglês";
-                                    codigoIdioma = "en";
-                                    break;
-                                case 2:
-                                    idioma = "Português";
-                                    codigoIdioma = "pt";
-                                    break;
-                                default:
-                                    break;
-                            }
-                        })
-                        .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
-                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false)).show();
-                break;
-            case R.id.dialogAlterarCliente:
-                if (getArguments() != null) {
-                    bundle.putParcelable("cliente", cliente);
-                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
-                }
-                break;
-            case R.id.estadoCliente:
-                if (getArguments() != null) {
-                    MainActivity.getProgressBar();
-                    if (isNetworkConnected(requireContext())) {
-                        if (internetIsConnected()) {
-                            estadoConta(cliente.getImei());
-                        } else {
-                            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
-                            MainActivity.dismissProgressBar();
-                        }
-                    } else {
-                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
-                        MainActivity.dismissProgressBar();
-                    }
-                }
-                break;
-            case R.id.gerarCodigoQr:
-                if (getArguments() != null)
-                    Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa());
-                break;
-            case R.id.config:
-                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
-                break;
-            case R.id.termosCondicoes:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));
-                break;
-            case R.id.politicaPrivacidade:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/politicaprivacidade")));
-                break;
-            case R.id.dialogAlterarCodigoPin:
-                if (getArguments() != null) {
-                    bundle.putLong("idusuario", getArguments().getLong("idusuario"));
-                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
-                }
-                break;
-            case R.id.acercaMborasytem:
-                acercaMboraSystem();
-                break;
-            case R.id.itemSair:
-                sairApp();
-                break;
-            default:
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
     }
 
     private void acercaMboraSystem() {
