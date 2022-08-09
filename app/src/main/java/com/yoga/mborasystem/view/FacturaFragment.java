@@ -786,6 +786,17 @@ public class FacturaFragment extends Fragment {
                 }
                 h.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                     menu.setHeaderTitle(produto.getNome());
+                    if (getArguments() != null) {
+                        if (getArguments().getBoolean("master")) {
+                            menu.add(getString(R.string.editar)).setOnMenuItemClickListener(item -> {
+                                bundle.clear();
+                                bundle.putParcelable("produto", produto);
+                                bundle.putBoolean("master", getArguments().getBoolean("master", false));
+                                Navigation.findNavController(requireView()).navigate(R.id.action_facturaFragment_to_dialogCriarProduto, bundle);
+                                return false;
+                            });
+                        }
+                    }
                     menu.add(getString(R.string.adicionar_produto)).setOnMenuItemClickListener(item -> {
                         addProduto(v, produto, produto.getId(), produto.getNome());
                         return false;
@@ -946,7 +957,6 @@ public class FacturaFragment extends Fragment {
                             });
                         }
                     }
-
                     menu.add(getString(R.string.rvr_car)).setOnMenuItemClickListener(item -> {
                         if (itemView.containsKey(produto.getId())) {
                             removerProduto(produto.getId(), itemView.get(produto.getId()), produto.getNome(), true);
