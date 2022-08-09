@@ -25,6 +25,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -55,7 +56,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+@SuppressWarnings("rawtypes")
 public class ListaClienteFragment extends Fragment {
 
     private int tipo;
@@ -77,12 +78,10 @@ public class ListaClienteFragment extends Fragment {
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        setHasOptionsMenu(true);
         binding = FragmentListaClienteBinding.inflate(inflater, container, false);
 
         binding.recyclerViewListaCliente.setAdapter(clienteAdapter);
@@ -109,7 +108,7 @@ public class ListaClienteFragment extends Fragment {
                     dt.append(clienteCantina.getNome().isEmpty() ? " " : clienteCantina.getNome()).append(",").append(clienteCantina.getTelefone().isEmpty() ? " " : clienteCantina.getTelefone()).append(",").append(clienteCantina.getEmail().isEmpty() ? " " : clienteCantina.getEmail()).append(",").append(clienteCantina.getEndereco().isEmpty() ? " " : clienteCantina.getEndereco()).append(",").append(clienteCantina.getNif().isEmpty() ? " " : clienteCantina.getNif()).append("\n");
                 }
                 data = dt;
-                exportarClientes(getString(R.string.clientes), tipo == 0 ? Ultilitario.isLocal : false);
+                exportarClientes(getString(R.string.clientes), tipo == 0 && Ultilitario.isLocal);
             }
         }));
 
@@ -117,6 +116,59 @@ public class ListaClienteFragment extends Fragment {
             consultarClientes(false, false, null);
             clienteAdapter.notifyDataSetChanged();
         });
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_cliente, menu);
+                SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+                MenuItem menuItem = menu.findItem(R.id.app_bar_search);
+                SearchView searchView = (SearchView) menuItem.getActionView();
+                searchView.setQueryHint(getString(R.string.nm) + ", " + getString(R.string.telefone) + ", " + getString(R.string.nif));
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
+                searchView.onActionViewExpanded();
+                menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        consultarClientes(false, false, null);
+                        return true;
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (newText.isEmpty()) {
+                            consultarClientes(false, false, null);
+                        } else {
+                            consultarClientes(true, true, newText);
+                        }
+                        return false;
+                    }
+                });
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                if (menuItem.getItemId() == R.id.criarClienteCantina) {
+                    criarCliente();
+                } else if (menuItem.getItemId() == R.id.exportarcliente) {
+                    exportarCliente();
+                } else if (menuItem.getItemId() == R.id.importarcliente) {
+                    importarClientes();
+                }
+                return NavigationUI.onNavDestinationSelected(menuItem, navController);
+            }
+        }, getViewLifecycleOwner());
         return binding.getRoot();
     }
 
@@ -156,6 +208,7 @@ public class ListaClienteFragment extends Fragment {
             return new ClienteViewHolder(FragmentClienteBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ClienteViewHolder h, int position) {
             ClienteCantina ct = getItem(position);
@@ -232,61 +285,6 @@ public class ListaClienteFragment extends Fragment {
         public boolean areContentsTheSame(@NonNull ClienteCantina oldItem, @NonNull ClienteCantina newItem) {
             return oldItem.getId() == newItem.getId();
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_cliente, menu);
-
-        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-        MenuItem menuItem = menu.findItem(R.id.app_bar_search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.nm) + ", " + getString(R.string.telefone) + ", " + getString(R.string.nif));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-        searchView.onActionViewExpanded();
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                consultarClientes(false, false, null);
-                return true;
-            }
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    consultarClientes(false, false, null);
-                } else {
-                    consultarClientes(true, true, newText);
-                }
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        if (item.getItemId() == R.id.criarClienteCantina) {
-            criarCliente();
-        } else if (item.getItemId() == R.id.exportarcliente) {
-            exportarCliente();
-        } else if (item.getItemId() == R.id.importarcliente) {
-            importarClientes();
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
     }
 
     private void criarCliente() {
