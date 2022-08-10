@@ -60,8 +60,8 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("rawtypes")
 public class ListaClienteFragment extends Fragment {
 
-    private int tipo;
     private StringBuilder data;
+    private int tipo, quantidade;
     private GroupAdapter adapter;
     private ExecutorService executor;
     private ClienteCantina clienteCantina;
@@ -91,6 +91,7 @@ public class ListaClienteFragment extends Fragment {
 
         binding.btnCriarCliente.setOnClickListener(v -> criarCliente());
         clienteCantinaViewModel.getQuantidadeCliente().observe(getViewLifecycleOwner(), quantidade -> {
+            this.quantidade = quantidade.intValue();
             binding.chipQuantidadeCliente.setText(String.valueOf(quantidade));
             binding.recyclerViewListaCliente.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : clienteAdapter);
         });
@@ -99,7 +100,15 @@ public class ListaClienteFragment extends Fragment {
             clienteAdapter.submitData(getLifecycle(), clientes);
             Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
         });
-
+        binding.floatingActionButtonCima.setOnClickListener(view -> binding.recyclerViewListaCliente.smoothScrollToPosition(0));
+        binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewListaCliente.smoothScrollToPosition(quantidade));
+        binding.switchOcultarFloatCimaBaixo.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                ocultarFloatButtonCimaBaixo(true, View.GONE);
+            else
+                ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
+        });
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "clientecantina"));
         clienteCantinaViewModel.getListaClientesExport().observe(getViewLifecycleOwner(), new EventObserver<>(cliente -> {
             StringBuilder dt = new StringBuilder();
             if (cliente.isEmpty()) {
@@ -171,6 +180,12 @@ public class ListaClienteFragment extends Fragment {
             }
         }, getViewLifecycleOwner());
         return binding.getRoot();
+    }
+
+    private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
+        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "clientecantina");
+        binding.floatingActionButtonCima.setVisibility(view);
+        binding.floatingActionButtonBaixo.setVisibility(view);
     }
 
     private void consultarClientes(boolean isCrud, boolean isPesquisa, String cliente) {
