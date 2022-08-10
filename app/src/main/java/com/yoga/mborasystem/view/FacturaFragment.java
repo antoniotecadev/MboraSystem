@@ -66,7 +66,6 @@ import com.yoga.mborasystem.databinding.FragmentFacturaBinding;
 import com.yoga.mborasystem.databinding.FragmentListaProdutoBinding;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.model.entidade.Cliente;
-import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.util.AutoCompleteClienteCantinaAdapter;
 import com.yoga.mborasystem.util.CriarFactura;
@@ -108,7 +107,6 @@ public class FacturaFragment extends Fragment {
     private ProdutoFacturaAdapter pagingAdapter;
     private GroupAdapter adapterFactura;
     private String resultCodeBar, referenciaFactura = "", facturaPath, dataEmissao = "";
-    private ArrayList<ClienteCantina> clienteCantina;
     private ClienteCantinaViewModel clienteCantinaViewModel;
     @SuppressLint("StaticFieldLeak")
     private static DecoratedBarcodeView barcodeView;
@@ -152,7 +150,6 @@ public class FacturaFragment extends Fragment {
         pagingAdapter = new ProdutoFacturaAdapter(new ProdutoFacturaComparator());
         listaCategoria = new ArrayList<>();
         adapterFactura = new GroupAdapter();
-        clienteCantina = new ArrayList<>();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
@@ -164,7 +161,29 @@ public class FacturaFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentFacturaBinding.inflate(inflater, container, false);
-        getListClientesCantina();
+        clienteCantinaViewModel.getCliente().observe(getViewLifecycleOwner(), clientesCantina -> {
+            if (!clientesCantina.isEmpty()) {
+                binding.txtNomeCliente.setAdapter(new AutoCompleteClienteCantinaAdapter(requireContext(), clientesCantina));
+            }
+        });
+        binding.txtNomeCliente.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty()) {
+                    clienteCantinaViewModel.consultarClienteCantina(charSequence.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         barcodeView = binding.viewStub.inflate().findViewById(R.id.barcode_scanner);
         binding.viewStub.setVisibility(View.GONE);
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
@@ -720,18 +739,6 @@ public class FacturaFragment extends Fragment {
     private String getDataSplitDispositivo(String dataSplit) {
         String[] dataDavice = TextUtils.split(dataSplit, "-");
         return dataDavice[0].trim() + '-' + dataDavice[1].trim() + '-' + dataDavice[2].trim();
-    }
-
-    private void getListClientesCantina() {
-//        clienteCantinaViewModel.consultarClientesCantina(null);
-//        clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientesCantina -> {
-//            clienteCantina.clear();
-//            for (ClienteCantina cliente : clientesCantina) {
-//                clienteCantina.add(new ClienteCantina(cliente.getId(), cliente.getNome(), cliente.getTelefone(), cliente.getEmail(), cliente.getEndereco()));
-//            }
-//            AutoCompleteClienteCantinaAdapter clienteCantinaAdapter = new AutoCompleteClienteCantinaAdapter(requireContext(), clienteCantina);
-//            binding.txtNomeCliente.setAdapter(clienteCantinaAdapter);
-//        });
     }
 
     private void openCamera() {

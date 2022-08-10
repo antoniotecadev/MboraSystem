@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.yoga.mborasystem.databinding.ClienteAutocompleteRowBinding;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCantina> {
 

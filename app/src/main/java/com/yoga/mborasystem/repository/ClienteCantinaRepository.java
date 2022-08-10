@@ -17,6 +17,8 @@ import com.yoga.mborasystem.util.Ultilitario;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Maybe;
+
 public class ClienteCantinaRepository {
 
     private final ClienteCantinaDao clienteCantinaDao;
@@ -36,6 +38,10 @@ public class ClienteCantinaRepository {
             return clienteCantinaDao.searchCliente(cliente);
         else
             return clienteCantinaDao.getClientesCantina();
+    }
+
+    public Maybe<List<ClienteCantina>> getClienteCantina(String cliente) {
+        return clienteCantinaDao.getClienteCantina(cliente);
     }
 
     public LiveData<Long> getQuantidadeCliente() {

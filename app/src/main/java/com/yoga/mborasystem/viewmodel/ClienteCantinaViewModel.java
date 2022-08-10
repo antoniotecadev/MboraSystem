@@ -86,6 +86,15 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return listaClientesCantina;
     }
 
+    private MutableLiveData<List<ClienteCantina>> cliente;
+
+    public MutableLiveData<List<ClienteCantina>> getCliente() {
+        if (cliente == null) {
+            cliente = new MutableLiveData<>();
+        }
+        return cliente;
+    }
+
     private MutableLiveData<Event<List<ClienteCantina>>> listaClienteExport;
 
     public MutableLiveData<Event<List<ClienteCantina>>> getListaClientesExport() {
@@ -167,7 +176,14 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                         getListaClientesCantina().postValue(clientes);
                     else
                         getListaClientesCantina().setValue(clientes);
-                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+    }
+
+    public void consultarClienteCantina(String cliente) {
+        disposable = clienteCantinaRepository.getClienteCantina(cliente)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(clienteCantinas -> getCliente().setValue(clienteCantinas), e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
     }
 
     public LiveData<Long> getQuantidadeCliente() {

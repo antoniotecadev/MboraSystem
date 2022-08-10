@@ -11,6 +11,8 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Maybe;
+
 @Dao
 public interface ClienteCantinaDao {
 
@@ -19,6 +21,9 @@ public interface ClienteCantinaDao {
 
     @Query("SELECT * FROM clientecantina WHERE estado != 3 ORDER BY id DESC")
     PagingSource<Integer, ClienteCantina> getClientesCantina();
+
+    @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :cliente || '%' OR telefone LIKE '%' || :cliente || '%' OR nif LIKE '%' || :cliente || '%') ORDER BY id DESC")
+    Maybe<List<ClienteCantina>> getClienteCantina(String cliente);
 
     @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :cliente || '%' OR telefone LIKE '%' || :cliente || '%' OR nif LIKE '%' || :cliente || '%')")
     PagingSource<Integer, ClienteCantina> searchCliente(String cliente);
