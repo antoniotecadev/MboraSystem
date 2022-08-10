@@ -59,7 +59,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
             } else {
                 String filterPatern = constraint.toString().toLowerCase().trim();
                 for (ClienteCantina clienteCantina : clienteCantinaList) {
-                    if (clienteCantina.getNome().toLowerCase().contains(filterPatern)) {
+                    if (clienteCantina.getNome().toLowerCase().contains(filterPatern) || clienteCantina.getTelefone().toLowerCase().contains(filterPatern) || clienteCantina.getNif().toLowerCase().contains(filterPatern)) {
                         clienteCantinas.add(clienteCantina);
                     }
                 }
