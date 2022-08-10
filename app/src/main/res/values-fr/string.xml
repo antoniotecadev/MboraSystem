@@ -318,7 +318,7 @@
     <string name="eliminar_cliente">Supprimer le client</string>
     <string name="dt_vl_dv">Saisissez le montant de la dette</string>
     <string name="dvd_atri_cl_cad">« La dette ne peut être imputée qu\'au client enregistré.</string>
-    <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ"</string>
+    <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ0123456789 "</string>
     <string name="noa_scan_codbar">Il ne pourra pas accéder à la caméra.</string>
     <string name="vds">Ventes</string>
     <string name="falha_venda">Échec du chargement des ventes</string>

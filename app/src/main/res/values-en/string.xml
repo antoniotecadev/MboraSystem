@@ -318,7 +318,7 @@
     <string name="eliminar_cliente">Delete Client</string>
     <string name="dt_vl_dv">Enter the debt amount</string>
     <string name="dvd_atri_cl_cad">"The debt can only be attributed to the registered client. "</string>
-    <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ"</string>
+    <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ0123456789 "</string>
     <string name="noa_scan_codbar">It will not be able to access the camera.</string>
     <string name="vds">Sales</string>
     <string name="falha_venda">Failed to load sales</string>

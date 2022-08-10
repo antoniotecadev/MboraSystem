@@ -332,7 +332,7 @@
     <string name="eliminar_cliente">Eliminar Cliente</string>
     <string name="dt_vl_dv">Digite o valor da dívida</string>
     <string name="dvd_atri_cl_cad">"A dívida só pode ser atribuída ao cliente cadastrado. "</string>
-    <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ "</string>
+    <string name="nome_cli_carac_aceite">"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZáéíóúÁÉÍÓÚçÇ0123456789 "</string>
     <string name="noa_scan_codbar">Não vai pode acessar a camera.</string>
     <string name="vds">Vendas</string>
     <string name="falha_venda">Falha ao carregar vendas</string>
