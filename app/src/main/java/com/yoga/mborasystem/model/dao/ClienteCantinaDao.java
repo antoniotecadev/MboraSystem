@@ -28,8 +28,8 @@ public interface ClienteCantinaDao {
     @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :cliente || '%' OR telefone LIKE '%' || :cliente || '%' OR nif LIKE '%' || :cliente || '%')")
     PagingSource<Integer, ClienteCantina> searchCliente(String cliente);
 
-    @Query("UPDATE clientecantina SET nome = :nome, telefone = :telefone, email = :email, endereco = :endereco, estado = :estado, data_modifica = :dataModif WHERE id = :id")
-    void update(String nome, String telefone, String email, String endereco, int estado, String dataModif, long id);
+    @Query("UPDATE clientecantina SET nif = :nif, nome = :nome, telefone = :telefone, email = :email, endereco = :endereco, estado = :estado, data_modifica = :dataModif WHERE id = :id")
+    void update(String nif, String nome, String telefone, String email, String endereco, int estado, String dataModif, long id);
 
     @Delete
     void delete(ClienteCantina clienteCantina);

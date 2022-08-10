@@ -48,8 +48,8 @@ public class ClienteCantinaRepository {
         return clienteCantinaDao.getQuantidadeCliente();
     }
 
-    public void update(String nome, String telefone, String email, String endereco, int estado, String dataModif, long id) {
-        clienteCantinaDao.update(nome, telefone, email, endereco, estado, dataModif, id);
+    public void update(ClienteCantina clienteCantina) {
+        clienteCantinaDao.update(clienteCantina.getNif(), clienteCantina.getNome(), clienteCantina.getTelefone(), clienteCantina.getEmail(), clienteCantina.getEndereco(), clienteCantina.getEstado(), clienteCantina.getData_modifica(), clienteCantina.getId());
     }
 
     public void delete(ClienteCantina clienteCantina) {

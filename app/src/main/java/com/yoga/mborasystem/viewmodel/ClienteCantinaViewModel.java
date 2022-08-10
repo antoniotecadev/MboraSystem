@@ -192,7 +192,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void actualizarCliente(ClienteCantina clienteCantina, AlertDialog dialog) {
-        Completable.fromAction(() -> clienteCantinaRepository.update(clienteCantina.getNome(), clienteCantina.getTelefone(), clienteCantina.getEmail(), clienteCantina.getEndereco(), clienteCantina.getEstado(), clienteCantina.getData_modifica(), clienteCantina.getId()))
+        Completable.fromAction(() -> clienteCantinaRepository.update(clienteCantina))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
