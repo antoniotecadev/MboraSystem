@@ -43,7 +43,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
         if (clienteCantina != null) {
             binding.textNome.setText(clienteCantina.getNome());
             binding.textId.setText("MSCC" + clienteCantina.getId());
-            binding.textTelefone.setText(clienteCantina.getTelefone());
+            binding.textTelefone.setText(clienteCantina.getTelefone() + " | " + clienteCantina.getNif());
         }
 
         return binding.getRoot();
