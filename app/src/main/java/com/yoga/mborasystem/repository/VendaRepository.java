@@ -34,7 +34,10 @@ public class VendaRepository {
 
     public PagingSource<Integer, Venda> getVendas(long idcliente, boolean isDivida, long idusuario, boolean isLixeira, boolean isPesquisa, String referencia, boolean isData, String data) {
         if (isData) {
-            return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
+            if (isLixeira)
+                return vendaDao.getVendasLixeira(data);
+            else
+                return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
         } else {
             if (isLixeira) {
                 if (isPesquisa)

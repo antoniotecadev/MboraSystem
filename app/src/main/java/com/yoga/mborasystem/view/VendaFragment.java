@@ -103,8 +103,8 @@ public class VendaFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentVendaListBinding.inflate(inflater, container, false);
 
-        isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
         isMaster = VendaFragmentArgs.fromBundle(getArguments()).getIsMaster();
+        isLixeira = VendaFragmentArgs.fromBundle(getArguments()).getIsLixeira();
 
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.venda) + ")");
@@ -400,8 +400,8 @@ public class VendaFragment extends Fragment {
         inflater.inflate(R.menu.menu_venda, menu);
 
         if (isLixeira) {
-            menu.findItem(R.id.btnScannerBack).setVisible(false);
-            menu.findItem(R.id.btnData).setVisible(false);
+//            menu.findItem(R.id.btnScannerBack).setVisible(false);
+//            menu.findItem(R.id.btnData).setVisible(false);
             menu.findItem(R.id.exportarvenda).setVisible(false);
             menu.findItem(R.id.importarvenda).setVisible(false);
         } else {
@@ -464,7 +464,7 @@ public class VendaFragment extends Fragment {
                 scanearCodigoQr();
                 break;
             case R.id.btnData:
-                VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
+                VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario).setIsLixeira(isLixeira);
                 Navigation.findNavController(requireView()).navigate(direction);
                 break;
             case R.id.exportarvenda:

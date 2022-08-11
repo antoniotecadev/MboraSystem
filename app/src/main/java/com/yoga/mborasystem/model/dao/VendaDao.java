@@ -82,6 +82,9 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado = 3 ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaLixeira();
 
+    @Query("SELECT * FROM vendas WHERE estado = 3 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
+    public abstract PagingSource<Integer, Venda> getVendasLixeira(String data);
+
     @Query("SELECT * FROM vendas WHERE estado = 3 AND codigo_qr LIKE '%' || :referencia || '%'")
     abstract PagingSource<Integer, Venda> searchVendaLixeira(String referencia);
 

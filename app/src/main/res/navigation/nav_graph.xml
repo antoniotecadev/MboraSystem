@@ -354,6 +354,9 @@
                 android:name="isPesquisa"
                 android:defaultValue="false"
                 app:argType="boolean" />
+            <argument
+                android:name="isLixeira"
+                android:defaultValue="false" />
         </dialog>
         <dialog
             android:id="@+id/dialogExportarImportarVenda"
