@@ -164,6 +164,15 @@ public class VendaFragment extends Fragment {
             vendaAdapter.submitData(getLifecycle(), vendas);
             Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
         });
+        binding.floatingActionButtonCima.setOnClickListener(view -> binding.recyclerViewListaVenda.smoothScrollToPosition(0));
+        binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewListaVenda.smoothScrollToPosition(quantidade));
+        binding.switchOcultarFloatCimaBaixo.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                ocultarFloatButtonCimaBaixo(true, View.GONE);
+            else
+                ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
+        });
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "venda"));
 
         vendaViewModel.getSelectedDataMutableLiveData().setValue(false);
         vendaViewModel.getSelectedDataMutableLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
@@ -302,6 +311,12 @@ public class VendaFragment extends Fragment {
             }
         }, getViewLifecycleOwner());
         return binding.getRoot();
+    }
+
+    private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
+        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "venda");
+        binding.floatingActionButtonCima.setVisibility(view);
+        binding.floatingActionButtonBaixo.setVisibility(view);
     }
 
     private void consultarVendas(boolean isCrud, boolean isDivida, boolean isPesquisa, String venda) {
