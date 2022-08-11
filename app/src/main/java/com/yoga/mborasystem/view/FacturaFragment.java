@@ -223,7 +223,6 @@ public class FacturaFragment extends Fragment {
         binding.buttonFechar.setOnClickListener(v -> fecharCamera());
 
         binding.btnCriarCliente.setOnClickListener(v -> {
-            MainActivity.getProgressBar();
             Navigation.findNavController(requireView()).navigate(FacturaFragmentDirections.actionFacturaFragmentToDialogCriarClienteCantina(binding.txtNomeCliente.getText().toString(), "", 0, "", "", ""));
             binding.txtNomeCliente.setText("");
         });
@@ -338,8 +337,6 @@ public class FacturaFragment extends Fragment {
                         troco = 0;
                         binding.troco.setText(getText(R.string.troco) + ": " + Ultilitario.formatPreco("0"));
                     }
-
-
                 }
             }
 
