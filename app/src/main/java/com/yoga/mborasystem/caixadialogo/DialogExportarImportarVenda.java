@@ -3,6 +3,7 @@ package com.yoga.mborasystem.caixadialogo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogExportarImportarVendaBinding;
 import com.yoga.mborasystem.util.Event;
@@ -30,14 +31,15 @@ public class DialogExportarImportarVenda extends DialogFragment {
         boolean isDivida = DialogExportarImportarVendaArgs.fromBundle(getArguments()).getIsDivida();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setIcon(R.drawable.ic_baseline_store_24);
+        builder.setIcon(R.drawable.ic_baseline_insert_drive_file_24);
         if (idusuario == 0) {
             if (idcliente == 0 && !isDivida) {
                 builder.setTitle(getString(R.string.exp_tds_vd));
             } else if (idcliente > 0 && !isDivida) {
                 builder.setTitle(getString(R.string.exp_tds_vd_cli));
             } else if (idcliente == 0 && isDivida) {
-                builder.setTitle(getString(R.string.exp_tds_vd_dvd));
+                builder.setTitle(getString(R.string.exp_tds_vd));
+//                builder.setTitle(getString(R.string.exp_tds_vd_dvd));
             } else if (idcliente > 0 && isDivida) {
                 builder.setTitle(getString(R.string.exp_tds_vd_dvd_cli));
             }
