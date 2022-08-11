@@ -149,7 +149,6 @@ public class DialogCriarClienteCantina extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        MainActivity.dismissProgressBar();
     }
 
 }
