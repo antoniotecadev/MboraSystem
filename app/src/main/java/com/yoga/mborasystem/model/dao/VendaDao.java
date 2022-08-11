@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.model.dao;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -28,46 +29,46 @@ public abstract class VendaDao {
     abstract void insert(ProdutoVenda produtoVenda);
 
     @Query("SELECT * FROM vendas WHERE estado = 4 ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaVazia();
+    abstract PagingSource<Integer, Venda> getVendaVazia();
 
     @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVenda();
+    abstract PagingSource<Integer, Venda> getVenda();
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaDiv();
+    abstract PagingSource<Integer, Venda> getVendaDiv();
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVenda(long idcliente);
+    abstract PagingSource<Integer, Venda> getVenda(long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0  ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaCliDiv(long idcliente);
+    abstract PagingSource<Integer, Venda> getVendaCliDiv(long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :referencia || '%'")
-    abstract Flowable<List<Venda>> searchVenda(String referencia);
+    abstract PagingSource<Integer, Venda> searchVenda(String referencia);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%'")
-    abstract Flowable<List<Venda>> searchVendaDiv(String referencia);
+    abstract PagingSource<Integer, Venda> searchVendaDiv(String referencia);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
-    abstract Flowable<List<Venda>> searchVenda(String referencia, long idcliente);
+    abstract PagingSource<Integer, Venda> searchVenda(String referencia, long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
-    abstract Flowable<List<Venda>> searchVendaCliDiv(String referencia, long idcliente);
+    abstract PagingSource<Integer, Venda> searchVendaCliDiv(String referencia, long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
-    abstract Flowable<List<Venda>> getVenda(String data);
+    abstract PagingSource<Integer, Venda> getVenda(String data);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
     public abstract List<Venda> getVendaExport(String data);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
-    abstract Flowable<List<Venda>> getVendaDataDiv(String data);
+    abstract PagingSource<Integer, Venda> getVendaDataDiv(String data);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
-    abstract Flowable<List<Venda>> getVendaDataCliDiv(String data, long idcliente);
+    abstract PagingSource<Integer, Venda> getVendaDataCliDiv(String data, long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND data_cria LIKE '%' || :data || '%'")
-    abstract Flowable<List<Venda>> getVenda(String data, long idcliente);
+    abstract PagingSource<Integer, Venda> getVenda(String data, long idcliente);
 
     @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda OR codigo_Barra = :codQr")
     abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda, String codQr);
@@ -79,10 +80,10 @@ public abstract class VendaDao {
     abstract void setDivida(int divida, long idvenda);
 
     @Query("SELECT * FROM vendas WHERE estado = 3 ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaLixeira();
+    abstract PagingSource<Integer, Venda> getVendaLixeira();
 
     @Query("SELECT * FROM vendas WHERE estado = 3 AND codigo_qr LIKE '%' || :referencia || '%'")
-    abstract Flowable<List<Venda>> searchVendaLixeira(String referencia);
+    abstract PagingSource<Integer, Venda> searchVendaLixeira(String referencia);
 
     @Delete
     abstract void deleteVenda(Venda venda);
@@ -94,22 +95,22 @@ public abstract class VendaDao {
     public abstract void deleteAllVendaLixeira(int estado);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaUsuario(long idusuario);
+    abstract PagingSource<Integer, Venda> getVendaUsuario(long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaDataUsuario(String data, long idusuario);
+    abstract PagingSource<Integer, Venda> getVendaDataUsuario(String data, long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaUsuario(String referencia, long idusuario);
+    abstract PagingSource<Integer, Venda> getVendaUsuario(String referencia, long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0  ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaDivUsuario(long idusuario);
+    abstract PagingSource<Integer, Venda> getVendaDivUsuario(long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaDataDivUsuario(String data, long idusuario);
+    abstract PagingSource<Integer, Venda> getVendaDataDivUsuario(String data, long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
-    abstract Flowable<List<Venda>> getVendaDivUsuario(String referencia, long idusuario);
+    abstract PagingSource<Integer, Venda> getVendaDivUsuario(String referencia, long idusuario);
 
     @Query("UPDATE vendas SET estado = :est WHERE id = :id")
     public abstract void restaurarVendas(int est, long id);
@@ -130,6 +131,12 @@ public abstract class VendaDao {
     @Query("UPDATE vendas SET codigo_qr = :ref WHERE id = :idvenda")
     public abstract void updateReferencia(String ref, long idvenda);
 
+    @Query("SELECT COUNT(id) FROM vendas  WHERE estado != 3")
+    public abstract LiveData<Long> getQuantidadeVenda();
+
+    @Query("SELECT COUNT(id) FROM vendas  WHERE estado = 3")
+    public abstract LiveData<Long> getQuantidadeVendaLixeira();
+
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
@@ -149,7 +156,7 @@ public abstract class VendaDao {
         return idvenda;
     }
 
-    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario) {
+    public PagingSource<Integer, Venda> getVendas(long idcliente, boolean isdivida, long idusuario) {
         if (idusuario == 0) {
             if (idcliente == 0 && !isdivida) {
                 return getVenda();
@@ -168,7 +175,7 @@ public abstract class VendaDao {
         return getVendaVazia();
     }
 
-    public Flowable<List<Venda>> getVendas(String data, long idcliente, boolean isDivida, long idusuario) {
+    public PagingSource<Integer, Venda> getVendas(String data, long idcliente, boolean isDivida, long idusuario) {
         if (idusuario == 0) {
             if (idcliente == 0 && !isDivida) {
                 return getVenda(data);
@@ -187,7 +194,7 @@ public abstract class VendaDao {
         return getVendaVazia();
     }
 
-    public Flowable<List<Venda>> getSearchVendas(String referencia, long idcliente, boolean isDivida, long idusuario) {
+    public PagingSource<Integer, Venda> getSearchVendas(String referencia, long idcliente, boolean isDivida, long idusuario) {
         if (idusuario == 0) {
             if (idcliente == 0 && !isDivida) {
                 return searchVenda(referencia);
@@ -206,11 +213,11 @@ public abstract class VendaDao {
         return getVendaVazia();
     }
 
-    public Flowable<List<Venda>> getVendasLixeira() {
+    public PagingSource<Integer, Venda> getVendasLixeira() {
         return getVendaLixeira();
     }
 
-    public Flowable<List<Venda>> searchVendasLixeira(String referencia) {
+    public PagingSource<Integer, Venda> searchVendasLixeira(String referencia) {
         return searchVendaLixeira(referencia);
     }
 
@@ -227,6 +234,7 @@ public abstract class VendaDao {
         Venda venda = new Venda();
         for (String vd : vendas) {
             String[] vend = vd.split(",");
+            venda.setId(0);
             venda.setNome_cliente(vend[0]);
             venda.setCodigo_qr(vend[1]);
             venda.setQuantidade(Integer.parseInt(vend[2]));

@@ -24,23 +24,24 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.paging.PagingDataAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
-import com.xwray.groupie.GroupieViewHolder;
-import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.FragmentVendaBinding;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
 import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.util.EventObserver;
@@ -58,25 +59,28 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("rawtypes")
 public class VendaFragment extends Fragment {
 
     private ExecutorService executor;
     private boolean vazio;
     private String data = "";
+    private int quantidade;
     private GroupAdapter adapter;
     private StringBuilder dataBuilder;
     private long idcliente, idusuario;
+    private VendaAdapter vendaAdapter;
     private VendaViewModel vendaViewModel;
     private String nomeUsuario, nomeCliente;
     private FragmentVendaListBinding binding;
     private boolean isLocal, isDivida, isLixeira, isMaster;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new GroupAdapter();
         dataBuilder = new StringBuilder();
+        vendaAdapter = new VendaAdapter(new VendaComparator());
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         idcliente = VendaFragmentArgs.fromBundle(getArguments()).getIdcliente();
         idusuario = VendaFragmentArgs.fromBundle(getArguments()).getIdusuario();
@@ -107,8 +111,8 @@ public class VendaFragment extends Fragment {
             binding.bottomNav.setVisibility(View.GONE);
         }
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
-            MainActivity.getProgressBar();
-            vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida, idusuario, isLixeira);
+            consultarVendas(false, isDivida, false, null, false, null);
+            vendaAdapter.notifyDataSetChanged();
         });
 
         binding.bottomNav.setOnItemSelectedListener(item -> {
@@ -122,7 +126,7 @@ public class VendaFragment extends Fragment {
                     } else {
                         requireActivity().setTitle(getString(R.string.vds));
                     }
-                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false, idusuario, isLixeira);
+                    consultarVendas(false, false, false, null, false, null);
                     break;
                 case R.id.vdDvd:
                     isDivida = true;
@@ -133,7 +137,7 @@ public class VendaFragment extends Fragment {
                     } else {
                         requireActivity().setTitle(getString(R.string.dvd));
                     }
-                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, true, idusuario, isLixeira);
+                    consultarVendas(false, true, false, null, false, null);
                     break;
                 default:
                     break;
@@ -141,20 +145,21 @@ public class VendaFragment extends Fragment {
             return true;
         });
 
-        binding.recyclerViewListaVenda.setAdapter(adapter);
+        binding.recyclerViewListaVenda.setAdapter(vendaAdapter);
+        binding.recyclerViewListaVenda.setHasFixedSize(true);
         binding.recyclerViewListaVenda.setLayoutManager(new LinearLayoutManager(getContext()));
-        vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, false, idusuario, isLixeira);
+
+        vendaViewModel.getQuantidadeVenda(isLixeira).observe(getViewLifecycleOwner(), quantidade -> {
+            this.quantidade = quantidade.intValue();
+            vazio = quantidade == 0;
+            binding.chipQuantVenda.setText(String.valueOf(quantidade));
+            binding.recyclerViewListaVenda.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : vendaAdapter);
+        });
+
+        consultarVendas(false, false, false, null, false, null);
         vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
-            binding.chipQuantVenda.setText(String.valueOf(vendas.size()));
-            adapter.clear();
-            if (vendas.isEmpty()) {
-                vazio = true;
-                Ultilitario.naoEncontrado(getContext(), adapter, R.string.venda_nao_encontrada);
-            } else {
-                vazio = false;
-                for (Venda venda : vendas)
-                    adapter.add(new ItemVenda(venda));
-            }
+            vendaAdapter.submitData(getLifecycle(), vendas);
+            Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
         });
 
         vendaViewModel.getSelectedDataMutableLiveData().setValue(false);
@@ -202,8 +207,12 @@ public class VendaFragment extends Fragment {
             }
             this.data = "";
         }));
-
         return binding.getRoot();
+    }
+
+    private void consultarVendas(boolean isCrud, boolean isDivida, boolean isPesquisa, String venda, boolean isData, String data) {
+        vendaViewModel.crud = isCrud;
+        vendaViewModel.consultarVendas(getViewLifecycleOwner(), idcliente, isDivida, idusuario, isLixeira, isPesquisa, venda, isData, data);
     }
 
     private void scanearCodigoQr() {
@@ -213,135 +222,130 @@ public class VendaFragment extends Fragment {
         zxingActivityResultLauncher.launch(intentIntegrator.createScanIntent());
     }
 
-    class ItemVenda extends Item<GroupieViewHolder> {
-
-        private final Venda venda;
+    class VendaAdapter extends PagingDataAdapter<Venda, VendaAdapter.VendaViewHolder> {
         private TextView divida;
 
-        public ItemVenda(Venda venda) {
-            this.venda = venda;
+        public VendaAdapter(@NonNull DiffUtil.ItemCallback<Venda> diffCallback) {
+            super(diffCallback);
+        }
+
+        @NonNull
+        @Override
+        public VendaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new VendaViewHolder(FragmentVendaBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         }
 
         @Override
-        public void bind(@NonNull GroupieViewHolder viewHolder, int position) {
-            TextView nomeCliente = viewHolder.itemView.findViewById(R.id.textCliente);
-            TextView referencia = viewHolder.itemView.findViewById(R.id.textReferencia);
-            TextView quantidade = viewHolder.itemView.findViewById(R.id.textQtProd);
-            TextView total = viewHolder.itemView.findViewById(R.id.textTotVend);
-            TextView desconto = viewHolder.itemView.findViewById(R.id.textDesc);
-            TextView totalDesc = viewHolder.itemView.findViewById(R.id.textTotDesc);
-            TextView valorPago = viewHolder.itemView.findViewById(R.id.textPago);
-            divida = viewHolder.itemView.findViewById(R.id.textDivida);
-            TextView valorBase = viewHolder.itemView.findViewById(R.id.textValBas);
-            TextView iva = viewHolder.itemView.findViewById(R.id.textVaIva);
-            TextView forPag = viewHolder.itemView.findViewById(R.id.textForPag);
-            TextView dataVenda = viewHolder.itemView.findViewById(R.id.textDatVen);
-            TextView operador = viewHolder.itemView.findViewById(R.id.textOper);
+        public void onBindViewHolder(@NonNull VendaViewHolder h, int position) {
+            Venda venda = getItem(position);
+            if (venda != null) {
+                divida = h.binding.textDivida;
+                if (venda.getDivida() > 0)
+                    h.binding.textDivida.setBackgroundColor(Color.RED);
 
-            CardView btnEntrar = viewHolder.itemView.findViewById(R.id.btnEntrar);
-
-            if (venda.getDivida() > 0) {
-                divida.setBackgroundColor(Color.RED);
+                h.binding.textCliente.setText(venda.getNome_cliente());
+                h.binding.textReferencia.setText(venda.getCodigo_qr());
+                h.binding.textQtProd.setText(String.valueOf(venda.getQuantidade()));
+                h.binding.textTotVend.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
+                h.binding.textDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto())));
+                h.binding.textTotDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_desconto())));
+                h.binding.textPago.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_pago())));
+                h.binding.textDivida.setText(Ultilitario.formatPreco(String.valueOf(venda.getDivida())));
+                h.binding.textValBas.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_base())));
+                h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_iva())));
+                h.binding.textForPag.setText(venda.getPagamento());
+                h.binding.textDatVen.setText(venda.getData_cria());
+                h.binding.textOper.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA" + venda.getIdoperador()));
+                h.binding.btnEntrar.setOnClickListener(v -> {
+                    VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                    Navigation.findNavController(requireView()).navigate(directions);
+                });
+                h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                    menu.setHeaderTitle(venda.getCodigo_qr());
+                    if (!isLixeira) {
+                        menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
+                            VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                            Navigation.findNavController(requireView()).navigate(directions);
+                            return false;
+                        });//groupId, itemId, order, title
+                        if (getArguments() != null) {
+                            if (getArguments().getBoolean("master")) {
+                                menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
+                                    if (venda.getDivida() == 0)
+                                        Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
+                                    else
+                                        caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true, false, venda);
+                                    return false;
+                                });
+                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+                                    caixaDialogo(getString(R.string.env_lx) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_lix, false, false, venda);
+                                    return false;
+                                });
+                                menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                                    caixaDialogo(getString(R.string.elim_vend_perm) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_n_lix, false, true, venda);
+                                    return false;
+                                });
+                            }
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        if (getArguments() != null) {
+                            if (getArguments().getBoolean("master") || isMaster) {
+                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                                    restaurarVenda(venda.getCodigo_qr(), venda.getId());
+                                    return false;
+                                });
+                                menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                                    dialogEliminarVenda(getString(R.string.cert_elim_vend), venda);
+                                    return false;
+                                });
+                                menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
-
-            nomeCliente.setText(venda.getNome_cliente());
-            referencia.setText(venda.getCodigo_qr());
-            quantidade.setText(String.valueOf(venda.getQuantidade()));
-            total.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
-            desconto.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto())));
-            totalDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_desconto())));
-            valorPago.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_pago())));
-            divida.setText(Ultilitario.formatPreco(String.valueOf(venda.getDivida())));
-            valorBase.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_base())));
-            iva.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_iva())));
-            forPag.setText(venda.getPagamento());
-            dataVenda.setText(venda.getData_cria());
-            operador.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA" + venda.getIdoperador()));
-
-            btnEntrar.setOnClickListener(v -> {
-                MainActivity.getProgressBar();
-                VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
-                Navigation.findNavController(requireView()).navigate(directions);
-            });
-
-            btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                menu.setHeaderTitle(venda.getCodigo_qr());
-                if (!isLixeira) {
-                    menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
-                        MainActivity.getProgressBar();
-                        VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
-                        Navigation.findNavController(requireView()).navigate(directions);
-                        return false;
-                    });//groupId, itemId, order, title
-                    if (getArguments() != null) {
-                        if (getArguments().getBoolean("master")) {
-                            menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
-                                if (venda.getDivida() == Ultilitario.ZERO)
-                                    Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
-                                else
-                                    caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true, false);
-                                return false;
-                            });
-                            menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(getString(R.string.env_lx) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_lix, false, false);
-                                return false;
-                            });
-                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(getString(R.string.elim_vend_perm) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_n_lix, false, true);
-                                return false;
-                            });
-                        }
-                    } else {
-                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    if (getArguments() != null) {
-                        if (getArguments().getBoolean("master") || isMaster) {
-                            menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                                restaurarVenda();
-                                return false;
-                            });
-                            menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                                dialogEliminarVenda(getString(R.string.cert_elim_vend));
-                                return false;
-                            });
-                            menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
-                        }
-                    } else {
-                        Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
         }
 
-        private void dialogEliminarVenda(String msg) {
+        private class VendaViewHolder extends RecyclerView.ViewHolder {
+            FragmentVendaBinding binding;
+
+            public VendaViewHolder(@NonNull FragmentVendaBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+
+        private void dialogEliminarVenda(String msg, Venda venda) {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        vendaViewModel.crud = true;
+                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false);
+                    })
                     .show();
         }
 
-        private void restaurarVenda() {
+        private void restaurarVenda(String codigoQr, long idvenda) {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.rest) + " (" + venda.getCodigo_qr() + ")")
+                    .setTitle(getString(R.string.rest) + " (" + codigoQr + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.restaurarVenda(Ultilitario.UM, venda.getId(), false))
+                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                        vendaViewModel.crud = true;
+                        vendaViewModel.restaurarVenda(Ultilitario.UM, idvenda, false);
+                    })
                     .show();
         }
 
-        @Override
-        public int getLayout() {
-            return R.layout.fragment_venda;
-        }
-
-        private void caixaDialogo(String titulo, int mensagem, boolean isliquidar, boolean permanente) {
-
+        private void caixaDialogo(String titulo, int mensagem, boolean isliquidar, boolean permanente, Venda venda) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
             alert.setTitle(titulo);
             alert.setMessage(getString(mensagem));
-
             FrameLayout layout = new FrameLayout(getContext());
             layout.setPadding(45, 0, 45, 0);
             final TextInputEditText editText = new TextInputEditText(requireContext());
@@ -356,25 +360,37 @@ public class VendaFragment extends Fragment {
                 alert.setView(layout);
             }
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                MainActivity.getProgressBar();
                 if (isliquidar) {
                     if (editText.length() < 15) {
                         if (venda.getDivida() >= Ultilitario.removerKZ(editText)) {
+                            vendaViewModel.crud = true;
                             vendaViewModel.liquidarDivida(venda.getDivida() - Ultilitario.removerKZ(editText), venda.getId());
                         } else {
-                            MainActivity.dismissProgressBar();
                             Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vl_n_sp), R.drawable.ic_toast_erro);
                         }
                     } else {
                         Ultilitario.showToast(getContext(), Color.RED, getString(R.string.vl_inv), R.drawable.ic_toast_erro);
                         divida.setError(getString(R.string.vl_inv));
-                        MainActivity.dismissProgressBar();
                     }
                 } else {
+                    vendaViewModel.crud = true;
                     vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
                 }
             }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
+        }
+    }
+
+    static class VendaComparator extends DiffUtil.ItemCallback<Venda> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Venda oldItem, @NonNull Venda newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Venda oldItem, @NonNull Venda newItem) {
+            return oldItem.getId() == newItem.getId();
         }
     }
 
@@ -416,7 +432,7 @@ public class VendaFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida, idusuario, isLixeira);
+                consultarVendas(false, isDivida, false, null, false, null);
                 return true;
             }
         });
@@ -430,9 +446,9 @@ public class VendaFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    vendaViewModel.consultarVendas(binding.mySwipeRefreshLayout, idcliente, isDivida, idusuario, isLixeira);
+                    consultarVendas(false, isDivida, false, null, false, null);
                 } else {
-                    vendaViewModel.searchVendas(newText, idcliente, isDivida, idusuario, isLixeira);
+                    consultarVendas(true, isDivida, true, newText, false, null);
                 }
                 return false;
             }
@@ -489,9 +505,15 @@ public class VendaFragment extends Fragment {
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
             if (isEliminar) {
-                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.eliminarVendaLixeira(0, null, null, false, true));
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                    vendaViewModel.crud = true;
+                    vendaViewModel.eliminarVendaLixeira(0, null, null, false, true);
+                });
             } else {
-                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> vendaViewModel.restaurarVenda(Ultilitario.UM, 0, true));
+                alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+                    vendaViewModel.crud = true;
+                    vendaViewModel.restaurarVenda(Ultilitario.UM, 0, true);
+                });
             }
             if (getArguments() != null) {
                 if (isMaster) {
@@ -512,12 +534,19 @@ public class VendaFragment extends Fragment {
                     Uri uri;
                     if (data != null) {
                         uri = data.getData();
-                        try {
-                            readTextFromUri(uri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                                .setTitle(getString(R.string.importar))
+                                .setMessage(uri.getPath())
+                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                    try {
+                                        readTextFromUri(uri);
+                                    } catch (IOException e) {
+                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .show();
                     }
                 }
             });
@@ -538,9 +567,9 @@ public class VendaFragment extends Fragment {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
-                    vendaViewModel.searchVendas(r.getContents(), idcliente, isDivida, idusuario, isLixeira);
+                    consultarVendas(true, isDivida, true, r.getContents(), false, null);
                 } else {
-                    Toast.makeText(requireActivity(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
                 }
             });
 

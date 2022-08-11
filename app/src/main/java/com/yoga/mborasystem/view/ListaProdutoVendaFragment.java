@@ -6,8 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -19,12 +24,7 @@ import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
+@SuppressWarnings("rawtypes")
 public class ListaProdutoVendaFragment extends Fragment {
 
     private GroupAdapter adapter;
@@ -65,7 +65,7 @@ public class ListaProdutoVendaFragment extends Fragment {
                     adapter.add(new Item<GroupieViewHolder>() {
 
                         @SuppressLint("UseSwitchCompatOrMaterialCode")
-                        private Switch estadoProduto;
+                        private SwitchCompat estadoProduto;
 
                         @Override
                         public void bind(@NonNull GroupieViewHolder viewHolder, int position) {

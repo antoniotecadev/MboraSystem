@@ -3,6 +3,7 @@ package com.yoga.mborasystem.repository;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
 
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.VendaDao;
@@ -31,28 +32,34 @@ public class VendaRepository {
         return vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
     }
 
-    public Flowable<List<Venda>> getVendas(long idcliente, boolean isdivida, long idusuario, boolean isLixeira) {
-        if (isLixeira) {
-            return vendaDao.getVendasLixeira();
+    public PagingSource<Integer, Venda> getVendas(long idcliente, boolean isDivida, long idusuario, boolean isLixeira, boolean isPesquisa, String referencia, boolean isData, String data) {
+        if (isData) {
+            return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
         } else {
-            return vendaDao.getVendas(idcliente, isdivida, idusuario);
+            if (isLixeira) {
+                if (isPesquisa)
+                    return vendaDao.searchVendasLixeira(referencia);
+                else
+                    return vendaDao.getVendasLixeira();
+            } else {
+                if (isPesquisa)
+                    return vendaDao.getSearchVendas(referencia, idcliente, isDivida, idusuario);
+                else
+                    return vendaDao.getVendas(idcliente, isDivida, idusuario);
+            }
         }
     }
 
-    public Flowable<List<Venda>> getVendasPorData(String data, long idcliente, boolean isDivida, long idusuario) {
-        return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
+    public LiveData<Long> getQuantidadeVenda(boolean isLixeira) {
+        if (isLixeira) {
+            return vendaDao.getQuantidadeVendaLixeira();
+        } else {
+            return vendaDao.getQuantidadeVenda();
+        }
     }
 
     public List<Venda> getVendasPorDataExport(String data) {
         return vendaDao.getVendaExport(data);
-    }
-
-    public Flowable<List<Venda>> getSearchVendas(String referencia, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
-        if (isLixeira) {
-            return vendaDao.searchVendasLixeira(referencia);
-        } else {
-            return vendaDao.getSearchVendas(referencia, idcliente, isDivida, idusuario);
-        }
     }
 
     public void importarVendas(List<String> vendas) {

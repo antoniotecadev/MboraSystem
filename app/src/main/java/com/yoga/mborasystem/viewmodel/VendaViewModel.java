@@ -10,10 +10,15 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelKt;
 import androidx.navigation.Navigation;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.rxjava3.PagingRx;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
@@ -34,16 +39,19 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class VendaViewModel extends AndroidViewModel {
 
+    public boolean crud;
     private final Venda venda;
     private Disposable disposable;
     private ExecutorService executor;
@@ -112,10 +120,10 @@ public class VendaViewModel extends AndroidViewModel {
         return selectedData;
     }
 
-    MutableLiveData<List<Venda>> listaVendas;
+    MutableLiveData<PagingData<Venda>> listaVendas;
     MutableLiveData<Event<List<Venda>>> vendas, vendasGuardarImprimir;
 
-    public MutableLiveData<List<Venda>> getListaVendasLiveData() {
+    public MutableLiveData<PagingData<Venda>> getListaVendasLiveData() {
         if (listaVendas == null) {
             listaVendas = new MutableLiveData<>();
         }
@@ -186,6 +194,7 @@ public class VendaViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public long cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
+        venda.setId(0);
         venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
         venda.setQuantidade(quantidade);
@@ -201,12 +210,10 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
-        Completable.fromAction(() -> {
-            idvenda = vendaRepository.insert(venda, produtos, precoTotalUnit);
-        })
+        Completable.fromAction(() -> idvenda = vendaRepository.insert(venda, produtos, precoTotalUnit))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -247,50 +254,63 @@ public class VendaViewModel extends AndroidViewModel {
         });
     }
 
-    public void consultarVendas(SwipeRefreshLayout mySwipeRefreshLayout, long idcliente, boolean isdivida, long idusuario, boolean isLixeira) {
-        compositeDisposable.add(vendaRepository.getVendas(idcliente, isdivida, idusuario, isLixeira)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+    public void consultarVendas(LifecycleOwner lifecycleOwner, long idcliente, boolean isDivida, long idusuario, boolean isLixeira, boolean isPesquisa, String referencia, boolean isData, String data) {
+        Flowable<PagingData<Venda>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> vendaRepository.getVendas(idcliente, isDivida, idusuario, isLixeira, isPesquisa, referencia, isData, data)));
+        PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
+        flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(vendas -> {
-                    getListaVendasLiveData().setValue(vendas);
-                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-                    MainActivity.dismissProgressBar();
-                }, e -> {
-                    MainActivity.dismissProgressBar();
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                    if (crud)
+                        getListaVendasLiveData().postValue(vendas);
+                    else
+                        getListaVendasLiveData().setValue(vendas);
+                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+//        compositeDisposable.add(vendaRepository.getVendas(idcliente, isdivida, idusuario, isLixeira)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(vendas -> {
+//                    getListaVendasLiveData().setValue(vendas);
+//                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
+//                    MainActivity.dismissProgressBar();
+//                }, e -> {
+//                    MainActivity.dismissProgressBar();
+//                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+//                }));
     }
 
-    public void searchVendas(String referencia, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
-        compositeDisposable.add(vendaRepository.getSearchVendas(referencia, idcliente, isDivida, idusuario, isLixeira)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(vendas -> {
-                    getListaVendasLiveData().setValue(vendas);
-                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+    public LiveData<Long> getQuantidadeVenda(boolean isLixeira) {
+        return vendaRepository.getQuantidadeVenda(isLixeira);
     }
+
+//    public void searchVendas(String referencia, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
+//        compositeDisposable.add(vendaRepository.getSearchVendas(referencia, idcliente, isDivida, idusuario, isLixeira)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(vendas -> {
+//                    getListaVendasLiveData().setValue(vendas);
+//                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
+//                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+//    }
 
     public void getVendasPorDataExport(String data) {
         getVendasParaExportar().postValue(new Event<>(vendaRepository.getVendasPorDataExport(data)));
     }
 
     public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida, long idusuario, boolean isVenda) {
-        compositeDisposable.add(vendaRepository.getVendasPorData(data, idcliente, isDivida, idusuario)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(vendas -> {
-                    if (isExport) {
-                        getVendasParaExportar().setValue(new Event<>(vendas));
-                    } else {
-                        if (isVenda) {
-                            getListaVendasLiveData().setValue(vendas);
-                        } else {
-                            getVendasGuardarImprimir().setValue(new Event<>(vendas));
-                        }
-                    }
-                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+//        compositeDisposable.add(vendaRepository.getVendasPorData(data, idcliente, isDivida, idusuario)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(vendas -> {
+//                    if (isExport) {
+//                        getVendasParaExportar().setValue(new Event<>(vendas));
+//                    } else {
+//                        if (isVenda) {
+//                            getListaVendasLiveData().setValue(vendas);
+//                        } else {
+//                            getVendasGuardarImprimir().setValue(new Event<>(vendas));
+//                        }
+//                    }
+//                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
+//                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void importarVenda(List<String> vendas) {
@@ -327,7 +347,7 @@ public class VendaViewModel extends AndroidViewModel {
         Completable.fromAction(() -> vendaRepository.liquidarDivida(divida, idivida))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -335,13 +355,11 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.div_liq), R.drawable.ic_toast_feito);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.div_n_liq) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -360,7 +378,6 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         if (isLixeira || eliminarTodasLixeira) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
                         } else {
@@ -370,7 +387,6 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -378,7 +394,6 @@ public class VendaViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void restaurarVenda(int estado, long idvenda, boolean todasVendas) {
-        MainActivity.getProgressBar();
         Completable.fromAction(() -> vendaRepository.restaurarVenda(estado, idvenda, todasVendas))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -390,21 +405,16 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        MainActivity.dismissProgressBar();
                         if (todasVendas) {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vends_rests), R.drawable.ic_toast_feito);
-                            consultarVendas(null, 0, false, 0, true);
                         } else {
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_rest), R.drawable.ic_toast_feito);
-                            consultarVendas(null, 0, false, 0, true);
                         }
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                        consultarVendas(null, 0, false, 0, true);
-                        MainActivity.dismissProgressBar();
                     }
                 });
     }
