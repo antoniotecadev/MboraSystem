@@ -31,6 +31,9 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado = 4 ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaVazia();
 
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado = 5 ORDER BY id DESC")
+    abstract LiveData<Long> getVendaVaziaCount();
+
     @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVenda();
 
@@ -58,17 +61,41 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
     abstract PagingSource<Integer, Venda> getVenda(String data);
 
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
+    abstract LiveData<Long> getVendaCount(String data);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3")
+    abstract LiveData<Long> getVendaCount();
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
     public abstract List<Venda> getVendaExport(String data);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
     abstract PagingSource<Integer, Venda> getVendaDataDiv(String data);
 
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
+    abstract LiveData<Long> getVendaDataDivCount(String data);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND divida > 0")
+    abstract LiveData<Long> getVendaDivCount();
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
     abstract PagingSource<Integer, Venda> getVendaDataCliDiv(String data, long idcliente);
 
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0 AND data_cria LIKE '%' || :data || '%'")
+    abstract LiveData<Long> getVendaDataCliDivCount(String data, long idcliente);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0")
+    abstract LiveData<Long> getVendaCliDivCount(long idcliente);
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND data_cria LIKE '%' || :data || '%'")
     abstract PagingSource<Integer, Venda> getVenda(String data, long idcliente);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND data_cria LIKE '%' || :data || '%'")
+    abstract LiveData<Long> getVendaCount(String data, long idcliente);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idclicant = :idcliente")
+    abstract LiveData<Long> getVendaCount(long idcliente);
 
     @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda OR codigo_Barra = :codQr")
     abstract Flowable<List<ProdutoVenda>> getProdutoVenda(long idvenda, String codQr);
@@ -84,6 +111,9 @@ public abstract class VendaDao {
 
     @Query("SELECT * FROM vendas WHERE estado = 3 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
     public abstract PagingSource<Integer, Venda> getVendasLixeira(String data);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado = 3 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
+    public abstract LiveData<Long> getVendasLixeiraCount(String data);
 
     @Query("SELECT * FROM vendas WHERE estado = 3 AND codigo_qr LIKE '%' || :referencia || '%'")
     abstract PagingSource<Integer, Venda> searchVendaLixeira(String referencia);
@@ -103,6 +133,12 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaDataUsuario(String data, long idusuario);
 
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
+    abstract LiveData<Long> getVendaDataUsuarioCount(String data, long idusuario);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idoperador = :idusuario")
+    abstract LiveData<Long> getVendaUsuarioCount(long idusuario);
+
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaUsuario(String referencia, long idusuario);
 
@@ -111,6 +147,12 @@ public abstract class VendaDao {
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaDataDivUsuario(String data, long idusuario);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
+    abstract LiveData<Long> getVendaDataDivUsuarioCount(String data, long idusuario);
+
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0")
+    abstract LiveData<Long> getVendaDivUsuarioCount(long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaDivUsuario(String referencia, long idusuario);
@@ -134,11 +176,8 @@ public abstract class VendaDao {
     @Query("UPDATE vendas SET codigo_qr = :ref WHERE id = :idvenda")
     public abstract void updateReferencia(String ref, long idvenda);
 
-    @Query("SELECT COUNT(id) FROM vendas  WHERE estado != 3")
-    public abstract LiveData<Long> getQuantidadeVenda();
-
     @Query("SELECT COUNT(id) FROM vendas  WHERE estado = 3")
-    public abstract LiveData<Long> getQuantidadeVendaLixeira();
+    public abstract LiveData<Long> getVendasLixeiraCount();
 
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
@@ -214,6 +253,44 @@ public abstract class VendaDao {
             return getVendaUsuario(referencia, idusuario);
         }
         return getVendaVazia();
+    }
+
+    public LiveData<Long> getVendasCount(String data, long idcliente, boolean isDivida, long idusuario) {
+        if (idusuario == 0) {
+            if (idcliente == 0 && !isDivida) {
+                return getVendaCount(data);
+            } else if (idcliente > 0 && !isDivida) {
+                return getVendaCount(data, idcliente);
+            } else if (idcliente == 0) {
+                return getVendaDataDivCount(data);
+            } else if (idcliente > 0) {
+                return getVendaDataCliDivCount(data, idcliente);
+            }
+        } else if (isDivida) {
+            return getVendaDataDivUsuarioCount(data, idusuario);
+        } else {
+            return getVendaDataUsuarioCount(data, idusuario);
+        }
+        return getVendaVaziaCount();
+    }
+
+    public LiveData<Long> getVendasCount(long idcliente, boolean isDivida, long idusuario) {
+        if (idusuario == 0) {
+            if (idcliente == 0 && !isDivida) {
+                return getVendaCount();
+            } else if (idcliente > 0 && !isDivida) {
+                return getVendaCount(idcliente);
+            } else if (idcliente == 0) {
+                return getVendaDivCount();
+            } else if (idcliente > 0) {
+                return getVendaCliDivCount(idcliente);
+            }
+        } else if (isDivida) {
+            return getVendaDivUsuarioCount(idusuario);
+        } else {
+            return getVendaUsuarioCount(idusuario);
+        }
+        return getVendaVaziaCount();
     }
 
     public PagingSource<Integer, Venda> getVendasLixeira() {

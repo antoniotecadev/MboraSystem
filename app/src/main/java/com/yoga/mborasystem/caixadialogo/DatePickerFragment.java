@@ -55,6 +55,7 @@ public class DatePickerFragment extends DialogFragment
             Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
             vendaViewModel.crud = true;
             vendaViewModel.consultarVendas(this, idcliente, isDivida, idusuario, isLixeira, true, null, true, data);
+            vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, isDivida, idusuario, true, data, this);
         } else {
             if (isPesquisa) {
                 vendaViewModel.getDocumentoDatatAppLiveData().setValue(new Event<>(data));

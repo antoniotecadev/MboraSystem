@@ -126,6 +126,7 @@ public class VendaFragment extends Fragment {
                     } else {
                         requireActivity().setTitle(getString(R.string.vds));
                     }
+                    vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, false, idusuario, false, null, getViewLifecycleOwner());
                     consultarVendas(false, false, false, null, false, null);
                     break;
                 case R.id.vdDvd:
@@ -137,6 +138,7 @@ public class VendaFragment extends Fragment {
                     } else {
                         requireActivity().setTitle(getString(R.string.dvd));
                     }
+                    vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, true, idusuario, false, null, getViewLifecycleOwner());
                     consultarVendas(false, true, false, null, false, null);
                     break;
                 default:
@@ -149,7 +151,8 @@ public class VendaFragment extends Fragment {
         binding.recyclerViewListaVenda.setHasFixedSize(true);
         binding.recyclerViewListaVenda.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        vendaViewModel.getQuantidadeVenda(isLixeira).observe(getViewLifecycleOwner(), quantidade -> {
+        vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, isDivida, idusuario, false, null, getViewLifecycleOwner());
+        vendaViewModel.getQuantidadeVenda().observe(getViewLifecycleOwner(), quantidade -> {
             this.quantidade = quantidade.intValue();
             vazio = quantidade == 0;
             binding.chipQuantVenda.setText(String.valueOf(quantidade));
@@ -400,8 +403,6 @@ public class VendaFragment extends Fragment {
         inflater.inflate(R.menu.menu_venda, menu);
 
         if (isLixeira) {
-//            menu.findItem(R.id.btnScannerBack).setVisible(false);
-//            menu.findItem(R.id.btnData).setVisible(false);
             menu.findItem(R.id.exportarvenda).setVisible(false);
             menu.findItem(R.id.importarvenda).setVisible(false);
         } else {

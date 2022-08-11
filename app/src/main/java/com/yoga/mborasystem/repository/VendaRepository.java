@@ -53,11 +53,17 @@ public class VendaRepository {
         }
     }
 
-    public LiveData<Long> getQuantidadeVenda(boolean isLixeira) {
-        if (isLixeira) {
-            return vendaDao.getQuantidadeVendaLixeira();
+    public LiveData<Long> getQuantidadeVenda(boolean isLixeira, long idcliente, boolean isDivida, long idusuario, boolean isData, String data) {
+        if (isData) {
+            if (isLixeira)
+                return vendaDao.getVendasLixeiraCount(data);
+            else
+                return vendaDao.getVendasCount(data, idcliente, isDivida, idusuario);
         } else {
-            return vendaDao.getQuantidadeVenda();
+            if (isLixeira)
+                return vendaDao.getVendasLixeiraCount();
+            else
+                return vendaDao.getVendasCount(idcliente, isDivida, idusuario);
         }
     }
 

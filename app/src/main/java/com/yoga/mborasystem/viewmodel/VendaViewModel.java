@@ -68,11 +68,18 @@ public class VendaViewModel extends AndroidViewModel {
         clienteRepository = new ClienteRepository(getApplication());
     }
 
+    MutableLiveData<Long> quantidade;
     MutableLiveData<Event<Long>> guardarPdf, imprimir;
     MutableLiveData<Event<Boolean>> exportLocal;
     MutableLiveData<Boolean> selectedData;
-    MutableLiveData<Event<String>> enviarWhatsApp;
-    MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento;
+    MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento, enviarWhatsApp;
+
+    public MutableLiveData<Long> getQuantidadeVenda() {
+        if (quantidade == null) {
+            quantidade = new MutableLiveData<>();
+        }
+        return quantidade;
+    }
 
     public MutableLiveData<Event<Long>> getPrintLiveData() {
         if (imprimir == null) {
@@ -277,8 +284,9 @@ public class VendaViewModel extends AndroidViewModel {
 //                }));
     }
 
-    public LiveData<Long> getQuantidadeVenda(boolean isLixeira) {
-        return vendaRepository.getQuantidadeVenda(isLixeira);
+    public LiveData<Long> getQuantidadeVenda(boolean isLixeira, long idcliente, boolean isDivida, long idusuario, boolean isData, String data, LifecycleOwner lifecycleOwner) {
+        vendaRepository.getQuantidadeVenda(isLixeira, idcliente, isDivida, idusuario, isData, data).observe(lifecycleOwner, quantidade -> getQuantidadeVenda().setValue(quantidade));
+        return null;
     }
 
 //    public void searchVendas(String referencia, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
