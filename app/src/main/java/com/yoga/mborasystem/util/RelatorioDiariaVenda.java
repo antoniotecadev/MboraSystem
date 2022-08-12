@@ -91,7 +91,7 @@ public class RelatorioDiariaVenda {
                 totalDescontos += venda.getDesconto();
                 totalDividas += venda.getDivida();
                 addLineSeparator(document);
-                addNewLineWithLeftAndRight(document, activity.getString(R.string.cliente), activity.getString(R.string.cod_qr), titleFont, titleFont);
+                addNewLineWithLeftAndRight(document, activity.getString(R.string.cliente), activity.getString(R.string.referencia), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, venda.getNome_cliente(), venda.getCodigo_qr(), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.quantidade), activity.getString(R.string.total), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, String.valueOf(venda.getQuantidade()), Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())), font, font);
