@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Maybe;
 
 public class VendaRepository {
 
@@ -65,6 +66,13 @@ public class VendaRepository {
             else
                 return vendaDao.getVendasCount(idcliente, isDivida, idusuario);
         }
+    }
+
+    public Maybe<List<Venda>> getVendasDashboard(boolean isReport, String data) {
+        if (isReport)
+            return vendaDao.getVendasDashboardReport(data);
+        else
+            return vendaDao.getVendasDashboard();
     }
 
     public List<Venda> getVendasPorDataExport(String data) {

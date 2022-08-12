@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Maybe;
 
 @Dao
 public abstract class VendaDao {
@@ -178,6 +179,12 @@ public abstract class VendaDao {
 
     @Query("SELECT COUNT(id) FROM vendas  WHERE estado = 3")
     public abstract LiveData<Long> getVendasLixeiraCount();
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
+    public abstract Maybe<List<Venda>> getVendasDashboard();
+
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
+    public abstract Maybe<List<Venda>> getVendasDashboardReport(String data);
 
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {

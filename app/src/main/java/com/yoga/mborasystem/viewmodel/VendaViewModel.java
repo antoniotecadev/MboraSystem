@@ -188,6 +188,15 @@ public class VendaViewModel extends AndroidViewModel {
         return produtosVenda;
     }
 
+    private MutableLiveData<List<Venda>> vendasDashboard;
+
+    public MutableLiveData<List<Venda>> getVendasDashboard() {
+        if (vendasDashboard == null) {
+            vendasDashboard = new MutableLiveData<>();
+        }
+        return vendasDashboard;
+    }
+
     private MutableLiveData<Ultilitario.Operacao> valido;
 
     public MutableLiveData<Ultilitario.Operacao> getValido() {
@@ -271,17 +280,20 @@ public class VendaViewModel extends AndroidViewModel {
                     else
                         getListaVendasLiveData().setValue(vendas);
                 }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
-//        compositeDisposable.add(vendaRepository.getVendas(idcliente, isdivida, idusuario, isLixeira)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(vendas -> {
-//                    getListaVendasLiveData().setValue(vendas);
-//                    Ultilitario.swipeRefreshLayout(mySwipeRefreshLayout);
-//                    MainActivity.dismissProgressBar();
-//                }, e -> {
-//                    MainActivity.dismissProgressBar();
-//                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-//                }));
+    }
+
+    public void consultarVendasDashboard(boolean isReport, String data) {
+        compositeDisposable.add(vendaRepository.getVendasDashboard(isReport, data)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(vendas -> {
+                    if (isReport)
+                        getVendasGuardarImprimir().setValue(new Event<>(vendas));
+                    else
+                        getVendasDashboard().setValue(vendas);
+                }, e -> {
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                }));
     }
 
     public LiveData<Long> getQuantidadeVenda(boolean isLixeira, long idcliente, boolean isDivida, long idusuario, boolean isData, String data, LifecycleOwner lifecycleOwner) {
@@ -289,36 +301,8 @@ public class VendaViewModel extends AndroidViewModel {
         return null;
     }
 
-//    public void searchVendas(String referencia, long idcliente, boolean isDivida, long idusuario, boolean isLixeira) {
-//        compositeDisposable.add(vendaRepository.getSearchVendas(referencia, idcliente, isDivida, idusuario, isLixeira)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(vendas -> {
-//                    getListaVendasLiveData().setValue(vendas);
-//                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-//                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
-//    }
-
     public void getVendasPorDataExport(String data) {
         getVendasParaExportar().postValue(new Event<>(vendaRepository.getVendasPorDataExport(data)));
-    }
-
-    public void getVendasPorData(String data, boolean isExport, long idcliente, boolean isDivida, long idusuario, boolean isVenda) {
-//        compositeDisposable.add(vendaRepository.getVendasPorData(data, idcliente, isDivida, idusuario)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(vendas -> {
-//                    if (isExport) {
-//                        getVendasParaExportar().setValue(new Event<>(vendas));
-//                    } else {
-//                        if (isVenda) {
-//                            getListaVendasLiveData().setValue(vendas);
-//                        } else {
-//                            getVendasGuardarImprimir().setValue(new Event<>(vendas));
-//                        }
-//                    }
-//                    getValido().setValue(Ultilitario.Operacao.NENHUMA);
-//                }, throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void importarVenda(List<String> vendas) {

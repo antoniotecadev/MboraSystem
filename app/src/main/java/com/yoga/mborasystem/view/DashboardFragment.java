@@ -117,8 +117,8 @@ public class DashboardFragment extends Fragment {
                 }
         });
 
-        vendaViewModel.consultarVendas(null, 0, false, 0, false);
-        vendaViewModel.getListaVendasLiveData().observe(getViewLifecycleOwner(), vendas -> {
+        vendaViewModel.consultarVendasDashboard(false, null);
+        vendaViewModel.getVendasDashboard().observe(getViewLifecycleOwner(), vendas -> {
             if (vendas.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.venda_nao_encontrada), Toast.LENGTH_LONG).show();
             } else {
@@ -323,7 +323,7 @@ public class DashboardFragment extends Fragment {
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        vendaViewModel.getVendasPorData(data, false, 0, false, 0, false);
+                        vendaViewModel.consultarVendasDashboard(true, data);
                         dialog.dismiss();
                     }).show();
         }));
@@ -331,7 +331,7 @@ public class DashboardFragment extends Fragment {
         vendaViewModel.getVendasGuardarImprimir().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             this.vendas.clear();
             if (vendas.isEmpty()) {
-                Ultilitario.alertDialog(getString(R.string.vendas), getString(R.string.nao_tem_venda) + " (" + this.data + ")", requireContext(), R.drawable.ic_baseline_store_24);
+                Ultilitario.alertDialog(getString(R.string.vendas), getString(R.string.nao_tem_venda) + " (" + this.data + ")", requireContext(), R.drawable.ic_baseline_insert_drive_file_24);
             } else {
                 this.vendas.addAll(vendas);
                 vendaViewModel.getProdutosVenda(0, null, this.data, true);
@@ -429,7 +429,7 @@ public class DashboardFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.relatorioDiarioVenda:
                 new AlertDialog.Builder(getActivity())
-                        .setIcon(R.drawable.ic_baseline_store_24)
+                        .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
                         .setTitle(R.string.rel_dia_ven)
                         .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
                             this.idItem = i;
