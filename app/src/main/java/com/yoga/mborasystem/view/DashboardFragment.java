@@ -38,6 +38,7 @@ import org.eazegraph.lib.models.ValueLinePoint;
 import org.eazegraph.lib.models.ValueLineSeries;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -69,7 +70,6 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         cliente = new Cliente();
         vendas = new ArrayList<>();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
@@ -342,7 +342,32 @@ public class DashboardFragment extends Fragment {
             facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
             guardarImprimirRelatorioVendaDiaria(idItem, facturaPath, this.vendas, produtos);
         }));
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_dashboard, menu);
+            }
 
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                switch (menuItem.getItemId()) {
+                    case R.id.relatorioDiarioVenda:
+                        new AlertDialog.Builder(getActivity())
+                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                                .setTitle(R.string.rel_dia_ven)
+                                .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
+                                    idItem = i;
+                                    DashboardFragmentDirections.ActionDashboardFragmentToDatePickerFragment direction = DashboardFragmentDirections.actionDashboardFragmentToDatePickerFragment(false);
+                                    Navigation.findNavController(requireView()).navigate(direction);
+                                }).show();
+                        break;
+                    default:
+                        break;
+                }
+                return NavigationUI.onNavDestinationSelected(menuItem, navController);
+            }
+        }, getViewLifecycleOwner());
         return binding.getRoot();
     }
 
@@ -423,27 +448,6 @@ public class DashboardFragment extends Fragment {
         mCubicValueLineChart.addSeries(series);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        switch (item.getItemId()) {
-            case R.id.relatorioDiarioVenda:
-                new AlertDialog.Builder(getActivity())
-                        .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
-                        .setTitle(R.string.rel_dia_ven)
-                        .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
-                            this.idItem = i;
-                            DashboardFragmentDirections.ActionDashboardFragmentToDatePickerFragment direction = DashboardFragmentDirections.actionDashboardFragmentToDatePickerFragment(false);
-                            Navigation.findNavController(requireView()).navigate(direction);
-                        }).show();
-                break;
-            default:
-                break;
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
-    }
-
     private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath, List<Venda> venda, List<ProdutoVenda> produtoVendas) {
         Handler handler = new Handler(Looper.getMainLooper());
         executor = Executors.newSingleThreadExecutor();
@@ -454,12 +458,6 @@ public class DashboardFragment extends Fragment {
                 getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler, getView());
             }
         });
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_dashboard, menu);
     }
 
     @Override
