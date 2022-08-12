@@ -35,7 +35,6 @@ import com.yoga.mborasystem.view.FacturaFragmentDirections;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -197,15 +196,6 @@ public class VendaViewModel extends AndroidViewModel {
         return vendasDashboard;
     }
 
-    private MutableLiveData<Ultilitario.Operacao> valido;
-
-    public MutableLiveData<Ultilitario.Operacao> getValido() {
-        if (valido == null) {
-            valido = new MutableLiveData<>();
-        }
-        return valido;
-    }
-
     private long idvenda;
 
     @SuppressLint("CheckResult")
@@ -291,9 +281,7 @@ public class VendaViewModel extends AndroidViewModel {
                         getVendasGuardarImprimir().setValue(new Event<>(vendas));
                     else
                         getVendasDashboard().setValue(vendas);
-                }, e -> {
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
-                }));
+                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public LiveData<Long> getQuantidadeVenda(boolean isLixeira, long idcliente, boolean isDivida, long idusuario, boolean isData, String data, LifecycleOwner lifecycleOwner) {
@@ -362,7 +350,7 @@ public class VendaViewModel extends AndroidViewModel {
         Completable.fromAction(() -> vendaRepository.eliminarVendaLixeira(estado, data, venda, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
@@ -389,7 +377,7 @@ public class VendaViewModel extends AndroidViewModel {
         Completable.fromAction(() -> vendaRepository.restaurarVenda(estado, idvenda, todasVendas))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -422,11 +410,11 @@ public class VendaViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
+        if (disposable.isDisposed()) {
             disposable.dispose();
         }
-        if (compositeDisposable != null || !Objects.requireNonNull(compositeDisposable).isDisposed()) {
-            compositeDisposable.clear();
+        if (compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
         }
         if (executor != null)
             executor.shutdownNow();
