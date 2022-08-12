@@ -362,6 +362,9 @@ public class DashboardFragment extends Fragment {
                                     Navigation.findNavController(requireView()).navigate(direction);
                                 }).show();
                         break;
+                    case R.id.calculadoraFragmentItem:
+                        Navigation.findNavController(requireView()).navigate(R.id.action_dashboardFragment_to_calculadoraFragment);
+                        break;
                     default:
                         break;
                 }

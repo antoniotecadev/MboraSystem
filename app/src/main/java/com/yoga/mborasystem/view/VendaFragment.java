@@ -304,6 +304,9 @@ public class VendaFragment extends Fragment {
                     case R.id.btnRestaurarTodosLixo:
                         dialogEliminarReataurarTodasVendasLixeira(getString(R.string.rest_vds), getString(R.string.rest_tdas_vds), false);
                         break;
+                    case R.id.calculadoraFragmentItem:
+                        Navigation.findNavController(requireView()).navigate(R.id.action_vendaFragment_to_calculadoraFragment);
+                        break;
                     default:
                         break;
                 }

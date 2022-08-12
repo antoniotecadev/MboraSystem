@@ -31,6 +31,12 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/calculadoraFragmentItem"
+        android:icon="@drawable/ic_baseline_calculate_24"
+        android:title="@string/calc"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
         android:id="@+id/btnEliminarTodosLixo"
         android:icon="@drawable/ic_eliminar"
         android:title="@string/elim_tdas"

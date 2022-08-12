@@ -330,6 +330,9 @@
                 android:name="isMaster"
                 android:defaultValue="false"
                 app:argType="boolean" />
+            <action
+                android:id="@+id/action_vendaFragment_to_calculadoraFragment"
+                app:destination="@id/calculadoraFragment" />
         </fragment>
         <dialog
             android:id="@+id/datePickerFragment"
@@ -425,6 +428,9 @@
             <action
                 android:id="@+id/action_dashboardFragment_to_datePickerFragment"
                 app:destination="@id/datePickerFragment" />
+            <action
+                android:id="@+id/action_dashboardFragment_to_calculadoraFragment"
+                app:destination="@id/calculadoraFragment" />
         </fragment>
         <fragment
             android:id="@+id/configuracaoFragment"
