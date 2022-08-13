@@ -292,7 +292,7 @@
     <string name="digite_valor_pago">Entrez le montant payé</string>
     <string name="factura_recibo">FACTURE /REÇU</string>
     <string name="clienteupper">CLIENT:</string>
-    <string name="desc_prec_qtd_val">Remise Prix Qté Valeur</string>
+    <string name="desc_prec_qtd_val">Description Prix Quantité Total</string>
     <string name="total_desc">Remise totale</string>
     <string name="pago">Paiement</string>
     <string name="pagamento">Paiement:</string>

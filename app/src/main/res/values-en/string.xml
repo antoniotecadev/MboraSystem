@@ -292,7 +292,7 @@
     <string name="digite_valor_pago">Enter the amount paid</string>
     <string name="factura_recibo">INVOICE /RECEIPT</string>
     <string name="clienteupper">CLIENT:</string>
-    <string name="desc_prec_qtd_val">Discount Price Qty Value</string>
+    <string name="desc_prec_qtd_val">Description Price Total Quantity</string>
     <string name="total_desc">Total Discount</string>
     <string name="pago">Payment</string>
     <string name="pagamento">Payment:</string>

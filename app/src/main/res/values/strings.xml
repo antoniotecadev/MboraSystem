@@ -306,7 +306,7 @@
     <string name="digite_valor_pago">Digite o valor pago</string>
     <string name="factura_recibo">FACTURA/RECIBO</string>
     <string name="clienteupper">CLIENTE:</string>
-    <string name="desc_prec_qtd_val">Desc Preco Qtd Valor</string>
+    <string name="desc_prec_qtd_val">Descrição Preço Quantidade Total</string>
     <string name="total_desc">Total Desconto</string>
     <string name="pago">Pago</string>
     <string name="pagamento">Pagamento:</string>
