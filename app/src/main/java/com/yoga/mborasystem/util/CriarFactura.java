@@ -92,7 +92,7 @@ public class CriarFactura {
             addNewItem(document, activity.getString(R.string.data) + (dataEmissao.isEmpty() ? Ultilitario.getDateCurrent() : dataEmissao), Element.ALIGN_LEFT, font);
             addLineSpace(document);
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.BOLD, BaseColor.BLACK);
-            addNewItem(document, activity.getString(R.string.factura_recibo) + "\n" + referenciaFactura + "\n\n", Element.ALIGN_CENTER, facturaReciboFont);
+            addNewItem(document, activity.getString(R.string.factura_recibo) + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
             addNewItem(document, activity.getString(R.string.clienteupper) + " " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
             addNewItem(document, activity.getString(R.string.nif) + " " + (txtNomeCliente.getText().toString().isEmpty() ? "" : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2]), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
@@ -115,7 +115,6 @@ public class CriarFactura {
             addNewItem(document, activity.getString(R.string.pagamento) + " " + formaPagamento, Element.ALIGN_LEFT, font);
             addNewItem(document, activity.getString(R.string.operador) + (idOperador > 0 ? " MSU" + idOperador : " MSA" + cliente.getId()), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
-            addLineSpace(document);
             document.add(qr_code_image);
             addNewItem(document, ReferenciaFactura, Element.ALIGN_CENTER, font);
             document.close();
