@@ -78,7 +78,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
 
         @Override
         public CharSequence convertResultToString(Object resultValue) {
-            return ((ClienteCantina) resultValue).getNome() + " - " + ((ClienteCantina) resultValue).getId();
+            return ((ClienteCantina) resultValue).getNome() + " - " + ((ClienteCantina) resultValue).getId() + " - " + ((ClienteCantina) resultValue).getNif();
         }
     };
 
