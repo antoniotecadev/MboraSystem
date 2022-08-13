@@ -40,10 +40,10 @@ import java.util.List;
 
 public class RelatorioDiariaVenda {
 
-    private static long totalVendas;
-    private static int quantidadeProdutos;
-    private static int totalDescontos;
-    private static int totalDividas;
+    private static long totalVendas = 0;
+    private static int quantidadeProdutos = 0;
+    private static int totalDescontos = 0;
+    private static int totalDividas = 0;
 
     public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, Handler handler, View view) {
         Dexter.withContext(activity)
