@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
@@ -91,8 +92,8 @@ public class CriarFactura {
             addNewItem(document, activity.getString(R.string.data) + (dataEmissao.isEmpty() ? Ultilitario.getDateCurrent() : dataEmissao), Element.ALIGN_LEFT, font);
             addLineSpace(document);
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 36.0f, Font.BOLD, BaseColor.BLACK);
-            addNewItem(document, activity.getString(R.string.factura_recibo) + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
-            addNewItem(document, activity.getString(R.string.clienteupper) + " " + txtNomeCliente.getText().toString(), Element.ALIGN_LEFT, font);
+            addNewItem(document, activity.getString(R.string.factura_recibo) + "\n" + referenciaFactura + "\n\n", Element.ALIGN_CENTER, facturaReciboFont);
+            addNewItem(document, activity.getString(R.string.clienteupper) + " " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.desc_prec_qtd_val), Element.ALIGN_CENTER, font);
             addLineSeparator(document);
