@@ -691,10 +691,15 @@ public class FacturaFragment extends Fragment {
             idcliente = 0;
         }
         if (somatorioValorFormaPagamento() == valorPago) {
+            int quantidadeProduto = 0;
+            for (Map.Entry<Long, Produto> produto : produtos.entrySet())
+                quantidadeProduto += (precoTotal.get(produto.getKey()) / produto.getValue().getPreco());
+
+            int finalQuantidadeProduto = quantidadeProduto;
             new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.confirmar_venda)
                     .setMessage(getString(R.string.cliente) + ": " + nomeIDcliente[0] + "\n" +
-                            getString(R.string.quantidade) + ": " + adapterFactura.getItemCount() + "\n"
+                            getString(R.string.quantidade) + ": " + quantidadeProduto + "\n"
                             + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
                             + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(Objects.requireNonNull(binding.textDesconto.getText()).toString()) + "\n"
                             + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
@@ -708,11 +713,11 @@ public class FacturaFragment extends Fragment {
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
                         if (getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(requireActivity())).equals(getDataSplitDispositivo(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())))) {
-                            vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, adapterFactura.getItemCount(), valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
+                            vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, finalQuantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         } else {
                             if (isNetworkConnected(requireContext())) {
                                 if (internetIsConnected()) {
-                                    estadoConta(cliente.getImei(), nomeIDcliente[0].trim());
+                                    estadoConta(cliente.getImei(), nomeIDcliente[0].trim(), finalQuantidadeProduto);
                                 } else {
                                     Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
                                     MainActivity.dismissProgressBar();
@@ -998,7 +1003,7 @@ public class FacturaFragment extends Fragment {
     private String mensagem;
     private byte estadoConta, termina;
 
-    private void estadoConta(String imei, String nomeIDcliente) {
+    private void estadoConta(String imei, String nomeIDcliente, int quantidadeProduto) {
         String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
@@ -1017,7 +1022,7 @@ public class FacturaFragment extends Fragment {
                             Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), R.drawable.ic_baseline_person_add_disabled_24);
                         } else if (estadoConta == Ultilitario.UM && termina == Ultilitario.ZERO) {
                             Ultilitario.setSharedPreferencesDataDispositivo(requireActivity());
-                            vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, adapterFactura.getItemCount(), valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
+                            vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, quantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         }
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
@@ -1028,7 +1033,7 @@ public class FacturaFragment extends Fragment {
                                 .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
                                     dialog.dismiss();
                                     MainActivity.getProgressBar();
-                                    estadoConta(imei, nomeIDcliente);
+                                    estadoConta(imei, nomeIDcliente, quantidadeProduto);
                                 })
                                 .show();
                     }
