@@ -45,18 +45,18 @@ import java.util.Objects;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String ReferenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao) {
+    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String ReferenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, ReferenciaFactura, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao);
+                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, ReferenciaFactura, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, ReferenciaFactura, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao);
+                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, ReferenciaFactura, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
                     }
 
                     @Override
@@ -66,7 +66,7 @@ public class CriarFactura {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String ReferenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao) {
+    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, String ReferenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -91,7 +91,7 @@ public class CriarFactura {
             addNewItem(document, activity.getString(R.string.data) + (dataEmissao.isEmpty() ? Ultilitario.getDateCurrent() : dataEmissao), Element.ALIGN_LEFT, font);
             addLineSpace(document);
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 36.0f, Font.BOLD, BaseColor.BLACK);
-            addNewItem(document, activity.getString(R.string.factura_recibo), Element.ALIGN_CENTER, facturaReciboFont);
+            addNewItem(document, activity.getString(R.string.factura_recibo) + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
             addNewItem(document, activity.getString(R.string.clienteupper) + " " + txtNomeCliente.getText().toString(), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.desc_prec_qtd_val), Element.ALIGN_CENTER, font);

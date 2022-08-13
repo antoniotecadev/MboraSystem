@@ -486,7 +486,7 @@ public class FacturaFragment extends Fragment {
             if (idvenda > 0) {
                 if (!referenciaFactura.isEmpty()) {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao);
+                    CriarFactura.getPemissionAcessStoregeExternal(true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
@@ -497,7 +497,7 @@ public class FacturaFragment extends Fragment {
             if (idvenda > 0) {
                 if (!referenciaFactura.isEmpty()) {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao);
+                    CriarFactura.getPemissionAcessStoregeExternal(false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
                 } else {
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
                 }
