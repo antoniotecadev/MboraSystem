@@ -41,7 +41,9 @@ import java.util.List;
 public class RelatorioDiariaVenda {
 
     private static long totalVendas;
-    private static int quantidadeVendas, quantidadeProdutos, quantidadeProdutosDistinto, totalDescontos, totalDividas;
+    private static int quantidadeProdutos;
+    private static int totalDescontos;
+    private static int totalDividas;
 
     public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, Handler handler, View view) {
         Dexter.withContext(activity)
@@ -85,7 +87,7 @@ public class RelatorioDiariaVenda {
             addNewItem(document, activity.getString(R.string.data) + Ultilitario.getDateCurrent(), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.vendas), Element.ALIGN_CENTER, titleFont);
-            quantidadeVendas = vendas.size();
+            int quantidadeVendas = vendas.size();
             for (Venda venda : vendas) {
                 totalVendas += venda.getTotal_venda();
                 totalDescontos += venda.getDesconto();
@@ -107,7 +109,7 @@ public class RelatorioDiariaVenda {
             }
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.produtos), Element.ALIGN_CENTER, titleFont);
-            quantidadeProdutosDistinto = produtoVendas.size();
+            int quantidadeProdutosDistinto = produtoVendas.size();
             for (ProdutoVenda produto : produtoVendas) {
                 quantidadeProdutos += produto.getQuantidade();
                 addLineSeparator(document);

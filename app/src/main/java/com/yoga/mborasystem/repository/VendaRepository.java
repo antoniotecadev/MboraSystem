@@ -16,7 +16,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 
 public class VendaRepository {
@@ -83,7 +82,7 @@ public class VendaRepository {
         vendaDao.insertVenda(vendas);
     }
 
-    public Flowable<List<ProdutoVenda>> getProdutosVenda(long idvenda, String codQr, String data, boolean isGuardarImprimir) {
+    public Maybe<List<ProdutoVenda>> getProdutosVenda(long idvenda, String codQr, String data, boolean isGuardarImprimir) {
         if (isGuardarImprimir) {
             return vendaDao.getProdutoVenda(data);
         } else {
