@@ -101,7 +101,7 @@ public class CriarFactura {
             for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
                 String preco = String.valueOf(produto.getValue().getPreco());
                 String valor = String.valueOf(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())).intValue());
-                addNewItem(document, produto.getValue().getNome() + " " + (produto.getValue().isIva() ? context.getString(R.string.iva_factura) : "") + " " + preco.substring(0, preco.length() - 2) + " " + Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco() + ". " + valor.substring(0, valor.length() - 2), Element.ALIGN_LEFT, font);
+                addNewItem(document, produto.getValue().getNome() + " " + (produto.getValue().isIva() ? context.getString(R.string.iva_factura) : "") + " " + Ultilitario.formatPreco(preco).replaceAll("Kz", "") + " " + Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco() + ". " + Ultilitario.formatPreco(valor).replaceAll("Kz", ""), Element.ALIGN_LEFT, font);
             }
             addLineSeparator(document);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.total), Ultilitario.formatPreco(String.valueOf(totalVenda)), font, font);
