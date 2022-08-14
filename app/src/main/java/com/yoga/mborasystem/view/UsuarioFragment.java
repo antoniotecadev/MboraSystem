@@ -134,7 +134,7 @@ public class UsuarioFragment extends Fragment {
                     h.binding.btnEliminar.setVisibility(View.GONE);
                 }
                 h.binding.txtNomeUsuario.setText(us.getNome());
-                h.binding.txtTel.setText(us.getTelefone() + " / MS" + us.getId());
+                h.binding.txtTel.setText(us.getTelefone() + " / MSU" + us.getId());
                 h.binding.txtEnd.setText(us.getEndereco());
                 h.binding.txtBloquear.setText(us.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
                 h.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> {
