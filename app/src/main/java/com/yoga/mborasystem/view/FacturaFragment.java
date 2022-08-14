@@ -599,15 +599,18 @@ public class FacturaFragment extends Fragment {
         alertDialog.dismiss();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void restaurar() {
         binding.txtNomeCliente.setText("");
         estado.clear();
         produtos.clear();
         adapterFactura.clear();
+        itemView.clear();
         precoTotal.clear();
         valor.clear();
         iva.clear();
         posicao.clear();
+        pagingAdapter.notifyDataSetChanged();
         total = 0;
         totaldesconto = 0;
         valorBase = 0;
@@ -637,7 +640,7 @@ public class FacturaFragment extends Fragment {
         Ultilitario.zerarPreco(binding.cartaoValorPago);
         Ultilitario.zerarPreco(binding.depValorPago);
         Ultilitario.zerarPreco(binding.transfValorPago);
-        consultarProdutos(idc, false, null, false);
+        binding.scrollView.smoothScrollTo(0,0);
     }
 
     private void abrirCamera() {
