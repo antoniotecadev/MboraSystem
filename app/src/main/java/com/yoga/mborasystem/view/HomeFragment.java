@@ -9,6 +9,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -35,6 +36,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
@@ -52,7 +54,7 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
-    String language = "";
+    String nomeOperador, language = "";
     private Cliente cliente;
     private boolean isOpen = false;
     private FragmentHomeBinding binding;
@@ -69,6 +71,7 @@ public class HomeFragment extends Fragment {
         FabRClockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
         FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
         assert getArguments() != null;
+        nomeOperador = getArguments().getString("nome");
         cliente = getArguments().getParcelable("cliente");
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
@@ -78,6 +81,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        PreferenceManager.getDefaultSharedPreferences(requireActivity()).edit().putString("nomeoperador", nomeOperador).apply();
         Toolbar toolbar = binding.toolbar;
         toolbar.inflateMenu(R.menu.menu_bloquear);
         toolbar.setOnMenuItemClickListener(item -> {
