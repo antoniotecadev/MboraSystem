@@ -367,7 +367,7 @@ public class VendaFragment extends Fragment {
                 h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_iva())));
                 h.binding.textForPag.setText(venda.getPagamento());
                 h.binding.textDatVen.setText(venda.getData_cria());
-                h.binding.textOper.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA" + venda.getIdoperador()));
+                h.binding.textOper.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA0"));
                 h.binding.btnEntrar.setOnClickListener(v -> {
                     VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                     Navigation.findNavController(requireView()).navigate(directions);
