@@ -268,10 +268,6 @@
     <string name="percentagem">%</string>
     <string name="valor_kwanza">Value in kwanza</string>
     <string name="forma_pagamento">Form of payment:</string>
-    <string name="cartao_multicaixa">ATM card</string>
-    <string name="dinheiro">Money</string>
-    <string name="deposito_bancario">Bank deposit</string>
-    <string name="transferencia_bancario">Bank transfer</string>
     <string name="efectuar_venda">Make sale</string>
     <string name="verificar_venda">Check Sale</string>
     <string name="total_desconto">Total with discount</string>

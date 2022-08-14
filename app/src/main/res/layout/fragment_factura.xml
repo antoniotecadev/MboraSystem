@@ -541,12 +541,12 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.checkbox.MaterialCheckBox
-                        android:id="@+id/checkbox_dinheiro"
+                        android:id="@+id/checkbox_numerario"
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
-                        android:text="@string/dinheiro" />
+                        android:text="Numerário" />
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/dinheiroValorPago"

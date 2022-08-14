@@ -112,7 +112,7 @@ public class CriarFactura {
             addNewLineWithLeftAndRight(document, "Total Pago", Ultilitario.formatPreco(String.valueOf(valorPago)), font, font);
             addNewLineWithLeftAndRight(document, "Troco", Ultilitario.formatPreco(String.valueOf(troco)), font, font);
             addLineSeparator(document);
-            addNewItem(document,"Pagamento" + formaPagamento, Element.ALIGN_LEFT, font);
+            addNewItem(document,"Pagamento: " + formaPagamento, Element.ALIGN_LEFT, font);
             addNewItem(document,"Operador: " + (idOperador > 0 ? " MSU" + idOperador : " MSA" + cliente.getId()), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             document.add(qr_code_image);

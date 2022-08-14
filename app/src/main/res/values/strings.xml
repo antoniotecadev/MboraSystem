@@ -282,10 +282,10 @@
     <string name="percentagem">%</string>
     <string name="valor_kwanza">Valor em kwanza</string>
     <string name="forma_pagamento">Forma de pagamento:</string>
-    <string name="cartao_multicaixa">Cartão Multicaixa</string>
-    <string name="dinheiro">Dinheiro</string>
-    <string name="deposito_bancario">Depósito Bancário</string>
-    <string name="transferencia_bancario">Transferência Bancária</string>
+    <string name="cartao_multicaixa" translatable="false">Cartão Multicaixa</string>
+    <string name="numerario" translatable="false">Numerário</string>
+    <string name="deposito_bancario" translatable="false">Depósito Bancário</string>
+    <string name="transferencia_bancario" translatable="false">Transferência Bancária</string>
     <string name="efectuar_venda">Efectuar Venda</string>
     <string name="verificar_venda">Verificar Venda</string>
     <string name="total_desconto">Total com desconto</string>
