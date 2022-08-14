@@ -200,7 +200,7 @@ public class ClienteViewModel extends AndroidViewModel {
         Completable.fromAction(() -> clienteRepository.update(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -244,7 +244,7 @@ public class ClienteViewModel extends AndroidViewModel {
         Completable.fromAction(() -> clienteRepository.alterarSenha(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -301,7 +301,7 @@ public class ClienteViewModel extends AndroidViewModel {
         Completable.fromAction(() -> clienteRepository.insert(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -452,7 +452,7 @@ public class ClienteViewModel extends AndroidViewModel {
         Completable.fromAction(() -> clienteRepository.delete(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CompletableObserver() {
+                .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
                         disposable = d;
@@ -473,7 +473,7 @@ public class ClienteViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null || !Objects.requireNonNull(disposable).isDisposed()) {
+        if (disposable.isDisposed()) {
             disposable.dispose();
         }
         if (executor != null)
