@@ -572,66 +572,47 @@ public class Ultilitario {
     }
 
     public static void setSharedPreferencesDataDispositivo(Activity activity) {
-        SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("data", monthInglesFrances(Ultilitario.getDateCurrent()));
-        editor.apply();
+        activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE).edit().putString("data", monthInglesFrances(Ultilitario.getDateCurrent())).apply();
     }
 
     public static String getSharedPreferencesDataDispositivo(Activity activity) {
-        SharedPreferences sharedPref = activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE);
-        return sharedPref.getString("data", "00-00-0000");
+        return activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE).getString("data", "00-00-0000");
     }
 
     public static String getTaxaIva(Activity activity) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        return sharedPreferences.getString("taxa_iva", "0");
+        return PreferenceManager.getDefaultSharedPreferences(activity).getString("taxa_iva", "0");
     }
 
     public static String getMotivoIsencao(Activity activity) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        return sharedPreferences.getString("motivo_isencao", "M00");
+        return PreferenceManager.getDefaultSharedPreferences(activity).getString("motivo_isencao", "M00");
     }
 
     public static boolean getNaoMostrarNovamente(Activity activity) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        return sharedPreferences.getBoolean("switch_most_nov", false);
+        return PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("switch_most_nov", false);
     }
 
     public static void setNaoMostrarNovamente(Activity activity, boolean estado) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("switch_most_nov", estado);
-        editor.apply();
+        PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("switch_most_nov", estado).apply();
     }
 
     public static String getAPN(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString("apn", "");
+        return PreferenceManager.getDefaultSharedPreferences(context).getString("apn", "");
     }
 
     public static void setAPN(Context context, String apn) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("apn", apn);
-        editor.apply();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("apn", apn).apply();
     }
 
     public static boolean getActivarAutenticacaoBiometrica(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean("autenticacaobiometrica", true);
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("autenticacaobiometrica", true);
     }
 
     public static boolean getBooleanPreference(Context context, String idvalue) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean(idvalue, false);
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(idvalue, false);
     }
 
     public static void setBooleanPreference(Context context, boolean value, String idvalue) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(idvalue, value);
-        editor.apply();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(idvalue, value).apply();
     }
 
     public static String monthInglesFrances(String data) {
@@ -693,8 +674,7 @@ public class Ultilitario {
     }
 
     public static String getSharedPreferencesIdioma(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString("lista_idioma", "Português");
+        return PreferenceManager.getDefaultSharedPreferences(context).getString("lista_idioma", "Português");
     }
 
     public static int getIdIdioma(Context context) {
