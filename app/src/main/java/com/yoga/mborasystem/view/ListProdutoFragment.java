@@ -467,6 +467,7 @@ public class ListProdutoFragment extends Fragment {
             produto.setEstado(Ultilitario.TRES);
             produto.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
+            alert.setIcon(android.R.drawable.ic_menu_delete);
             alert.setTitle(titulo);
             alert.setMessage(mensagem);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> produtoViewModel.eliminarProduto(produto, !permanente, null, false)
