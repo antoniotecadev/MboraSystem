@@ -575,7 +575,7 @@
     <string name="tem_cert_elim_fich">Tem a certeza que quer eliminar este ficheiro?</string>
     <string name="tem_cert_fech">Tem a certeza que quer fechar sem guardar ou imprimir esta venda?</string>
     <string name="sm_prm_na_vis_doc">Sem permissão não pode ver documentos</string>
-    <string name="n_most_nov">Não mostrar novamente</string>
+    <string name="n_most_nov">Não mostrar novamente.</string>
     <string name="n_most_nov_config">Não mostrar novamente \na caixa de mensagem de venda efectuada ao fechar</string>
     <string name="br_na_enc_mun">Bairros não encotrados neste município</string>
     <string name="meu_qr_code">Meu código Qr</string>

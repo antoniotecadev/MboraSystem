@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Checkable;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -516,12 +518,26 @@ public class FacturaFragment extends Fragment {
         vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(alertDialog -> {
             if (alertDialog != null && !Ultilitario.getNaoMostrarNovamente(requireActivity())) {
                 if (facturaPath.isEmpty()) {
+                    LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
+                    MaterialCheckBox check = new MaterialCheckBox(requireContext());
+                    check.setText(getString(R.string.n_most_nov));
+                    layout.setPadding(45, 0, 0, 0);
+                    layout.addView(check);
+                    check.setOnCheckedChangeListener((compoundButton, b) -> {
+                        if (b)
+                            Ultilitario.setNaoMostrarNovamente(requireActivity(), true);
+                        else
+                            Ultilitario.setNaoMostrarNovamente(requireActivity(), false);
+                    });
                     new AlertDialog.Builder(requireContext())
                             .setIcon(R.drawable.ic_baseline_store_24)
                             .setTitle(R.string.fechar)
                             .setMessage(R.string.tem_cert_fech)
-                            .setNeutralButton(getString(R.string.n_most_nov), (dialogInterface, i) -> Ultilitario.setNaoMostrarNovamente(requireActivity(), true))
-                            .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
+                            .setView(layout)
+                            .setNegativeButton(R.string.nao, (dialogInterface, i) -> {
+                                Ultilitario.setNaoMostrarNovamente(requireActivity(), false);
+                                dialogInterface.dismiss();
+                            })
                             .setPositiveButton(R.string.sim, (dialogInterface, i) -> fecharAlertDialog(alertDialog)).show();
                 } else {
                     fecharAlertDialog(alertDialog);

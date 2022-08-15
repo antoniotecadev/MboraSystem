@@ -553,7 +553,7 @@
     <string name="tem_cert_elim_fich">Voulez-vous vraiment supprimer ce fichier ?</string>
     <string name="tem_cert_fech">Êtes-vous sûr de vouloir conclure sans enregistrer ni imprimer cette vente ?</string>
     <string name="sm_prm_na_vis_doc">Sans autorisation, impossible de visualiser les documents</string>
-    <string name="n_most_nov">Ne pas montrer de nouveau</string>
+    <string name="n_most_nov">Ne pas montrer de nouveau.</string>
     <string name="br_na_enc_mun">Quartiers introuvables dans cette commune</string>
     <string name="meu_qr_code">Mon code QR</string>
     <string name="part_me_cod_qr">Partager mon code QR</string>
