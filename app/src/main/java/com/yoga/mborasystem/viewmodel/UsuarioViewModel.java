@@ -9,10 +9,10 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -70,11 +70,11 @@ public class UsuarioViewModel extends AndroidViewModel {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
-    public void criarUsuario(EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void criarUsuario(EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
         validarUsuario(Ultilitario.Operacao.CRIAR, 0, nome, telefone, endereco, estado, codigoPin, codigoPinNovamente, dialog);
     }
 
-    public void actualizarUsuario(long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void actualizarUsuario(long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
         validarUsuario(Ultilitario.Operacao.ACTUALIZAR, id, nome, telefone, endereco, estado, codigoPin, codigoPinNovamente, dialog);
     }
 
@@ -87,7 +87,7 @@ public class UsuarioViewModel extends AndroidViewModel {
         return listaUsuarios;
     }
 
-    public void validarUsuario(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void validarUsuario(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
         if (isCampoVazio(nome.getText().toString()) || Ultilitario.letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
