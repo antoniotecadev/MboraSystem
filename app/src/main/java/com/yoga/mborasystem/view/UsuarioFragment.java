@@ -174,8 +174,9 @@ public class UsuarioFragment extends Fragment {
         private void deleteUser(String msg, Usuario usuario) {
             usuarioViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.eliminar) + " (" + usuario.getNome() + ")")
-                    .setMessage(msg)
+                    .setIcon(android.R.drawable.ic_menu_delete)
+                    .setTitle(getString(R.string.eliminar))
+                    .setMessage("(" + usuario.getNome() + ")\n" + msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> usuarioViewModel.eliminarUsuario(usuario, null))
                     .show();
