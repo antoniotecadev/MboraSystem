@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
                     break;
                 case R.id.gerarQrCode:
                     if (getArguments() != null)
-                        Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa());
+                        Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
                     break;
                 case R.id.sairApp:
                     sairApp();
@@ -250,7 +250,7 @@ public class HomeFragment extends Fragment {
                         break;
                     case R.id.gerarCodigoQr:
                         if (getArguments() != null)
-                            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa());
+                            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
                         break;
                     case R.id.config:
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);

@@ -126,7 +126,7 @@ public class FacturaFragment extends Fragment {
                 barcodeView.setStatusText(result.getText() + "  " + getString(R.string.ja_scaneado));
                 beepManager.playBeepSoundAndVibrate();
                 consultarProdutos(idc, true, resultCodeBar, true);
-                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false, null, "", "");
+                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false, null, "", "", "");
             }
         }
 
@@ -640,7 +640,7 @@ public class FacturaFragment extends Fragment {
         Ultilitario.zerarPreco(binding.cartaoValorPago);
         Ultilitario.zerarPreco(binding.depValorPago);
         Ultilitario.zerarPreco(binding.transfValorPago);
-        binding.scrollView.smoothScrollTo(0,0);
+        binding.scrollView.smoothScrollTo(0, 0);
     }
 
     private void abrirCamera() {
