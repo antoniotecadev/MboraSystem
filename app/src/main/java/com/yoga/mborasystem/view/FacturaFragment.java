@@ -352,7 +352,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorDivida.setText("" + ((total - desconto) - valorPago));
                 } else {
                     buttonView.setChecked(false);
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.no_pos_apl_div), R.drawable.ic_toast_erro);
+                    Ultilitario.alertDialog(getString(R.string.dvd), getString(R.string.no_pos_apl_div), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } else {
                 binding.switchEdit.setChecked(false);
@@ -737,7 +737,7 @@ public class FacturaFragment extends Fragment {
                     })
                     .show();
         } else {
-            Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.smt_siff), R.drawable.ic_toast_erro);
+            Ultilitario.alertDialog(getString(R.string.forma_pagamento), getString(R.string.smt_siff), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
     }
 
