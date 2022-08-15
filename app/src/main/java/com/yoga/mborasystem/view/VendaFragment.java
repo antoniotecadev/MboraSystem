@@ -18,9 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -338,7 +336,6 @@ public class VendaFragment extends Fragment {
     }
 
     class VendaAdapter extends PagingDataAdapter<Venda, VendaAdapter.VendaViewHolder> {
-        private TextView divida;
 
         public VendaAdapter(@NonNull DiffUtil.ItemCallback<Venda> diffCallback) {
             super(diffCallback);
@@ -354,7 +351,6 @@ public class VendaFragment extends Fragment {
         public void onBindViewHolder(@NonNull VendaViewHolder h, int position) {
             Venda venda = getItem(position);
             if (venda != null) {
-                divida = h.binding.textDivida;
                 if (venda.getDivida() > 0)
                     h.binding.textDivida.setBackgroundColor(Color.RED);
 
@@ -389,15 +385,15 @@ public class VendaFragment extends Fragment {
                                     if (venda.getDivida() == 0)
                                         Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
                                     else
-                                        caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", R.string.enc_div_vend, true, false, venda);
+                                        caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", getString(R.string.enc_div_vend), true, false, venda);
                                     return false;
                                 });
                                 menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(getString(R.string.env_lx) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_lix, false, false, venda);
+                                    caixaDialogo(getString(R.string.env_lx), " (" + venda.getCodigo_qr() + ")" + "\n" + getString(R.string.env_vend_lix), false, false, venda);
                                     return false;
                                 });
                                 menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(getString(R.string.elim_vend_perm) + " (" + venda.getCodigo_qr() + ")", R.string.env_vend_n_lix, false, true, venda);
+                                    caixaDialogo(getString(R.string.elim_vend_perm), " (" + venda.getCodigo_qr() + ")" + "\n" + getString(R.string.env_vend_n_lix), false, true, venda);
                                     return false;
                                 });
                             }
@@ -436,6 +432,7 @@ public class VendaFragment extends Fragment {
 
         private void dialogEliminarVenda(String msg, Venda venda) {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setIcon(android.R.drawable.ic_menu_delete)
                     .setTitle(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")")
                     .setMessage(msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
@@ -457,11 +454,11 @@ public class VendaFragment extends Fragment {
                     .show();
         }
 
-        private void caixaDialogo(String titulo, int mensagem, boolean isliquidar, boolean permanente, Venda venda) {
+        private void caixaDialogo(String titulo, String mensagem, boolean isliquidar, boolean permanente, Venda venda) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
             alert.setCancelable(false);
             alert.setTitle(titulo);
-            alert.setMessage(getString(mensagem));
+            alert.setMessage(mensagem);
             final LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
             layout.setPadding(0, 0, 0, 0);
             layout.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -475,9 +472,10 @@ public class VendaFragment extends Fragment {
             layout.addView(editText);
             layout.addView(limpar);
             limpar.setOnClickListener(view -> Ultilitario.zerarPreco(editText));
-            if (isliquidar) {
+            if (isliquidar)
                 alert.setView(layout);
-            }
+            else
+                alert.setIcon(android.R.drawable.ic_menu_delete);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                 if (isliquidar) {
                     if (editText.length() < 15) {
