@@ -485,11 +485,10 @@ public class VendaFragment extends Fragment {
                             vendaViewModel.crud = true;
                             vendaViewModel.liquidarDivida(venda.getDivida() - Ultilitario.removerKZ(editText), venda.getId());
                         } else {
-                            Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.vl_n_sp), R.drawable.ic_toast_erro);
+                            Ultilitario.alertDialog(titulo, getString(R.string.vl_n_sp), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     } else {
-                        Ultilitario.showToast(getContext(), Color.RED, getString(R.string.vl_inv), R.drawable.ic_toast_erro);
-                        divida.setError(getString(R.string.vl_inv));
+                        Ultilitario.alertDialog(titulo, getString(R.string.vl_inv), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 } else {
                     vendaViewModel.crud = true;
