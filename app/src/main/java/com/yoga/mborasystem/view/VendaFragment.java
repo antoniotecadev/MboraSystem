@@ -389,11 +389,11 @@ public class VendaFragment extends Fragment {
                                     return false;
                                 });
                                 menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(getString(R.string.env_lx), " (" + venda.getCodigo_qr() + ")" + "\n" + getString(R.string.env_vend_lix), false, false, venda);
+                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getCodigo_qr() + ")" + "\n" + getString(R.string.env_vend_lix), false, false, venda);
                                     return false;
                                 });
                                 menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(getString(R.string.elim_vend_perm), " (" + venda.getCodigo_qr() + ")" + "\n" + getString(R.string.env_vend_n_lix), false, true, venda);
+                                    caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")" + "\n" + getString(R.string.env_vend_n_lix), false, true, venda);
                                     return false;
                                 });
                             }
@@ -433,8 +433,8 @@ public class VendaFragment extends Fragment {
         private void dialogEliminarVenda(String msg, Venda venda) {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                     .setIcon(android.R.drawable.ic_menu_delete)
-                    .setTitle(getString(R.string.elim_vend) + " (" + venda.getCodigo_qr() + ")")
-                    .setMessage(msg)
+                    .setTitle(getString(R.string.elim_vend))
+                    .setMessage("(" + venda.getCodigo_qr() + ")\n" + msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                         vendaViewModel.crud = true;
