@@ -123,7 +123,7 @@ public class FacturaFragment extends Fragment {
             } else {
                 addScaner = true;
                 resultCodeBar = result.getText();
-                barcodeView.setStatusText(result.getText() + "\n" + getString(R.string.ja_scaneado));
+                barcodeView.setStatusText(result.getText() + "  " + getString(R.string.ja_scaneado));
                 beepManager.playBeepSoundAndVibrate();
                 consultarProdutos(idc, true, resultCodeBar, true);
                 Ultilitario.showToastOrAlertDialogQrCode(requireContext(), result.getBitmapWithResultPoints(Color.YELLOW), false, null, "", "");
