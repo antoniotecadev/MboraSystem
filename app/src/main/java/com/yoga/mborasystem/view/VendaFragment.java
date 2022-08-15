@@ -10,12 +10,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -456,18 +459,22 @@ public class VendaFragment extends Fragment {
 
         private void caixaDialogo(String titulo, int mensagem, boolean isliquidar, boolean permanente, Venda venda) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+            alert.setCancelable(false);
             alert.setTitle(titulo);
             alert.setMessage(getString(mensagem));
-            FrameLayout layout = new FrameLayout(getContext());
-            layout.setPadding(45, 0, 45, 0);
+            final LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
+            layout.setPadding(0, 0, 0, 0);
+            layout.setGravity(Gravity.CENTER_HORIZONTAL);
             final TextInputEditText editText = new TextInputEditText(requireContext());
+            final Button limpar = new Button(requireContext());
+            limpar.setText(getText(R.string.limpar));
             editText.setHint(getString(R.string.valor_kwanza));
             editText.setMaxLines(1);
             Ultilitario.precoFormat(getContext(), editText);
             editText.setText(String.valueOf(venda.getDivida()));
-
             layout.addView(editText);
-
+            layout.addView(limpar);
+            limpar.setOnClickListener(view -> Ultilitario.zerarPreco(editText));
             if (isliquidar) {
                 alert.setView(layout);
             }
