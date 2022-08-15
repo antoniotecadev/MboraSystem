@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -133,7 +134,10 @@ public class UsuarioFragment extends Fragment {
                     h.binding.btnEntrar.setEnabled(false);
                     h.binding.btnEliminar.setVisibility(View.GONE);
                 }
-                h.binding.txtNomeUsuario.setText(us.getNome());
+                if (us.getEstado() == Ultilitario.DOIS)
+                    h.binding.txtNomeUsuario.setText(Html.fromHtml(getString(R.string.risc_text, us.getNome())));
+                else
+                    h.binding.txtNomeUsuario.setText(us.getNome());
                 h.binding.txtTel.setText(us.getTelefone() + " / MSU" + us.getId());
                 h.binding.txtEnd.setText(us.getEndereco());
                 h.binding.txtBloquear.setText(us.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
