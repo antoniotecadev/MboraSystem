@@ -318,6 +318,8 @@ public class ListProdutoFragment extends Fragment {
             Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+            if (isEliminar)
+                alert.setIcon(android.R.drawable.ic_menu_delete);
             alert.setTitle(titulo);
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
@@ -407,11 +409,11 @@ public class ListProdutoFragment extends Fragment {
                         if (getArguments() != null) {
                             if (getArguments().getBoolean("master") || isMaster) {
                                 menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(produto, getString(R.string.env_lx) + " (" + produto.getNome() + ")", R.string.env_prod_p_lix, false);
+                                    caixaDialogo(produto, getString(R.string.env_lx), "(" + produto.getNome() + ")\n" + getString(R.string.env_prod_p_lix), false);
                                     return false;
                                 });
                                 menu.add(getString(R.string.eliminar_produto)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(produto, getString(R.string.elim_prod_perm) + " (" + produto.getNome() + ")", R.string.env_prod_n_lix, true);
+                                    caixaDialogo(produto, getString(R.string.elim_prod_perm), "(" + produto.getNome() + ")\n" + getString(R.string.env_prod_n_lix), true);
                                     return false;
                                 });
                             }
@@ -451,21 +453,22 @@ public class ListProdutoFragment extends Fragment {
         private void dialogEliminarProduto(String nome, Produto produto) {
             produtoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.eliminar) + " (" + nome + ")")
-                    .setMessage(getString(R.string.tem_certeza_eliminar_produto))
+                    .setIcon(android.R.drawable.ic_menu_delete)
+                    .setTitle(getString(R.string.eliminar))
+                    .setMessage("(" + nome + ")\n" + getString(R.string.tem_certeza_eliminar_produto))
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(produto, false, null, false))
                     .show();
         }
 
-        private void caixaDialogo(Produto produto, String titulo, int mensagem, boolean permanente) {
+        private void caixaDialogo(Produto produto, String titulo, String mensagem, boolean permanente) {
             produtoViewModel.crud = true;
             produto.setId(produto.getId());
             produto.setEstado(Ultilitario.TRES);
             produto.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
             alert.setTitle(titulo);
-            alert.setMessage(getString(mensagem));
+            alert.setMessage(mensagem);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> produtoViewModel.eliminarProduto(produto, !permanente, null, false)
             ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
