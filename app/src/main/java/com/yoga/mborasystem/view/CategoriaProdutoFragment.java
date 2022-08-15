@@ -211,6 +211,8 @@ public class CategoriaProdutoFragment extends Fragment {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
                 alert.setIcon(android.R.drawable.ic_menu_delete);
+            else
+                alert.setIcon(android.R.drawable.ic_menu_revert);
             alert.setTitle(titulo);
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
@@ -357,6 +359,7 @@ public class CategoriaProdutoFragment extends Fragment {
         private void restaurarCategoria(String categoria, long idcategoria) {
             categoriaProdutoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
+                    .setIcon(android.R.drawable.ic_menu_revert)
                     .setTitle(getString(R.string.rest) + " (" + categoria + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, idcategoria, false))

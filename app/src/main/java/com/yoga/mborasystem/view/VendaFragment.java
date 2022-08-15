@@ -445,6 +445,7 @@ public class VendaFragment extends Fragment {
 
         private void restaurarVenda(String codigoQr, long idvenda) {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setIcon(android.R.drawable.ic_menu_revert)
                     .setTitle(getString(R.string.rest) + " (" + codigoQr + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
@@ -522,6 +523,8 @@ public class VendaFragment extends Fragment {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
                 alert.setIcon(android.R.drawable.ic_menu_delete);
+            else
+                alert.setIcon(android.R.drawable.ic_menu_revert);
             alert.setTitle(titulo);
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());

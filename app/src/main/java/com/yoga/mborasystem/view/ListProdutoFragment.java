@@ -320,6 +320,8 @@ public class ListProdutoFragment extends Fragment {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
                 alert.setIcon(android.R.drawable.ic_menu_delete);
+            else
+                alert.setIcon(android.R.drawable.ic_menu_revert);
             alert.setTitle(titulo);
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
@@ -444,6 +446,7 @@ public class ListProdutoFragment extends Fragment {
         private void restaurarProduto(String nome, long idproduto) {
             produtoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
+                    .setIcon(android.R.drawable.ic_menu_revert)
                     .setTitle(getString(R.string.rest) + " (" + nome + ")")
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, idproduto, false))
