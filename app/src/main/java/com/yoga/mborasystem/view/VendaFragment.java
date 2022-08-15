@@ -520,6 +520,8 @@ public class VendaFragment extends Fragment {
             Snackbar.make(binding.myCoordinatorLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+            if (isEliminar)
+                alert.setIcon(android.R.drawable.ic_menu_delete);
             alert.setTitle(titulo);
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
