@@ -281,11 +281,11 @@ public class CategoriaProdutoFragment extends Fragment {
                                     return false;
                                 });
                                 menu1.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(ct, getString(R.string.env_lx), "(" + ct.getCategoria() + ")" + "\n" + getString(R.string.env_cat_lixe), false);
+                                    caixaDialogo(ct, getString(R.string.env_lx), "(" + ct.getCategoria() + ")\n" + getString(R.string.env_cat_lixe), false);
                                     return false;
                                 });
                                 menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(ct, getString(R.string.elim_cat_perm), "(" + ct.getCategoria() + ")" + "\n" + getString(R.string.env_cat_n_lix), true);
+                                    caixaDialogo(ct, getString(R.string.elim_cat_perm), "(" + ct.getCategoria() + ")\n" + getString(R.string.env_cat_n_lix), true);
                                     return false;
                                 });
                             }
@@ -348,7 +348,7 @@ public class CategoriaProdutoFragment extends Fragment {
             new AlertDialog.Builder(requireContext())
                     .setIcon(android.R.drawable.ic_menu_delete)
                     .setTitle(getString(R.string.eliminar_categoria))
-                    .setMessage(" (" + categoria + ")" + "\n" + msg)
+                    .setMessage(" (" + categoria + ")\n" + msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(ct, !isLixeira, false))
                     .show();
