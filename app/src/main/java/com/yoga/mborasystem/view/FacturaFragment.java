@@ -457,7 +457,7 @@ public class FacturaFragment extends Fragment {
                     referenciaFactura = "FR 00V" + (dataEmissao.isEmpty() ? TextUtils.split(Ultilitario.getDateCurrent(), "-")[2].trim() : TextUtils.split(dataEmissao, "-")[2].trim());
                     if (binding.checkboxDivida.isChecked()) {
                         if (valorDivida > 0) {
-                            if (nomeIDcliente.length == 2 && Long.parseLong(nomeIDcliente[1].trim()) > 0) {
+                            if (nomeIDcliente.length == 3 && Long.parseLong(nomeIDcliente[1].trim()) > 0) {
                                 dialogVerificarVenda(nomeIDcliente);
                             } else {
                                 binding.txtNomeCliente.requestFocus();
