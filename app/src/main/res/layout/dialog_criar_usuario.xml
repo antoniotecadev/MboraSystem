@@ -52,7 +52,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:hint="@string/Numero_Telefone"
+                    android:hint="@string/telefone"
                     android:inputType="phone" />
 
             </com.google.android.material.textfield.TextInputLayout>
