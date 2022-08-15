@@ -209,6 +209,8 @@ public class CategoriaProdutoFragment extends Fragment {
             Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+            if (isEliminar)
+                alert.setIcon(android.R.drawable.ic_menu_delete);
             alert.setTitle(titulo);
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
@@ -279,11 +281,11 @@ public class CategoriaProdutoFragment extends Fragment {
                                     return false;
                                 });
                                 menu1.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(ct, getString(R.string.env_lx) + " (" + ct.getCategoria() + ")", R.string.env_cat_lixe, false);
+                                    caixaDialogo(ct, getString(R.string.env_lx), "(" + ct.getCategoria() + ")" + "\n" + getString(R.string.env_cat_lixe), false);
                                     return false;
                                 });
                                 menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(ct, getString(R.string.elim_cat_perm) + " (" + ct.getCategoria() + ")", R.string.env_cat_n_lix, true);
+                                    caixaDialogo(ct, getString(R.string.elim_cat_perm), "(" + ct.getCategoria() + ")" + "\n" + getString(R.string.env_cat_n_lix), true);
                                     return false;
                                 });
                             }
@@ -319,13 +321,14 @@ public class CategoriaProdutoFragment extends Fragment {
             }
         }
 
-        private void caixaDialogo(Categoria categoria, String titulo, int mensagem, boolean permanente) {
+        private void caixaDialogo(Categoria categoria, String titulo, String mensagem, boolean permanente) {
             categoria.setId(categoria.getId());
             categoria.setEstado(Ultilitario.TRES);
             categoria.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
+            alert.setIcon(android.R.drawable.ic_menu_delete);
             alert.setTitle(titulo);
-            alert.setMessage(getString(mensagem));
+            alert.setMessage(mensagem);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         categoriaProdutoViewModel.crud = true;
                         categoriaProdutoViewModel.eliminarCategoria(categoria, !permanente, false);
@@ -343,8 +346,9 @@ public class CategoriaProdutoFragment extends Fragment {
         private void dialogEliminarCategoria(String msg, String categoria, Categoria ct) {
             categoriaProdutoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.eliminar_categoria) + " (" + categoria + ")")
-                    .setMessage(msg)
+                    .setIcon(android.R.drawable.ic_menu_delete)
+                    .setTitle(getString(R.string.eliminar_categoria))
+                    .setMessage(" (" + categoria + ")" + "\n" + msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(ct, !isLixeira, false))
                     .show();
