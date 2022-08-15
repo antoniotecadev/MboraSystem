@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.view;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -134,10 +135,13 @@ public class UsuarioFragment extends Fragment {
                     h.binding.btnEntrar.setEnabled(false);
                     h.binding.btnEliminar.setVisibility(View.GONE);
                 }
-                if (us.getEstado() == Ultilitario.DOIS)
+                if (us.getEstado() == Ultilitario.DOIS) {
+                    h.binding.txtBloquear.setTextColor(Color.RED);
                     h.binding.txtNomeUsuario.setText(Html.fromHtml(getString(R.string.risc_text, us.getNome())));
-                else
+                } else {
+                    h.binding.txtBloquear.setTextColor(Color.BLUE);
                     h.binding.txtNomeUsuario.setText(us.getNome());
+                }
                 h.binding.txtTel.setText(us.getTelefone() + " / MSU" + us.getId());
                 h.binding.txtEnd.setText(us.getEndereco());
                 h.binding.txtBloquear.setText(us.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
