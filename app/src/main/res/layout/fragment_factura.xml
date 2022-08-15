@@ -81,7 +81,7 @@
                             android:id="@+id/txtNomeCliente"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:completionHint="@string/nome_cliente"
+                            android:completionHint="@string/clientes"
                             android:completionThreshold="1"
                             android:digits="@string/nome_cli_carac_aceite"
                             android:hint="@string/csm_fnl"
