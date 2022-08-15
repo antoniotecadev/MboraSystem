@@ -132,7 +132,7 @@ public class Ultilitario {
             new androidx.appcompat.app.AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_baseline_store_24)
                     .setTitle(R.string.meu_qr_code)
-                    .setMessage(context.getString(R.string.nome) + ": " + nome + "\n" + context.getString(R.string.estab) + ": " + estabalecimento)
+                    .setMessage(context.getString(R.string.nm) + ": " + nome + "\n" + context.getString(R.string.estab) + ": " + estabalecimento)
                     .setView(view)
                     .setNegativeButton(R.string.guard_part, (dialogInterface, i) -> requestPermissionLauncherShareQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss()).show();
