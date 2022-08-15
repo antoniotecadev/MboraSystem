@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Checkable;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -523,12 +522,7 @@ public class FacturaFragment extends Fragment {
                     check.setText(getString(R.string.n_most_nov));
                     layout.setPadding(45, 0, 0, 0);
                     layout.addView(check);
-                    check.setOnCheckedChangeListener((compoundButton, b) -> {
-                        if (b)
-                            Ultilitario.setNaoMostrarNovamente(requireActivity(), true);
-                        else
-                            Ultilitario.setNaoMostrarNovamente(requireActivity(), false);
-                    });
+                    check.setOnCheckedChangeListener((compoundButton, b) -> Ultilitario.setNaoMostrarNovamente(requireActivity(), b));
                     new AlertDialog.Builder(requireContext())
                             .setIcon(R.drawable.ic_baseline_store_24)
                             .setTitle(R.string.fechar)
