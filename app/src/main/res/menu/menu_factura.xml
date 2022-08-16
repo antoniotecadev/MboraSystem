@@ -19,4 +19,10 @@
       android:title="@string/dat_ems"
       app:showAsAction="collapseActionView" />
 
+  <item
+      android:id="@+id/itemEliminarRascunho"
+      android:icon="@android:drawable/ic_menu_day"
+      android:title="@string/elm_rasc"
+      app:showAsAction="collapseActionView" />
+
 </menu>

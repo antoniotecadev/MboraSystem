@@ -346,7 +346,7 @@ public class ListProdutoFragment extends Fragment {
 
     private void consultarProdutos(boolean iScrud, String produto, boolean isPesquisa) {
         produtoViewModel.crud = iScrud;
-        produtoViewModel.consultarProdutos(idcategoria, produto, isLixeira, isPesquisa, getViewLifecycleOwner(), false, false);
+        produtoViewModel.consultarProdutos(idcategoria, produto, isLixeira, isPesquisa, getViewLifecycleOwner(), false, false, false, null);
     }
 
     class ProdutoAdapter extends PagingDataAdapter<Produto, ProdutoAdapter.ProdutoViewHolder> {

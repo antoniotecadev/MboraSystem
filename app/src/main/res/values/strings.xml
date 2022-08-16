@@ -643,6 +643,10 @@
     <string name="dat_ems_nao_dat_act">Data de emissão não pode ser maior que a data actual.</string>
     <string name="dat_nao_sel">Data não seleccionada</string>
     <string name="cst_tds_prod">Consultar todos produtos</string>
+    <string name="elm_rasc">Eliminar rascunho</string>
+    <string name="rasc">Rascunho</string>
+    <string name="act_rasc_fact">Activar rascunho na facturação</string>
+    <string name="rasc_elm">Rascunho eliminado</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

@@ -236,9 +236,9 @@ public class ProdutoViewModel extends AndroidViewModel {
         getListaProdutosisExport().postValue(new Event<>(produtoRepository.getProdutosExport(idcategoria)));
     }
 
-    public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner, boolean isFactura, boolean isTodosProdutos) {
+    public void consultarProdutos(long idcategoria, String produtoText, boolean isLixeira, boolean isPesquisa, LifecycleOwner lifecycleOwner, boolean isFactura, boolean isTodosProdutos, boolean isRascunho, List<Long> produtoRascunho) {
         this.lifecycleOwner = lifecycleOwner;
-        flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText, isFactura, isTodosProdutos)));
+        flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> isRascunho ? produtoRepository.getProdutosRascunho(produtoRascunho) : produtoRepository.getProdutos(idcategoria, isLixeira, isPesquisa, produtoText, isFactura, isTodosProdutos)));
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(produto -> {
