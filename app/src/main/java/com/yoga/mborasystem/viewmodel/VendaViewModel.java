@@ -5,6 +5,7 @@ import android.app.Application;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -213,7 +214,8 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setDivida(valorDivida);
         venda.setValor_pago(valorPago);
         venda.setEstado(Ultilitario.UM);
-        venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
+//        venda.setData(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
+        venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.getDateCurrent() : dataEmissao + "-" + TextUtils.split(Ultilitario.getDateCurrent(), "-")[3]);
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
         Completable.fromAction(() -> idvenda = vendaRepository.insert(venda, produtos, precoTotalUnit))

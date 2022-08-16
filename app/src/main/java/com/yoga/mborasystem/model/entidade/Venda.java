@@ -25,6 +25,7 @@ public class Venda implements Parcelable {
     private int divida;
     private int valor_pago;
     private int estado;
+//    private String data;
     private String data_cria;
     private String data_elimina;
     private long idclicant;
@@ -201,6 +202,14 @@ public class Venda implements Parcelable {
     public void setIdoperador(long idoperador) {
         this.idoperador = idoperador;
     }
+
+//    public String getData() {
+//        return data;
+//    }
+//
+//    public void setData(String data) {
+//        this.data = data;
+//    }
 
     @Override
     public int describeContents() {
