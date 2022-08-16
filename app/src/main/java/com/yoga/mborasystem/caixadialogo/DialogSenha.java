@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 
 public class DialogSenha extends DialogFragment {
 
-    private Bundle bundle;
     private AlertDialog dialog;
     private DialogSenhaBinding binding;
     private ClienteViewModel clienteViewModel;
@@ -45,7 +44,6 @@ public class DialogSenha extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         us = new Usuario();
-        bundle = new Bundle();
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
     }

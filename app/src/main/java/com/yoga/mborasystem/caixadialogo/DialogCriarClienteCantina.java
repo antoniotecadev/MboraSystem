@@ -72,7 +72,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
             StringBuilder sb = new StringBuilder();
             if (isNetworkConnected(requireContext())) {
                 if (internetIsConnected()) {
-                    if (Ultilitario.letraNumero.matcher(binding.txtNIF.getText().toString()).find() || binding.txtNIF.length() > 14) {
+                    if (Ultilitario.letraNumero.matcher(Objects.requireNonNull(binding.txtNIF.getText()).toString()).find() || binding.txtNIF.length() > 14) {
                         Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.nif_bi) + " " + getString(R.string.ivld), R.drawable.ic_toast_erro);
                     } else {
                         MainActivity.getProgressBar();

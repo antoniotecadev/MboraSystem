@@ -16,7 +16,7 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressWarnings("rawtypes")
 public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCantina> {
 
     private final List<ClienteCantina> clienteCantinaList;
