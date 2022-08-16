@@ -79,6 +79,10 @@ public class ProdutoRepository {
         }
     }
 
+    public PagingSource<Integer, Produto> getProdutosRascunho(List<Long> produtoRascunho){
+        return produtoDao.getProdutosRascunho(produtoRascunho);
+    }
+
     public List<Produto> getProdutosExport(long idcat) throws Exception {
         return produtoDao.getProdutosExport(idcat);
     }

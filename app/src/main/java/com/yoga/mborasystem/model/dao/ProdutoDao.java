@@ -112,4 +112,7 @@ public interface ProdutoDao {
 
     @Query("SELECT * FROM produtos WHERE idcategoria = :idcat AND codigoBarra = :codigoBar AND estado = :estadoProd ORDER BY produtos.id DESC")
     PagingSource<Integer, Produto> getFilterProdutosCodBar(long idcat, String codigoBar, int estadoProd);
+
+    @Query("SELECT * FROM produtos WHERE id IN (:idproduto) AND estado = 1")
+    PagingSource<Integer, Produto> getProdutosRascunho(List<Long> idproduto);
 }
