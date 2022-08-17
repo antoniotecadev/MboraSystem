@@ -564,7 +564,7 @@
     <string name="fal_ab_pdf">Falha ao abrir PDF</string>
     <string name="inst_app">Instale aplicativo que  abre documentos no formato PDF</string>
     <string name="elmnd">eliminado(a)</string>
-    <string name="part_fich">Share file</string>
+    <string name="part_fich">Partilhar documento</string>
     <string name="det">Detalhes</string>
     <string name="nome_fich">Nome do ficheiro</string>
     <string name="tipo_fich">Tipo de ficheiro</string>

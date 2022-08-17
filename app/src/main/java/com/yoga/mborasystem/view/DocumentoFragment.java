@@ -13,21 +13,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.FileProvider;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +26,16 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.xwray.groupie.GroupAdapter;
@@ -237,7 +235,7 @@ public class DocumentoFragment extends Fragment {
                             return false;
                         });
                         menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
-                            partilharDocumentoPDF(v);
+                            partilharDocumentoPDF(v, titulo);
                             return false;
                         });
                     } else if (pasta.equalsIgnoreCase("Facturas")) {
@@ -246,7 +244,7 @@ public class DocumentoFragment extends Fragment {
                             return false;
                         });
                         menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
-                            partilharDocumentoPDF(v);
+                            partilharDocumentoPDF(v, titulo);
                             return false;
                         });
                     }
@@ -334,7 +332,7 @@ public class DocumentoFragment extends Fragment {
             return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
         }
 
-        private void partilharDocumentoPDF(View v) {
+        private void partilharDocumentoPDF(View v, String titulo) {
             Uri fileURI;
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
             new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
@@ -349,7 +347,7 @@ public class DocumentoFragment extends Fragment {
             share.setType("application/pdf");
             share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             share.putExtra(Intent.EXTRA_STREAM, fileURI);
-            startActivity(Intent.createChooser(share, getString(R.string.part_fich)));
+            startActivity(Intent.createChooser(share, getString(R.string.part_fich) + " " + titulo));
         }
 
         private void detalhes(String titulo) {
