@@ -69,8 +69,8 @@ public class HomeFragment extends Fragment {
         FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
         FabRClockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
         FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
-        assert getArguments() != null;
-        nomeOperador = getArguments().getString("nome");
+        if (getArguments() != null)
+            nomeOperador = getArguments().getString("nome");
         cliente = getArguments().getParcelable("cliente");
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
@@ -141,8 +141,8 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> {
             MainActivity.getProgressBar();
-            assert getArguments() != null;
-            bundle.putBoolean("master", getArguments().getBoolean("master"));
+            if (getArguments() != null)
+                bundle.putBoolean("master", getArguments().getBoolean("master"));
             bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
         });
@@ -199,7 +199,6 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                assert getArguments() != null;
                 switch (menuItem.getItemId()) {
                     case R.id.idioma:
                         new AlertDialog.Builder(requireContext())
@@ -366,24 +365,27 @@ public class HomeFragment extends Fragment {
     }
 
     private void entrarCategorias() {
-        MainActivity.getProgressBar();
-        assert getArguments() != null;
-        HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
-        Navigation.findNavController(requireView()).navigate(direction);
+        if (getArguments() != null) {
+            MainActivity.getProgressBar();
+            HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
+            Navigation.findNavController(requireView()).navigate(direction);
+        }
     }
 
     private void entrarProdutos() {
-        MainActivity.getProgressBar();
-        assert getArguments() != null;
-        HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
-        Navigation.findNavController(requireView()).navigate(direction);
+        if (getArguments() != null) {
+            MainActivity.getProgressBar();
+            HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
+            Navigation.findNavController(requireView()).navigate(direction);
+        }
     }
 
     private void entrarVendas() {
-        MainActivity.getProgressBar();
-        assert getArguments() != null;
-        HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
-        Navigation.findNavController(requireView()).navigate(direction);
+        if (getArguments() != null) {
+            MainActivity.getProgressBar();
+            HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
+            Navigation.findNavController(requireView()).navigate(direction);
+        }
     }
 
     private String estado;
