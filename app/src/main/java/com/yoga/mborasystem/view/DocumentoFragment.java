@@ -254,7 +254,7 @@ public class DocumentoFragment extends Fragment {
                         menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
                             File file = new File(documento.getCaminho());
                             new AlertDialog.Builder(requireContext())
-                                    .setIcon(R.drawable.ic_baseline_store_24)
+                                    .setIcon(R.drawable.ic_baseline_delete_40)
                                     .setTitle(titulo)
                                     .setMessage(R.string.tem_cert_elim_fich)
                                     .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
