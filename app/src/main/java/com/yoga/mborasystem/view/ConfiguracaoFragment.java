@@ -21,34 +21,35 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         ListPreference taxaIva = findPreference("taxa_iva");
         motivoIsento = findPreference("motivo_isencao");
 
-        assert taxaIva != null;
-        desabilitarMotivoIsencao(taxaIva.getValue(), motivoIsento);
-
-        taxaIva.setOnPreferenceChangeListener((preference, newValue) -> {
-            int taxas = Integer.parseInt(newValue.toString());
-            String[] taxa_values = getResources().getStringArray(R.array.array_taxa_iva_valor);
-            String taxa = taxa_values[taxas == 14 ? 3 : taxas == 7 ? 2 : (taxas == 5 ? 1 : 0)];
-            desabilitarMotivoIsencao(taxa, motivoIsento);
-            return true;
-        });
-        assert listaIdioma != null;
-        listaIdioma.setOnPreferenceChangeListener((preference, newValue) -> {
-            switch (newValue.toString()) {
-                case "Francês":
-                    codigoIdioma = "fr";
-                    break;
-                case "Inglês":
-                    codigoIdioma = "en";
-                    break;
-                case "Português":
-                    codigoIdioma = "pt";
-                    break;
-                default:
-                    return false;
-            }
-            getSelectedIdioma(requireActivity(), codigoIdioma, newValue.toString(), false, false);
-            return true;
-        });
+        if (taxaIva != null) {
+            desabilitarMotivoIsencao(taxaIva.getValue(), motivoIsento);
+            taxaIva.setOnPreferenceChangeListener((preference, newValue) -> {
+                int taxas = Integer.parseInt(newValue.toString());
+                String[] taxa_values = getResources().getStringArray(R.array.array_taxa_iva_valor);
+                String taxa = taxa_values[taxas == 14 ? 3 : taxas == 7 ? 2 : (taxas == 5 ? 1 : 0)];
+                desabilitarMotivoIsencao(taxa, motivoIsento);
+                return true;
+            });
+        }
+        if (listaIdioma != null) {
+            listaIdioma.setOnPreferenceChangeListener((preference, newValue) -> {
+                switch (newValue.toString()) {
+                    case "Francês":
+                        codigoIdioma = "fr";
+                        break;
+                    case "Inglês":
+                        codigoIdioma = "en";
+                        break;
+                    case "Português":
+                        codigoIdioma = "pt";
+                        break;
+                    default:
+                        return false;
+                }
+                getSelectedIdioma(requireActivity(), codigoIdioma, newValue.toString(), false, false);
+                return true;
+            });
+        }
     }
 
     private void desabilitarMotivoIsencao(String taxa, ListPreference motivoIsento) {
