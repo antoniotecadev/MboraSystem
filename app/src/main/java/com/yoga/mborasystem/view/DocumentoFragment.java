@@ -17,6 +17,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -53,7 +54,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressWarnings("rawtypes")
 public class DocumentoFragment extends Fragment {
 
     private String pasta;
@@ -64,7 +65,6 @@ public class DocumentoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         adapter = new GroupAdapter();
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
     }
@@ -96,59 +96,58 @@ public class DocumentoFragment extends Fragment {
             Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
             getDocumentos(null, false, data, true);
         }));
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_documento, menu);
-        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-        MenuItem menuItem = menu.findItem(R.id.app_bar_search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.nm) + ", " + getString(R.string.referencia));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-        searchView.onActionViewExpanded();
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+        requireActivity().addMenuProvider(new MenuProvider() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_documento, menu);
+                SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+                MenuItem menuItem = menu.findItem(R.id.app_bar_search);
+                SearchView searchView = (SearchView) menuItem.getActionView();
+                searchView.setQueryHint(getString(R.string.nm) + ", " + getString(R.string.referencia));
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
+                searchView.onActionViewExpanded();
+                menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        getDocumentos(null, false, "", false);
+                        return true;
+                    }
+                });
+
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (newText.isEmpty()) {
+                            getDocumentos(null, false, "", false);
+                        } else {
+                            getDocumentos(newText.replace("/", "_"), true, "", false);
+                        }
+                        return false;
+                    }
+                });
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                getDocumentos(null, false, "", false);
-                return true;
-            }
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    getDocumentos(null, false, "", false);
-                } else {
-                    getDocumentos(newText.replace("/", "_"), true, "", false);
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                if (menuItem.getItemId() == R.id.btnData) {
+                    DocumentoFragmentDirections.ActionDocumentoFragmentToDatePickerFragment direction = DocumentoFragmentDirections.actionDocumentoFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
+                    Navigation.findNavController(requireView()).navigate(direction);
                 }
-                return false;
+                return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        if (item.getItemId() == R.id.btnData) {
-            DocumentoFragmentDirections.ActionDocumentoFragmentToDatePickerFragment direction = DocumentoFragmentDirections.actionDocumentoFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
-            Navigation.findNavController(requireView()).navigate(direction);
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
+        }, getViewLifecycleOwner());
+        return binding.getRoot();
     }
 
     private void getDocumentos(String ficheiro, boolean isPesquisa, String data, boolean isPesquisaData) {
@@ -164,8 +163,7 @@ public class DocumentoFragment extends Fragment {
             ficheiro, String data, boolean isPesquisaData) {
         MainActivity.getProgressBar();
         requireActivity().setTitle(getString(title));
-        List<Ultilitario.Documento> pdfList = new ArrayList<>();
-        pdfList.addAll(getPdfList(pasta, isPesquisa, ficheiro, requireContext()));
+        List<Ultilitario.Documento> pdfList = new ArrayList<>(getPdfList(pasta, isPesquisa, ficheiro, requireContext()));
         binding.chipQuantDoc.setText(String.valueOf(pdfList.size()));
         adapter.clear();
         if (pdfList.isEmpty()) {
