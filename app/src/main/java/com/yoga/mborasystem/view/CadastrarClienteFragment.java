@@ -36,6 +36,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -62,7 +63,6 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
 //        query.addChildEventListener(new ChildEventListener() {
 //            @Override
 //            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -101,7 +101,7 @@ public class CadastrarClienteFragment extends Fragment {
 
     private void spinnerBairros(String município) {
         String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/" + município.trim().replaceAll("\\s+", "") + "/bairros";
-        ArrayAdapter<String> bairros = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> bairros = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
         Ion.with(requireActivity())
                 .load(URL)
                 .asJsonArray()
@@ -206,36 +206,33 @@ public class CadastrarClienteFragment extends Fragment {
                     break;
             }
         });
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.menu_home_ferramenta, menu);
+                menu.findItem(R.id.dialogAlterarCliente).setVisible(false);
+                menu.findItem(R.id.estadoCliente).setVisible(false);
+                menu.findItem(R.id.gerarCodigoQr).setVisible(false);
+                menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
+                menu.findItem(R.id.termosCondicoes).setVisible(false);
+                menu.findItem(R.id.politicaPrivacidade).setVisible(false);
+                menu.findItem(R.id.acercaMborasytem).setVisible(false);
+                menu.findItem(R.id.itemSair).setVisible(false);
+                menu.findItem(R.id.bloquearFragment).setVisible(false);
+                menu.findItem(R.id.idioma).setVisible(false);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                if (menuItem.getItemId() == R.id.config) {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoFragment2);
+                }
+                return NavigationUI.onNavDestinationSelected(menuItem, navController);
+            }
+        }, getViewLifecycleOwner());
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_home_ferramenta, menu);
-        menu.findItem(R.id.dialogAlterarCliente).setVisible(false);
-        menu.findItem(R.id.estadoCliente).setVisible(false);
-        menu.findItem(R.id.gerarCodigoQr).setVisible(false);
-        menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
-        menu.findItem(R.id.termosCondicoes).setVisible(false);
-        menu.findItem(R.id.politicaPrivacidade).setVisible(false);
-        menu.findItem(R.id.acercaMborasytem).setVisible(false);
-        menu.findItem(R.id.itemSair).setVisible(false);
-        menu.findItem(R.id.bloquearFragment).setVisible(false);
-        menu.findItem(R.id.idioma).setVisible(false);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-        switch (item.getItemId()) {
-            case R.id.config:
-                Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoFragment2);
-                break;
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
     }
 
     public void writeNewClient(FragmentCadastrarClienteBinding binding, String imei) throws NoSuchAlgorithmException, InvalidKeySpecException {
