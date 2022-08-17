@@ -27,6 +27,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,6 +55,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 @SuppressWarnings("rawtypes")
 public class DocumentoFragment extends Fragment {
 
@@ -195,6 +197,7 @@ public class DocumentoFragment extends Fragment {
         private final String pasta;
         private final int title;
         private final int msg;
+        private String titulo;
         private final Context context;
         private final Ultilitario.Documento documento;
 
@@ -213,14 +216,19 @@ public class DocumentoFragment extends Fragment {
             TextView descricao = viewHolder.itemView.findViewById(R.id.txtDescricao);
             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
             String[] refFact = TextUtils.split(documento.getNome(), "_");
-            nomeDocumento.setText(refFact[0].trim() + "/" + refFact[1].trim());
+            try {
+                titulo = refFact[0].trim() + "/" + refFact[1].trim();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                titulo = documento.getNome();
+            }
+            nomeDocumento.setText(titulo);
             descricao.setText(documento.getNome() + "\n" + Ultilitario.converterData(documento.getData_cria(), true) + " - " + formatSize(documento.getTamanho()));
             viewHolder.itemView.setOnClickListener(this::abrirDocumentoPDF);
             registerForContextMenu(menu);
             menu.setOnClickListener(View::showContextMenu);
             viewHolder.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
                 menu1.setHeaderIcon(R.drawable.ic_baseline_store_24);
-                menu1.setHeaderTitle(refFact[0].trim() + "/" + refFact[1].trim());
+                menu1.setHeaderTitle(titulo);
                 if (getArguments() != null) {
                     if (pasta.equalsIgnoreCase("Relatorios") && getArguments().getBoolean("master") ||
                             pasta.equalsIgnoreCase("Facturas") && getArguments().getBoolean("master")) {
@@ -249,7 +257,7 @@ public class DocumentoFragment extends Fragment {
                             File file = new File(documento.getCaminho());
                             new AlertDialog.Builder(requireContext())
                                     .setIcon(R.drawable.ic_baseline_store_24)
-                                    .setTitle(refFact[0].trim() + "/" + refFact[1].trim())
+                                    .setTitle(titulo)
                                     .setMessage(R.string.tem_cert_elim_fich)
                                     .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
                                     .setPositiveButton(R.string.sim, (dialogInterface, i) -> {
@@ -264,11 +272,11 @@ public class DocumentoFragment extends Fragment {
                                             if (file.exists()) {
                                                 requireContext().deleteFile(file.getName());
                                             } else {
-                                                Snackbar.make(v, refFact[0].trim() + "/" + refFact[1].trim() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                                Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
                                                 getDocumentPDF(pasta, title, msg, false, null, "", false);
                                             }
                                         } else {
-                                            Snackbar.make(v, refFact[0].trim() + "/" + refFact[1].trim() + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
                                             getDocumentPDF(pasta, title, msg, false, null, "", false);
                                         }
                                     }).show();
@@ -277,7 +285,7 @@ public class DocumentoFragment extends Fragment {
                     }
                 }
                 menu1.add(getString(R.string.det)).setOnMenuItemClickListener(item -> {
-                    detalhes(refFact);
+                    detalhes(titulo);
                     return false;
                 });
             });
@@ -344,9 +352,9 @@ public class DocumentoFragment extends Fragment {
             startActivity(Intent.createChooser(share, getString(R.string.part_fich)));
         }
 
-        private void detalhes(String[] refFact) {
+        private void detalhes(String titulo) {
             Ultilitario.alertDialog(getString(R.string.det), getString(R.string.nome_fich) + ": " + documento.getNome()
-                            + "\n" + getString(R.string.referencia) + ": " + refFact[0].trim() + "/" + refFact[1].trim()
+                            + "\n" + getString(R.string.referencia) + ": " + titulo
                             + "\n" + getString(R.string.tipo_fich) + ": " + documento.getTipo()
                             + "\n" + getString(R.string.tama_fich) + ": " + formatSize(documento.getTamanho())
                             + "\n" + getString(R.string.data_modifica) + ": " + Ultilitario.converterData(documento.getData_modifica(), true)
