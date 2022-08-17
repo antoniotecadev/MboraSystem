@@ -319,7 +319,7 @@ public class ListProdutoFragment extends Fragment {
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
-                alert.setIcon(android.R.drawable.ic_menu_delete);
+                alert.setIcon(R.drawable.ic_baseline_delete_40);
             else
                 alert.setIcon(android.R.drawable.ic_menu_revert);
             alert.setTitle(titulo);
@@ -456,7 +456,7 @@ public class ListProdutoFragment extends Fragment {
         private void dialogEliminarProduto(String nome, Produto produto) {
             produtoViewModel.crud = true;
             new AlertDialog.Builder(requireContext())
-                    .setIcon(android.R.drawable.ic_menu_delete)
+                    .setIcon(R.drawable.ic_baseline_delete_40)
                     .setTitle(getString(R.string.eliminar))
                     .setMessage("(" + nome + ")\n" + getString(R.string.tem_certeza_eliminar_produto))
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
@@ -470,7 +470,7 @@ public class ListProdutoFragment extends Fragment {
             produto.setEstado(Ultilitario.TRES);
             produto.setData_elimina(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
             android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
-            alert.setIcon(android.R.drawable.ic_menu_delete);
+            alert.setIcon(R.drawable.ic_baseline_delete_40);
             alert.setTitle(titulo);
             alert.setMessage(mensagem);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> produtoViewModel.eliminarProduto(produto, !permanente, null, false)

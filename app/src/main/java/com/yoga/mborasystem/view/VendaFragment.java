@@ -432,7 +432,7 @@ public class VendaFragment extends Fragment {
 
         private void dialogEliminarVenda(String msg, Venda venda) {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setIcon(android.R.drawable.ic_menu_delete)
+                    .setIcon(R.drawable.ic_baseline_delete_40)
                     .setTitle(getString(R.string.elim_vend))
                     .setMessage("(" + venda.getCodigo_qr() + ")\n" + msg)
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
@@ -476,7 +476,7 @@ public class VendaFragment extends Fragment {
             if (isliquidar)
                 alert.setView(layout);
             else
-                alert.setIcon(android.R.drawable.ic_menu_delete);
+                alert.setIcon(R.drawable.ic_baseline_delete_40);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                 if (isliquidar) {
                     if (editText.length() < 15) {
@@ -522,7 +522,7 @@ public class VendaFragment extends Fragment {
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
-                alert.setIcon(android.R.drawable.ic_menu_delete);
+                alert.setIcon(R.drawable.ic_baseline_delete_40);
             else
                 alert.setIcon(android.R.drawable.ic_menu_revert);
             alert.setTitle(titulo);

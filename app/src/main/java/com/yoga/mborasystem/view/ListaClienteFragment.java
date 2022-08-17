@@ -261,7 +261,7 @@ public class ListaClienteFragment extends Fragment {
                                 clienteCantina.setId(ct.getId());
                                 clienteCantina.setEstado(Ultilitario.TRES);
                                 new AlertDialog.Builder(requireContext())
-                                        .setIcon(android.R.drawable.ic_menu_delete)
+                                        .setIcon(R.drawable.ic_baseline_delete_40)
                                         .setTitle(getString(R.string.eliminar) + " (" + ct.getNome() + ")")
                                         .setMessage(getString(R.string.tem_cert_elim_cli))
                                         .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
