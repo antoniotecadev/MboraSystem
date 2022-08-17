@@ -5,25 +5,19 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
-import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.databinding.FragmentCalculadoraBinding;
-import com.yoga.mborasystem.util.Ultilitario;
 
 import java.math.BigDecimal;
 
@@ -50,8 +44,6 @@ public class CalculadoraFragment extends DialogFragment implements View.OnClickL
     private TextView textViewInputNumbers;
     private ScriptEngine scriptEngine;
 
-    private AlertDialog dialog;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +56,7 @@ public class CalculadoraFragment extends DialogFragment implements View.OnClickL
         binding = FragmentCalculadoraBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setView(binding.getRoot());
-        dialog = builder.create();
+        AlertDialog dialog = builder.create();
 
         setOnClickListeners();
         setOnTouchListener();
