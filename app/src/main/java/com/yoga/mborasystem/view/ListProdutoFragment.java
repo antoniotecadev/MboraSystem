@@ -370,7 +370,7 @@ public class ListProdutoFragment extends Fragment {
                 h.binding.txtPrecoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
                 h.binding.txtPrecoProdutoFornecedor.setText(getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
                 h.binding.txtQuantidadeProduto.setTextColor(produto.getQuantidade() == 0 ? Color.RED : Color.parseColor("#43A047"));
-                h.binding.txtQuantidadeProduto.setText((produto.getQuantidade() == 0 ? getString(R.string.sem_prod_stoc) + " - " : getString(R.string.prod_stoc) + " - ") + getText(R.string.quantidade) + ": " + produto.getQuantidade());
+                h.binding.txtQuantidadeProduto.setText(!produto.isStock() ? getString(R.string.sem_cont_stoc) + " - " + getText(R.string.quantidade) + ": " + produto.getQuantidade() : (produto.getQuantidade() == 0 ? getString(R.string.sem_prod_stoc) + " - " : getString(R.string.prod_stoc) + " - ") + getText(R.string.quantidade) + ": " + produto.getQuantidade());
                 h.binding.txtCodigoBarProduto.setText(getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + produto.getData_elimina() : ""));
                 h.binding.txtReferenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());
                 if (produto.getEstado() == Ultilitario.UM) {
