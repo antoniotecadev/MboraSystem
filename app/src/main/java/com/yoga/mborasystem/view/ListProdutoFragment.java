@@ -369,6 +369,7 @@ public class ListProdutoFragment extends Fragment {
                 h.binding.txtNomeProduto.setText(produto.getNome());
                 h.binding.txtPrecoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
                 h.binding.txtPrecoProdutoFornecedor.setText(getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
+                h.binding.txtQuantidadeProduto.setTextColor(produto.getQuantidade() == 0 ? Color.RED : Color.BLUE);
                 h.binding.txtQuantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
                 h.binding.txtCodigoBarProduto.setText(getText(R.string.codigo_bar) + ": " + produto.getCodigoBarra() + (isLixeira ? "\nAdd " + getString(R.string.lix) + ": " + produto.getData_elimina() : ""));
                 h.binding.txtReferenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());

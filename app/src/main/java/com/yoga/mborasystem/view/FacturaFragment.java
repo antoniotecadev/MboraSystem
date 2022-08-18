@@ -847,10 +847,7 @@ public class FacturaFragment extends Fragment {
             if (produto != null) {
                 h.binding.txtProduto.setText(produto.getNome());
                 h.binding.txtPreco.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " - MS" + produto.getId() + " - " + produto.getCodigoBarra());
-                if (produto.getQuantidade() == 0)
-                    h.binding.txtQuantidade.setTextColor(Color.RED);
-                else
-                    h.binding.txtQuantidade.setTextColor(Color.BLUE);
+                h.binding.txtQuantidade.setTextColor(produto.getQuantidade() == 0 ? Color.RED : Color.BLUE);
                 h.binding.txtQuantidade.setText(getString(R.string.quantidade) + " - " + produto.getQuantidade());
                 itemView.put(produto.getId(), h.itemView);
                 if (estado.get(produto.getId()) != null && Objects.requireNonNull(estado.get(produto.getId())))
@@ -905,15 +902,19 @@ public class FacturaFragment extends Fragment {
         }
 
         private void adicionarProduto(long id, Produto produto, View v, boolean b) {
-            estado.put(id, true);
-            produtos.put(id, produto);
-            adapterFactura.add(new ItemFactura(produto));
-            if (b) {
-                desfazer(produto.getNome() + " " + getString(R.string.produto_adicionado), id, v, null);
+            if (produto.getQuantidade() == 0) {
+                Ultilitario.alertDialog(getString(R.string.sem_prod_stoc), getString(R.string.sem_prod_stoc_msg, produto.getNome()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            } else {
+                estado.put(id, true);
+                produtos.put(id, produto);
+                adapterFactura.add(new ItemFactura(produto));
+                if (b) {
+                    desfazer(produto.getNome() + " " + getString(R.string.produto_adicionado), id, v, null);
+                }
+                habilitarDesabilitarButtonEfectuarVenda();
+                v.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
+                setProdutoRascunho(id);
             }
-            habilitarDesabilitarButtonEfectuarVenda();
-            v.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
-            setProdutoRascunho(id);
         }
 
         private void desfazer(String message, long id, View view, Produto produto) {

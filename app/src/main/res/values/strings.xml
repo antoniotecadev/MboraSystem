@@ -647,6 +647,8 @@
     <string name="rasc">Rascunho</string>
     <string name="act_rasc_fact">Activar rascunho na facturação</string>
     <string name="rasc_elm">Rascunho eliminado</string>
+    <string name="sem_prod_stoc">Sem produto em stock</string>
+    <string name="sem_prod_stoc_msg">Para vender este produto (%1$s) aumente a sua quantidade ou desmarque o seu controle de stock.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
