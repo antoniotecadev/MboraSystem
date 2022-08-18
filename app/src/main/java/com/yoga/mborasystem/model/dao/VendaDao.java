@@ -185,14 +185,18 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
     public abstract Maybe<List<Venda>> getVendasDashboardReport(String data);
 
+    @Query("UPDATE produtos SET quantidade = :quantidade WHERE id = :idproduto")
+    public abstract void actualizarQuantidadeProduto(int quantidade, long idproduto);
+
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
         long idvenda = insert(venda);
         updateReferencia(venda.getCodigo_qr() + "/" + idvenda, idvenda);
         for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
+            int quantidade = Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco();
             produtoVenda.setNome_produto(produto.getValue().getNome());
-            produtoVenda.setQuantidade(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco());
+            produtoVenda.setQuantidade(quantidade);
             produtoVenda.setPreco_total(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())));
             produtoVenda.setCodigo_Barra(venda.getCodigo_qr() + "/" + idvenda);
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
@@ -200,6 +204,8 @@ public abstract class VendaDao {
             produtoVenda.setIdvenda(idvenda);
             produtoVenda.setData_cria(venda.getData_cria());
             insert(produtoVenda);
+            if (produto.getValue().isStock())
+                actualizarQuantidadeProduto(produto.getValue().getQuantidade() - quantidade, produto.getValue().getId());
         }
         return idvenda;
     }
