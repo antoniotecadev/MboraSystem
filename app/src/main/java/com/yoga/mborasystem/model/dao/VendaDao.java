@@ -195,6 +195,7 @@ public abstract class VendaDao {
         updateReferencia(venda.getCodigo_qr() + "/" + idvenda, idvenda);
         for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
             int quantidade = Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco();
+            produtoVenda.setId(0);
             produtoVenda.setNome_produto(produto.getValue().getNome());
             produtoVenda.setQuantidade(quantidade);
             produtoVenda.setPreco_total(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())));
