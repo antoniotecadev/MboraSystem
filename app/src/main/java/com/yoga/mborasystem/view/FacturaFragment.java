@@ -902,7 +902,7 @@ public class FacturaFragment extends Fragment {
         }
 
         private void adicionarProduto(long id, Produto produto, View v, boolean b) {
-            if (produto.getQuantidade() == 0) {
+            if (produto.getQuantidade() == 0 && produto.isStock()) {
                 Ultilitario.alertDialog(getString(R.string.sem_prod_stoc), getString(R.string.sem_prod_stoc_msg, produto.getNome()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             } else {
                 estado.put(id, true);
