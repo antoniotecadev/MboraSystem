@@ -848,7 +848,7 @@ public class FacturaFragment extends Fragment {
                 h.binding.txtProduto.setText(produto.getNome());
                 h.binding.txtPreco.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " - MS" + produto.getId() + " - " + produto.getCodigoBarra());
                 h.binding.txtQuantidade.setTextColor(produto.getQuantidade() == 0 ? Color.RED : Color.BLUE);
-                h.binding.txtQuantidade.setText(getString(R.string.quantidade) + " - " + produto.getQuantidade());
+                h.binding.txtQuantidade.setText((produto.getQuantidade() == 0 ? getString(R.string.sem_prod_stoc) + " - " : getString(R.string.prod_stoc) + " - ") + getString(R.string.quantidade) + " - " + produto.getQuantidade());
                 itemView.put(produto.getId(), h.itemView);
                 if (estado.get(produto.getId()) != null && Objects.requireNonNull(estado.get(produto.getId())))
                     h.itemView.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
