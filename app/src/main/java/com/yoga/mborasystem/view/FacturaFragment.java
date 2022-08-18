@@ -1022,6 +1022,7 @@ public class FacturaFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         if ((Integer.parseInt(parent.getItemAtPosition(position).toString()) > produto.getQuantidade()) && produto.isStock()) {
+                            qt.setSelection(0);
                             Ultilitario.alertDialog(getString(R.string.avs_stock), getString(R.string.quant_prod_dispo, String.valueOf(produto.getQuantidade())), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } else {
                             quantidade = Integer.parseInt(parent.getItemAtPosition(position).toString());
