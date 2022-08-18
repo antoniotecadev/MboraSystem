@@ -27,7 +27,7 @@ public class ProdutoRepository {
     }
 
     public void update(Produto pd) {
-        produtoDao.update(pd.getNome(), pd.getTipo(), pd.getUnidade(), pd.getPreco(), pd.getPrecofornecedor(), pd.getQuantidade(), pd.getCodigoBarra(), pd.isIva(), pd.getPercentagemIva(), pd.getCodigoMotivoIsencao(), pd.getEstado(), pd.getData_modifica(), pd.getId());
+        produtoDao.update(pd.getNome(), pd.getTipo(), pd.getUnidade(), pd.getPreco(), pd.getPrecofornecedor(), pd.getQuantidade(), pd.getCodigoBarra(), pd.isIva(), pd.getPercentagemIva(), pd.getCodigoMotivoIsencao(), pd.getEstado(), pd.isStock(), pd.getData_modifica(), pd.getId());
     }
 
     public void delete(Produto pd, boolean lx, boolean eliminarTodasLixeira) {
@@ -79,7 +79,7 @@ public class ProdutoRepository {
         }
     }
 
-    public PagingSource<Integer, Produto> getProdutosRascunho(List<Long> produtoRascunho){
+    public PagingSource<Integer, Produto> getProdutosRascunho(List<Long> produtoRascunho) {
         return produtoDao.getProdutosRascunho(produtoRascunho);
     }
 
