@@ -559,6 +559,8 @@ public class FacturaFragment extends Fragment {
                 menuInflater.inflate(R.menu.menu_factura, menu);
                 if (getProdutoRascunho().isEmpty())
                     menu.findItem(R.id.itemEliminarRascunho).setVisible(false);
+                else
+                    requireActivity().setTitle(getString(R.string.rasc));
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
                 SearchView searchView = (SearchView) menuItem.getActionView();
@@ -823,6 +825,7 @@ public class FacturaFragment extends Fragment {
     }
 
     private void eliminarRascunho() {
+        requireActivity().setTitle(getString(R.string.fctrc));
         idprodutoRascunho.clear();
         sharedPreferences.edit().putString("idprodutorascunho", null).apply();
     }
