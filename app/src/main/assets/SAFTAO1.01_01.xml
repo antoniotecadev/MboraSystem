@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AuditFile>
+<AuditFile xmlns="urn:OECD:StandardAuditFile-Tax:AO_1.01_01" xsi:schemaLocation="urn:OECD:StandardAuditFile-Tax:AO_1.01_01 SAFTAO1.01_01.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Header>
-        <AuditFileVersion>str1234</AuditFileVersion>
+        <AuditFileVersion>1.01_01</AuditFileVersion>
         <CompanyID>str1234</CompanyID>
         <TaxRegistrationNumber>str1234000</TaxRegistrationNumber>
         <TaxAccountingBasis>A</TaxAccountingBasis>
@@ -12,15 +12,15 @@
             <Province>str1234</Province>
             <Country />
         </CompanyAddress>
-        <FiscalYear>1234</FiscalYear>
+        <FiscalYear>2022</FiscalYear>
         <StartDate>2012-12-13</StartDate>
         <EndDate>2012-12-13</EndDate>
         <CurrencyCode>AOA</CurrencyCode>
         <DateCreated>2012-12-13</DateCreated>
         <TaxEntity>str1234</TaxEntity>
         <ProductCompanyTaxID>str1234</ProductCompanyTaxID>
-        <SoftwareValidationNumber>str1234</SoftwareValidationNumber>
-        <ProductID>str1234</ProductID>
+        <SoftwareValidationNumber>308/AGT/2021</SoftwareValidationNumber>
+        <ProductID>BUESIMPLES/MAYONGI ANGOLA,LDA</ProductID>
         <ProductVersion>str1234</ProductVersion>
         <Telephone>str1234</Telephone>
         <Fax>str1234</Fax>
@@ -37,19 +37,19 @@
                 <AddressDetail>str1234</AddressDetail>
                 <City>str1234</City>
                 <Province>str1234</Province>
-                <Country />
+                <Country>AO</Country>
             </BillingAddress>
             <ShipToAddress>
                 <AddressDetail>str1234</AddressDetail>
                 <City>str1234</City>
                 <Province>str1234</Province>
-                <Country />
+                <Country>AO</Country>
             </ShipToAddress>
             <Telephone>str1234</Telephone>
             <Fax>str1234</Fax>
             <Email>str1234</Email>
             <Website>str1234</Website>
-            <SelfBillingIndicator>1234</SelfBillingIndicator>
+            <SelfBillingIndicator>0</SelfBillingIndicator>
         </Customer>
         <Product>
             <ProductType>P</ProductType>
@@ -60,12 +60,12 @@
         <TaxTable>
             <TaxTableEntry>
                 <TaxType>IVA</TaxType>
-                <TaxCountryRegion>st</TaxCountryRegion>
-                <TaxCode>str1234</TaxCode>
+                <TaxCountryRegion>AO</TaxCountryRegion>
+                <TaxCode>NOR</TaxCode>
                 <Description>str1234</Description>
                 <TaxExpirationDate>2012-12-13</TaxExpirationDate>
                 <TaxPercentage>123.45</TaxPercentage>
-                <TaxAmount>123.45</TaxAmount>
+                <TaxAmount>0.00</TaxAmount>
             </TaxTableEntry>
         </TaxTable>
     </MasterFiles>
@@ -75,7 +75,7 @@
             <TotalDebit>123.45</TotalDebit>
             <TotalCredit>123.45</TotalCredit>
             <Invoice>
-                <InvoiceNo>str1234</InvoiceNo>
+                <InvoiceNo>FT S001/1</InvoiceNo>
                 <DocumentStatus>
                     <InvoiceStatus>N</InvoiceStatus>
                     <InvoiceStatusDate>2012-12-13T12:12:12</InvoiceStatusDate>
@@ -84,13 +84,13 @@
                 </DocumentStatus>
                 <Hash>str1234</Hash>
                 <HashControl>str1234</HashControl>
-                <Period>1234</Period>
+                <Period>12</Period>
                 <InvoiceDate>2012-12-13</InvoiceDate>
                 <InvoiceType>FT</InvoiceType>
                 <SpecialRegimes>
-                    <SelfBillingIndicator>1234</SelfBillingIndicator>
-                    <CashVATSchemeIndicator>1234</CashVATSchemeIndicator>
-                    <ThirdPartiesBillingIndicator>1234</ThirdPartiesBillingIndicator>
+                    <SelfBillingIndicator>1</SelfBillingIndicator>
+                    <CashVATSchemeIndicator>1</CashVATSchemeIndicator>
+                    <ThirdPartiesBillingIndicator>1</ThirdPartiesBillingIndicator>
                 </SpecialRegimes>
                 <SourceID>str1234</SourceID>
                 <SystemEntryDate>2012-12-13T12:12:12</SystemEntryDate>
@@ -104,7 +104,7 @@
                         <AddressDetail>str1234</AddressDetail>
                         <City>str1234</City>
                         <Province>str1234</Province>
-                        <Country>str1234</Country>
+                        <Country>AO</Country>
                     </Address>
                 </ShipTo>
                 <ShipFrom>
@@ -116,7 +116,7 @@
                         <AddressDetail>str1234</AddressDetail>
                         <City>str1234</City>
                         <Province>str1234</Province>
-                        <Country>str1234</Country>
+                        <Country>AO</Country>
                     </Address>
                 </ShipFrom>
                 <Line>
@@ -138,8 +138,8 @@
                     <CreditAmount>123.45</CreditAmount>
                     <Tax>
                         <TaxType>IVA</TaxType>
-                        <TaxCountryRegion>st</TaxCountryRegion>
-                        <TaxCode>str1234</TaxCode>
+                        <TaxCountryRegion>AO</TaxCountryRegion>
+                        <TaxCode>NOR</TaxCode>
                         <TaxPercentage>123.45</TaxPercentage>
                         <TaxAmount>123.45</TaxAmount>
                     </Tax>
@@ -150,7 +150,7 @@
                     <NetTotal>123.45</NetTotal>
                     <GrossTotal>123.45</GrossTotal>
                     <Currency>
-                        <CurrencyCode>str</CurrencyCode>
+                        <CurrencyCode>AOA</CurrencyCode>
                         <CurrencyAmount>123.45</CurrencyAmount>
                         <ExchangeRate>123.45</ExchangeRate>
                     </Currency>
@@ -161,7 +161,7 @@
                     </Payment>
                 </DocumentTotals>
                 <WithholdingTax>
-                    <WithholdingTaxAmount>123.45</WithholdingTaxAmount>
+                    <WithholdingTaxAmount>0</WithholdingTaxAmount>
                 </WithholdingTax>
             </Invoice>
         </SalesInvoices>

@@ -53,13 +53,20 @@ import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTI
 import org.apache.xerces.xs.XSModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
+import jlibs.xml.sax.SAXProducer;
 import jlibs.xml.sax.XMLDocument;
 import jlibs.xml.xsd.XSInstance;
 import jlibs.xml.xsd.XSParser;
@@ -114,51 +121,18 @@ public class LoginFragment extends Fragment {
                 .build();
     }
 
-    public static Document loadXsdDocument(String inputName, Context context) {
-        final String filename = inputName;
-
-        InputStream inputStream = null;
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(
-                    new InputStreamReader(context.getAssets().open(filename), "UTF-8"));
-            inputStream = context.getResources().getAssets().open(filename);
-            Log.i("SAF-T", inputStream + "\n\nAvailable: " + inputStream.available());
-
-            // do reading, usually loop until end of file reading
-            String mLine;
-            while ((mLine = reader.readLine()) != null) {
-//                Log.i("SAF-T", mLine);
-            }
-        } catch (IOException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                    inputStream.close();
-                } catch (IOException e) {
-                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(false);
-        factory.setIgnoringElementContentWhitespace(true);
-        factory.setIgnoringComments(true);
-        Document doc = null;
+    public static boolean validateXMLSchema(String xsdPath, String xmlPath, Context context) {
 
         try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            final File inputFile = new File(filename);
-            doc = builder.parse(inputStream);
-        } catch (final Exception e) {
-            e.printStackTrace();
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new File(xsdPath));
+            Validator validator = schema.newValidator();
+            validator.validate(new StreamSource(new File(xmlPath)));
+        } catch (IOException | SAXException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            return false;
         }
-
-        return doc;
+        return true;
     }
 
     @Override
@@ -247,52 +221,29 @@ public class LoginFragment extends Fragment {
             Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
         });
         binding.btnMenu.setOnClickListener(v -> {
+            if (validateXMLSchema(getXSDCacheFile(requireContext(), "SAFTAO1.01_01.xsd").getAbsolutePath(), getXSDCacheFile(requireContext(), "SAFTAO1.01_01.xml").getAbsolutePath(), requireContext()))
+                Toast.makeText(requireContext(), "Válido", Toast.LENGTH_SHORT).show();
 //            MainActivity.getProgressBar();
 //            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
 
-            try {
-                Uri uri = Uri.fromFile(new File("assets/filexsd/SAFTAO1.01_01.xsd"));
-                String filename = "filexsd/";
-                String[] s = requireContext().getResources().getAssets().list(filename);
-                Log.i("SAF-T", getXSDCacheFile(requireContext()).getAbsolutePath());
+//            try {
+//
+//                // Parse the file into an XSModel object
+//                XSModel xsModel = new XSParser().parse(getXSDCacheFile(requireContext(), "SAFTAO1.01_01.xsd").getAbsolutePath());
+//
+//                // Define defaults for the XML generation
+//                XSInstance instance = new XSInstance();
+//
+//                // Build the sample xml doc
+//                // Replace first param to XMLDoc with a file input stream to write to file
+//                QName rootElement = new QName("urn:OECD:StandardAuditFile-Tax:AO_1.01_01", "AuditFile");
+//                XMLDocument sampleXml = new XMLDocument(new StreamResult(System.out), false, 0, "utf-8");
+//                instance.generate(xsModel, rootElement, sampleXml);
+//
+//            } catch (Exception e) {
+//                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//            }
 
-
-                // instance.
-
-//                final Document doc = loadXsdDocument(filename, requireContext());
-
-                // Find the docs root element and use it to find the targetNamespace
-//                final Element rootElem = doc.getDocumentElement();
-//                String targetNamespace = null;
-//                if (rootElem != null && rootElem.getNodeName().equals("xs:schema")) {
-//                    targetNamespace = rootElem.getAttribute("targetNamespace");
-//                }
-
-                // Parse the file into an XSModel object
-                XSModel xsModel = new XSParser().parse(getXSDCacheFile(requireContext()).getAbsolutePath());
-
-
-                // Define defaults for the XML generation
-                XSInstance instance = new XSInstance();
-                instance.minimumElementsGenerated = 1;
-                instance.maximumElementsGenerated = 1;
-                instance.generateDefaultAttributes = true;
-                instance.generateOptionalAttributes = true;
-                instance.maximumRecursionDepth = 0;
-                instance.generateAllChoices = true;
-                instance.showContentModel = true;
-                instance.generateOptionalElements = true;
-
-                // Build the sample xml doc
-                // Replace first param to XMLDoc with a file input stream to write to file
-                QName rootElement = new QName("urn:OECD:StandardAuditFile-Tax:AO_1.01_01", "AuditFile");
-                XMLDocument sampleXml = new XMLDocument(new StreamResult(System.out), true, 4, null);
-                instance.generate(xsModel, rootElement, sampleXml);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
 
         });
 
@@ -323,10 +274,10 @@ public class LoginFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public static File getXSDCacheFile(Context context) throws IOException {
-        File cacheFile = new File(context.getCacheDir(), "SAFTAO1.01_01.xsd");
+    public static File getXSDCacheFile(Context context, String filePath) {
+        File cacheFile = new File(context.getCacheDir(), filePath);
         try {
-            InputStream inputStream = context.getAssets().open("SAFTAO1.01_01.xsd");
+            InputStream inputStream = context.getAssets().open(filePath);
             try {
                 FileOutputStream outputStream = new FileOutputStream(cacheFile);
                 try {
@@ -342,7 +293,7 @@ public class LoginFragment extends Fragment {
                 inputStream.close();
             }
         } catch (IOException e) {
-            throw new IOException("Could not open robot png", e);
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return cacheFile;
     }
