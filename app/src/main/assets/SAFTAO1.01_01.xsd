@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <xs:schema xmlns:ns="urn:OECD:StandardAuditFile-Tax:AO_1.01_01"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" id="SAF-T_AO"
-    targetNamespace="urn:OECD:StandardAuditFile-Tax:AO_1.01_01" version="1.01_01">
+    targetNamespace="urn:OECD:StandardAuditFile-Tax:AO_1.01_01" version="1.01_01"
+    xmlns="urn:OECD:StandardAuditFile-Tax:AO_1.01_01">
     <xs:element name="AuditFile">
         <xs:complexType>
             <xs:sequence>
