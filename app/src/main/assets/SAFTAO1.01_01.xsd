@@ -168,7 +168,7 @@
     <xs:element name="AuditFileVersion">
         <xs:simpleType>
             <xs:restriction base="xs:string">
-                <xs:pattern value="1.01_01" />
+                <xs:pattern value="1.01_01|2.02_02" />
             </xs:restriction>
         </xs:simpleType>
     </xs:element>

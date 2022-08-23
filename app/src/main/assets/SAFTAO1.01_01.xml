@@ -10,7 +10,7 @@
             <AddressDetail>str1234</AddressDetail>
             <City>str1234</City>
             <Province>str1234</Province>
-            <Country />
+            <Country>AO</Country>
         </CompanyAddress>
         <FiscalYear>2022</FiscalYear>
         <StartDate>2012-12-13</StartDate>
