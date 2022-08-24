@@ -28,35 +28,35 @@
         <Website>str1234</Website>
     </Header>
     <MasterFiles>
-<!--        <Customer>-->
-<!--            <CustomerID>str1234</CustomerID>-->
-<!--            <AccountID>str1234</AccountID>-->
-<!--            <CustomerTaxID>str1234</CustomerTaxID>-->
-<!--            <CompanyName>str1234</CompanyName>-->
-<!--            <BillingAddress>-->
-<!--                <AddressDetail>str1234</AddressDetail>-->
-<!--                <City>str1234</City>-->
-<!--                <Province>str1234</Province>-->
-<!--                <Country>AO</Country>-->
-<!--            </BillingAddress>-->
-<!--            <ShipToAddress>-->
-<!--                <AddressDetail>str1234</AddressDetail>-->
-<!--                <City>str1234</City>-->
-<!--                <Province>str1234</Province>-->
-<!--                <Country>AO</Country>-->
-<!--            </ShipToAddress>-->
-<!--            <Telephone>str1234</Telephone>-->
-<!--            <Fax>str1234</Fax>-->
-<!--            <Email>str1234</Email>-->
-<!--            <Website>str1234</Website>-->
-<!--            <SelfBillingIndicator>0</SelfBillingIndicator>-->
-<!--        </Customer>-->
-<!--        <Product>-->
-<!--            <ProductType>P</ProductType>-->
-<!--            <ProductCode>str1234</ProductCode>-->
-<!--            <ProductDescription>str1234</ProductDescription>-->
-<!--            <ProductNumberCode>str1234</ProductNumberCode>-->
-<!--        </Product>-->
+        <Customer>
+            <CustomerID>str1234</CustomerID>
+            <AccountID>str1234</AccountID>
+            <CustomerTaxID>str1234</CustomerTaxID>
+            <CompanyName>str1234</CompanyName>
+            <BillingAddress>
+                <AddressDetail>str1234</AddressDetail>
+                <City>str1234</City>
+                <Province>str1234</Province>
+                <Country>AO</Country>
+            </BillingAddress>
+            <ShipToAddress>
+                <AddressDetail>str1234</AddressDetail>
+                <City>str1234</City>
+                <Province>str1234</Province>
+                <Country>AO</Country>
+            </ShipToAddress>
+            <Telephone>str1234</Telephone>
+            <Fax>str1234</Fax>
+            <Email>str1234</Email>
+            <Website>str1234</Website>
+            <SelfBillingIndicator>0</SelfBillingIndicator>
+        </Customer>
+        <Product>
+            <ProductType>P</ProductType>
+            <ProductCode>str1234</ProductCode>
+            <ProductDescription>str1234</ProductDescription>
+            <ProductNumberCode>str1234</ProductNumberCode>
+        </Product>
         <TaxTable>
             <TaxTableEntry>
                 <TaxType>IVA</TaxType>
@@ -143,6 +143,8 @@
                         <TaxPercentage>123.45</TaxPercentage>
                         <TaxAmount>123.45</TaxAmount>
                     </Tax>
+                    <TaxExemptionReason>Regime Transitório</TaxExemptionReason>
+                    <TaxExemptionCode>M00</TaxExemptionCode>
                     <SettlementAmount>123.45</SettlementAmount>
                 </Line>
                 <DocumentTotals>
