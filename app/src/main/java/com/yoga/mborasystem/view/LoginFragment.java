@@ -1,46 +1,25 @@
 package com.yoga.mborasystem.view;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
+
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.common.util.IOUtils;
-import com.yoga.mborasystem.MainActivity;
-import com.yoga.mborasystem.R;
-import com.yoga.mborasystem.databinding.FragmentLoginBinding;
-import com.yoga.mborasystem.util.Ultilitario;
-import com.yoga.mborasystem.viewmodel.ClienteViewModel;
-import com.yoga.mborasystem.viewmodel.LoginViewModel;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executor;
 
 import androidx.annotation.NonNull;
 import androidx.biometric.BiometricPrompt;
@@ -50,25 +29,39 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import static android.content.Context.VIBRATOR_SERVICE;
-import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
-import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.yoga.mborasystem.MainActivity;
+import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.FragmentLoginBinding;
+import com.yoga.mborasystem.util.Common;
+import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.ClienteViewModel;
+import com.yoga.mborasystem.viewmodel.LoginViewModel;
 
-import org.apache.xerces.xs.XSModel;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+
 import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -77,11 +70,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-
-import jlibs.xml.sax.SAXProducer;
-import jlibs.xml.sax.XMLDocument;
-import jlibs.xml.xsd.XSInstance;
-import jlibs.xml.xsd.XSParser;
 
 public class LoginFragment extends Fragment {
 
@@ -96,7 +84,6 @@ public class LoginFragment extends Fragment {
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
-    ByteArrayOutputStream outputStream;
 
     private void instanceOfBiometricPrompt() {
         executor = ContextCompat.getMainExecutor(requireContext());
@@ -236,185 +223,241 @@ public class LoginFragment extends Fragment {
         binding.btnMenu.setOnClickListener(v -> {
 
             try {
-                File inputFile = new File(getXSDORXMLCacheFile(requireContext(), "SAFTAO1.01_01.xml").getAbsolutePath());
-                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                Document doc = docBuilder.parse(inputFile);
+
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.newDocument();
                 doc.normalize();
 
-                Node masterFiles = doc.getElementsByTagName("MasterFiles").item(0);
-                Node header = doc.getElementsByTagName("Header").item(0);
-                Node companyAddress = doc.getElementsByTagName("CompanyAddress").item(0);
+                // root element
+                Element rootElement = doc.createElement("AuditFile");
+                doc.appendChild(rootElement);
+                setAtributo(doc, "xmlns", "urn:OECD:StandardAuditFile-Tax:AO_1.01_01", rootElement);
+                setAtributo(doc, "xsi:schemaLocation", "urn:OECD:StandardAuditFile-Tax:AO_1.01_01 SAFTAO1.01_01.xsd", rootElement);
+                setAtributo(doc, "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance", rootElement);
 
-                NodeList list = header.getChildNodes();
-                NodeList listAddress = companyAddress.getChildNodes();
+                Element header = doc.createElement("Header");
+                rootElement.appendChild(header);
 
+                criarElemento(doc, "AuditFileVersion", header, "2.02_02");
+                criarElemento(doc, "CompanyID", header, "1536728967LA98");
+                criarElemento(doc, "TaxRegistrationNumber", header, "1536728967LA98");
+                criarElemento(doc, "TaxAccountingBasis", header, "F");
+                criarElemento(doc, "CompanyName", header, "YOGA");
 
-                for (int i = 0; i < list.getLength(); i++) {
-                    Node node = list.item(i);
-                    if (node.getNodeType() == Node.ELEMENT_NODE) {
-                        Element eElement = (Element) node;
-                        if ("AuditFileVersion".equals(eElement.getNodeName()))
-                            eElement.setTextContent("2.02_02");
-                        else if ("CompanyID".equals(eElement.getNodeName()))
-                            eElement.setTextContent("5000999784");
-                        else if ("TaxRegistrationNumber".equals(eElement.getNodeName()))
-                            eElement.setTextContent("5000999784");
-                        else if ("TaxAccountingBasis".equals(eElement.getNodeName()))
-                            eElement.setTextContent("F");
-                        else if ("CompanyName".equals(eElement.getNodeName()))
-                            eElement.setTextContent("YOGA - COMÉRCIO, SERVIÇOS E TECNOLOGIA");
-                        else if ("CompanyAddress".equals(eElement.getNodeName())) {
-                            for (int i1 = 0; i1 < listAddress.getLength(); i1++) {
-                                Node n1 = listAddress.item(i1);
-                                if (n1.getNodeType() == Node.ELEMENT_NODE) {
-                                    Element e1 = (Element) n1;
-                                    if ("AddressDetail".equals(e1.getNodeName()))
-                                        e1.setTextContent("Morro Bento ||");
-                                    else if ("City".equals(e1.getNodeName()))
-                                        e1.setTextContent("Luanda");
-                                    else if ("Province".equals(e1.getNodeName()))
-                                        e1.setTextContent("Luanda");
-                                    else if ("Country".equals(e1.getNodeName()))
-                                        e1.setTextContent("AO");
-                                }
-                            }
-                        } else if ("FiscalYear".equals(eElement.getNodeName()))
-                            eElement.setTextContent("2023");
-                        else if ("StartDate".equals(eElement.getNodeName()))
-                            eElement.setTextContent("2022-12-13");
-                        else if ("EndDate".equals(eElement.getNodeName()))
-                            eElement.setTextContent("2023-12-13");
-                        else if ("CurrencyCode".equals(eElement.getNodeName()))
-                            eElement.setTextContent("AOA");
-                        else if ("DateCreated".equals(eElement.getNodeName()))
-                            eElement.setTextContent("2022-12-13");
-                        else if ("TaxEntity".equals(eElement.getNodeName()))
-                            eElement.setTextContent("Global");
-                        else if ("ProductCompanyTaxID".equals(eElement.getNodeName()))
-                            eElement.setTextContent("AO5417432466");
-                        else if ("SoftwareValidationNumber".equals(eElement.getNodeName()))
-                            eElement.setTextContent("308/AGT/2021");
-                        else if ("ProductID".equals(eElement.getNodeName()))
-                            eElement.setTextContent("MBORASYSTEM/YOGA ANGOLA,LDA");
-                        else if ("ProductVersion".equals(eElement.getNodeName()))
-                            eElement.setTextContent("1");
-                        else if ("Telephone".equals(eElement.getNodeName()))
-                            eElement.setTextContent("932359808");
-                        else if ("Fax".equals(eElement.getNodeName()))
-                            eElement.setTextContent("yoga@hotmail.com");
-                        else if ("Email".equals(eElement.getNodeName()))
-                            eElement.setTextContent("yoga@hotmail.com");
-                        else if ("Website".equals(eElement.getNodeName()))
-                            eElement.setTextContent("www.yoga.com.ao");
-                    }
-                }
+                Element companyAddress = doc.createElement("CompanyAddress");
+                header.appendChild(companyAddress);
+                criarElemento(doc, "AddressDetail", companyAddress, "Benfica");
+                criarElemento(doc, "City", companyAddress, "Luanda");
+                criarElemento(doc, "Province", companyAddress, "Luanda");
+                criarElemento(doc, "Country", companyAddress, "AO");
 
-                for (int c = 0; c <= 1; c++) {
-                    Element customer = doc.createElement("Customer");
-                    customer.appendChild(doc.createElement("CustomerID")).setTextContent("1200 - " + c);
-                    customer.appendChild(doc.createElement("AccountID")).setTextContent("Desconhecido - " + c);
-                    customer.appendChild(doc.createElement("CustomerTaxID")).setTextContent("1236985LA44 - " + c);
-                    customer.appendChild(doc.createElement("CompanyName")).setTextContent("Consumidor Final - " + c);
-                    masterFiles.appendChild(customer);
+                criarElemento(doc, "FiscalYear", header, "2022");
+                criarElemento(doc, "StartDate", header, "2012-12-13");
+                criarElemento(doc, "EndDate", header, "2012-12-13");
+                criarElemento(doc, "CurrencyCode", header, "AOA");
+                criarElemento(doc, "DateCreated", header, "2012-12-13");
+                criarElemento(doc, "TaxEntity", header, "Global");
+                criarElemento(doc, "ProductCompanyTaxID", header, "5000999784");
+                criarElemento(doc, "SoftwareValidationNumber", header, "308/AGT/2021");
+                criarElemento(doc, "ProductID", header, "MBORASYSTEM/YOGA ANGOLA,LDA");
+                criarElemento(doc, "ProductVersion", header, "1");
+                criarElemento(doc, "Telephone", header, "932359808");
+                criarElemento(doc, "Fax", header, "antonio@gmail.com");
+                criarElemento(doc, "Email", header, "antonio@gmail.com");
+                criarElemento(doc, "Website", header, "www.yoga.com");
 
-                    Element billingAddress = doc.createElement("BillingAddress");
-                    billingAddress.appendChild(doc.createElement("AddressDetail")).setTextContent("Luanda, benfica - " + c);
-                    billingAddress.appendChild(doc.createElement("City")).setTextContent("Luanda - " + c);
-                    billingAddress.appendChild(doc.createElement("Province")).setTextContent("Luanda - " + c);
-                    billingAddress.appendChild(doc.createElement("Country")).setTextContent("AO");
-                    customer.appendChild(billingAddress);
+                Element masterFiles = doc.createElement("MasterFiles");
+                rootElement.appendChild(masterFiles);
 
-                    Element shipToAddress = doc.createElement("ShipToAddress");
-                    shipToAddress.appendChild(doc.createElement("AddressDetail")).setTextContent("Luanda, benfica - " + c);
-                    shipToAddress.appendChild(doc.createElement("City")).setTextContent("Luanda - " + c);
-                    shipToAddress.appendChild(doc.createElement("Province")).setTextContent("Luanda - " + c);
-                    shipToAddress.appendChild(doc.createElement("Country")).setTextContent("AO");
-                    customer.appendChild(shipToAddress);
+                Element customer = doc.createElement("Customer");
+                masterFiles.appendChild(customer);
+                criarElemento(doc, "CustomerID", customer, "1");
+                criarElemento(doc, "AccountID", customer, "Desconhecido");
+                criarElemento(doc, "CustomerTaxID", customer, "1234");
+                criarElemento(doc, "CompanyName", customer, "Consumidor Final");
 
-                    customer.appendChild(doc.createElement("Telephone")).setTextContent("96325841" + c);
-                    customer.appendChild(doc.createElement("Fax")).setTextContent("mauropedro@gmail.com");
-                    customer.appendChild(doc.createElement("Email")).setTextContent("mauropedro@gmail.com");
-                    customer.appendChild(doc.createElement("Website")).setTextContent("www.pedro.com");
-                }
+                Element billingAddress = doc.createElement("BillingAddress");
+                customer.appendChild(billingAddress);
+                criarElemento(doc, "AddressDetail", billingAddress, "Benfica");
+                criarElemento(doc, "City", billingAddress, "Luanda");
+                criarElemento(doc, "Province", billingAddress, "Luanda");
+                criarElemento(doc, "Country", billingAddress, "AO");
 
-                for (int c = 0; c <= 1; c++) {
-                    Element product = doc.createElement("Product");
-                    product.appendChild(doc.createElement("ProductType")).setTextContent("P");
-                    product.appendChild(doc.createElement("ProductCode")).setTextContent("147858");
-                    product.appendChild(doc.createElement("ProductDescription")).setTextContent("bombom");
-                    product.appendChild(doc.createElement("ProductNumberCode")).setTextContent("1257885");
-                    masterFiles.appendChild(product);
-                }
+                Element shipToAddress = doc.createElement("ShipToAddress");
+                customer.appendChild(shipToAddress);
+                criarElemento(doc, "AddressDetail", shipToAddress, "Benfica");
+                criarElemento(doc, "City", shipToAddress, "Luanda");
+                criarElemento(doc, "Province", shipToAddress, "Luanda");
+                criarElemento(doc, "Country", shipToAddress, "AO");
+
+                criarElemento(doc, "Telephone", customer, "936566987");
+                criarElemento(doc, "Fax", customer, "matias@gmail.com");
+                criarElemento(doc, "Email", customer, "matias@gmail.com");
+                criarElemento(doc, "Website", customer, "www.yoga.com");
+                criarElemento(doc, "SelfBillingIndicator", customer, "0");
+
+                Element product = doc.createElement("Product");
+                masterFiles.appendChild(product);
+                criarElemento(doc, "ProductType", product, "P");
+                criarElemento(doc, "ProductCode", product, "123456789");
+                criarElemento(doc, "ProductDescription", product, "Arroz");
+                criarElemento(doc, "ProductNumberCode", product, "123456789");
 
                 Element taxTable = doc.createElement("TaxTable");
                 masterFiles.appendChild(taxTable);
-                for (int c = 0; c <= 1; c++) {
-                    Element taxTableEntry = doc.createElement("TaxTableEntry");
-                    taxTableEntry.appendChild(doc.createElement("TaxType")).setTextContent("IVA");
-                    taxTableEntry.appendChild(doc.createElement("TaxCountryRegion")).setTextContent("AO");
-                    taxTableEntry.appendChild(doc.createElement("TaxCode")).setTextContent("NOR");
-                    taxTableEntry.appendChild(doc.createElement("Description")).setTextContent("desconhecido");
-                    taxTableEntry.appendChild(doc.createElement("TaxExpirationDate")).setTextContent("1989-12-26");
-                    taxTableEntry.appendChild(doc.createElement("TaxPercentage")).setTextContent("70.23");
-                    taxTableEntry.appendChild(doc.createElement("TaxAmount")).setTextContent("737.258");
-                    taxTable.appendChild(taxTableEntry);
-                }
 
+                Element taxTableEntry = doc.createElement("TaxTableEntry");
+                taxTable.appendChild(taxTableEntry);
+                criarElemento(doc, "TaxType", taxTableEntry, "IVA");
+                criarElemento(doc, "TaxCountryRegion", taxTableEntry, "AO");
+                criarElemento(doc, "TaxCode", taxTableEntry, "NOR");
+                criarElemento(doc, "Description", taxTableEntry, "Desconhecido");
+                criarElemento(doc, "TaxExpirationDate", taxTableEntry, "2012-12-13");
+                criarElemento(doc, "TaxPercentage", taxTableEntry, "123.45");
+                criarElemento(doc, "TaxAmount", taxTableEntry, "0.00");
 
-                outputStream = new ByteArrayOutputStream();
+                Element sourceDocuments = doc.createElement("SourceDocuments");
+                rootElement.appendChild(sourceDocuments);
 
-                // write the content on console
+                Element salesInvoices = doc.createElement("SalesInvoices");
+                sourceDocuments.appendChild(salesInvoices);
+                criarElemento(doc, "NumberOfEntries", salesInvoices, "33");
+                criarElemento(doc, "TotalDebit", salesInvoices, "123.45");
+                criarElemento(doc, "TotalCredit", salesInvoices, "123.45");
+
+                Element invoice = doc.createElement("Invoice");
+                salesInvoices.appendChild(invoice);
+                criarElemento(doc, "InvoiceNo", invoice, "FT S001/1");
+
+                Element documentStatus = doc.createElement("DocumentStatus");
+                invoice.appendChild(documentStatus);
+                criarElemento(doc, "InvoiceStatus", documentStatus, "N");
+                criarElemento(doc, "InvoiceStatusDate", documentStatus, "2012-12-13T12:12:12");
+                criarElemento(doc, "SourceID", documentStatus, "Desconhecido");
+                criarElemento(doc, "SourceBilling", documentStatus, "P");
+
+                criarElemento(doc, "Hash", invoice, "145568567645gfgsgsfsfd");
+                criarElemento(doc, "HashControl", invoice, "gfdgxdrfg454ddfd");
+                criarElemento(doc, "Period", invoice, "12");
+                criarElemento(doc, "InvoiceDate", invoice, "2012-12-13");
+                criarElemento(doc, "InvoiceType", invoice, "FT");
+
+                Element specialRegimes = doc.createElement("SpecialRegimes");
+                invoice.appendChild(specialRegimes);
+                criarElemento(doc, "SelfBillingIndicator", specialRegimes, "0");
+                criarElemento(doc, "CashVATSchemeIndicator", specialRegimes, "0");
+                criarElemento(doc, "ThirdPartiesBillingIndicator", specialRegimes, "0");
+
+                criarElemento(doc, "SourceID", invoice, "1");
+                criarElemento(doc, "SystemEntryDate", invoice, "2012-12-13T12:12:12");
+                criarElemento(doc, "CustomerID", invoice, "1");
+
+                Element shipTo = doc.createElement("ShipTo");
+                invoice.appendChild(shipTo);
+                criarElemento(doc, "DeliveryID", shipTo, "1");
+                criarElemento(doc, "DeliveryDate", shipTo, "2012-12-13");
+
+                Element address = doc.createElement("Address");
+                shipTo.appendChild(address);
+
+                criarElemento(doc, "BuildingNumber", address, "124");
+                criarElemento(doc, "StreetName", address, "Benfica");
+                criarElemento(doc, "AddressDetail", address, "Benfica");
+                criarElemento(doc, "City", address, "Luanda");
+                criarElemento(doc, "Province", address, "Luanda");
+                criarElemento(doc, "Country", address, "AO");
+
+                Element shipFrom = doc.createElement("ShipFrom");
+                invoice.appendChild(shipFrom);
+                criarElemento(doc, "DeliveryID", shipFrom, "1");
+                criarElemento(doc, "DeliveryDate", shipFrom, "2012-12-13");
+
+                Element address1 = doc.createElement("Address");
+                shipFrom.appendChild(address1);
+
+                criarElemento(doc, "BuildingNumber", address1, "124");
+                criarElemento(doc, "StreetName", address1, "Benfica");
+                criarElemento(doc, "AddressDetail", address1, "Benfica");
+                criarElemento(doc, "City", address1, "Luanda");
+                criarElemento(doc, "Province", address1, "Luanda");
+                criarElemento(doc, "Country", address1, "AO");
+
+                Element line = doc.createElement("Line");
+                invoice.appendChild(line);
+                criarElemento(doc, "LineNumber", line, "33");
+
+                Element orderReferences = doc.createElement("OrderReferences");
+                line.appendChild(orderReferences);
+                criarElemento(doc, "OriginatingON", orderReferences, "33");
+                criarElemento(doc, "OrderDate", orderReferences, "2012-12-13");
+
+                criarElemento(doc, "ProductCode", line, "111");
+                criarElemento(doc, "ProductDescription", line, "Arroz");
+                criarElemento(doc, "Quantity", line, "2");
+                criarElemento(doc, "UnitOfMeasure", line, "UN");
+                criarElemento(doc, "UnitPrice", line, "123.45");
+                criarElemento(doc, "TaxPointDate", line, "2012-12-13");
+                criarElemento(doc, "Description", line, "Arroz");
+
+                Element productSerialNumber = doc.createElement("ProductSerialNumber");
+                line.appendChild(productSerialNumber);
+                criarElemento(doc, "SerialNumber", productSerialNumber, "ISS");
+
+                criarElemento(doc, "CreditAmount", line, "123.45");
+
+                Element tax = doc.createElement("Tax");
+                line.appendChild(tax);
+                criarElemento(doc, "TaxType", tax, "IVA");
+                criarElemento(doc, "TaxCountryRegion", tax, "AO");
+                criarElemento(doc, "TaxCode", tax, "NOR");
+                criarElemento(doc, "TaxPercentage", tax, "0");
+                criarElemento(doc, "TaxAmount", tax, "123.45");
+
+                criarElemento(doc, "TaxExemptionReason", line, "Regime simplificado");
+                criarElemento(doc, "TaxExemptionCode", line, "M00");
+                criarElemento(doc, "SettlementAmount", line, "123.45");
+
+                Element documentTotals = doc.createElement("DocumentTotals");
+                invoice.appendChild(documentTotals);
+                criarElemento(doc, "TaxPayable", documentTotals, "123.45");
+                criarElemento(doc, "NetTotal", documentTotals, "123.45");
+                criarElemento(doc, "GrossTotal", documentTotals, "123.45");
+
+                Element currency = doc.createElement("Currency");
+                documentTotals.appendChild(currency);
+                criarElemento(doc, "CurrencyCode", currency, "AOA");
+                criarElemento(doc, "CurrencyAmount", currency, "123.45");
+                criarElemento(doc, "ExchangeRate", currency, "123.45");
+
+                Element paymentMethod = doc.createElement("PaymentMethod");
+                documentTotals.appendChild(paymentMethod);
+                criarElemento(doc, "PaymentMechanism", paymentMethod, "CC");
+                criarElemento(doc, "PaymentAmount", paymentMethod, "123.45");
+                criarElemento(doc, "PaymentDate", paymentMethod, "2012-12-13");
+
+                Element withholdingTax = doc.createElement("WithholdingTax");
+                invoice.appendChild(withholdingTax);
+                criarElemento(doc, "WithholdingTaxAmount", withholdingTax, "0");
+
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                DOMSource source = new DOMSource(doc);
-                System.out.println("-----------Modified File-----------");
-                StreamResult consoleResult = new StreamResult(outputStream);
-                StreamResult result = new StreamResult(System.out);
-                transformer.transform(source, consoleResult);
-                transformer.transform(source, result);
+                StreamResult result = new StreamResult(Common.getAppPath("SAFT-AO") + "SAFTAO1.01_01.xml");
+                transformer.transform(new DOMSource(doc), result);
 
-//                InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
+                addFileContentProvider(getContext(), "/SAFT-AO/" + "SAFTAO1.01_01.xml");
 
-                Log.i("SAF-T", outputStream.toString("UTF-8"));
-
-            } catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
-                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            } finally {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                if (validateXMLSchema(getXSDORXMLCacheFile(requireContext(), "SAFTAO1.01_01.xsd").getAbsolutePath(), Common.getAppPath("SAFT-AO") + "SAFTAO1.01_01.xml", requireContext())) {
+                    Toast.makeText(requireContext(), "Válido", Toast.LENGTH_SHORT).show();
                 }
+
+            } catch (ParserConfigurationException | TransformerException e) {
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
-
-
-//            if (validateXMLSchema(getXSDCacheFile(requireContext(), "SAFTAO1.01_01.xsd").getAbsolutePath(), getXSDCacheFile(requireContext(), "SAFTAO1.01_01.xml").getAbsolutePath(), requireContext()))
-//                Toast.makeText(requireContext(), "Válido", Toast.LENGTH_SHORT).show();
 //            MainActivity.getProgressBar();
 //            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
-
-//            try {
-//
-//                // Parse the file into an XSModel object
-//                XSModel xsModel = new XSParser().parse(getXSDCacheFile(requireContext(), "SAFTAO1.01_01.xsd").getAbsolutePath());
-//
-//                // Define defaults for the XML generation
-//                XSInstance instance = new XSInstance();
-//
-//                // Build the sample xml doc
-//                // Replace first param to XMLDoc with a file input stream to write to file
-//                QName rootElement = new QName("urn:OECD:StandardAuditFile-Tax:AO_1.01_01", "AuditFile");
-//                XMLDocument sampleXml = new XMLDocument(new StreamResult(System.out), false, 0, "utf-8");
-//                instance.generate(xsModel, rootElement, sampleXml);
-//
-//            } catch (Exception e) {
-//                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-
-
         });
 
         clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), cliente -> {
@@ -439,9 +482,20 @@ public class LoginFragment extends Fragment {
         if (!Ultilitario.getActivarAutenticacaoBiometrica(requireContext())) {
             binding.btnAuthBiometric.setVisibility(View.INVISIBLE);
         }
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
+    }
+
+    private void criarElemento(Document doc, String elementoFilho, Element elementPai, String valorElementoFilho) {
+        Element element = doc.createElement(elementoFilho);
+        elementPai.appendChild(element);
+        element.setTextContent(valorElementoFilho);
+    }
+
+    private void setAtributo(Document doc, String atributo, String valor, Element element) {
+        Attr attr = doc.createAttribute(atributo);
+        attr.setValue(valor);
+        element.setAttributeNode(attr);
     }
 
     public static File getXSDORXMLCacheFile(Context context, String filePath) {
