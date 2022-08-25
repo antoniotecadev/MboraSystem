@@ -147,7 +147,7 @@
                                                                 <xs:element ref="NetTotal" />
                                                                 <xs:element ref="GrossTotal" />
                                                                 <xs:element minOccurs="0" name="Currency" type="Currency" />
-                                                                <xs:element minOccurs="0" maxOccurs="unbounded" name="Payment" type="PaymentMethod" />
+                                                                <xs:element minOccurs="0" maxOccurs="unbounded" name="PaymentMethod" type="PaymentMethod" />
                                                             </xs:sequence>
                                                         </xs:complexType>
                                                     </xs:element>
