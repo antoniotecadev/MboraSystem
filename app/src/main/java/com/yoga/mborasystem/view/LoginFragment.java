@@ -29,10 +29,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentLoginBinding;
@@ -46,7 +42,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -81,12 +76,11 @@ public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
     private ClienteViewModel clienteViewModel;
 
-    private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
     private void instanceOfBiometricPrompt() {
-        executor = ContextCompat.getMainExecutor(requireContext());
+        Executor executor = ContextCompat.getMainExecutor(requireContext());
         biometricPrompt = new BiometricPrompt(requireActivity(),
                 executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
@@ -501,20 +495,14 @@ public class LoginFragment extends Fragment {
     public static File getXSDORXMLCacheFile(Context context, String filePath) {
         File cacheFile = new File(context.getCacheDir(), filePath);
         try {
-            InputStream inputStream = context.getAssets().open(filePath);
-            try {
-                FileOutputStream outputStream = new FileOutputStream(cacheFile);
-                try {
+            try (InputStream inputStream = context.getAssets().open(filePath)) {
+                try (FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
                     byte[] buf = new byte[1024];
                     int len;
                     while ((len = inputStream.read(buf)) > 0) {
                         outputStream.write(buf, 0, len);
                     }
-                } finally {
-                    outputStream.close();
                 }
-            } finally {
-                inputStream.close();
             }
         } catch (IOException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
