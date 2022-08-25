@@ -8,8 +8,14 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
-        android:id="@+id/btnData"
+        android:id="@+id/itemData"
         android:icon="@android:drawable/ic_menu_day"
         android:title="@string/pes_dat"
         app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/itemSaft"
+        android:icon="@drawable/ic_baseline_insert_drive_file_24"
+        android:title="@string/ger_saft"
+        app:showAsAction="collapseActionView" />
 </menu>

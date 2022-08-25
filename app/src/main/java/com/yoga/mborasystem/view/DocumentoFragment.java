@@ -140,9 +140,11 @@ public class DocumentoFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                if (menuItem.getItemId() == R.id.btnData) {
+                if (menuItem.getItemId() == R.id.itemData) {
                     DocumentoFragmentDirections.ActionDocumentoFragmentToDatePickerFragment direction = DocumentoFragmentDirections.actionDocumentoFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
                     Navigation.findNavController(requireView()).navigate(direction);
+                } else if(menuItem.getItemId() == R.id.itemSaft){
+
                 }
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }

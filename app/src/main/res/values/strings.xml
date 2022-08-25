@@ -653,6 +653,7 @@
     <string name="sem_cont_stoc">Sem controle de stock</string>
     <string name="quant_prod_dispo">Você tem apenas %1$s produto(s) disponivel em stock. Aumente a sua quantidade ou desmarque o seu controle de stock</string>
     <string name="avs_stock">Aviso de stock</string>
+    <string name="ger_saft">Gerar documento SAFT</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
