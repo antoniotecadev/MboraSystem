@@ -2,14 +2,14 @@
 <AuditFile xmlns="urn:OECD:StandardAuditFile-Tax:AO_1.01_01" xsi:schemaLocation="urn:OECD:StandardAuditFile-Tax:AO_1.01_01 SAFTAO1.01_01.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Header>
         <AuditFileVersion>1.01_01</AuditFileVersion>
-        <CompanyID>str1234</CompanyID>
-        <TaxRegistrationNumber>str1234000</TaxRegistrationNumber>
-        <TaxAccountingBasis>A</TaxAccountingBasis>
-        <CompanyName>str1234</CompanyName>
+        <CompanyID>5000999784</CompanyID>
+        <TaxRegistrationNumber>5000999784</TaxRegistrationNumber>
+        <TaxAccountingBasis>F</TaxAccountingBasis>
+        <CompanyName>YOGA</CompanyName>
         <CompanyAddress>
-            <AddressDetail>str1234</AddressDetail>
-            <City>str1234</City>
-            <Province>str1234</Province>
+            <AddressDetail>Multiperfi, Morro Bento 2, Luanda</AddressDetail>
+            <City>Luanda</City>
+            <Province>Luanda</Province>
             <Country>AO</Country>
         </CompanyAddress>
         <FiscalYear>2022</FiscalYear>

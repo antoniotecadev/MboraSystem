@@ -459,9 +459,15 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, isUserMaster());
+                    if (getArguments() != null) {
+                        bundle.putParcelable("cliente", cliente);
+                        bundle.putBoolean("master", getArguments().getBoolean("master"));
+                        Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
+                    } else {
+                        Toast.makeText(getContext(), requireContext().getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_LONG).show();
                 }
             }
     );

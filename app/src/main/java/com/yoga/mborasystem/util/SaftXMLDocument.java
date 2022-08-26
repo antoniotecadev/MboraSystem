@@ -5,6 +5,8 @@ import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.yoga.mborasystem.model.entidade.Cliente;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -75,7 +77,7 @@ public class SaftXMLDocument {
         return true;
     }
 
-    private void criarDocumentoSaft(Context context) {
+    public void criarDocumentoSaft(Context context, Cliente cliente) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -93,16 +95,16 @@ public class SaftXMLDocument {
             rootElement.appendChild(header);
 
             criarElemento(doc, "AuditFileVersion", header, "1.01_01");
-            criarElemento(doc, "CompanyID", header, "1536728967LA98");
-            criarElemento(doc, "TaxRegistrationNumber", header, "1536728967LA98");
+            criarElemento(doc, "CompanyID", header, cliente.getNifbi());
+            criarElemento(doc, "TaxRegistrationNumber", header, cliente.getNifbi());
             criarElemento(doc, "TaxAccountingBasis", header, "F");
-            criarElemento(doc, "CompanyName", header, "YOGA");
+            criarElemento(doc, "CompanyName", header, cliente.getNomeEmpresa());
 
             Element companyAddress = doc.createElement("CompanyAddress");
             header.appendChild(companyAddress);
-            criarElemento(doc, "AddressDetail", companyAddress, "Benfica");
-            criarElemento(doc, "City", companyAddress, "Luanda");
-            criarElemento(doc, "Province", companyAddress, "Luanda");
+            criarElemento(doc, "AddressDetail", companyAddress, cliente.getRua() + ", " + cliente.getBairro() + ", " + cliente.getMunicipio());
+            criarElemento(doc, "City", companyAddress, cliente.getProvincia());
+            criarElemento(doc, "Province", companyAddress, cliente.getProvincia());
             criarElemento(doc, "Country", companyAddress, "AO");
 
             criarElemento(doc, "FiscalYear", header, "2022");

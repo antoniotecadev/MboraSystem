@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -38,6 +40,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -45,6 +48,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
 import com.yoga.mborasystem.util.EventObserver;
+import com.yoga.mborasystem.util.SaftXMLDocument;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
@@ -58,14 +62,18 @@ import java.util.List;
 public class DocumentoFragment extends Fragment {
 
     private String pasta;
+    private int accao;
     private GroupAdapter adapter;
     private VendaViewModel vendaViewModel;
     private FragmentDocumentoBinding binding;
+    private TextInputEditText dataInicio, dataFim;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new GroupAdapter();
+        dataInicio = new TextInputEditText(requireContext());
+        dataFim = new TextInputEditText(requireContext());
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
     }
 
@@ -94,7 +102,12 @@ public class DocumentoFragment extends Fragment {
         });
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
-            getDocumentos(null, false, data, true);
+            if (accao == 0)
+                getDocumentos(null, false, data, true);
+            else if (accao == 1)
+                dataInicio.setText(data);
+            else if (accao == 2)
+                dataFim.setText(data);
         }));
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
@@ -141,15 +154,48 @@ public class DocumentoFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
                 if (menuItem.getItemId() == R.id.itemData) {
-                    DocumentoFragmentDirections.ActionDocumentoFragmentToDatePickerFragment direction = DocumentoFragmentDirections.actionDocumentoFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
-                    Navigation.findNavController(requireView()).navigate(direction);
-                } else if(menuItem.getItemId() == R.id.itemSaft){
-
+                    getData(0);
+                } else if (menuItem.getItemId() == R.id.itemSaft) {
+                    android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
+                    alert.setCancelable(false);
+                    alert.setIcon(R.drawable.ic_baseline_insert_drive_file_24);
+                    alert.setTitle(getString(R.string.ger_saft));
+                    final LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
+                    final TextView inicio = new TextView(requireContext());
+                    inicio.setText(getText(R.string.de));
+                    final TextView fim = new TextView(requireContext());
+                    fim.setText(getText(R.string.ate));
+                    layout.setOrientation(LinearLayoutCompat.VERTICAL);
+                    layout.setPadding(55, 0, 55, 0);
+                    layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                    layout.addView(inicio);
+                    layout.addView(setTextInputEditText(dataInicio, 1));
+                    layout.addView(fim);
+                    layout.addView(setTextInputEditText(dataFim, 2));
+                    alert.setView(layout);
+                    alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"))).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                            .show();
                 }
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
         return binding.getRoot();
+    }
+
+    private TextInputEditText setTextInputEditText(TextInputEditText textInputEditText, int accao) {
+        textInputEditText.setMaxLines(1);
+        textInputEditText.setHint(getString(R.string.selec_data));
+        textInputEditText.setOnFocusChangeListener((view, b) -> {
+            if (b) getData(accao);
+        });
+        textInputEditText.setOnClickListener(view -> getData(accao));
+        return textInputEditText;
+    }
+
+    private void getData(int accao) {
+        this.accao = accao;
+        DocumentoFragmentDirections.ActionDocumentoFragmentToDatePickerFragment direction = DocumentoFragmentDirections.actionDocumentoFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
     private void getDocumentos(String ficheiro, boolean isPesquisa, String data, boolean isPesquisaData) {
