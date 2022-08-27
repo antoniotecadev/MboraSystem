@@ -3,6 +3,7 @@ package com.yoga.mborasystem.util;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -16,6 +17,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -70,6 +74,8 @@ public class SaftXMLDocument {
 
     public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim) throws ParserConfigurationException, TransformerException, IOException, SAXException {
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.newDocument();
@@ -98,20 +104,18 @@ public class SaftXMLDocument {
         criarElemento(doc, "Province", companyAddress, cliente.getProvincia());
         criarElemento(doc, "Country", companyAddress, "AO");
 
-        criarElemento(doc, "FiscalYear", header, "2022");
+        criarElemento(doc, "FiscalYear", header, TextUtils.split(dataInicio, "-")[0].trim());
         criarElemento(doc, "StartDate", header, dataInicio);
         criarElemento(doc, "EndDate", header, dataFim);
         criarElemento(doc, "CurrencyCode", header, "AOA");
-        criarElemento(doc, "DateCreated", header, "2012-12-13");
+        criarElemento(doc, "DateCreated", header, sdf.format(new Date()));
         criarElemento(doc, "TaxEntity", header, "Global");
         criarElemento(doc, "ProductCompanyTaxID", header, "5000999784");
-        criarElemento(doc, "SoftwareValidationNumber", header, "308/AGT/2021");
+        criarElemento(doc, "SoftwareValidationNumber", header, "000/AGT/0000");
         criarElemento(doc, "ProductID", header, "MBORASYSTEM/YOGA ANGOLA,LDA");
-        criarElemento(doc, "ProductVersion", header, "1");
-        criarElemento(doc, "Telephone", header, "932359808");
-        criarElemento(doc, "Fax", header, "antonio@gmail.com");
-        criarElemento(doc, "Email", header, "antonio@gmail.com");
-        criarElemento(doc, "Website", header, "www.yoga.com");
+        criarElemento(doc, "ProductVersion", header, "1.0");
+        criarElemento(doc, "Telephone", header, cliente.getTelefone());
+        criarElemento(doc, "Email", header, cliente.getEmail());
 
         Element masterFiles = doc.createElement("MasterFiles");
         rootElement.appendChild(masterFiles);

@@ -17,15 +17,15 @@
         <EndDate>2012-12-13</EndDate>
         <CurrencyCode>AOA</CurrencyCode>
         <DateCreated>2012-12-13</DateCreated>
-        <TaxEntity>str1234</TaxEntity>
-        <ProductCompanyTaxID>str1234</ProductCompanyTaxID>
-        <SoftwareValidationNumber>308/AGT/2021</SoftwareValidationNumber>
-        <ProductID>BUESIMPLES/MAYONGI ANGOLA,LDA</ProductID>
-        <ProductVersion>str1234</ProductVersion>
-        <Telephone>str1234</Telephone>
-        <Fax>str1234</Fax>
-        <Email>str1234</Email>
-        <Website>str1234</Website>
+        <TaxEntity>Global</TaxEntity>
+        <ProductCompanyTaxID>AO5000999784</ProductCompanyTaxID>
+        <SoftwareValidationNumber>000/AGT/0000</SoftwareValidationNumber>
+        <ProductID>MBORASYSTEM/YOGA ANGOLA,LDA</ProductID>
+        <ProductVersion>1.0</ProductVersion>
+        <Telephone>923698521</Telephone>
+        <Fax>yoga@gmail.com</Fax>
+        <Email>yoga@gmail.com</Email>
+        <Website>www.yoga.com</Website>
     </Header>
     <MasterFiles>
         <Customer>
