@@ -199,7 +199,7 @@ public class VendaViewModel extends AndroidViewModel {
     private long idvenda;
 
     @SuppressLint("CheckResult")
-    public long cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
+    public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
         venda.setId(0);
         venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
@@ -238,7 +238,6 @@ public class VendaViewModel extends AndroidViewModel {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_nao_efectuada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
-        return idvenda;
     }
 
     @SuppressLint("CheckResult")
