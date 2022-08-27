@@ -322,6 +322,13 @@ public class VendaViewModel extends AndroidViewModel {
                 .subscribe(produtos -> getProdutosVendaLiveData().setValue(new Event<>(produtos)), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
+    public void getVendaSaft(String dataInicio, String dataFim) {
+            compositeDisposable.add(vendaRepository.getVendaSaft(dataInicio, dataFim)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(vendas -> getVendasParaExportar().setValue(new Event<>(vendas)), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+    }
+
     @SuppressLint("CheckResult")
     public void liquidarDivida(int divida, long idivida) {
         Completable.fromAction(() -> vendaRepository.liquidarDivida(divida, idivida))

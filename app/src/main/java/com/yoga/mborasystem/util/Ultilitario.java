@@ -489,6 +489,27 @@ public class Ultilitario {
         return listMonth.get(month);
     }
 
+    public static String getDataInicioFim(String data) {
+
+        Map<String, String> listData = new HashMap<>();
+
+        listData.put("janeiro", "01");
+        listData.put("fevereiro", "02");
+        listData.put("março", "03");
+        listData.put("abril", "04");
+        listData.put("maio", "05");
+        listData.put("junho", "06");
+        listData.put("julho", "07");
+        listData.put("agosto", "08");
+        listData.put("setembro", "09");
+        listData.put("outubro", "10");
+        listData.put("novembro", "11");
+        listData.put("dezembro", "12");
+
+        String[] date = TextUtils.split(data.trim(), "-");
+        return date[2] + "-" + listData.get(date[1]) + "-" + date[0];
+    }
+
     private static class ExportarAsyncTask extends AsyncTask<String, Void, String> {
 
         private final Uri uri;
@@ -528,13 +549,13 @@ public class Ultilitario {
         }
     }
 
-    public static void colorRandomImage(ImageView i, Random rand) {
+    /*public static void colorRandomImage(ImageView i, Random rand) {
         int r, g, b;
         r = rand.nextInt();
         g = rand.nextInt();
         b = rand.nextInt();
         i.setColorFilter(Color.rgb(r, g, b));
-    }
+    }*/
 
     @SuppressWarnings("deprecation")
     @SuppressLint("MissingPermission")

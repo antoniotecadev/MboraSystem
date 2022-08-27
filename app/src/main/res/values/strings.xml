@@ -347,7 +347,7 @@
     <string name="dat_sel">Data Seleccionada</string>
     <string name="exp_v">"Exportar vendas de "</string>
     <string name="vendas">Vendas</string>
-    <string name="nao_tem_venda">Não tem venda(s) nesta data</string>
+    <string name="nao_tem_venda">Não tem venda(s) nesta data.</string>
     <string name="venda_n_impo">Vendas não importadas</string>
     <string name="venda_impo">Vendas importadas</string>
     <string name="sem_iva">Sem iva</string>
@@ -656,6 +656,9 @@
     <string name="ger_saft">Gerar documento SAFT</string>
     <string name="de">De:</string>
     <string name="ate">Até:</string>
+    <string name="dat_1_nao_dat_2">A primeira data (%1$s) não pode ser maior que a segunda data (%2$s).</string>
+    <string name="pri_dat_vaz">Seleciona a primeira data.</string>
+    <string name="seg_dat_vaz">Selecciona a segunda data.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

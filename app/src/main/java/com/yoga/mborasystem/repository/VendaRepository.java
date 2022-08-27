@@ -90,6 +90,10 @@ public class VendaRepository {
         }
     }
 
+    public Maybe<List<Venda>> getVendaSaft(String dataInicio, String dataFim){
+        return vendaDao.getVendaSaft(dataInicio, dataFim);
+    }
+
     public void liquidarDivida(int divida, long idivida) {
         vendaDao.liquidardivida(divida, idivida);
     }

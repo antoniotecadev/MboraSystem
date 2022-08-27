@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.getDataInicioFim;
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
 
 import android.annotation.SuppressLint;
@@ -52,11 +53,20 @@ import com.yoga.mborasystem.util.SaftXMLDocument;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
+import org.xml.sax.SAXException;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 @SuppressWarnings("rawtypes")
 public class DocumentoFragment extends Fragment {
@@ -101,88 +111,135 @@ public class DocumentoFragment extends Fragment {
             return true;
         });
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
-            Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
-            if (accao == 0)
+            if (accao == 0) {
+                Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
                 getDocumentos(null, false, data, true);
-            else if (accao == 1)
+            } else if (accao == 1)
                 dataInicio.setText(data);
             else if (accao == 2)
                 dataFim.setText(data);
         }));
-        requireActivity().addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.menu_documento, menu);
-                SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-                MenuItem menuItem = menu.findItem(R.id.app_bar_search);
-                SearchView searchView = (SearchView) menuItem.getActionView();
-                searchView.setQueryHint(getString(R.string.nm) + ", " + getString(R.string.referencia));
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-                searchView.onActionViewExpanded();
-                menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-                    @Override
-                    public boolean onMenuItemActionExpand(MenuItem item) {
-                        return true;
+        vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
+            if (vendas.isEmpty()) {
+                Ultilitario.alertDialog(getString(R.string.ger_saft), getString(R.string.nao_tem_venda), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            } else {
+                try {
+                    if (getArguments() != null) {
+                        new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataInicioFim(Objects.requireNonNull(dataInicio.getText()).toString()), getDataInicioFim(Objects.requireNonNull(dataFim.getText()).toString()));
+                    } else {
+                        Toast.makeText(requireContext(), getText(R.string.arg_null), Toast.LENGTH_LONG).show();
                     }
-
-                    @Override
-                    public boolean onMenuItemActionCollapse(MenuItem item) {
-                        getDocumentos(null, false, "", false);
-                        return true;
-                    }
-                });
-
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        if (newText.isEmpty()) {
-                            getDocumentos(null, false, "", false);
-                        } else {
-                            getDocumentos(newText.replace("/", "_"), true, "", false);
-                        }
-                        return false;
-                    }
-                });
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                if (menuItem.getItemId() == R.id.itemData) {
-                    getData(0);
-                } else if (menuItem.getItemId() == R.id.itemSaft) {
-                    android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
-                    alert.setCancelable(false);
-                    alert.setIcon(R.drawable.ic_baseline_insert_drive_file_24);
-                    alert.setTitle(getString(R.string.ger_saft));
-                    final LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
-                    final TextView inicio = new TextView(requireContext());
-                    inicio.setText(getText(R.string.de));
-                    final TextView fim = new TextView(requireContext());
-                    fim.setText(getText(R.string.ate));
-                    layout.setOrientation(LinearLayoutCompat.VERTICAL);
-                    layout.setPadding(55, 0, 55, 0);
-                    layout.setGravity(Gravity.CENTER_HORIZONTAL);
-                    layout.addView(inicio);
-                    layout.addView(setTextInputEditText(dataInicio, 1));
-                    layout.addView(fim);
-                    layout.addView(setTextInputEditText(dataFim, 2));
-                    alert.setView(layout);
-                    alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"))).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                            .show();
+                } catch (ParserConfigurationException | TransformerException | IOException | SAXException e) {
+                    Ultilitario.alertDialog(getString(R.string.ger_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
-                return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
-        }, getViewLifecycleOwner());
+            MainActivity.dismissProgressBar();
+        }));
+        requireActivity().addMenuProvider(new MenuProvider() {
+                                              @Override
+                                              public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                                                  menuInflater.inflate(R.menu.menu_documento, menu);
+                                                  SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+                                                  MenuItem menuItem = menu.findItem(R.id.app_bar_search);
+                                                  SearchView searchView = (SearchView) menuItem.getActionView();
+                                                  searchView.setQueryHint(getString(R.string.nm) + ", " + getString(R.string.referencia));
+                                                  searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
+                                                  searchView.onActionViewExpanded();
+                                                  menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                                                      @Override
+                                                      public boolean onMenuItemActionExpand(MenuItem item) {
+                                                          return true;
+                                                      }
+
+                                                      @Override
+                                                      public boolean onMenuItemActionCollapse(MenuItem item) {
+                                                          getDocumentos(null, false, "", false);
+                                                          return true;
+                                                      }
+                                                  });
+
+                                                  searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                                      @Override
+                                                      public boolean onQueryTextSubmit(String query) {
+                                                          return false;
+                                                      }
+
+                                                      @Override
+                                                      public boolean onQueryTextChange(String newText) {
+                                                          if (newText.isEmpty()) {
+                                                              getDocumentos(null, false, "", false);
+                                                          } else {
+                                                              getDocumentos(newText.replace("/", "_"), true, "", false);
+                                                          }
+                                                          return false;
+                                                      }
+                                                  });
+                                              }
+
+                                              @Override
+                                              public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                                                  NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                                                  if (menuItem.getItemId() == R.id.itemData) {
+                                                      getData(0);
+                                                  } else if (menuItem.getItemId() == R.id.itemSaft) {
+                                                      dialogGerarSaft();
+                                                  }
+                                                  return NavigationUI.onNavDestinationSelected(menuItem, navController);
+                                              }
+                                          },
+                getViewLifecycleOwner());
         return binding.getRoot();
     }
 
-    private TextInputEditText setTextInputEditText(TextInputEditText textInputEditText, int accao) {
+    private void dialogGerarSaft() {
+        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
+        alert.setCancelable(false);
+        alert.setIcon(R.drawable.ic_baseline_insert_drive_file_24);
+        alert.setTitle(getString(R.string.ger_saft));
+        final LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
+        final TextView inicio = new TextView(requireContext());
+        inicio.setText(getText(R.string.de));
+        final TextView fim = new TextView(requireContext());
+        fim.setText(getText(R.string.ate));
+        layout.setOrientation(LinearLayoutCompat.VERTICAL);
+        layout.setPadding(55, 0, 55, 0);
+        layout.setGravity(Gravity.CENTER_HORIZONTAL);
+        layout.addView(inicio);
+        layout.addView(setTextInputEditText(dataInicio, 1));
+        layout.addView(fim);
+        layout.addView(setTextInputEditText(dataFim, 2));
+        alert.setView(layout);
+        alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
+            try {
+                layout.removeAllViews();
+                if (Objects.requireNonNull(dataInicio.getText()).toString().isEmpty()) {
+                    this.dialogGerarSaft();
+                    dataInicio.requestFocus();
+                    Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.pri_dat_vaz), R.drawable.ic_toast_erro);
+                } else if (Objects.requireNonNull(dataFim.getText()).toString().isEmpty()) {
+                    this.dialogGerarSaft();
+                    dataFim.requestFocus();
+                    Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
+                } else if (Objects.requireNonNull(sdf.parse(dataFim.getText().toString())).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
+                    MainActivity.getProgressBar();
+                    vendaViewModel.getVendaSaft(dataInicio.getText().toString(), dataFim.getText().toString());
+                } else {
+                    this.dialogGerarSaft();
+                    Ultilitario.alertDialog(getString(R.string.ger_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                }
+            } catch (ParseException e) {
+                Ultilitario.alertDialog(getString(R.string.ger_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
+        }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> {
+            layout.removeAllViews();
+            dialog.dismiss();
+        })
+                .show();
+    }
+
+    private TextInputEditText setTextInputEditText(TextInputEditText textInputEditText,
+                                                   int accao) {
         textInputEditText.setMaxLines(1);
         textInputEditText.setHint(getString(R.string.selec_data));
         textInputEditText.setOnFocusChangeListener((view, b) -> {
@@ -198,7 +255,8 @@ public class DocumentoFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(direction);
     }
 
-    private void getDocumentos(String ficheiro, boolean isPesquisa, String data, boolean isPesquisaData) {
+    private void getDocumentos(String ficheiro, boolean isPesquisa, String data,
+                               boolean isPesquisaData) {
         if (pasta.equalsIgnoreCase("Facturas")) {
             getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, isPesquisa, ficheiro, data, isPesquisaData);
         } else {
@@ -407,6 +465,7 @@ public class DocumentoFragment extends Fragment {
                             + "\n" + getString(R.string.caminho) + ": " + documento.getCaminho()
                     , context, R.drawable.ic_baseline_store_24);
         }
+
     }
 
     @Override
