@@ -117,7 +117,7 @@ public class DocumentoFragment extends Fragment {
         });
         clienteCantinaViewModel.getCliente().observe(getViewLifecycleOwner(), clienteCantinas -> {
              this.clienteCantinas = clienteCantinas;
-            vendaViewModel.getVendaSaft(dataInicio.getText().toString(), dataFim.getText().toString());
+            vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
         });
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             if (accao == 0) {

@@ -122,9 +122,9 @@ public class SaftXMLDocument {
         Element masterFiles = doc.createElement("MasterFiles");
         rootElement.appendChild(masterFiles);
         if (clienteCantina.isEmpty())
-            elementCustomer(doc, masterFiles, "1", "999999999", "Consumidor Final", "Desconhecido", "Desconhecido", "Desconhecido", "AO", "Desconhecido", "Desconhecido");
+            elementCustomer(doc, masterFiles, "1", "999999999", "Consumidor Final", "Desconhecido", "Desconhecido", "Desconhecido", "Desconhecido", "Desconhecido");
         else for (ClienteCantina cc : clienteCantina)
-            elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), "Luanda", "Luanda", "AO", isEmpty(cc.getTelefone()), isEmpty(cc.getEmail()));
+            elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), "Luanda", "Luanda", isEmpty(cc.getTelefone()), isEmpty(cc.getEmail()));
 
         Element product = doc.createElement("Product");
         masterFiles.appendChild(product);
@@ -283,7 +283,7 @@ public class SaftXMLDocument {
         }
     }
 
-    private void elementCustomer(Document doc, Element masterFiles, String customerID, String customerTaxID, String companyName, String addressDetail, String city, String province, String country, String telephone, String email) {
+    private void elementCustomer(Document doc, Element masterFiles, String customerID, String customerTaxID, String companyName, String addressDetail, String city, String province, String telephone, String email) {
         Element customer = doc.createElement("Customer");
         masterFiles.appendChild(customer);
         criarElemento(doc, "CustomerID", customer, customerID);
@@ -296,14 +296,14 @@ public class SaftXMLDocument {
         criarElemento(doc, "AddressDetail", billingAddress, addressDetail);
         criarElemento(doc, "City", billingAddress, city);
         criarElemento(doc, "Province", billingAddress, province);
-        criarElemento(doc, "Country", billingAddress, country);
+        criarElemento(doc, "Country", billingAddress, "AO");
 
         Element shipToAddress = doc.createElement("ShipToAddress");
         customer.appendChild(shipToAddress);
         criarElemento(doc, "AddressDetail", shipToAddress, addressDetail);
         criarElemento(doc, "City", shipToAddress, city);
         criarElemento(doc, "Province", shipToAddress, province);
-        criarElemento(doc, "Country", shipToAddress, country);
+        criarElemento(doc, "Country", shipToAddress, "AO");
 
         criarElemento(doc, "Telephone", customer, telephone);
         criarElemento(doc, "Email", customer, email);
