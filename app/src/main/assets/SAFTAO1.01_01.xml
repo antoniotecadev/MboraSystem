@@ -29,26 +29,26 @@
     </Header>
     <MasterFiles>
         <Customer>
-            <CustomerID>str1234</CustomerID>
-            <AccountID>str1234</AccountID>
-            <CustomerTaxID>str1234</CustomerTaxID>
-            <CompanyName>str1234</CompanyName>
+            <CustomerID>1</CustomerID>
+            <AccountID>Desconhecido</AccountID>
+            <CustomerTaxID>12547863LA45</CustomerTaxID>
+            <CompanyName>Pedro Martins</CompanyName>
             <BillingAddress>
-                <AddressDetail>str1234</AddressDetail>
-                <City>str1234</City>
-                <Province>str1234</Province>
+                <AddressDetail>Benfica</AddressDetail>
+                <City>Luanda</City>
+                <Province>Luanda</Province>
                 <Country>AO</Country>
             </BillingAddress>
             <ShipToAddress>
-                <AddressDetail>str1234</AddressDetail>
-                <City>str1234</City>
-                <Province>str1234</Province>
+                <AddressDetail>Futungo</AddressDetail>
+                <City>Luanda</City>
+                <Province>Luanda</Province>
                 <Country>AO</Country>
             </ShipToAddress>
-            <Telephone>str1234</Telephone>
-            <Fax>str1234</Fax>
-            <Email>str1234</Email>
-            <Website>str1234</Website>
+            <Telephone>936985555</Telephone>
+            <Fax>pedro@gmail.com</Fax>
+            <Email>pedro@gmail.com</Email>
+            <Website>www.pedro.com</Website>
             <SelfBillingIndicator>0</SelfBillingIndicator>
         </Customer>
         <Product>
