@@ -141,10 +141,8 @@ public class SaftXMLDocument {
         criarElemento(doc, "TaxType", taxTableEntry, "IVA");
         criarElemento(doc, "TaxCountryRegion", taxTableEntry, "AO");
         criarElemento(doc, "TaxCode", taxTableEntry, "NOR");
-        criarElemento(doc, "Description", taxTableEntry, "Desconhecido");
-        criarElemento(doc, "TaxExpirationDate", taxTableEntry, "2012-12-13");
+        criarElemento(doc, "Description", taxTableEntry, "Normal");
         criarElemento(doc, "TaxPercentage", taxTableEntry, "123.45");
-        criarElemento(doc, "TaxAmount", taxTableEntry, "0.00");
 
         Element sourceDocuments = doc.createElement("SourceDocuments");
         rootElement.appendChild(sourceDocuments);

@@ -62,7 +62,7 @@
                 <TaxType>IVA</TaxType>
                 <TaxCountryRegion>AO</TaxCountryRegion>
                 <TaxCode>NOR</TaxCode>
-                <Description>str1234</Description>
+                <Description>Normal</Description>
                 <TaxExpirationDate>2012-12-13</TaxExpirationDate>
                 <TaxPercentage>123.45</TaxPercentage>
                 <TaxAmount>0.00</TaxAmount>
