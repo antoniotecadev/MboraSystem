@@ -105,7 +105,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     }
 
     private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        if (isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) && Ultilitario.letraNumero.matcher(nif.getText().toString()).find()) {
+        if (isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) || Ultilitario.letraNumero.matcher(nif.getText().toString()).find()) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_invalido));
         } else if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
@@ -117,7 +117,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
             email.requestFocus();
             email.setError(getApplication().getString(R.string.email_invalido));
-        } else if (!isCampoVazio(Objects.requireNonNull(endereco.getText()).toString()) && Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(endereco.getText()).toString()) || Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
             endereco.requestFocus();
             endereco.setError(getApplication().getString(R.string.endereco_invalido));
         } else {
