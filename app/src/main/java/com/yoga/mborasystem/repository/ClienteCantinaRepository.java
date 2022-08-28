@@ -40,8 +40,11 @@ public class ClienteCantinaRepository {
             return clienteCantinaDao.getClientesCantina();
     }
 
-    public Maybe<List<ClienteCantina>> getClienteCantina(String cliente) {
-        return clienteCantinaDao.getClienteCantina(cliente);
+    public Maybe<List<ClienteCantina>> getClienteCantina(String cliente, boolean isForDocumentSaft) {
+        if (isForDocumentSaft)
+            return clienteCantinaDao.getClienteCantinaSaft();
+        else
+            return clienteCantinaDao.getClienteCantina(cliente);
     }
 
     public LiveData<Long> getQuantidadeCliente() {

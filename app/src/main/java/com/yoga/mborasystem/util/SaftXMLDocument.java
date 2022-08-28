@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.ClienteCantina;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.xml.XMLConstants;
@@ -72,7 +74,7 @@ public class SaftXMLDocument {
         return true;
     }
 
-    public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim) throws ParserConfigurationException, TransformerException, IOException, SAXException {
+    public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim, List<ClienteCantina> clienteCantina) throws ParserConfigurationException, TransformerException, IOException, SAXException {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -119,33 +121,10 @@ public class SaftXMLDocument {
 
         Element masterFiles = doc.createElement("MasterFiles");
         rootElement.appendChild(masterFiles);
-
-        Element customer = doc.createElement("Customer");
-        masterFiles.appendChild(customer);
-        criarElemento(doc, "CustomerID", customer, "1");
-        criarElemento(doc, "AccountID", customer, "Desconhecido");
-        criarElemento(doc, "CustomerTaxID", customer, "1234");
-        criarElemento(doc, "CompanyName", customer, "Consumidor Final");
-
-        Element billingAddress = doc.createElement("BillingAddress");
-        customer.appendChild(billingAddress);
-        criarElemento(doc, "AddressDetail", billingAddress, "Benfica");
-        criarElemento(doc, "City", billingAddress, "Luanda");
-        criarElemento(doc, "Province", billingAddress, "Luanda");
-        criarElemento(doc, "Country", billingAddress, "AO");
-
-        Element shipToAddress = doc.createElement("ShipToAddress");
-        customer.appendChild(shipToAddress);
-        criarElemento(doc, "AddressDetail", shipToAddress, "Benfica");
-        criarElemento(doc, "City", shipToAddress, "Luanda");
-        criarElemento(doc, "Province", shipToAddress, "Luanda");
-        criarElemento(doc, "Country", shipToAddress, "AO");
-
-        criarElemento(doc, "Telephone", customer, "936566987");
-        criarElemento(doc, "Fax", customer, "matias@gmail.com");
-        criarElemento(doc, "Email", customer, "matias@gmail.com");
-        criarElemento(doc, "Website", customer, "www.yoga.com");
-        criarElemento(doc, "SelfBillingIndicator", customer, "0");
+        if (clienteCantina.isEmpty())
+            elementCustomer(doc, masterFiles, "1", "999999999", "Consumidor Final", "Desconhecido", "Desconhecido", "Desconhecido", "AO", "Desconhecido", "Desconhecido");
+        else for (ClienteCantina cc : clienteCantina)
+            elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), "Luanda", "Luanda", "AO", isEmpty(cc.getTelefone()), isEmpty(cc.getEmail()));
 
         Element product = doc.createElement("Product");
         masterFiles.appendChild(product);
@@ -302,5 +281,36 @@ public class SaftXMLDocument {
         if (validateXMLSchema(getPathXSDCacheFile(context).getAbsolutePath(), Common.getAppPath("SAFT-AO") + "SAFTAO1.01_01.xml")) {
             Toast.makeText(context, "Válido", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void elementCustomer(Document doc, Element masterFiles, String customerID, String customerTaxID, String companyName, String addressDetail, String city, String province, String country, String telephone, String email) {
+        Element customer = doc.createElement("Customer");
+        masterFiles.appendChild(customer);
+        criarElemento(doc, "CustomerID", customer, customerID);
+        criarElemento(doc, "AccountID", customer, "Desconhecido");
+        criarElemento(doc, "CustomerTaxID", customer, customerTaxID);
+        criarElemento(doc, "CompanyName", customer, companyName);
+
+        Element billingAddress = doc.createElement("BillingAddress");
+        customer.appendChild(billingAddress);
+        criarElemento(doc, "AddressDetail", billingAddress, addressDetail);
+        criarElemento(doc, "City", billingAddress, city);
+        criarElemento(doc, "Province", billingAddress, province);
+        criarElemento(doc, "Country", billingAddress, country);
+
+        Element shipToAddress = doc.createElement("ShipToAddress");
+        customer.appendChild(shipToAddress);
+        criarElemento(doc, "AddressDetail", shipToAddress, addressDetail);
+        criarElemento(doc, "City", shipToAddress, city);
+        criarElemento(doc, "Province", shipToAddress, province);
+        criarElemento(doc, "Country", shipToAddress, country);
+
+        criarElemento(doc, "Telephone", customer, telephone);
+        criarElemento(doc, "Email", customer, email);
+        criarElemento(doc, "SelfBillingIndicator", customer, "0");
+    }
+
+    private String isEmpty(String valor) {
+        return valor.isEmpty() ? "Desconhecido" : valor;
     }
 }

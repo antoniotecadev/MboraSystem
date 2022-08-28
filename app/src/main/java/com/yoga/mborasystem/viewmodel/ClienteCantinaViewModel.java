@@ -179,11 +179,14 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
-    public void consultarClienteCantina(String cliente) {
-        disposable = clienteCantinaRepository.getClienteCantina(cliente)
+    public void consultarClienteCantina(String cliente, boolean isForDocumentSaft) {
+        disposable = clienteCantinaRepository.getClienteCantina(cliente, isForDocumentSaft)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(clienteCantinas -> getCliente().setValue(clienteCantinas), e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
+                .subscribe(clienteCantinas -> getCliente().setValue(clienteCantinas), e -> {
+                    MainActivity.dismissProgressBar();
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
+                });
     }
 
     public LiveData<Long> getQuantidadeCliente() {
