@@ -48,6 +48,7 @@ import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
+import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.SaftXMLDocument;
@@ -73,11 +74,13 @@ import javax.xml.transform.TransformerException;
 @SuppressWarnings("rawtypes")
 public class DocumentoFragment extends Fragment {
 
-    private String pasta;
     private int accao;
+    private String pasta;
+    private List<Venda> vendas;
     private GroupAdapter adapter;
     private VendaViewModel vendaViewModel;
     private FragmentDocumentoBinding binding;
+    private List<ClienteCantina> clienteCantinas;
     private TextInputEditText dataInicio, dataFim;
     ClienteCantinaViewModel clienteCantinaViewModel;
 
@@ -114,16 +117,26 @@ public class DocumentoFragment extends Fragment {
             }
             return true;
         });
-        clienteCantinaViewModel.getCliente().observe(getViewLifecycleOwner(), clienteCantinas -> {
+
+        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtoVendas -> {
             try {
                 if (getArguments() != null) {
-                    new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataInicioFim(Objects.requireNonNull(dataInicio.getText()).toString()), getDataInicioFim(Objects.requireNonNull(dataFim.getText()).toString()), clienteCantinas);
+                    new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataInicioFim(Objects.requireNonNull(dataInicio.getText()).toString()), getDataInicioFim(Objects.requireNonNull(dataFim.getText()).toString()), this.clienteCantinas, produtoVendas);
                 } else {
                     Toast.makeText(requireContext(), getText(R.string.arg_null), Toast.LENGTH_LONG).show();
                 }
             } catch (ParserConfigurationException | TransformerException | IOException | SAXException e) {
                 Ultilitario.alertDialog(getString(R.string.ger_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
+            MainActivity.dismissProgressBar();
+        }));
+
+        clienteCantinaViewModel.getCliente().observe(getViewLifecycleOwner(), clienteCantinas -> {
+            this.clienteCantinas = clienteCantinas;
+            List<Long> idvenda = new ArrayList<>();
+            for (Venda venda : this.vendas)
+                idvenda.add(venda.getId());
+            vendaViewModel.getProdutosVenda(0, null, null, false, true, idvenda);
         });
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             if (accao == 0) {
@@ -138,12 +151,12 @@ public class DocumentoFragment extends Fragment {
             if (vendas.isEmpty()) {
                 Ultilitario.alertDialog(getString(R.string.ger_saft), getString(R.string.nao_tem_venda), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             } else {
+                this.vendas = vendas;
                 List<Long> idcliente = new ArrayList<>();
                 for (Venda venda : vendas)
                     idcliente.add(venda.getIdclicant());
                 clienteCantinaViewModel.consultarClienteCantina(null, true, idcliente);
             }
-            MainActivity.dismissProgressBar();
         }));
         requireActivity().addMenuProvider(new MenuProvider() {
                                               @Override

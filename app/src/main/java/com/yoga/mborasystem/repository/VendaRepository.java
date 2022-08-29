@@ -82,15 +82,17 @@ public class VendaRepository {
         vendaDao.insertVenda(vendas);
     }
 
-    public Maybe<List<ProdutoVenda>> getProdutosVenda(long idvenda, String codQr, String data, boolean isGuardarImprimir) {
-        if (isGuardarImprimir) {
+    public Maybe<List<ProdutoVenda>> getProdutosVenda(long idvenda, String codQr, String data, boolean isGuardarImprimir, boolean isForDocumentSaft, List<Long> idvendaList) {
+        if (isForDocumentSaft)
+            return vendaDao.getProdutoVendaSaft(idvendaList);
+        else if (isGuardarImprimir)
             return vendaDao.getProdutoVenda(data);
-        } else {
+        else
             return vendaDao.getProdutosVenda(idvenda, codQr);
-        }
+
     }
 
-    public Maybe<List<Venda>> getVendaSaft(String dataInicio, String dataFim){
+    public Maybe<List<Venda>> getVendaSaft(String dataInicio, String dataFim) {
         return vendaDao.getVendaSaft(dataInicio, dataFim);
     }
 

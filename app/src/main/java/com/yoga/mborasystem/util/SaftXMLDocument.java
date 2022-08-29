@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
+import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -74,7 +75,7 @@ public class SaftXMLDocument {
         return true;
     }
 
-    public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim, List<ClienteCantina> clienteCantina) throws ParserConfigurationException, TransformerException, IOException, SAXException {
+    public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim, List<ClienteCantina> clienteCantina, List<ProdutoVenda> produtoVendas) throws ParserConfigurationException, TransformerException, IOException, SAXException {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -126,13 +127,14 @@ public class SaftXMLDocument {
         else for (ClienteCantina cc : clienteCantina)
             elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), "Luanda", "Luanda", isEmpty(cc.getTelefone().trim()), isEmpty(cc.getEmail().trim()));
 
-        Element product = doc.createElement("Product");
-        masterFiles.appendChild(product);
-        criarElemento(doc, "ProductType", product, "P");
-        criarElemento(doc, "ProductCode", product, "123456789");
-        criarElemento(doc, "ProductDescription", product, "Arroz");
-        criarElemento(doc, "ProductNumberCode", product, "123456789");
-
+        for (ProdutoVenda pv : produtoVendas) {
+            Element product = doc.createElement("Product");
+            masterFiles.appendChild(product);
+            criarElemento(doc, "ProductType", product, pv.getTipo());
+            criarElemento(doc, "ProductCode", product, String.valueOf(pv.getId()));
+            criarElemento(doc, "ProductDescription", product, pv.getNome_produto());
+            criarElemento(doc, "ProductNumberCode", product, pv.getCodigo_Barra().isEmpty() ? String.valueOf(pv.getId()) : pv.getCodigo_Barra());
+        }
         Element taxTable = doc.createElement("TaxTable");
         masterFiles.appendChild(taxTable);
 

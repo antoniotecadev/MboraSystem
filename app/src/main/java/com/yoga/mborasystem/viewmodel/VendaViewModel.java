@@ -314,21 +314,21 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    public void getProdutosVenda(long idvenda, String codQr, String data, boolean isGuardarImprimir) {
-        compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda, codQr, data, isGuardarImprimir)
+    public void getProdutosVenda(long idvenda, String codQr, String data, boolean isGuardarImprimir, boolean isForDocumentSaft, List<Long> idvendaList) {
+        compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda, codQr, data, isGuardarImprimir, isForDocumentSaft, idvendaList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(produtos -> getProdutosVendaLiveData().setValue(new Event<>(produtos)), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void getVendaSaft(String dataInicio, String dataFim) {
-            compositeDisposable.add(vendaRepository.getVendaSaft(dataInicio, dataFim)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(vendas -> getVendasParaExportar().setValue(new Event<>(vendas)), throwable -> {
-                        MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
-                    }));
+        compositeDisposable.add(vendaRepository.getVendaSaft(dataInicio, dataFim)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(vendas -> getVendasParaExportar().setValue(new Event<>(vendas)), throwable -> {
+                    MainActivity.dismissProgressBar();
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
+                }));
     }
 
     @SuppressLint("CheckResult")

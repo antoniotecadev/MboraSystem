@@ -103,6 +103,9 @@ public abstract class VendaDao {
     @Query("SELECT * FROM produtosvendas WHERE data_cria LIKE '%' || :data || '%'")
     public abstract Maybe<List<ProdutoVenda>> getProdutoVenda(String data);
 
+    @Query("SELECT DISTINCT(nome_produto), * FROM produtosvendas WHERE idvenda IN (:idvenda)")
+    public abstract Maybe<List<ProdutoVenda>> getProdutoVendaSaft(List<Long> idvenda);
+
     @Query("UPDATE vendas SET divida = :divida WHERE id = :idvenda")
     abstract void setDivida(int divida, long idvenda);
 
@@ -200,9 +203,12 @@ public abstract class VendaDao {
             int quantidade = Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco();
             produtoVenda.setId(0);
             produtoVenda.setNome_produto(produto.getValue().getNome());
+            produtoVenda.setTipo(produto.getValue().getTipo());
+            produtoVenda.setUnidade(produto.getValue().getUnidade());
+            produtoVenda.setCodigoMotivoIsencao(produto.getValue().getCodigoMotivoIsencao());
             produtoVenda.setQuantidade(quantidade);
             produtoVenda.setPreco_total(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())));
-            produtoVenda.setCodigo_Barra(venda.getCodigo_qr() + "/" + idvenda);
+            produtoVenda.setCodigo_Barra(produto.getValue().getCodigoBarra());
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
             produtoVenda.setIva(produto.getValue().isIva());
             produtoVenda.setIdvenda(idvenda);

@@ -24,6 +24,7 @@ import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
+
 @SuppressWarnings("rawtypes")
 public class ListaProdutoVendaFragment extends Fragment {
 
@@ -55,7 +56,7 @@ public class ListaProdutoVendaFragment extends Fragment {
         binding.recyclerViewListaProduto.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.chipQuantidadeProduto.setText(quant + "");
 
-        vendaViewModel.getProdutosVenda(idvenda, codQr, null, false);
+        vendaViewModel.getProdutosVenda(idvenda, codQr, null, false, false, null);
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
             adapter.clear();
             if (produtos.isEmpty()) {

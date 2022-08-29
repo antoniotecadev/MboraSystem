@@ -53,9 +53,9 @@
         </Customer>
         <Product>
             <ProductType>P</ProductType>
-            <ProductCode>str1234</ProductCode>
-            <ProductDescription>str1234</ProductDescription>
-            <ProductNumberCode>str1234</ProductNumberCode>
+            <ProductCode>1</ProductCode>
+            <ProductDescription>Arroz</ProductDescription>
+            <ProductNumberCode>123456</ProductNumberCode>
         </Product>
         <TaxTable>
             <TaxTableEntry>

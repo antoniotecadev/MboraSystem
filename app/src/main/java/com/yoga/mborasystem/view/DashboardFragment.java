@@ -334,7 +334,7 @@ public class DashboardFragment extends Fragment {
                 Ultilitario.alertDialog(getString(R.string.vendas), getString(R.string.nao_tem_venda) + " (" + this.data + ")", requireContext(), R.drawable.ic_baseline_insert_drive_file_24);
             } else {
                 this.vendas.addAll(vendas);
-                vendaViewModel.getProdutosVenda(0, null, this.data, true);
+                vendaViewModel.getProdutosVenda(0, null, this.data, true, false, null);
             }
         }));
 
