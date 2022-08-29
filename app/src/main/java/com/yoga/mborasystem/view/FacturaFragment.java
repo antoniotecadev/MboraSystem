@@ -187,7 +187,7 @@ public class FacturaFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!charSequence.toString().isEmpty()) {
-                    clienteCantinaViewModel.consultarClienteCantina(charSequence.toString(),false);
+                    clienteCantinaViewModel.consultarClienteCantina(charSequence.toString(), false, null);
                 }
             }
 

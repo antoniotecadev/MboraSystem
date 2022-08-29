@@ -810,7 +810,7 @@
                 <xs:element minOccurs="0" ref="TaxExpirationDate" />
                 <xs:sequence>
                     <xs:element ref="TaxPercentage" />
-                    <xs:element ref="TaxAmount" />
+                    <xs:element minOccurs="0" ref="TaxAmount" />
                 </xs:sequence>
             </xs:sequence>
         </xs:complexType>

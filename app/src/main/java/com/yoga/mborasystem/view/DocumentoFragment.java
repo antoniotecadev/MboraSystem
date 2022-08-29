@@ -48,7 +48,7 @@ import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDocumentoBinding;
-import com.yoga.mborasystem.model.entidade.ClienteCantina;
+import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.SaftXMLDocument;
 import com.yoga.mborasystem.util.Ultilitario;
@@ -80,7 +80,6 @@ public class DocumentoFragment extends Fragment {
     private FragmentDocumentoBinding binding;
     private TextInputEditText dataInicio, dataFim;
     ClienteCantinaViewModel clienteCantinaViewModel;
-    private List<ClienteCantina> clienteCantinas;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,8 +115,15 @@ public class DocumentoFragment extends Fragment {
             return true;
         });
         clienteCantinaViewModel.getCliente().observe(getViewLifecycleOwner(), clienteCantinas -> {
-             this.clienteCantinas = clienteCantinas;
-            vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
+            try {
+                if (getArguments() != null) {
+                    new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataInicioFim(Objects.requireNonNull(dataInicio.getText()).toString()), getDataInicioFim(Objects.requireNonNull(dataFim.getText()).toString()), clienteCantinas);
+                } else {
+                    Toast.makeText(requireContext(), getText(R.string.arg_null), Toast.LENGTH_LONG).show();
+                }
+            } catch (ParserConfigurationException | TransformerException | IOException | SAXException e) {
+                Ultilitario.alertDialog(getString(R.string.ger_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
         });
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             if (accao == 0) {
@@ -132,15 +138,10 @@ public class DocumentoFragment extends Fragment {
             if (vendas.isEmpty()) {
                 Ultilitario.alertDialog(getString(R.string.ger_saft), getString(R.string.nao_tem_venda), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             } else {
-                try {
-                    if (getArguments() != null) {
-                        new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataInicioFim(Objects.requireNonNull(dataInicio.getText()).toString()), getDataInicioFim(Objects.requireNonNull(dataFim.getText()).toString()), this.clienteCantinas);
-                    } else {
-                        Toast.makeText(requireContext(), getText(R.string.arg_null), Toast.LENGTH_LONG).show();
-                    }
-                } catch (ParserConfigurationException | TransformerException | IOException | SAXException e) {
-                    Ultilitario.alertDialog(getString(R.string.ger_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
+                List<Long> idcliente = new ArrayList<>();
+                for (Venda venda : vendas)
+                    idcliente.add(venda.getIdclicant());
+                clienteCantinaViewModel.consultarClienteCantina(null, true, idcliente);
             }
             MainActivity.dismissProgressBar();
         }));
@@ -232,7 +233,7 @@ public class DocumentoFragment extends Fragment {
                     Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
                 } else if (Objects.requireNonNull(sdf.parse(dataFim.getText().toString())).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
                     MainActivity.getProgressBar();
-                    clienteCantinaViewModel.consultarClienteCantina(null, true);
+                    vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
                 } else {
                     this.dialogGerarSaft();
                     Ultilitario.alertDialog(getString(R.string.ger_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);

@@ -124,7 +124,7 @@ public class SaftXMLDocument {
         if (clienteCantina.isEmpty())
             elementCustomer(doc, masterFiles, "1", "999999999", "Consumidor Final", "Desconhecido", "Desconhecido", "Desconhecido", "Desconhecido", "Desconhecido");
         else for (ClienteCantina cc : clienteCantina)
-            elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), "Luanda", "Luanda", isEmpty(cc.getTelefone()), isEmpty(cc.getEmail()));
+            elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), "Luanda", "Luanda", isEmpty(cc.getTelefone().trim()), isEmpty(cc.getEmail().trim()));
 
         Element product = doc.createElement("Product");
         masterFiles.appendChild(product);

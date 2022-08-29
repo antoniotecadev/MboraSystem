@@ -25,8 +25,8 @@ public interface ClienteCantinaDao {
     @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :cliente || '%' OR telefone LIKE '%' || :cliente || '%' OR nif LIKE '%' || :cliente || '%') ORDER BY id DESC")
     Maybe<List<ClienteCantina>> getClienteCantina(String cliente);
 
-    @Query("SELECT * FROM clientecantina WHERE estado != 3 ORDER BY id DESC")
-    Maybe<List<ClienteCantina>> getClienteCantinaSaft();
+    @Query("SELECT * FROM clientecantina WHERE id IN (:idcliente) AND estado != 3 ORDER BY id DESC")
+    Maybe<List<ClienteCantina>> getClienteCantinaSaft(List<Long> idcliente);
 
     @Query("SELECT * FROM clientecantina WHERE estado != 3 AND (nome LIKE '%' || :cliente || '%' OR telefone LIKE '%' || :cliente || '%' OR nif LIKE '%' || :cliente || '%')")
     PagingSource<Integer, ClienteCantina> searchCliente(String cliente);
