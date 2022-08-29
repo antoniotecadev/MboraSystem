@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
+import com.yoga.mborasystem.model.entidade.Venda;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -75,7 +76,7 @@ public class SaftXMLDocument {
         return true;
     }
 
-    public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim, List<ClienteCantina> clienteCantina, List<ProdutoVenda> produtoVendas) throws ParserConfigurationException, TransformerException, IOException, SAXException {
+    public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim, List<ClienteCantina> clienteCantina, List<ProdutoVenda> produtoVendas, List<Venda> vendas) throws ParserConfigurationException, TransformerException, IOException, SAXException {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -151,7 +152,7 @@ public class SaftXMLDocument {
 
         Element salesInvoices = doc.createElement("SalesInvoices");
         sourceDocuments.appendChild(salesInvoices);
-        criarElemento(doc, "NumberOfEntries", salesInvoices, "33");
+        criarElemento(doc, "NumberOfEntries", salesInvoices, String.valueOf(vendas.size()));
         criarElemento(doc, "TotalDebit", salesInvoices, "123.45");
         criarElemento(doc, "TotalCredit", salesInvoices, "123.45");
 
