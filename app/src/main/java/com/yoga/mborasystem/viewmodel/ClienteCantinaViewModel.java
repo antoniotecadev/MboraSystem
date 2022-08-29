@@ -122,11 +122,11 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
             endereco.setError(getApplication().getString(R.string.endereco_invalido));
         } else {
             MainActivity.getProgressBar();
-            clienteCantina.setNif(nif.getText().toString());
+            clienteCantina.setNif(nif.getText().toString().trim());
             clienteCantina.setNome(nomeCliente.getText().toString());
-            clienteCantina.setTelefone(telefone.getText().toString());
-            clienteCantina.setEmail(email.getText().toString());
-            clienteCantina.setEndereco(endereco.getText().toString());
+            clienteCantina.setTelefone(telefone.getText().toString().trim());
+            clienteCantina.setEmail(email.getText().toString().trim());
+            clienteCantina.setEndereco(endereco.getText().toString().trim());
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 clienteCantina.setId(0);
                 clienteCantina.setEstado(Ultilitario.UM);
