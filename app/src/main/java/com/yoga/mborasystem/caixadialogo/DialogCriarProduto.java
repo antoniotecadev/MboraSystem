@@ -68,7 +68,7 @@ public class DialogCriarProduto extends DialogFragment {
 
             if (produto != null) {
                 binding.txtNomeProduto.setText(produto.getNome());
-                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_tipo, produto.getTipo(), binding.spinnerTipo);
+                Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_tipo_valor, produto.getTipo(), binding.spinnerTipo);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_unidade, produto.getUnidade(), binding.spinnerUnidade);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_taxa_iva_valor, String.valueOf(produto.getPercentagemIva()), binding.spinnerTaxaImposto);
                 Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_motivo_isecao_valor, produto.getCodigoMotivoIsencao(), binding.spinnerMotivoIsecao);
@@ -257,6 +257,17 @@ public class DialogCriarProduto extends DialogFragment {
         return "";
     }
 
+    private String getValorTipoProduto() {
+        final String[] tipo = getResources().getStringArray(R.array.array_tipo);
+        final String[] valor = getResources().getStringArray(R.array.array_tipo_valor);
+        for (int i = 0; i <= tipo.length; i++) {
+            if (binding.spinnerTipo.getSelectedItem().toString().equalsIgnoreCase(tipo[i])) {
+                return valor[i];
+            }
+        }
+        return "P";
+    }
+
     private void scanearCodigoBar(int camera) {
         intentIntegrator.setPrompt(getString(R.string.alinhar_codigo_barra));
         intentIntegrator.setOrientationLocked(false);
@@ -266,12 +277,12 @@ public class DialogCriarProduto extends DialogFragment {
 
     private void createProduto(long idcategoria) {
         produtoViewModel.crud = true;
-        produtoViewModel.criarProduto(binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, dialog, !binding.switchContinuar.isChecked(), idcategoria);
+        produtoViewModel.criarProduto(binding.txtNomeProduto, getValorTipoProduto(), binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, dialog, !binding.switchContinuar.isChecked(), idcategoria);
     }
 
     private void updateProduto(long idproduto, long idcategoria) {
         produtoViewModel.crud = true;
-        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, binding.spinnerTipo, binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, idcategoria, dialog);
+        produtoViewModel.actualizarProduto(idproduto, binding.txtNomeProduto, getValorTipoProduto(), binding.spinnerUnidade, getCodigoMotivoIsecao(), binding.txtPrecoProduto, binding.txtPrecoProdutoFornecedor, binding.txtQuantidadeProduto, binding.txtCodigoBar, binding.checkIva, Integer.valueOf(binding.spinnerIva.getSelectedItem().toString()), binding.switchEstado, binding.switchStock, idcategoria, dialog);
     }
 
     private void deleteProduto(Produto produto) {
