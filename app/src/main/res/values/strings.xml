@@ -748,7 +748,7 @@
         <item>S</item>
     </string-array>
     <string-array name="array_unidade">
-        <item>Uni</item>
-        <item>Kg</item>
+        <item>UN</item>
+        <item>KG</item>
     </string-array>
 </resources>
