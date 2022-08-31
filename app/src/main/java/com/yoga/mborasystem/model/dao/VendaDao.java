@@ -211,6 +211,7 @@ public abstract class VendaDao {
             produtoVenda.setCodigo_Barra(produto.getValue().getCodigoBarra());
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
             produtoVenda.setIva(produto.getValue().isIva());
+            produtoVenda.setPercentagemIva(produto.getValue().getPercentagemIva());
             produtoVenda.setIdvenda(idvenda);
             produtoVenda.setData_cria(venda.getData_cria());
             insert(produtoVenda);
