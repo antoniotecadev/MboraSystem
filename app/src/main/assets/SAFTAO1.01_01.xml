@@ -72,38 +72,38 @@
     <SourceDocuments>
         <SalesInvoices>
             <NumberOfEntries>33</NumberOfEntries>
-            <TotalDebit>123.45</TotalDebit>
-            <TotalCredit>123.45</TotalCredit>
+            <TotalDebit>0.00</TotalDebit>
+            <TotalCredit>0.00</TotalCredit>
             <Invoice>
                 <InvoiceNo>FT S001/1</InvoiceNo>
                 <DocumentStatus>
                     <InvoiceStatus>N</InvoiceStatus>
                     <InvoiceStatusDate>2012-12-13T12:12:12</InvoiceStatusDate>
-                    <SourceID>str1234</SourceID>
+                    <SourceID>1</SourceID>
                     <SourceBilling>P</SourceBilling>
                 </DocumentStatus>
-                <Hash>str1234</Hash>
-                <HashControl>str1234</HashControl>
+                <Hash>vnYYNMmkEqOWQ5xVJyp8qR3WhXl88BAZL2iq+s0rKtBWFmesp89X3Ojx3hqdr8Qfy0gLRRw4RG6NuarbZr1gS+lfTC057UMS47RXd3jwwqb79X1BY/7gWiBc6gH6pMS/tRqeQ+wLBrI8Ed3RU4UpwNtrQoP21NGZU2Ha7irhitM=</Hash>
+                <HashControl>1</HashControl>
                 <Period>12</Period>
                 <InvoiceDate>2012-12-13</InvoiceDate>
-                <InvoiceType>FT</InvoiceType>
+                <InvoiceType>FR</InvoiceType>
                 <SpecialRegimes>
-                    <SelfBillingIndicator>1</SelfBillingIndicator>
-                    <CashVATSchemeIndicator>1</CashVATSchemeIndicator>
-                    <ThirdPartiesBillingIndicator>1</ThirdPartiesBillingIndicator>
+                    <SelfBillingIndicator>0</SelfBillingIndicator>
+                    <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+                    <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
                 </SpecialRegimes>
-                <SourceID>str1234</SourceID>
+                <SourceID>1</SourceID>
                 <SystemEntryDate>2012-12-13T12:12:12</SystemEntryDate>
-                <CustomerID>str1234</CustomerID>
+                <CustomerID>1</CustomerID>
                 <ShipTo>
-                    <DeliveryID>str1234</DeliveryID>
+                    <DeliveryID>0</DeliveryID>
                     <DeliveryDate>2012-12-13</DeliveryDate>
                     <Address>
                         <BuildingNumber>str1234</BuildingNumber>
-                        <StreetName>str1234</StreetName>
-                        <AddressDetail>str1234</AddressDetail>
-                        <City>str1234</City>
-                        <Province>str1234</Province>
+                        <StreetName>Desconhecido</StreetName>
+                        <AddressDetail>Desconhecido</AddressDetail>
+                        <City>Desconhecido</City>
+                        <Province>Desconhecido</Province>
                         <Country>AO</Country>
                     </Address>
                 </ShipTo>
@@ -112,10 +112,10 @@
                     <DeliveryDate>2012-12-13</DeliveryDate>
                     <Address>
                         <BuildingNumber>str1234</BuildingNumber>
-                        <StreetName>str1234</StreetName>
-                        <AddressDetail>str1234</AddressDetail>
-                        <City>str1234</City>
-                        <Province>str1234</Province>
+                        <StreetName>Desconhecido</StreetName>
+                        <AddressDetail>Desconhecido</AddressDetail>
+                        <City>Desconhecido</City>
+                        <Province>Desconhecido</Province>
                         <Country>AO</Country>
                     </Address>
                 </ShipFrom>
@@ -125,10 +125,10 @@
                         <OriginatingON>str1234</OriginatingON>
                         <OrderDate>2012-12-13</OrderDate>
                     </OrderReferences>
-                    <ProductCode>str1234</ProductCode>
-                    <ProductDescription>str1234</ProductDescription>
-                    <Quantity>123.45</Quantity>
-                    <UnitOfMeasure>str1234</UnitOfMeasure>
+                    <ProductCode>1</ProductCode>
+                    <ProductDescription>arroz</ProductDescription>
+                    <Quantity>12</Quantity>
+                    <UnitOfMeasure>UN</UnitOfMeasure>
                     <UnitPrice>123.45</UnitPrice>
                     <TaxPointDate>2012-12-13</TaxPointDate>
                     <Description>str1234</Description>
@@ -140,7 +140,7 @@
                         <TaxType>IVA</TaxType>
                         <TaxCountryRegion>AO</TaxCountryRegion>
                         <TaxCode>NOR</TaxCode>
-                        <TaxPercentage>123.45</TaxPercentage>
+                        <TaxPercentage>14</TaxPercentage>
                         <TaxAmount>123.45</TaxAmount>
                     </Tax>
                     <TaxExemptionReason>Regime Transitório</TaxExemptionReason>

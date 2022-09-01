@@ -434,7 +434,7 @@
         <xs:annotation>
             <xs:documentation>
                 Deve ser preenchido com "1" se respeitar a faturação emitida em nome e por conta de terceiros e com "2" se é obrigado a cativar o IVA.
-                Com "3" se cumprir as duas condições e com "0" (zero) no caso de nãi cumprir com nenhuma condição.
+                Com "3" se cumprir as duas condições e com "0" (zero) no caso de não cumprir com nenhuma condição.
             </xs:documentation>
         </xs:annotation>
         <xs:simpleType>
@@ -860,7 +860,7 @@
             <xs:element ref="TaxCode" />
             <xs:sequence>
                 <xs:element ref="TaxPercentage" />
-                <xs:element maxOccurs="unbounded" ref="TaxAmount" />
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="TaxAmount" />
             </xs:sequence>
         </xs:sequence>
     </xs:complexType>

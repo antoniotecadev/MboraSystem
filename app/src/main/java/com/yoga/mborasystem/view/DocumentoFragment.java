@@ -1,6 +1,6 @@
 package com.yoga.mborasystem.view;
 
-import static com.yoga.mborasystem.util.Ultilitario.getDataInicioFim;
+import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
 
 import android.annotation.SuppressLint;
@@ -121,7 +121,7 @@ public class DocumentoFragment extends Fragment {
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtoVendas -> {
             try {
                 if (getArguments() != null) {
-                    new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataInicioFim(Objects.requireNonNull(dataInicio.getText()).toString()), getDataInicioFim(Objects.requireNonNull(dataFim.getText()).toString()), this.clienteCantinas, produtoVendas, this.vendas);
+                    new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataFormatMonth(Objects.requireNonNull(dataInicio.getText()).toString()), getDataFormatMonth(Objects.requireNonNull(dataFim.getText()).toString()), this.clienteCantinas, produtoVendas, this.vendas);
                 } else {
                     Toast.makeText(requireContext(), getText(R.string.arg_null), Toast.LENGTH_LONG).show();
                 }
