@@ -5,11 +5,14 @@ import static androidx.room.ForeignKey.CASCADE;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "produtosvendas", indices = {@Index(value = {"idvenda"})},
         foreignKeys = @ForeignKey(entity = Venda.class, parentColumns = "id", childColumns = "idvenda", onDelete = CASCADE))
 public class ProdutoVenda {
-    
+
+    @PrimaryKey(autoGenerate = true)
+    private long idpdvd = 0;
     private long id;
     private String nome_produto;
     private String tipo;
@@ -30,6 +33,14 @@ public class ProdutoVenda {
     }
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getIdpdvd() {
+        return idpdvd;
+    }
+
+    public void setIdpdvd(long idpdvd) {
+        this.idpdvd = idpdvd;
     }
 
     public String getNome_produto() {
