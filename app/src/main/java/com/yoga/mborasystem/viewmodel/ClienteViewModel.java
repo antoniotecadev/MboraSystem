@@ -127,6 +127,9 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (nif.length() < 10) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_incompleto));
+        } else if (isCampoVazio(Objects.requireNonNull(nomeEmpresa.getText()).toString()) || letras.matcher(nomeEmpresa.getText().toString()).find()) {
+            nomeEmpresa.requestFocus();
+            nomeEmpresa.setError(getApplication().getString(R.string.nome_invalido));
         } else if (isNumeroValido(Objects.requireNonNull(telefone.getText()).toString())) {
             telefone.requestFocus();
             telefone.setError(getApplication().getString(R.string.numero_invalido));
@@ -142,9 +145,6 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
             email.requestFocus();
             email.setError(getApplication().getString(R.string.email_invalido));
-        } else if (isCampoVazio(Objects.requireNonNull(nomeEmpresa.getText()).toString()) || letras.matcher(nomeEmpresa.getText().toString()).find()) {
-            nomeEmpresa.requestFocus();
-            nomeEmpresa.setError(getApplication().getString(R.string.nome_invalido));
         } else if (nomeEmpresa.length() < 4) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_curto));
