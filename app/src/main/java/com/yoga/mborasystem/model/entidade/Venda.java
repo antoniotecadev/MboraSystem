@@ -29,6 +29,8 @@ public class Venda implements Parcelable {
     private String data_elimina;
     private long idclicant;
     private long idoperador;
+    private String data_cria_hora;
+
 
     public Venda(Parcel in) {
         id = in.readLong();
@@ -48,6 +50,7 @@ public class Venda implements Parcelable {
         data_elimina = in.readString();
         idclicant = in.readLong();
         idoperador = in.readLong();
+        data_cria_hora = in.readString();
     }
 
     public static final Creator<Venda> CREATOR = new Creator<Venda>() {
@@ -202,6 +205,14 @@ public class Venda implements Parcelable {
         this.idoperador = idoperador;
     }
 
+    public String getData_cria_hora() {
+        return data_cria_hora;
+    }
+
+    public void setData_cria_hora(String data_cria_hora) {
+        this.data_cria_hora = data_cria_hora;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -226,5 +237,6 @@ public class Venda implements Parcelable {
         dest.writeString(data_elimina);
         dest.writeLong(idclicant);
         dest.writeLong(idoperador);
+        dest.writeString(data_cria_hora);
     }
 }
