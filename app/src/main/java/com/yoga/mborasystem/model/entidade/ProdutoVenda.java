@@ -1,17 +1,15 @@
 package com.yoga.mborasystem.model.entidade;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
-
-import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "produtosvendas", indices = {@Index(value = {"idvenda"})},
         foreignKeys = @ForeignKey(entity = Venda.class, parentColumns = "id", childColumns = "idvenda", onDelete = CASCADE))
 public class ProdutoVenda {
-
-    @PrimaryKey(autoGenerate = true)
+    
     private long id;
     private String nome_produto;
     private String tipo;
