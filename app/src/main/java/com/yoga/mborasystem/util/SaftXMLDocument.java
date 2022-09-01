@@ -3,7 +3,6 @@ package com.yoga.mborasystem.util;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -212,8 +211,8 @@ public class SaftXMLDocument {
             for (ProdutoVenda pv : produtoVendas) {
                 if (pv.getIdvenda() == vd.getId()) {
 
-                    String precoUnitario = Ultilitario.formatPreco(String.valueOf(pv.getPreco_total() / pv.getQuantidade())).replaceAll(",", ".").replaceAll("Kz", "").replaceAll("\\s+", "");
-                    String precoUnitarioSemIVA = String.valueOf((int) ((pv.getPreco_total() / pv.getQuantidade()) / Float.parseFloat(pv.getPercentagemIva() == 14 ? "1." + pv.getPercentagemIva() : "1.0" + pv.getPercentagemIva())));
+                    int precoUnitario = (pv.getPreco_total() / pv.getQuantidade());
+                    int precoUnitarioSemIVA = (int) ((pv.getPreco_total() / pv.getQuantidade()) / Float.parseFloat(pv.getPercentagemIva() == 14 ? "1." + pv.getPercentagemIva() : "1.0" + pv.getPercentagemIva()));
 
                     Element line = doc.createElement("Line");
                     invoice.appendChild(line);
@@ -223,13 +222,13 @@ public class SaftXMLDocument {
                     criarElemento(doc, "ProductDescription", line, pv.getNome_produto());
                     criarElemento(doc, "Quantity", line, String.valueOf(pv.getQuantidade()));
                     criarElemento(doc, "UnitOfMeasure", line, pv.getUnidade());
-                    criarElemento(doc, "UnitPrice", line, pv.isIva() ? Ultilitario.formatPreco(precoUnitarioSemIVA).replaceAll(",", ".").replaceAll("Kz", "").replaceAll("\\s+", "") : precoUnitario);
+                    criarElemento(doc, "UnitPrice", line, pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario));
                     criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getData_cria()));
                     criarElemento(doc, "Description", line, pv.getNome_produto());
 
-                    String creditAmount = String.valueOf(Integer.parseInt(precoUnitarioSemIVA) * pv.getQuantidade());
+                    int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
 
-                    criarElemento(doc, "CreditAmount", line, Ultilitario.formatPreco(creditAmount).replaceAll(",", ".").replaceAll("Kz", "").replaceAll("\\s+", ""));
+                    criarElemento(doc, "CreditAmount", line, formatarValor(creditAmount));
 
                     Element tax = doc.createElement("Tax");
                     line.appendChild(tax);
@@ -246,25 +245,29 @@ public class SaftXMLDocument {
             }
             Element documentTotals = doc.createElement("DocumentTotals");
             invoice.appendChild(documentTotals);
-            criarElemento(doc, "TaxPayable", documentTotals, "123.45");
-            criarElemento(doc, "NetTotal", documentTotals, "123.45");
-            criarElemento(doc, "GrossTotal", documentTotals, "123.45");
+
+            int taxPayable = vd.getDesconto() == 0 ? vd.getValor_iva() : vd.getDesconto() - vd.getValor_base();
+            int netTotal = vd.getValor_base();
+            int grossTotal = taxPayable + vd.getValor_base();
+
+            criarElemento(doc, "TaxPayable", documentTotals, formatarValor(taxPayable));
+            criarElemento(doc, "NetTotal", documentTotals, formatarValor(netTotal));
+            criarElemento(doc, "GrossTotal", documentTotals, formatarValor(grossTotal));
 
             Element currency = doc.createElement("Currency");
             documentTotals.appendChild(currency);
             criarElemento(doc, "CurrencyCode", currency, "AOA");
-            criarElemento(doc, "CurrencyAmount", currency, "123.45");
-            criarElemento(doc, "ExchangeRate", currency, "123.45");
+            criarElemento(doc, "CurrencyAmount", currency, formatarValor(grossTotal));
+            criarElemento(doc, "ExchangeRate", currency, "0");
 
             Element paymentMethod = doc.createElement("PaymentMethod");
             documentTotals.appendChild(paymentMethod);
-            criarElemento(doc, "PaymentMechanism", paymentMethod, "CC");
-            criarElemento(doc, "PaymentAmount", paymentMethod, "123.45");
-            criarElemento(doc, "PaymentDate", paymentMethod, "2012-12-13");
+            criarElemento(doc, "PaymentAmount", paymentMethod, formatarValor(netTotal));
+            criarElemento(doc, "PaymentDate", paymentMethod, getDataFormatMonth(vd.getData_cria()));
 
             Element withholdingTax = doc.createElement("WithholdingTax");
             invoice.appendChild(withholdingTax);
-            criarElemento(doc, "WithholdingTaxAmount", withholdingTax, "0");
+            criarElemento(doc, "WithholdingTaxAmount", withholdingTax, formatarValor(taxPayable));
         }
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -321,5 +324,9 @@ public class SaftXMLDocument {
             }
         }
         return "";
+    }
+
+    private String formatarValor(int valor) {
+        return Ultilitario.formatPreco(String.valueOf(valor)).replaceAll(",", ".").replaceAll("Kz", "").replaceAll("\\s+", "");
     }
 }
