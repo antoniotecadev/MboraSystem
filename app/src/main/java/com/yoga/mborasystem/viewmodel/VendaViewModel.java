@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.viewmodel;
 
+import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Color;
@@ -33,7 +35,10 @@ import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.view.FacturaFragmentDirections;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -216,6 +221,8 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
+        String data = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss", Locale.getDefault()).format(new Date());
+        venda.setData_cria_hora(dataEmissao.isEmpty() ? data : (getDataFormatMonth(dataEmissao) + "T00:00:00").trim());
         Completable.fromAction(() -> idvenda = vendaRepository.insert(venda, produtos, precoTotalUnit))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
