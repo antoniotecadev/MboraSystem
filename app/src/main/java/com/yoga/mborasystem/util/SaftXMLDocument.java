@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -100,7 +102,7 @@ public class SaftXMLDocument {
         criarElemento(doc, "AuditFileVersion", header, "1.01_01");
         criarElemento(doc, "CompanyID", header, cliente.getNifbi());
         criarElemento(doc, "TaxRegistrationNumber", header, cliente.getNifbi());
-        criarElemento(doc, "TaxAccountingBasis", header, "F");
+        criarElemento(doc, "TaxAccountingBasis", header, "F"); // Tipo de Sistema = F, C, I
         criarElemento(doc, "CompanyName", header, cliente.getNomeEmpresa());
 
         Element companyAddress = doc.createElement("CompanyAddress");
@@ -115,8 +117,8 @@ public class SaftXMLDocument {
         criarElemento(doc, "EndDate", header, dataFim);
         criarElemento(doc, "CurrencyCode", header, "AOA");
         criarElemento(doc, "DateCreated", header, sdf.format(new Date()));
-        criarElemento(doc, "TaxEntity", header, "Global");
-        criarElemento(doc, "ProductCompanyTaxID", header, "5000999784");
+        criarElemento(doc, "TaxEntity", header, "Global"); // Ficheiro de Logística e Tesouraria
+        criarElemento(doc, "ProductCompanyTaxID", header, "5000999784"); // Identificação fiscal da entidade produtora do software
         criarElemento(doc, "SoftwareValidationNumber", header, "000/AGT/0000");
         criarElemento(doc, "ProductID", header, "MBORASYSTEM/YOGA ANGOLA,LDA");
         criarElemento(doc, "ProductVersion", header, "1.0");
@@ -138,25 +140,44 @@ public class SaftXMLDocument {
             criarElemento(doc, "ProductDescription", product, pv.getNome_produto());
             criarElemento(doc, "ProductNumberCode", product, pv.getCodigo_Barra().isEmpty() ? String.valueOf(pv.getId()) : pv.getCodigo_Barra());
         }
+        Map<String, String> tabelaImposto = new HashMap<>();
+        for (ProdutoVenda pv : produtoVendas) {
+            String taxType = pv.isIva() ? "IVA" : "NS";
+            String taxCode = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "ISE";
+            String description = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "Normal" : "Outros") : "Isenta";
+            String taxPercentage = String.valueOf(pv.getPercentagemIva());
+            String key = (taxType + taxCode + description + taxPercentage).trim();
+            tabelaImposto.put(key, taxType);
+            tabelaImposto.put(key, taxCode);
+            tabelaImposto.put(key, description);
+            tabelaImposto.put(key, taxPercentage);
+        }
         Element taxTable = doc.createElement("TaxTable");
         masterFiles.appendChild(taxTable);
-
-        Element taxTableEntry = doc.createElement("TaxTableEntry");
-        taxTable.appendChild(taxTableEntry);
-        criarElemento(doc, "TaxType", taxTableEntry, "IVA");
-        criarElemento(doc, "TaxCountryRegion", taxTableEntry, "AO");
-        criarElemento(doc, "TaxCode", taxTableEntry, "NOR");
-        criarElemento(doc, "Description", taxTableEntry, "Normal");
-        criarElemento(doc, "TaxPercentage", taxTableEntry, "123.45");
+        for (String key : tabelaImposto.keySet()) {
+            Element taxTableEntry = doc.createElement("TaxTableEntry");
+            taxTable.appendChild(taxTableEntry);
+            criarElemento(doc, "TaxType", taxTableEntry, tabelaImposto.get(key));
+            criarElemento(doc, "TaxCountryRegion", taxTableEntry, "AO");
+            criarElemento(doc, "TaxCode", taxTableEntry, tabelaImposto.get(key));
+            criarElemento(doc, "Description", taxTableEntry, tabelaImposto.get(key));
+            criarElemento(doc, "TaxPercentage", taxTableEntry, tabelaImposto.get(key));
+        }
 
         Element sourceDocuments = doc.createElement("SourceDocuments");
         rootElement.appendChild(sourceDocuments);
-
+        int totalCredit = 0, totalDebit = 0;
+        for (ProdutoVenda pv : produtoVendas) {
+            totalCredit += (int) ((pv.getPreco_total() / pv.getQuantidade()) / Float.parseFloat(pv.getPercentagemIva() == 14 ? "1." + pv.getPercentagemIva() : "1.0" + pv.getPercentagemIva()));
+        }
+        for (Venda vd : vendas) {
+            totalDebit += vd.getValor_base();
+        }
         Element salesInvoices = doc.createElement("SalesInvoices");
         sourceDocuments.appendChild(salesInvoices);
         criarElemento(doc, "NumberOfEntries", salesInvoices, String.valueOf(vendas.size()));
-        criarElemento(doc, "TotalDebit", salesInvoices, "0.00");
-        criarElemento(doc, "TotalCredit", salesInvoices, "0.00");
+        criarElemento(doc, "TotalDebit", salesInvoices, formatarValor(totalDebit));
+        criarElemento(doc, "TotalCredit", salesInvoices, formatarValor(totalCredit));
 
         for (Venda vd : vendas) {
             Element invoice = doc.createElement("Invoice");
@@ -166,7 +187,7 @@ public class SaftXMLDocument {
             Element documentStatus = doc.createElement("DocumentStatus");
             invoice.appendChild(documentStatus);
             criarElemento(doc, "InvoiceStatus", documentStatus, "N");
-            criarElemento(doc, "InvoiceStatusDate", documentStatus, "2012-12-13T12:12:12");
+            criarElemento(doc, "InvoiceStatusDate", documentStatus, vd.getData_cria_hora());
             criarElemento(doc, "SourceID", documentStatus, String.valueOf(vd.getId()));
             criarElemento(doc, "SourceBilling", documentStatus, "P");
 
@@ -212,7 +233,7 @@ public class SaftXMLDocument {
                 if (pv.getIdvenda() == vd.getId()) {
 
                     int precoUnitario = (pv.getPreco_total() / pv.getQuantidade());
-                    int precoUnitarioSemIVA = (int) ((pv.getPreco_total() / pv.getQuantidade()) / Float.parseFloat(pv.getPercentagemIva() == 14 ? "1." + pv.getPercentagemIva() : "1.0" + pv.getPercentagemIva()));
+                    int precoUnitarioSemIVA = (int) (precoUnitario / Float.parseFloat(pv.getPercentagemIva() == 14 ? "1." + pv.getPercentagemIva() : "1.0" + pv.getPercentagemIva()));
 
                     Element line = doc.createElement("Line");
                     invoice.appendChild(line);
