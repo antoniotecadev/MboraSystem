@@ -221,7 +221,7 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
-        String hora = new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new Date());
+        String hora = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         venda.setData_cria_hora(dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + "T" + hora : (getDataFormatMonth(dataEmissao) + "T" + hora).trim());
         Completable.fromAction(() -> idvenda = vendaRepository.insert(venda, produtos, precoTotalUnit))
                 .subscribeOn(Schedulers.io())
