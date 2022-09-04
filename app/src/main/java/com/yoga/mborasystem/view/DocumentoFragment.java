@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
@@ -42,6 +43,12 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -205,7 +212,24 @@ public class DocumentoFragment extends Fragment {
                                                   if (menuItem.getItemId() == R.id.itemData) {
                                                       getData(0);
                                                   } else if (menuItem.getItemId() == R.id.itemSaft) {
-                                                      dialogGerarSaft();
+                                                      Dexter.withContext(requireContext())
+                                                              .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                              .withListener(new PermissionListener() {
+                                                                  @Override
+                                                                  public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                                                                      dialogGerarSaft();
+                                                                  }
+
+                                                                  @Override
+                                                                  public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                                                                      dialogGerarSaft();
+                                                                  }
+
+                                                                  @Override
+                                                                  public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+
+                                                                  }
+                                                              }).check();
                                                   }
                                                   return NavigationUI.onNavDestinationSelected(menuItem, navController);
                                               }
