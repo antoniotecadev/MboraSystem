@@ -132,51 +132,50 @@ public class SaftXMLDocument {
         else for (ClienteCantina cc : clienteCantina)
             elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), cliente.getProvincia(), cliente.getProvincia(), isEmpty(cc.getTelefone().trim()), isEmpty(cc.getEmail().trim()));
 
-        for (ProdutoVenda pv : produtoVendas) {
+        Map<Long, ProdutoVenda> produtoVendaMap = new HashMap<>();
+        for (ProdutoVenda pv : produtoVendas)
+            produtoVendaMap.put(pv.getId(), pv);
+
+        for (Map.Entry<Long, ProdutoVenda> pv : produtoVendaMap.entrySet()) {
             Element product = doc.createElement("Product");
             masterFiles.appendChild(product);
-            criarElemento(doc, "ProductType", product, pv.getTipo());
-            criarElemento(doc, "ProductCode", product, String.valueOf(pv.getId()));
-            criarElemento(doc, "ProductDescription", product, pv.getNome_produto());
-            criarElemento(doc, "ProductNumberCode", product, pv.getCodigo_Barra().isEmpty() ? String.valueOf(pv.getId()) : pv.getCodigo_Barra());
+            criarElemento(doc, "ProductType", product, pv.getValue().getTipo());
+            criarElemento(doc, "ProductCode", product, String.valueOf(pv.getValue().getId()));
+            criarElemento(doc, "ProductDescription", product, pv.getValue().getNome_produto());
+            criarElemento(doc, "ProductNumberCode", product, pv.getValue().getCodigo_Barra().isEmpty() ? String.valueOf(pv.getValue().getId()) : pv.getValue().getCodigo_Barra());
         }
-        Map<String, String> tabelaImposto = new HashMap<>();
+        Map<String, TaxTable> tabelaImposto = new HashMap<>();
         for (ProdutoVenda pv : produtoVendas) {
             String taxType = pv.isIva() ? "IVA" : "NS";
             String taxCode = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "ISE";
             String description = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "Normal" : "Outros") : "Isenta";
             String taxPercentage = String.valueOf(pv.getPercentagemIva());
             String key = (taxType + taxCode + description + taxPercentage).trim();
-            tabelaImposto.put(key, taxType);
-            tabelaImposto.put(key, taxCode);
-            tabelaImposto.put(key, description);
-            tabelaImposto.put(key, taxPercentage);
+            tabelaImposto.put(key, new TaxTable(taxType, taxCode, description, taxPercentage));
         }
-        Element taxTable = doc.createElement("TaxTable");
+        Element taxTable = doc.createElement("TaxTable"); // Tabela de imposto
         masterFiles.appendChild(taxTable);
-        for (String key : tabelaImposto.keySet()) {
+        for (Map.Entry<String, TaxTable> tax : tabelaImposto.entrySet()) {
             Element taxTableEntry = doc.createElement("TaxTableEntry");
             taxTable.appendChild(taxTableEntry);
-            criarElemento(doc, "TaxType", taxTableEntry, tabelaImposto.get(key));
+            criarElemento(doc, "TaxType", taxTableEntry, tax.getValue().taxType);
             criarElemento(doc, "TaxCountryRegion", taxTableEntry, "AO");
-            criarElemento(doc, "TaxCode", taxTableEntry, tabelaImposto.get(key));
-            criarElemento(doc, "Description", taxTableEntry, tabelaImposto.get(key));
-            criarElemento(doc, "TaxPercentage", taxTableEntry, tabelaImposto.get(key));
+            criarElemento(doc, "TaxCode", taxTableEntry, tax.getValue().taxCode);
+            criarElemento(doc, "Description", taxTableEntry, tax.getValue().description);
+            criarElemento(doc, "TaxPercentage", taxTableEntry, tax.getValue().taxPercentage);
         }
 
         Element sourceDocuments = doc.createElement("SourceDocuments");
         rootElement.appendChild(sourceDocuments);
-        int totalCredit = 0, totalDebit = 0;
-        for (ProdutoVenda pv : produtoVendas) {
-            totalCredit += (int) ((pv.getPreco_total() / pv.getQuantidade()) / Float.parseFloat(pv.getPercentagemIva() == 14 ? "1." + pv.getPercentagemIva() : "1.0" + pv.getPercentagemIva()));
-        }
-        for (Venda vd : vendas) {
-            totalDebit += vd.getValor_base();
-        }
+        int totalCredit = 0;
+
+        for (Venda vd : vendas)
+            totalCredit += vd.getValor_base();
+
         Element salesInvoices = doc.createElement("SalesInvoices");
         sourceDocuments.appendChild(salesInvoices);
         criarElemento(doc, "NumberOfEntries", salesInvoices, String.valueOf(vendas.size()));
-        criarElemento(doc, "TotalDebit", salesInvoices, formatarValor(totalDebit));
+        criarElemento(doc, "TotalDebit", salesInvoices, "0.00");
         criarElemento(doc, "TotalCredit", salesInvoices, formatarValor(totalCredit));
 
         for (Venda vd : vendas) {
@@ -204,7 +203,7 @@ public class SaftXMLDocument {
             criarElemento(doc, "ThirdPartiesBillingIndicator", specialRegimes, "0");
 
             criarElemento(doc, "SourceID", invoice, String.valueOf(vd.getId()));
-            criarElemento(doc, "SystemEntryDate", invoice, "2012-12-13T12:12:12");
+            criarElemento(doc, "SystemEntryDate", invoice, vd.getData_cria_hora());
             criarElemento(doc, "CustomerID", invoice, String.valueOf(vd.getIdclicant() == 0 ? 1 : vd.getIdclicant()));
 
             Element shipTo = doc.createElement("ShipTo");
@@ -212,22 +211,18 @@ public class SaftXMLDocument {
 
             Element address = doc.createElement("Address");
             shipTo.appendChild(address);
-
+            boolean v = false;
             if (clienteCantina.isEmpty()) {
-                criarElemento(doc, "AddressDetail", address, "Desconhecido");
-                criarElemento(doc, "City", address, "Desconhecido");
-                criarElemento(doc, "Province", address, "Desconhecido");
-                criarElemento(doc, "Country", address, "AO");
+                v = true;
+                addressCustomer(doc, address, "Desconhecido", "Desconhecido", "Desconhecido");
             } else for (ClienteCantina cc : clienteCantina) {
                 if (cc.getId() == vd.getIdclicant()) {
-                    criarElemento(doc, "AddressDetail", address, cc.getEndereco());
-                    criarElemento(doc, "City", address, cliente.getProvincia());
-                    criarElemento(doc, "Province", address, cliente.getProvincia());
-                    criarElemento(doc, "Country", address, "AO");
+                    v = true;
+                    addressCustomer(doc, address, cc.getEndereco(), cliente.getProvincia(), cliente.getProvincia());
                     break;
                 }
             }
-
+            if (!v) addressCustomer(doc, address, "Desconhecido", "Desconhecido", "Desconhecido");
             int i = 0;
             for (ProdutoVenda pv : produtoVendas) {
                 if (pv.getIdvenda() == vd.getId()) {
@@ -240,12 +235,12 @@ public class SaftXMLDocument {
                     criarElemento(doc, "LineNumber", line, String.valueOf(++i));
 
                     criarElemento(doc, "ProductCode", line, String.valueOf(pv.getId()));
-                    criarElemento(doc, "ProductDescription", line, pv.getNome_produto());
+                    criarElemento(doc, "ProductDescription", line, pv.getNome_produto().trim());
                     criarElemento(doc, "Quantity", line, String.valueOf(pv.getQuantidade()));
                     criarElemento(doc, "UnitOfMeasure", line, pv.getUnidade());
                     criarElemento(doc, "UnitPrice", line, pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario));
                     criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getData_cria()));
-                    criarElemento(doc, "Description", line, pv.getNome_produto());
+                    criarElemento(doc, "Description", line, pv.getNome_produto().trim());
 
                     int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
 
@@ -271,7 +266,7 @@ public class SaftXMLDocument {
             int netTotal = vd.getValor_base();
             int grossTotal = taxPayable + vd.getValor_base();
 
-            criarElemento(doc, "TaxPayable", documentTotals, formatarValor(taxPayable));
+            criarElemento(doc, "TaxPayable", documentTotals, (taxPayable < 0 ? "-" : "") + formatarValor(taxPayable));
             criarElemento(doc, "NetTotal", documentTotals, formatarValor(netTotal));
             criarElemento(doc, "GrossTotal", documentTotals, formatarValor(grossTotal));
 
@@ -283,12 +278,12 @@ public class SaftXMLDocument {
 
             Element paymentMethod = doc.createElement("PaymentMethod");
             documentTotals.appendChild(paymentMethod);
-            criarElemento(doc, "PaymentAmount", paymentMethod, formatarValor(netTotal));
+            criarElemento(doc, "PaymentAmount", paymentMethod, formatarValor(vd.getValor_pago())); // Valor do pagamento
             criarElemento(doc, "PaymentDate", paymentMethod, getDataFormatMonth(vd.getData_cria()));
 
             Element withholdingTax = doc.createElement("WithholdingTax");
             invoice.appendChild(withholdingTax);
-            criarElemento(doc, "WithholdingTaxAmount", withholdingTax, formatarValor(taxPayable));
+            criarElemento(doc, "WithholdingTaxAmount", withholdingTax, (taxPayable < 0 ? "-" : "") + formatarValor(taxPayable)); // Valor do imposto retido na fonte
         }
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -315,21 +310,22 @@ public class SaftXMLDocument {
 
         Element billingAddress = doc.createElement("BillingAddress");
         customer.appendChild(billingAddress);
-        criarElemento(doc, "AddressDetail", billingAddress, addressDetail);
-        criarElemento(doc, "City", billingAddress, city);
-        criarElemento(doc, "Province", billingAddress, province);
-        criarElemento(doc, "Country", billingAddress, "AO");
+        addressCustomer(doc, billingAddress, addressDetail, city, province);
 
         Element shipToAddress = doc.createElement("ShipToAddress");
         customer.appendChild(shipToAddress);
-        criarElemento(doc, "AddressDetail", shipToAddress, addressDetail);
-        criarElemento(doc, "City", shipToAddress, city);
-        criarElemento(doc, "Province", shipToAddress, province);
-        criarElemento(doc, "Country", shipToAddress, "AO");
+        addressCustomer(doc, shipToAddress, "Desconhecido", "Desconhecido", "Desconhecido");
 
         criarElemento(doc, "Telephone", customer, telephone);
         criarElemento(doc, "Email", customer, email);
         criarElemento(doc, "SelfBillingIndicator", customer, "0");
+    }
+
+    private void addressCustomer(Document doc, Element elementoPai, String addressDetail, String city, String province) {
+        criarElemento(doc, "AddressDetail", elementoPai, addressDetail);
+        criarElemento(doc, "City", elementoPai, city);
+        criarElemento(doc, "Province", elementoPai, province);
+        criarElemento(doc, "Country", elementoPai, "AO");
     }
 
     private String isEmpty(String valor) {
@@ -349,5 +345,17 @@ public class SaftXMLDocument {
 
     private String formatarValor(int valor) {
         return Ultilitario.formatPreco(String.valueOf(valor)).replaceAll(",", ".").replaceAll("Kz", "").replaceAll("\\s+", "");
+    }
+
+    private static class TaxTable {
+
+        private final String taxType, taxCode, description, taxPercentage;
+
+        public TaxTable(String taxType, String taxCode, String description, String taxPercentage) {
+            this.taxType = taxType;
+            this.taxCode = taxCode;
+            this.description = description;
+            this.taxPercentage = taxPercentage;
+        }
     }
 }
