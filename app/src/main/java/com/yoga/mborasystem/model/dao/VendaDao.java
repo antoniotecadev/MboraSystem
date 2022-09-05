@@ -103,7 +103,7 @@ public abstract class VendaDao {
     @Query("SELECT * FROM produtosvendas WHERE data_cria LIKE '%' || :data || '%'")
     public abstract Maybe<List<ProdutoVenda>> getProdutoVenda(String data);
 
-    @Query("SELECT DISTINCT(nome_produto), * FROM produtosvendas WHERE idvenda IN (:idvenda)")
+    @Query("SELECT * FROM produtosvendas WHERE idvenda IN (:idvenda)")
     public abstract Maybe<List<ProdutoVenda>> getProdutoVendaSaft(List<Long> idvenda);
 
     @Query("UPDATE vendas SET divida = :divida WHERE id = :idvenda")
