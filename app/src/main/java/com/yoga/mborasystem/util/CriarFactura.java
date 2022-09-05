@@ -94,7 +94,7 @@ public class CriarFactura {
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.BOLD, BaseColor.BLACK);
             addNewItem(document,"FACTURA/RECIBO" + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
             addNewItem(document,"CLIENTE: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
-            addNewItem(document,"NIF: " + (txtNomeCliente.getText().toString().isEmpty() ? "" : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2]), Element.ALIGN_LEFT, font);
+            addNewItem(document,"NIF: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2]), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             addNewItem(document, "Descrição Preço Quantidade Total", Element.ALIGN_CENTER, font);
             addLineSeparator(document);
