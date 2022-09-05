@@ -598,7 +598,7 @@
             </xs:documentation>
         </xs:annotation>
     </xs:element>
-    <xs:element name="TaxPayable" type="SAFMonetaryType2DecimalPlaces" />
+    <xs:element name="TaxPayable" type="xs:decimal" />
     <xs:element name="NetTotal" type="SAFMonetaryType2DecimalPlaces" />
     <xs:element name="GrossTotal" type="SAFMonetaryType2DecimalPlaces" />
     <xs:element name="CurrencyAmount" type="SAFmonetaryType" />
@@ -889,7 +889,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="WithholdingTaxAmount" type="SAFmonetaryType">
+            <xs:element name="WithholdingTaxAmount" type="xs:decimal">
                 <xs:annotation>
                     <xs:documentation>
                         Deve ser indicado o montante retido de imposto.
