@@ -130,7 +130,7 @@ public class SaftXMLDocument {
         if (clienteCantina.isEmpty())
             elementCustomer(doc, masterFiles, "1", "999999999", "Consumidor Final", "Desconhecido", "Desconhecido", "Desconhecido", "Desconhecido", "Desconhecido");
         else for (ClienteCantina cc : clienteCantina)
-            elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), cc.getEndereco(), cliente.getProvincia(), cliente.getProvincia(), isEmpty(cc.getTelefone().trim()), isEmpty(cc.getEmail().trim()));
+            elementCustomer(doc, masterFiles, String.valueOf(cc.getId()), cc.getNif(), cc.getNome(), isEmpty(cc.getEndereco()), cliente.getProvincia(), cliente.getProvincia(), isEmpty(cc.getTelefone().trim()), isEmpty(cc.getEmail().trim()));
 
         Map<Long, ProdutoVenda> produtoVendaMap = new HashMap<>();
         for (ProdutoVenda pv : produtoVendas)
@@ -218,7 +218,7 @@ public class SaftXMLDocument {
             } else for (ClienteCantina cc : clienteCantina) {
                 if (cc.getId() == vd.getIdclicant()) {
                     v = true;
-                    addressCustomer(doc, address, cc.getEndereco(), cliente.getProvincia(), cliente.getProvincia());
+                    addressCustomer(doc, address, isEmpty(cc.getEndereco()), cliente.getProvincia(), cliente.getProvincia());
                     break;
                 }
             }
