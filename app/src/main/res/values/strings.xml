@@ -245,7 +245,7 @@
     <string name="usuario_bloqueado">Usuário bloqueado</string>
     <string name="usuario_desbloqueado">Usuário desbloqueado</string>
     <string name="eliminar">Eliminar</string>
-    <string name="endereco">Endereço*</string>
+    <string name="endereco">Endereço</string>
     <string name="opcao_conta">Opção de conta:</string>
     <string name="vencimento_conta">Vencimento da conta:</string>
     <string name="nunca">Nunca</string>

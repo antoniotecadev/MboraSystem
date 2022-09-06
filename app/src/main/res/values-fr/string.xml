@@ -231,7 +231,7 @@
     <string name="usuario_bloqueado">Utilisateur bloqué</string>
     <string name="usuario_desbloqueado">Utilisateur déverrouillé</string>
     <string name="eliminar">Supprimer</string>
-    <string name="endereco">Adresse*</string>
+    <string name="endereco">Adresse</string>
     <string name="opcao_conta">Option de compte :</string>
     <string name="vencimento_conta">Expiration du compte :</string>
     <string name="nunca">Jamais</string>

@@ -120,7 +120,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
             email.requestFocus();
             email.setError(getApplication().getString(R.string.email_invalido));
-        } else if (isCampoVazio(Objects.requireNonNull(endereco.getText()).toString()) || Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
+        } else if (!isCampoVazio(Objects.requireNonNull(endereco.getText()).toString()) && Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
             endereco.requestFocus();
             endereco.setError(getApplication().getString(R.string.endereco_invalido));
         } else {
