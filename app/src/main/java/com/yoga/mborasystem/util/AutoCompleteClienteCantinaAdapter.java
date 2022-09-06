@@ -16,6 +16,7 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @SuppressWarnings("rawtypes")
 public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCantina> {
 
@@ -43,7 +44,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
         if (clienteCantina != null) {
             binding.textNome.setText(clienteCantina.getNome());
             binding.textId.setText("MSCC" + clienteCantina.getId());
-            binding.textTelefone.setText(clienteCantina.getTelefone() + " | " + clienteCantina.getNif());
+            binding.textTelefone.setText(clienteCantina.getTelefone().isEmpty() ? "Desconhecido" : clienteCantina.getTelefone() + " | " + (clienteCantina.getNif().isEmpty() ? "999999999" : clienteCantina.getNif()));
         }
 
         return binding.getRoot();
@@ -78,7 +79,7 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
 
         @Override
         public CharSequence convertResultToString(Object resultValue) {
-            return ((ClienteCantina) resultValue).getNome() + " - " + ((ClienteCantina) resultValue).getId() + " - " + ((ClienteCantina) resultValue).getNif();
+            return ((ClienteCantina) resultValue).getNome() + " - " + ((ClienteCantina) resultValue).getId() + " - " + (((ClienteCantina) resultValue).getNif().isEmpty() ? "999999999" : ((ClienteCantina) resultValue).getNif());
         }
     };
 
