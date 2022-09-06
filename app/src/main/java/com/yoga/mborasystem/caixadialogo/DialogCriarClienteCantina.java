@@ -24,6 +24,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class DialogCriarClienteCantina extends DialogFragment {
 
@@ -31,6 +32,8 @@ public class DialogCriarClienteCantina extends DialogFragment {
     private ClienteCantina clienteCantina;
     private DialogCriarClienteCantinaBinding binding;
     private ClienteCantinaViewModel clienteCantinaViewModel;
+
+    public static Pattern letraNumero = Pattern.compile("[^a-zA-Z0-9]");
 
     @NonNull
     @Override
@@ -72,7 +75,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
             StringBuilder sb = new StringBuilder();
             if (isNetworkConnected(requireContext())) {
                 if (internetIsConnected()) {
-                    if (Ultilitario.letraNumero.matcher(Objects.requireNonNull(binding.txtNIF.getText()).toString()).find() || binding.txtNIF.length() > 14) {
+                    if (letraNumero.matcher(Objects.requireNonNull(binding.txtNIF.getText()).toString()).find() || binding.txtNIF.length() > 14 || binding.txtNIF.length() < 10) {
                         Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.nif_bi) + " " + getString(R.string.ivld), R.drawable.ic_toast_erro);
                     } else {
                         MainActivity.getProgressBar();

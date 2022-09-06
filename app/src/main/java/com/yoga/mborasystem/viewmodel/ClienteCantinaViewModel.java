@@ -30,6 +30,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import autodispose2.AutoDispose;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
@@ -69,6 +70,8 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
+    public static Pattern letraNumero = Pattern.compile("[^a-zA-Z0-9]");
+
     public void criarCliente(TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
         validarCliente(0, Ultilitario.Operacao.CRIAR, nif, nomeCliente, telefone, email, endereco, dialog);
     }
@@ -105,7 +108,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     }
 
     private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        if (isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) || Ultilitario.letraNumero.matcher(nif.getText().toString()).find()) {
+        if (!isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) && ((letraNumero.matcher(Objects.requireNonNull(nif.getText()).toString()).find()) || Objects.requireNonNull(nif.getText()).toString().length() > 14 || Objects.requireNonNull(nif.getText()).toString().length() < 10)) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_invalido));
         } else if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
