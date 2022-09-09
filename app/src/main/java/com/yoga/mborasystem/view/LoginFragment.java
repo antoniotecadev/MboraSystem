@@ -170,10 +170,7 @@ public class LoginFragment extends Fragment {
         binding.btn8.setOnClickListener(v -> digitarCodigoPin(8));
         binding.btn9.setOnClickListener(v -> digitarCodigoPin(9));
         binding.btn0.setOnClickListener(v -> digitarCodigoPin(0));
-        binding.btnApagar.setOnClickListener(v -> {
-//            MainActivity.getProgressBar();
-//            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
-        });
+        binding.btnApagar.setOnClickListener(v -> limparCodigoPin());
         binding.btnMenu.setOnClickListener(v -> {
             MainActivity.getProgressBar();
             Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin);
