@@ -253,7 +253,7 @@
     <string name="diamesano">d/m/a</string>
     <string name="certifique_data">Certique se a data esta certa.</string>
     <string name="alterar_codigo_pin">Alterar código pin</string>
-    <string name="erro">Erro de servidor</string>
+    <string name="erro">Erro</string>
     <string name="data_cria">Data de criação</string>
     <string name="data_modifica">Data de modificação</string>
     <string name="info_usuario_bloqueado">Entra em contacto com o seu Administrador</string>
