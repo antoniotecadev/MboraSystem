@@ -30,6 +30,7 @@ public class Venda implements Parcelable {
     private long idclicant;
     private long idoperador;
     private String data_cria_hora;
+    private String hash;
 
 
     public Venda(Parcel in) {
@@ -211,6 +212,14 @@ public class Venda implements Parcelable {
 
     public void setData_cria_hora(String data_cria_hora) {
         this.data_cria_hora = data_cria_hora;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     @Override
