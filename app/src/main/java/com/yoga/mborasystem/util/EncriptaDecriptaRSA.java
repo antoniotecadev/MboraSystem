@@ -1,7 +1,5 @@
 package com.yoga.mborasystem.util;
 
-import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
-
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,7 +34,7 @@ public class EncriptaDecriptaRSA {
                 writeKey(PATH_CHAVE_PRIVADA, key.getPrivate());
                 writeKey(PATH_CHAVE_PUBLICA, key.getPublic());
             }
-            descriptografarTexto(assinarTexto("2018-05-18;2018-05-18T11:22:19;FAC 001/18;53.002;"));
+            descriptografarTexto(assinarTexto());
         } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -49,10 +47,10 @@ public class EncriptaDecriptaRSA {
         chave.close();
     }
 
-    private static String assinarTexto(String texto) throws Exception {
+    private static String assinarTexto() throws Exception {
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA));
         final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
-        final String textoCriptografado = criptografa(texto, privateKey);
+        final String textoCriptografado = criptografa("2018-05-18;2018-05-18T11:22:19;FAC 001/18;53.002;", privateKey);
         Log.i("RSA", "Mensagem Criptografada: " + textoCriptografado);
         Log.i("RSA", "Size: " + textoCriptografado.length());
         return textoCriptografado;
