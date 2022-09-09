@@ -4,7 +4,6 @@ import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
@@ -30,18 +36,8 @@ import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Objects;
 import java.util.Random;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 public class CadastrarClienteFragment extends Fragment {
 
@@ -113,12 +109,12 @@ public class CadastrarClienteFragment extends Fragment {
                             bairros.add(parceiro.get("br").getAsString());
                         }
                         if (bairros.getItem(1).isEmpty()) {
-                            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.br_na_enc_mun), R.drawable.ic_toast_erro);
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.br_na_enc_mun), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } else {
                             Snackbar.make(requireView(), getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
                         }
                     } catch (Exception ex) {
-                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), "Erro:" + ex.getMessage(), R.drawable.ic_toast_erro);
+                        Ultilitario.alertDialog(getString(R.string.erro), ex.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
@@ -144,11 +140,11 @@ public class CadastrarClienteFragment extends Fragment {
                         }
                     } else {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
+                        Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 } else {
                     MainActivity.dismissProgressBar();
-                    Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             }
 
@@ -172,12 +168,8 @@ public class CadastrarClienteFragment extends Fragment {
             try {
                 imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
                 clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei);
-            } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), getText(R.string.erro) + ": " + e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         });
         binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes"))));
@@ -188,12 +180,8 @@ public class CadastrarClienteFragment extends Fragment {
                 case CRIAR:
                     try {
                         writeNewClient(binding, imei);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                        Toast.makeText(requireActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    } catch (InvalidKeySpecException e) {
-                        e.printStackTrace();
-                        Toast.makeText(requireActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                     MainActivity.dismissProgressBar();
                     Ultilitario.dialogConta(getString(R.string.conta_criada), getContext()).show();
@@ -235,7 +223,7 @@ public class CadastrarClienteFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void writeNewClient(FragmentCadastrarClienteBinding binding, String imei) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public void writeNewClient(FragmentCadastrarClienteBinding binding, String imei) {
         Cliente cliente = new Cliente();
         cliente.setId(1);
         cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
