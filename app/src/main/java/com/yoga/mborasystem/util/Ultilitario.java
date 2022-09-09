@@ -51,6 +51,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -856,6 +857,20 @@ public class Ultilitario {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.municipios, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         municipios.setAdapter(adapter);
+    }
+
+    public static File getFilePathCache(Context context, String filePath) throws IOException {
+        File cacheFile = new File(context.getCacheDir(), filePath);
+        try (InputStream inputStream = context.getAssets().open(filePath)) {
+            try (FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buf)) > 0) {
+                    outputStream.write(buf, 0, len);
+                }
+            }
+        }
+        return cacheFile;
     }
 
 }

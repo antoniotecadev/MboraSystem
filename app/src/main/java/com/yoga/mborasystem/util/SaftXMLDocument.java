@@ -2,6 +2,7 @@ package com.yoga.mborasystem.util;
 
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
+import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -19,9 +20,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,20 +55,6 @@ public class SaftXMLDocument {
         Attr attr = doc.createAttribute(atributo);
         attr.setValue(valor);
         element.setAttributeNode(attr);
-    }
-
-    private File getPathXSDCacheFile(Context context) throws IOException {
-        File cacheFile = new File(context.getCacheDir(), "SAFTAO1.01_01.xsd");
-        try (InputStream inputStream = context.getAssets().open("SAFTAO1.01_01.xsd")) {
-            try (FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = inputStream.read(buf)) > 0) {
-                    outputStream.write(buf, 0, len);
-                }
-            }
-        }
-        return cacheFile;
     }
 
     private boolean validateXMLSchema(String xsdPath, String xmlPath) throws IOException, SAXException {
@@ -295,7 +280,7 @@ public class SaftXMLDocument {
 
         addFileContentProvider(context, "/SAFT-AO/" + "SAFTAO1.01_01.xml");
 
-        if (validateXMLSchema(getPathXSDCacheFile(context).getAbsolutePath(), Common.getAppPath("SAFT-AO") + "SAFTAO1.01_01.xml")) {
+        if (validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").getAbsolutePath(), Common.getAppPath("SAFT-AO") + "SAFTAO1.01_01.xml")) {
             Toast.makeText(context, "Válido", Toast.LENGTH_LONG).show();
         }
     }
