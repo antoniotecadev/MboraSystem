@@ -859,9 +859,9 @@ public class Ultilitario {
         municipios.setAdapter(adapter);
     }
 
-    public static File getFilePathCache(Context context, String filePath) throws IOException {
-        File cacheFile = new File(context.getCacheDir(), filePath);
-        try (InputStream inputStream = context.getAssets().open(filePath)) {
+    public static File getFilePathCache(Context context, String file) throws IOException {
+        File cacheFile = new File(context.getCacheDir(), file);
+        try (InputStream inputStream = context.getAssets().open(file)) {
             try (FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
                 byte[] buf = new byte[1024];
                 int len;
