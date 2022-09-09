@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.util;
 
+import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
+
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,8 +24,8 @@ import javax.crypto.Cipher;
 
 public class EncriptaDecriptaRSA {
     private static final String ALGORITHM = "RSA";
-    private static final String PATH_CHAVE_PRIVADA = Common.getAppPath("KEYS-RSA") + "private.key";
-    private static final String PATH_CHAVE_PUBLICA = Common.getAppPath("KEYS-RSA") + "public.key";
+    private static final String PATH_CHAVE_PRIVADA = Common.getAppPath("KEYS-RSA") + "privatekey.key";
+    private static final String PATH_CHAVE_PUBLICA = Common.getAppPath("KEYS-RSA") + "publickey.key";
 
     public static void gerarChave(Context context) {
         try {
