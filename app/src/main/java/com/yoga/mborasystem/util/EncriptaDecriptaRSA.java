@@ -25,7 +25,7 @@ public class EncriptaDecriptaRSA {
     private static final String PATH_CHAVE_PRIVADA = Common.getAppPath("KEYS-RSA") + "privatekey.key";
     private static final String PATH_CHAVE_PUBLICA = Common.getAppPath("KEYS-RSA") + "publickey.key";
 
-    public static void gerarChave(Context context) {
+    private static void gerarChave(Context context) {
         try {
             if (!fileExists()) {
                 final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
@@ -34,7 +34,7 @@ public class EncriptaDecriptaRSA {
                 writeKey(PATH_CHAVE_PRIVADA, key.getPrivate());
                 writeKey(PATH_CHAVE_PUBLICA, key.getPublic());
             }
-            descriptografarTexto(assinarTexto());
+            descriptografarTexto(assinarTexto("2018-05-18;2018-05-18T11:22:19;FAC 001/18;53.002;", EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA));
         } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -47,13 +47,10 @@ public class EncriptaDecriptaRSA {
         chave.close();
     }
 
-    private static String assinarTexto() throws Exception {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA));
+    public static String assinarTexto(String texto, String filePath) throws Exception {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filePath));
         final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
-        final String textoCriptografado = criptografa("2018-05-18;2018-05-18T11:22:19;FAC 001/18;53.002;", privateKey);
-        Log.i("RSA", "Mensagem Criptografada: " + textoCriptografado);
-        Log.i("RSA", "Size: " + textoCriptografado.length());
-        return textoCriptografado;
+        return criptografa(texto, privateKey);
     }
 
     private static void descriptografarTexto(String texto) throws Exception {

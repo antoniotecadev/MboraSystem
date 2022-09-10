@@ -128,4 +128,7 @@ public class VendaRepository {
         return vendaDao.getProdutoMenosVendido(data);
     }
 
+    public void insertHashVenda(String hashVenda, long idvenda) {
+        vendaDao.updateHashVenda(hashVenda, idvenda);
+    }
 }

@@ -194,6 +194,9 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND (data_cria BETWEEN :dataInicio AND :dataFim) ORDER BY id DESC")
     public abstract Maybe<List<Venda>> getVendaSaft(String dataInicio, String dataFim);
 
+    @Query("UPDATE vendas SET hash = :hashVenda WHERE id = :idvenda")
+    public abstract void updateHashVenda(String hashVenda, long idvenda);
+
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
