@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -755,7 +756,7 @@ public class FacturaFragment extends Fragment {
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        if (getDataSplitDispositivo(Ultilitario.getSharedPreferencesDataDispositivo(requireActivity())).equals(getDataSplitDispositivo(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())))) {
+                        if (getDataSplitDispositivo(Ultilitario.getValueSharedPreferences(requireActivity(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent())))) {
                             vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, finalQuantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         } else {
                             if (isNetworkConnected(requireContext())) {
@@ -1110,7 +1111,7 @@ public class FacturaFragment extends Fragment {
                             MainActivity.dismissProgressBar();
                             Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), R.drawable.ic_baseline_person_add_disabled_24);
                         } else if (estadoConta == Ultilitario.UM && termina == Ultilitario.ZERO) {
-                            Ultilitario.setSharedPreferencesDataDispositivo(requireActivity());
+                            Ultilitario.setValueSharedPreferences(requireActivity(), "data", monthInglesFrances(Ultilitario.getDateCurrent()));
                             vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, quantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         }
                     } catch (Exception ex) {

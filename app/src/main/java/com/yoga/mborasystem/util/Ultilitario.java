@@ -593,12 +593,12 @@ public class Ultilitario {
                 .show();
     }
 
-    public static void setSharedPreferencesDataDispositivo(Activity activity) {
-        activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE).edit().putString("data", monthInglesFrances(Ultilitario.getDateCurrent())).apply();
+    public static void setValueSharedPreferences(Activity activity, String idValue, String value) {
+        activity.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).edit().putString(idValue, value).apply();
     }
 
-    public static String getSharedPreferencesDataDispositivo(Activity activity) {
-        return activity.getSharedPreferences("DATE_DAVICE", Context.MODE_PRIVATE).getString("data", "00-00-0000");
+    public static String getValueSharedPreferences(Activity activity, String idValue, String defaultValue) {
+        return activity.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).getString(idValue, defaultValue);
     }
 
     public static String getTaxaIva(Activity activity) {
