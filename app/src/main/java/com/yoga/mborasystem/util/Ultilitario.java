@@ -859,6 +859,10 @@ public class Ultilitario {
         municipios.setAdapter(adapter);
     }
 
+    public static String formatarValor(int valor) {
+        return Ultilitario.formatPreco(String.valueOf(valor)).replaceAll(",", ".").replaceAll("Kz", "").replaceAll("\\s+", "");
+    }
+
     public static File getFilePathCache(Context context, String file) throws IOException {
         File cacheFile = new File(context.getCacheDir(), file);
         try (InputStream inputStream = context.getAssets().open(file)) {

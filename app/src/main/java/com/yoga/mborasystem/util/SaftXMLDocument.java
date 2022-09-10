@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.util;
 
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
+import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 
@@ -326,10 +327,6 @@ public class SaftXMLDocument {
             }
         }
         return "";
-    }
-
-    private String formatarValor(int valor) {
-        return Ultilitario.formatPreco(String.valueOf(valor)).replaceAll(",", ".").replaceAll("Kz", "").replaceAll("\\s+", "");
     }
 
     private static class TaxTable {
