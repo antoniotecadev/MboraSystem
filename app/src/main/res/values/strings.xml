@@ -653,7 +653,7 @@
     <string name="sem_cont_stoc">Sem controle de stock</string>
     <string name="quant_prod_dispo">Você tem apenas %1$s produto(s) disponivel em stock. Aumente a sua quantidade ou desmarque o seu controle de stock</string>
     <string name="avs_stock">Aviso de stock</string>
-    <string name="ger_saft">Gerar documento SAFT</string>
+    <string name="exp_saft">Exportar documento SAFT</string>
     <string name="de">De:</string>
     <string name="ate">Até:</string>
     <string name="dat_1_nao_dat_2">A primeira data (%1$s) não pode ser maior que a segunda data (%2$s).</string>

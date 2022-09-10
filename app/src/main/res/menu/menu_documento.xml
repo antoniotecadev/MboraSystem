@@ -16,6 +16,6 @@
     <item
         android:id="@+id/itemSaft"
         android:icon="@drawable/ic_baseline_insert_drive_file_24"
-        android:title="@string/ger_saft"
+        android:title="@string/exp_saft"
         app:showAsAction="collapseActionView" />
 </menu>
