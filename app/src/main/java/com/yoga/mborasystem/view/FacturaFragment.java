@@ -737,7 +737,7 @@ public class FacturaFragment extends Fragment {
         if (somatorioValorFormaPagamento() == valorPago) {
             int quantidadeProduto = 0;
             for (Map.Entry<Long, Produto> produto : produtos.entrySet())
-                quantidadeProduto += (precoTotal.get(produto.getKey()) / produto.getValue().getPreco());
+                quantidadeProduto += (Objects.requireNonNull(precoTotal.get(produto.getKey())) / produto.getValue().getPreco());
 
             int finalQuantidadeProduto = quantidadeProduto;
             new AlertDialog.Builder(requireContext())
