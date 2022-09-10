@@ -176,7 +176,7 @@ public class SaftXMLDocument {
             criarElemento(doc, "SourceID", documentStatus, String.valueOf(vd.getId()));
             criarElemento(doc, "SourceBilling", documentStatus, "P");
 
-            criarElemento(doc, "Hash", invoice, "145568567645gfgsgsfsfd");
+            criarElemento(doc, "Hash", invoice, vd.getHash());
             criarElemento(doc, "HashControl", invoice, "1");
             criarElemento(doc, "Period", invoice, TextUtils.split(getDataFormatMonth(vd.getData_cria()), "-")[1].trim());
             criarElemento(doc, "InvoiceDate", invoice, getDataFormatMonth(vd.getData_cria()));
@@ -262,10 +262,10 @@ public class SaftXMLDocument {
             criarElemento(doc, "CurrencyAmount", currency, formatarValor(grossTotal));
             criarElemento(doc, "ExchangeRate", currency, "0");
 
-            Element paymentMethod = doc.createElement("PaymentMethod");
-            documentTotals.appendChild(paymentMethod);
-            criarElemento(doc, "PaymentAmount", paymentMethod, formatarValor(vd.getValor_pago())); // Valor do pagamento
-            criarElemento(doc, "PaymentDate", paymentMethod, getDataFormatMonth(vd.getData_cria()));
+            Element payment = doc.createElement("Payment");
+            documentTotals.appendChild(payment);
+            criarElemento(doc, "PaymentAmount", payment, formatarValor(vd.getValor_pago())); // Valor do pagamento
+            criarElemento(doc, "PaymentDate", payment, getDataFormatMonth(vd.getData_cria()));
 
             Element withholdingTax = doc.createElement("WithholdingTax");
             invoice.appendChild(withholdingTax);
