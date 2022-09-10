@@ -133,7 +133,7 @@ public class DocumentoFragment extends Fragment {
                     Toast.makeText(requireContext(), getText(R.string.arg_null), Toast.LENGTH_LONG).show();
                 }
             } catch (ParserConfigurationException | TransformerException | IOException | SAXException e) {
-                Ultilitario.alertDialog(getString(R.string.ger_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                Ultilitario.alertDialog(getString(R.string.exp_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
             MainActivity.dismissProgressBar();
         }));
@@ -156,7 +156,7 @@ public class DocumentoFragment extends Fragment {
         }));
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             if (vendas.isEmpty()) {
-                Ultilitario.alertDialog(getString(R.string.ger_saft), getString(R.string.nao_tem_venda), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                Ultilitario.alertDialog(getString(R.string.exp_saft), getString(R.string.nao_tem_venda), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             } else {
                 this.vendas = vendas;
                 List<Long> idcliente = new ArrayList<>();
@@ -242,7 +242,7 @@ public class DocumentoFragment extends Fragment {
         android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
         alert.setCancelable(false);
         alert.setIcon(R.drawable.ic_baseline_insert_drive_file_24);
-        alert.setTitle(getString(R.string.ger_saft));
+        alert.setTitle(getString(R.string.exp_saft));
         final LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
         final TextView inicio = new TextView(requireContext());
         inicio.setText(getText(R.string.de));
@@ -273,10 +273,10 @@ public class DocumentoFragment extends Fragment {
                     vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
                 } else {
                     this.dialogGerarSaft();
-                    Ultilitario.alertDialog(getString(R.string.ger_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    Ultilitario.alertDialog(getString(R.string.exp_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } catch (ParseException e) {
-                Ultilitario.alertDialog(getString(R.string.ger_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                Ultilitario.alertDialog(getString(R.string.exp_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> {
             layout.removeAllViews();
