@@ -593,12 +593,12 @@ public class Ultilitario {
                 .show();
     }
 
-    public static void setValueSharedPreferences(Activity activity, String idValue, String value) {
-        activity.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).edit().putString(idValue, value).apply();
+    public static void setValueSharedPreferences(Context Context, String idValue, String value) {
+        Context.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).edit().putString(idValue, value).apply();
     }
 
-    public static String getValueSharedPreferences(Activity activity, String idValue, String defaultValue) {
-        return activity.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).getString(idValue, defaultValue);
+    public static String getValueSharedPreferences(Context context, String idValue, String defaultValue) {
+        return context.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).getString(idValue, defaultValue);
     }
 
     public static String getTaxaIva(Activity activity) {
