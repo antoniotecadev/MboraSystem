@@ -72,6 +72,9 @@ public class CriarFactura {
         if (new File(path).exists())
             new File(path).delete();
         try {
+            String nib = PreferenceManager.getDefaultSharedPreferences(context).getString("nib", "");
+            String iban = PreferenceManager.getDefaultSharedPreferences(context).getString("iban", "");
+            String textorodape = PreferenceManager.getDefaultSharedPreferences(context).getString("textorodape", "");
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(path));
             document.setMargins(10, 5, 0, 0);
@@ -114,11 +117,16 @@ public class CriarFactura {
             addLineSeparator(document);
             addNewItem(document, "Pagamento: " + formaPagamento, Element.ALIGN_LEFT, font);
             addNewItem(document, "Operador: " + (idOperador > 0 ? " MSU" + idOperador : " MSA0"), Element.ALIGN_LEFT, font);
-            addLineSeparator(document);
+            if (!nib.isEmpty())
+                addNewItem(document, "NIB: " + nib, Element.ALIGN_LEFT, font);
+            if (!iban.isEmpty())
+                addNewItem(document, "IBAN: " + iban, Element.ALIGN_LEFT, font);
             if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_qr_code", false)) {
+                addLineSeparator(document);
                 document.add(qr_code_image);
-                addNewItem(document, referenciaFactura, Element.ALIGN_CENTER, font);
             }
+            if (!textorodape.isEmpty())
+                addNewItem(document, textorodape, Element.ALIGN_CENTER, font);
             document.close();
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
             addFileContentProvider(activity.getApplicationContext(), "/Facturas/" + facturaPath);
