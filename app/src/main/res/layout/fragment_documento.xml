@@ -8,10 +8,10 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/mySwipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewListaDoc"
@@ -35,8 +35,7 @@
                 android:background="@color/cor_castanha"
                 app:itemTextColor="@color/white"
                 app:menu="@menu/menu_bottom_doc" />
-
-        </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_quant_doc"

@@ -124,7 +124,7 @@ public class DocumentoFragment extends Fragment {
             }
             return true;
         });
-
+        binding.mySwipeRefreshLayout.setOnRefreshListener(() -> getDocumentos(null, false, "", false));
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtoVendas -> {
             try {
                 if (getArguments() != null) {
@@ -335,6 +335,7 @@ public class DocumentoFragment extends Fragment {
                     Ultilitario.naoEncontrado(getContext(), adapter, msg);
                 }
             } else {
+                Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
                 for (Ultilitario.Documento documento : pdfList) {
                     adapter.add(new ItemDocumento(documento, requireContext(), pasta, title, msg));
                 }
