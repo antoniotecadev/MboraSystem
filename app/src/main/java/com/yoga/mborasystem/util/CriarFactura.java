@@ -6,6 +6,7 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewItem;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
+import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 
 import android.Manifest;
 import android.app.Activity;
@@ -92,7 +93,7 @@ public class CriarFactura {
             Font font = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, "NIF: " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, "TEL: " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
-            addNewItem(document, "DATA: " + (dataEmissao.isEmpty() ? Ultilitario.getDateCurrent() : dataEmissao), Element.ALIGN_LEFT, font);
+            addNewItem(document, "DATA: " + (dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) : getDataFormatMonth(dataEmissao)) + " " + TextUtils.split(Ultilitario.getDateCurrent(), "-")[3], Element.ALIGN_LEFT, font);
             addLineSpace(document);
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.BOLD, BaseColor.BLACK);
             addNewItem(document, "FACTURA/RECIBO" + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
@@ -121,6 +122,8 @@ public class CriarFactura {
                 addNewItem(document, "NIB: " + nib, Element.ALIGN_LEFT, font);
             if (!iban.isEmpty())
                 addNewItem(document, "IBAN: " + iban, Element.ALIGN_LEFT, font);
+            addLineSeparator(document);
+            addNewItem(document, "Os bens/serviços foram colocados a disposição do adquirente na data de " + getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + " e endereço de emissão do documento.", Element.ALIGN_LEFT, font);
             if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_qr_code", false)) {
                 addLineSeparator(document);
                 document.add(qr_code_image);
