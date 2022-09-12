@@ -831,7 +831,7 @@ public class Ultilitario {
         SimpleDateFormat dateFormat;
         Date d = new Date(data * 1000);
         if (comHora) {
-            dateFormat = new SimpleDateFormat("dd-MMMM-yyyy hh:mm:ss", Locale.getDefault());
+            dateFormat = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", Locale.getDefault());
         } else {
             dateFormat = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
         }
