@@ -651,7 +651,6 @@ public class FacturaFragment extends Fragment {
         valor.clear();
         iva.clear();
         posicao.clear();
-        pagingAdapter.notifyDataSetChanged();
         total = 0;
         totaldesconto = 0;
         valorBase = 0;
