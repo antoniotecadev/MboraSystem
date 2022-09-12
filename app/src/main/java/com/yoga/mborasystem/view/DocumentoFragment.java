@@ -217,12 +217,12 @@ public class DocumentoFragment extends Fragment {
                                                               .withListener(new PermissionListener() {
                                                                   @Override
                                                                   public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                                                                      dialogGerarSaft();
+                                                                      dialogExportarDocumentoSaft();
                                                                   }
 
                                                                   @Override
                                                                   public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                                                                      dialogGerarSaft();
+                                                                      dialogExportarDocumentoSaft();
                                                                   }
 
                                                                   @Override
@@ -238,7 +238,7 @@ public class DocumentoFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void dialogGerarSaft() {
+    private void dialogExportarDocumentoSaft() {
         android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
         alert.setCancelable(false);
         alert.setIcon(R.drawable.ic_baseline_insert_drive_file_24);
@@ -261,18 +261,18 @@ public class DocumentoFragment extends Fragment {
             try {
                 layout.removeAllViews();
                 if (Objects.requireNonNull(dataInicio.getText()).toString().isEmpty()) {
-                    this.dialogGerarSaft();
+                    this.dialogExportarDocumentoSaft();
                     dataInicio.requestFocus();
                     Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.pri_dat_vaz), R.drawable.ic_toast_erro);
                 } else if (Objects.requireNonNull(dataFim.getText()).toString().isEmpty()) {
-                    this.dialogGerarSaft();
+                    this.dialogExportarDocumentoSaft();
                     dataFim.requestFocus();
                     Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
                 } else if (Objects.requireNonNull(sdf.parse(dataFim.getText().toString())).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
                     MainActivity.getProgressBar();
                     vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
                 } else {
-                    this.dialogGerarSaft();
+                    this.dialogExportarDocumentoSaft();
                     Ultilitario.alertDialog(getString(R.string.exp_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } catch (ParseException e) {
