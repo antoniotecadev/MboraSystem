@@ -772,9 +772,8 @@ public class Ultilitario {
     public static void addFileContentProvider(Context context, String filePath) {
         File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
         final String pdf = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
-        final String xml = MimeTypeMap.getSingleton().getMimeTypeFromExtension("xml");
         final String[] selectionArgs = new String[]{dir.getPath() + "/MboraSystem/" + filePath};
-        MediaScannerConnection.scanFile(context, selectionArgs, new String[]{pdf, xml},
+        MediaScannerConnection.scanFile(context, selectionArgs, new String[]{pdf},
                 (path, uri) -> {
                 });
     }
