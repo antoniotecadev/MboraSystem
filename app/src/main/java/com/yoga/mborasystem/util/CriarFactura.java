@@ -115,22 +115,20 @@ public class CriarFactura {
             addNewItem(document, "Pagamento: " + formaPagamento, Element.ALIGN_LEFT, font);
             addNewItem(document, "Operador: " + (idOperador > 0 ? " MSU" + idOperador : " MSA0"), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
-            document.add(qr_code_image);
+            if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_qr_code", false))
+                document.add(qr_code_image);
             addNewItem(document, ReferenciaFactura, Element.ALIGN_CENTER, font);
             document.close();
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
             addFileContentProvider(activity.getApplicationContext(), "/Facturas/" + facturaPath);
             if (!isGuardar)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                     printPDF(activity, activity.getBaseContext(), facturaPath, "Facturas");
-                } else {
+                else
                     Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
-                }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (DocumentException e) {
-            e.printStackTrace();
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
             MainActivity.dismissProgressBar();
