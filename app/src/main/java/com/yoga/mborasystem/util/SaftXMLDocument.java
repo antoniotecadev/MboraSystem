@@ -68,7 +68,8 @@ public class SaftXMLDocument {
 
     public void criarDocumentoSaft(Context context, Cliente cliente, String dataInicio, String dataFim, List<ClienteCantina> clienteCantina, List<ProdutoVenda> produtoVendas, List<Venda> vendas) throws ParserConfigurationException, TransformerException, IOException, SAXException {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String[] dataHora = TextUtils.split(sdf.format(new Date()), " ");
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -102,7 +103,7 @@ public class SaftXMLDocument {
         criarElemento(doc, "StartDate", header, dataInicio);
         criarElemento(doc, "EndDate", header, dataFim);
         criarElemento(doc, "CurrencyCode", header, "AOA");
-        criarElemento(doc, "DateCreated", header, sdf.format(new Date()));
+        criarElemento(doc, "DateCreated", header, dataHora[0]);
         criarElemento(doc, "TaxEntity", header, "Global"); // Ficheiro de Logística e Tesouraria
         criarElemento(doc, "ProductCompanyTaxID", header, "5000999784"); // Identificação fiscal da entidade produtora do software
         criarElemento(doc, "SoftwareValidationNumber", header, "000/AGT/0000");
@@ -272,17 +273,17 @@ public class SaftXMLDocument {
             criarElemento(doc, "WithholdingTaxAmount", withholdingTax, (taxPayable < 0 ? "-" : "") + formatarValor(taxPayable)); // Valor do imposto retido na fonte
         }
 
+        String FILE_PATH_SAFT_AO = Common.getAppPath("SAFT-AO") + dataHora[0] + "T" + dataHora[1] + "SAFT.xml";
+
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        StreamResult result = new StreamResult(Common.getAppPath("SAFT-AO") + "SAFTAO1.01_01.xml");
+        StreamResult result = new StreamResult(FILE_PATH_SAFT_AO);
         transformer.transform(new DOMSource(doc), result);
 
-        addFileContentProvider(context, "/SAFT-AO/" + "SAFTAO1.01_01.xml");
-
-        if (validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").getAbsolutePath(), Common.getAppPath("SAFT-AO") + "SAFTAO1.01_01.xml")) {
-            Toast.makeText(context, "Válido", Toast.LENGTH_LONG).show();
+        if (validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").getAbsolutePath(), FILE_PATH_SAFT_AO)) {
+            Ultilitario.partilharDocumento(FILE_PATH_SAFT_AO, context, "application/xml", context.getString(R.string.exp_saft));
         }
     }
 
