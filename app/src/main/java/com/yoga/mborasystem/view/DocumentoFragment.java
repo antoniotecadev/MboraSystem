@@ -486,21 +486,9 @@ public class DocumentoFragment extends Fragment {
         }
 
         private void partilharDocumentoPDF(View v, String titulo) {
-            Uri fileURI;
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
             new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
-            File file = new File(documento.getCaminho());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
-            } else {
-                fileURI = Uri.fromFile(file);
-            }
-            Intent share = new Intent();
-            share.setAction(Intent.ACTION_SEND);
-            share.setType("application/pdf");
-            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            share.putExtra(Intent.EXTRA_STREAM, fileURI);
-            startActivity(Intent.createChooser(share, getString(R.string.part_fich) + " " + titulo));
+            Ultilitario.partilharDocumento(documento.getCaminho(), context, "application/pdf", getString(R.string.part_fich) + " " + titulo);
         }
 
         private void detalhes(String titulo) {

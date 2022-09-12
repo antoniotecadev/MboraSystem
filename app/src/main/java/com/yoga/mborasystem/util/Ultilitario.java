@@ -40,6 +40,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.core.content.FileProvider;
+import androidx.preference.PreferenceManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -75,15 +84,6 @@ import java.util.regex.Pattern;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.core.content.FileProvider;
-import androidx.preference.PreferenceManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class Ultilitario {
 
@@ -877,4 +877,19 @@ public class Ultilitario {
         return cacheFile;
     }
 
+    public static void partilharDocumento(String filePath, Context context, String fileType, String titulo) {
+        Uri fileURI;
+        File file = new File(filePath);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
+        } else {
+            fileURI = Uri.fromFile(file);
+        }
+        Intent share = new Intent();
+        share.setAction(Intent.ACTION_SEND);
+        share.setType(fileType);
+        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        share.putExtra(Intent.EXTRA_STREAM, fileURI);
+        context.startActivity(Intent.createChooser(share, titulo));
+    }
 }
