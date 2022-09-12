@@ -550,14 +550,6 @@ public class Ultilitario {
         }
     }
 
-    /*public static void colorRandomImage(ImageView i, Random rand) {
-        int r, g, b;
-        r = rand.nextInt();
-        g = rand.nextInt();
-        b = rand.nextInt();
-        i.setColorFilter(Color.rgb(r, g, b));
-    }*/
-
     @SuppressWarnings("deprecation")
     @SuppressLint("MissingPermission")
     public static boolean isNetworkConnected(Context context) {
@@ -593,8 +585,8 @@ public class Ultilitario {
                 .show();
     }
 
-    public static void setValueSharedPreferences(Context Context, String idValue, String value) {
-        Context.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).edit().putString(idValue, value).apply();
+    public static void setValueSharedPreferences(Context context, String idValue, String value) {
+        context.getSharedPreferences("VALUE_STRING", Context.MODE_PRIVATE).edit().putString(idValue, value).apply();
     }
 
     public static String getValueSharedPreferences(Context context, String idValue, String defaultValue) {
