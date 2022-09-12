@@ -1,13 +1,11 @@
 package com.yoga.mborasystem.util;
 
-import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
