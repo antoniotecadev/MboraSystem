@@ -622,7 +622,7 @@
     <string name="dad_actu">Dados actualizados</string>
     <string name="dad_nao_act">Dados não actualizados</string>
     <string name="msg_tel_blo_act_emp">Entra em sua conta para obter os dados da empresa actualizado.</string>
-    <string name="dds_cmc">Dados Comerciais</string>
+    <string name="dds_cmc">Dados Comerciais (Factura)</string>
     <string name="nm_cmc">Nome Comercial</string>
     <string name="nib">NIB (Conta Bancária)</string>
     <string name="iban">IBAN</string>
