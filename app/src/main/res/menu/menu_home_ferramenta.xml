@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <item
-      android:id="@+id/dialogAlterarCliente"
-      android:title="item" />
-  <item
-      android:id="@+id/estadoCliente"
-      android:title="@string/estd_cont" />
-  <item
-      android:id="@+id/gerarCodigoQr"
-      android:title="@string/cod_qr"/>
-  <item
-      android:id="@+id/dialogAlterarCodigoPin"
-      android:title="@string/alterar_codigo_pin" />
-  <item
-      android:id="@+id/config"
-      android:title="@string/config" />
-  <item
-      android:id="@+id/termosCondicoes"
-      android:title="@string/termo_condicao" />
-  <item
-      android:id="@+id/politicaPrivacidade"
-      android:title="@string/politica_privacidade" />
-<!--  <item android:title="@string/precisa_ajuda" />-->
-  <item
-      android:id="@+id/bloquearFragment"
-      android:title="@string/bloquear" />
-  <item
-      android:id="@+id/acercaMborasytem"
-      android:title="@string/ace" />
-  <item
-      android:id="@+id/itemSair"
-      android:title="@string/sair" />
-  <item
-      android:id="@+id/idioma"
-      android:title="@string/idm"
-      app:showAsAction="ifRoom|collapseActionView"/>
+    <item
+        android:id="@+id/dialogAlterarCliente"
+        android:title="item" />
+    <item
+        android:id="@+id/estadoCliente"
+        android:title="@string/estd_cont" />
+    <item
+        android:id="@+id/gerarCodigoQr"
+        android:title="@string/cod_qr" />
+    <item
+        android:id="@+id/dialogAlterarCodigoPin"
+        android:title="@string/alterar_codigo_pin" />
+    <item
+        android:id="@+id/config"
+        android:title="@string/config" />
+    <item
+        android:id="@+id/baseDeDados"
+        android:title="@string/bd">
+        <menu>
+            <item
+                android:id="@+id/expoBd"
+                android:title="@string/expoBd"/>
+            <item
+                android:id="@+id/impoBd"
+                android:title="@string/impoBd"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/termosCondicoes"
+        android:title="@string/termo_condicao" />
+    <item
+        android:id="@+id/politicaPrivacidade"
+        android:title="@string/politica_privacidade" />
+    <!--  <item android:title="@string/precisa_ajuda" />-->
+    <item
+        android:id="@+id/bloquearFragment"
+        android:title="@string/bloquear" />
+    <item
+        android:id="@+id/acercaMborasytem"
+        android:title="@string/ace" />
+    <item
+        android:id="@+id/itemSair"
+        android:title="@string/sair" />
+    <item
+        android:id="@+id/idioma"
+        android:title="@string/idm"
+        app:showAsAction="ifRoom|collapseActionView" />
 </menu>

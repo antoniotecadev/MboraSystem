@@ -659,6 +659,9 @@
     <string name="dat_1_nao_dat_2">A primeira data (%1$s) não pode ser maior que a segunda data (%2$s).</string>
     <string name="pri_dat_vaz">Seleciona a primeira data.</string>
     <string name="seg_dat_vaz">Selecciona a segunda data.</string>
+    <string name="bd">Base de dados</string>
+    <string name="expoBd">Exportar BD</string>
+    <string name="impoBd">Importar BD</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
