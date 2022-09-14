@@ -13,6 +13,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,6 +51,8 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HomeFragment extends Fragment {
 
@@ -56,6 +60,7 @@ public class HomeFragment extends Fragment {
     String nomeOperador, language = "";
     private Cliente cliente;
     private boolean isOpen = false;
+    private ExecutorService executor;
     private FragmentHomeBinding binding;
     private String idioma, codigoIdioma;
     private ClienteViewModel clienteViewModel;
@@ -253,6 +258,11 @@ public class HomeFragment extends Fragment {
                         break;
                     case R.id.config:
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
+                        break;
+                    case R.id.expoBd:
+                        MainActivity.getProgressBar();
+                        executor = Executors.newSingleThreadExecutor();
+                        executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper())));
                         break;
                     case R.id.termosCondicoes:
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));

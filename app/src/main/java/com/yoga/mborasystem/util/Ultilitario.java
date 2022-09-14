@@ -22,6 +22,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -57,11 +59,13 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -869,18 +873,82 @@ public class Ultilitario {
     }
 
     public static void partilharDocumento(String filePath, Context context, String fileType, String titulo) {
-        Uri fileURI;
-        File file = new File(filePath);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
-        } else {
-            fileURI = Uri.fromFile(file);
+        try {
+            Uri fileURI;
+            File file = new File(filePath);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
+            } else {
+                fileURI = Uri.fromFile(file);
+            }
+            Intent share = new Intent();
+            share.setAction(Intent.ACTION_SEND);
+            share.setType(fileType);
+            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            share.putExtra(Intent.EXTRA_STREAM, fileURI);
+            context.startActivity(Intent.createChooser(share, titulo));
+        } catch (Exception e) {
+            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
         }
-        Intent share = new Intent();
-        share.setAction(Intent.ACTION_SEND);
-        share.setType(fileType);
-        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        share.putExtra(Intent.EXTRA_STREAM, fileURI);
-        context.startActivity(Intent.createChooser(share, titulo));
+    }
+
+    public static void exportDB(Context context, Handler handler) {
+        try {
+            File direct = new File(Environment.getExternalStorageDirectory() + "/MboraSystem/DATABASE-BACKUP");
+            if (!direct.exists()) direct.mkdir();
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+            if (sd.canWrite()) {
+                String nameDB = "database-mborasystem-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + ".db";
+                String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
+                String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + nameDB;
+                File currentDB = new File(data, currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+                handler.post(() -> new AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_baseline_done_24)
+                        .setTitle(context.getString(R.string.bd_expo))
+                        .setMessage(context.getString(R.string.dds_exp) + "\n\n" + backupDB.toString())
+                        .setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss())
+                        .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> partilharDocumento(Common.getAppPath("DATABASE-BACKUP") + nameDB, context, "application/db", context.getString(R.string.partilhar)))
+                        .show());
+            }
+        } catch (Exception e) {
+            handler.post(() -> alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24));
+        } finally {
+            MainActivity.dismissProgressBar();
+        }
+    }
+
+    public static void importDB(Context context) {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+            if (sd.canWrite()) {
+                String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
+                String backupDBPath = "/MboraSystem/DATABASE-BACKUP/database-mborasystem.db";
+                File backupDB = new File(data, currentDBPath);
+                File currentDB = new File(sd, backupDBPath);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    File dbshm = new File(backupDB.getPath() + "-shm");
+                    File dbwal = new File(backupDB.getPath() + "-wal");
+                    if (dbshm.exists()) dbshm.delete();
+                    if (dbwal.exists()) dbwal.delete();
+                }
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+                Toast.makeText(context, backupDB.toString(), Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 }
