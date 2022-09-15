@@ -4,6 +4,7 @@ import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -281,7 +282,13 @@ public class SaftXMLDocument {
         transformer.transform(new DOMSource(doc), result);
 
         if (validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").getAbsolutePath(), FILE_PATH_SAFT_AO)) {
-            Ultilitario.partilharDocumento(FILE_PATH_SAFT_AO, context, "application/xml", context.getString(R.string.exp_saft));
+            new AlertDialog.Builder(context)
+                    .setIcon(R.drawable.ic_baseline_done_24)
+                    .setTitle(context.getString(R.string.doc_saft_expo))
+                    .setMessage(FILE_PATH_SAFT_AO)
+                    .setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss())
+                    .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> Ultilitario.partilharDocumento(FILE_PATH_SAFT_AO, context, "application/xml", context.getString(R.string.part_fich)))
+                    .show();
         }
     }
 
