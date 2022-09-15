@@ -542,7 +542,7 @@
     <string name="fal_ab_pdf">Failed to open PDF</string>
     <string name="inst_app">Install application that opens documents in PDF format</string>
     <string name="elmnd">eliminated</string>
-    <string name="part_fich">Share file</string>
+    <string name="part_doc">Share document</string>
     <string name="det">Details</string>
     <string name="nome_fich">File name</string>
     <string name="tipo_fich">File type</string>

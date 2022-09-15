@@ -542,7 +542,7 @@
     <string name="fal_ab_pdf">Impossible d\'ouvrir le PDF</string>
     <string name="inst_app">Installer une application qui ouvre des documents au format PDF</string>
     <string name="elmnd">éliminé</string>
-    <string name="part_fich">Partager le fichier</string>
+    <string name="part_doc">Partager le document</string>
     <string name="det">Détails</string>
     <string name="nome_fich">Nom de fichier</string>
     <string name="tipo_fich">Type de fichier</string>

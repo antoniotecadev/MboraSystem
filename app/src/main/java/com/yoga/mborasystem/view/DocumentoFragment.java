@@ -489,7 +489,7 @@ public class DocumentoFragment extends Fragment {
         private void partilharDocumentoPDF(View v, String titulo) {
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
             new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
-            Ultilitario.partilharDocumento(documento.getCaminho(), context, "application/pdf", getString(R.string.part_fich) + " " + titulo);
+            Ultilitario.partilharDocumento(documento.getCaminho(), context, "application/pdf", getString(R.string.part_doc) + " " + titulo);
         }
 
         private void detalhes(String titulo) {

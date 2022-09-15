@@ -287,7 +287,7 @@ public class SaftXMLDocument {
                     .setTitle(context.getString(R.string.doc_saft_expo))
                     .setMessage(FILE_PATH_SAFT_AO)
                     .setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss())
-                    .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> Ultilitario.partilharDocumento(FILE_PATH_SAFT_AO, context, "application/xml", context.getString(R.string.part_fich)))
+                    .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> Ultilitario.partilharDocumento(FILE_PATH_SAFT_AO, context, "application/xml", context.getString(R.string.part_doc)))
                     .show();
         }
     }
