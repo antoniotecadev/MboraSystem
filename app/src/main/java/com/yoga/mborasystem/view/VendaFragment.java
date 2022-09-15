@@ -294,7 +294,7 @@ public class VendaFragment extends Fragment {
                     case R.id.importarvenda:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             //Importa as vendas
-                            Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null);
+                            Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null, false);
                         } else {
                             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }

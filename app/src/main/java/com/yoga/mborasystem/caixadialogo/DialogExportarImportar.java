@@ -128,7 +128,7 @@ public class DialogExportarImportar extends DialogFragment {
 
     private void importarCategorias() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Ultilitario.importarCategoriasProdutosClientes(importCategoryActivityResultLauncher, null);
+            Ultilitario.importarCategoriasProdutosClientes(importCategoryActivityResultLauncher, null, false);
         } else {
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }

@@ -664,6 +664,9 @@
     <string name="impoBd">Importar BD</string>
     <string name="bd_expo">Base de dados exportada</string>
     <string name="dds_exp">Dados exportados: categorias, produtos, clientes, vendas e usuários.</string>
+    <string name="bd_impo">Base de dados importada</string>
+    <string name="app_fis">Click \"OK\" para sair da aplicação, isto ajuda a fixar a base de dados importada e evita possíveis erros.</string>
+    <string name="imp_elim_bd">Todos os dados da base de dados actual serão eliminados ou substituidos.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

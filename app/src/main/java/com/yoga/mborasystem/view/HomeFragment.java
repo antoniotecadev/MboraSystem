@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
@@ -7,15 +8,18 @@ import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,7 +110,7 @@ public class HomeFragment extends Fragment {
             return false;
         });
 
-        binding.floatingActionButton.setOnClickListener(v -> Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext(), R.drawable.ic_baseline_store_24));
+        binding.floatingActionButton.setOnClickListener(v -> alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext(), R.drawable.ic_baseline_store_24));
 
         binding.floatingActionButtonLixo.setOnClickListener(v -> {
             if (isOpen) {
@@ -167,7 +171,7 @@ public class HomeFragment extends Fragment {
         clienteViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
             if (operacao == Ultilitario.Operacao.ACTUALIZAR) {
                 Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
-                Ultilitario.alertDialog(getString(R.string.dad_actu), getString(R.string.msg_tel_blo_act_emp), requireContext(), R.drawable.ic_baseline_store_24);
+                alertDialog(getString(R.string.dad_actu), getString(R.string.msg_tel_blo_act_emp), requireContext(), R.drawable.ic_baseline_store_24);
                 clienteViewModel.getValido().setValue(Ultilitario.Operacao.NENHUMA);
             }
         });
@@ -264,6 +268,13 @@ public class HomeFragment extends Fragment {
                         executor = Executors.newSingleThreadExecutor();
                         executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper())));
                         break;
+                    case R.id.impoBd:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
+                        } else {
+                            alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                        break;
                     case R.id.termosCondicoes:
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));
                         break;
@@ -338,7 +349,7 @@ public class HomeFragment extends Fragment {
                             try {
                                 JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
                                 String contactos = parceiro.get("contactos").getAsString();
-                                Ultilitario.alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca) + "\n" + contactos, requireContext(), R.drawable.ic_baseline_store_24);
+                                alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca) + "\n" + contactos, requireContext(), R.drawable.ic_baseline_store_24);
                             } catch (Exception ex) {
                                 MainActivity.dismissProgressBar();
                                 new AlertDialog.Builder(requireContext())
@@ -432,7 +443,7 @@ public class HomeFragment extends Fragment {
                                     "IMEI: " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
 
                         }
-                        Ultilitario.alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext(),
+                        alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext(),
                                 estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
@@ -496,4 +507,32 @@ public class HomeFragment extends Fragment {
                 }
             }
     );
+
+    private String uriPath;
+    ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Uri uri;
+                    if (data != null) {
+                        uri = data.getData();
+                        try {
+                            uriPath = TextUtils.split(uri.getPath(), "/")[4];
+                        } catch (IndexOutOfBoundsException e) {
+                            alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                                .setTitle(getString(R.string.impoBd))
+                                .setMessage(uri.getPath() + "\n\n" + getString(R.string.imp_elim_bd))
+                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                    MainActivity.getProgressBar();
+                                    executor = Executors.newSingleThreadExecutor();
+                                    executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
+                                })
+                                .show();
+                    }
+                }
+            });
 }

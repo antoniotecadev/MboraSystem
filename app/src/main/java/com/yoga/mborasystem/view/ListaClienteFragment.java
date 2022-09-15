@@ -207,7 +207,7 @@ public class ListaClienteFragment extends Fragment {
 
     private void importarClientes() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Ultilitario.importarCategoriasProdutosClientes(importClientActivityResultLauncher, requireActivity());
+            Ultilitario.importarCategoriasProdutosClientes(importClientActivityResultLauncher, requireActivity(), false);
         } else {
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
