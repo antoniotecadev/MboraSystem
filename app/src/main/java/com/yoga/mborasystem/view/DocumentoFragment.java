@@ -130,7 +130,7 @@ public class DocumentoFragment extends Fragment {
                 if (getArguments() != null) {
                     new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataFormatMonth(Objects.requireNonNull(dataInicio.getText()).toString()), getDataFormatMonth(Objects.requireNonNull(dataFim.getText()).toString()), this.clienteCantinas, produtoVendas, this.vendas);
                 } else {
-                    Toast.makeText(requireContext(), getText(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } catch (ParserConfigurationException | TransformerException | IOException | SAXException e) {
                 Ultilitario.alertDialog(getString(R.string.exp_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
@@ -418,8 +418,7 @@ public class DocumentoFragment extends Fragment {
                                             try {
                                                 file.getCanonicalFile().delete();
                                             } catch (IOException e) {
-                                                e.printStackTrace();
-                                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                             }
                                             if (file.exists()) {
                                                 requireContext().deleteFile(file.getName());
@@ -474,7 +473,7 @@ public class DocumentoFragment extends Fragment {
                     Ultilitario.alertDialog(context.getString(R.string.fal_ab_pdf), context.getString(R.string.inst_app), context, R.drawable.ic_baseline_store_24);
                 }
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         }
 
