@@ -306,7 +306,7 @@ public class ListProdutoFragment extends Fragment {
             try {
                 produtoViewModel.exportarProdutos(this.idcategoria);
             } catch (Exception e) {
-                handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
+                handler.post(() -> Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
             }
         });
         dialogInterface.dismiss();
@@ -336,10 +336,10 @@ public class ListProdutoFragment extends Fragment {
                 if (isMaster) {
                     alert.show();
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.nao_alt_ope), Toast.LENGTH_LONG).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } else {
-                Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         }
     }
@@ -399,7 +399,7 @@ public class ListProdutoFragment extends Fragment {
                                 });
                             }
                         } else {
-                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     });
                 } else {
@@ -421,7 +421,7 @@ public class ListProdutoFragment extends Fragment {
                                 });
                             }
                         } else {
-                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     });
                 }
@@ -531,7 +531,7 @@ public class ListProdutoFragment extends Fragment {
                                     try {
                                         readTextFromUri(uri);
                                     } catch (IOException e) {
-                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                        Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                     }
                                 })
                                 .show();
@@ -551,10 +551,8 @@ public class ListProdutoFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     produtos.add(line);
                 }
-            } catch (FileNotFoundException e) {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
             produtoViewModel.crud = true;
             produtoViewModel.importarProdutos(produtos, false, this.idcategoria);
