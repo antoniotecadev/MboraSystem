@@ -329,6 +329,17 @@
                     android:text="@string/desconto"
                     android:textSize="20sp" />
 
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinnerDesconto"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="@dimen/margem_lateral_formulario"
+                    android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                    android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                    android:background="#C6C6C6"
+                    android:spinnerMode="dialog"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

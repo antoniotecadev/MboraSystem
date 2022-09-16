@@ -349,7 +349,7 @@ public class Ultilitario {
         return Objects.requireNonNull(editText.getText()).toString().replaceAll(",", ".");
     }
 
-    public static void addItemOnSpinner(Spinner spinner, int qtd, Context context, int inicio) {
+    public static void addItemOnSpinner(AppCompatSpinner spinner, int qtd, Context context, int inicio) {
         ArrayList<Integer> listaQuantidade = new ArrayList<>();
         for (int i = inicio; i <= qtd; ++i) {
             listaQuantidade.add(i);

@@ -264,7 +264,7 @@
     <string name="produto_importado">Imported products</string>
     <string name="ficheiro_certo">"Error: Product not imported, please select a product file."</string>
     <string name="zero">0</string>
-    <string name="desconto">Discount</string>
+    <string name="desconto">Discount(%)</string>
     <string name="percentagem">%</string>
     <string name="valor_kwanza">Value in kwanza</string>
     <string name="forma_pagamento">Form of payment:</string>

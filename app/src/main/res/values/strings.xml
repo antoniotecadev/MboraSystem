@@ -278,7 +278,7 @@
     <string name="produto_importado">Produtos importados</string>
     <string name="ficheiro_certo">"Erro: Produto não importado, seleccione um ficheiro de produto."</string>
     <string name="zero">0</string>
-    <string name="desconto">Desconto</string>
+    <string name="desconto">Desconto(%)</string>
     <string name="percentagem">%</string>
     <string name="valor_kwanza">Valor em kwanza</string>
     <string name="forma_pagamento">Forma de pagamento:</string>

@@ -26,13 +26,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
@@ -292,6 +292,7 @@ public class FacturaFragment extends Fragment {
             pagingAdapter.notifyDataSetChanged();
         });
         binding.textTaxa.setText(Ultilitario.getTaxaIva(requireActivity()) + "%");
+        Ultilitario.addItemOnSpinner(binding.spinnerDesconto, 100, getContext(), 0);
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
         binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
         binding.textDesconto.addTextChangedListener(new TextWatcher() {
@@ -1013,7 +1014,7 @@ public class FacturaFragment extends Fragment {
                 TextView prod = viewHolder.itemView.findViewById(R.id.textProd);
                 TextView ref = viewHolder.itemView.findViewById(R.id.txtRefProd);
                 TextView pr = viewHolder.itemView.findViewById(R.id.textPreco);
-                Spinner qt = viewHolder.itemView.findViewById(R.id.spinnerQt);
+                AppCompatSpinner qt = viewHolder.itemView.findViewById(R.id.spinnerQt);
                 totaluni = viewHolder.itemView.findViewById(R.id.textTotalUnit);
                 Button btnRemover = viewHolder.itemView.findViewById(R.id.btnRemover);
                 Ultilitario.addItemOnSpinner(qt, 255, getContext(), 1);
