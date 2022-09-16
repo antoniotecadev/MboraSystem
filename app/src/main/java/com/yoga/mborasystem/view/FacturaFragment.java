@@ -453,7 +453,7 @@ public class FacturaFragment extends Fragment {
                 }
             } catch (ParseException e) {
                 dataEmissao = "";
-                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         }));
 
@@ -762,12 +762,12 @@ public class FacturaFragment extends Fragment {
                                 if (internetIsConnected()) {
                                     estadoConta(cliente.getImei(), nomeIDcliente[0].trim(), finalQuantidadeProduto);
                                 } else {
-                                    Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
                                     MainActivity.dismissProgressBar();
+                                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                 }
                             } else {
-                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
                                 MainActivity.dismissProgressBar();
+                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                             }
                         }
                     })
