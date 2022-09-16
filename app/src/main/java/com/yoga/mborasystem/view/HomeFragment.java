@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -247,12 +246,12 @@ public class HomeFragment extends Fragment {
                                 if (internetIsConnected()) {
                                     estadoConta(cliente.getImei());
                                 } else {
-                                    Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
                                     MainActivity.dismissProgressBar();
+                                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                 }
                             } else {
-                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
                                 MainActivity.dismissProgressBar();
+                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                             }
                         }
                         break;
@@ -309,7 +308,7 @@ public class HomeFragment extends Fragment {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             bitmap = barcodeEncoder.encodeBitmap(cliente.getImei(), BarcodeFormat.QR_CODE, 500, 500);
         } catch (Exception e) {
-            Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
         return bitmap;
     }
@@ -332,7 +331,7 @@ public class HomeFragment extends Fragment {
             MainActivity.getProgressBar();
             bundle.putBoolean("master", getArguments().getBoolean("master"));
         } else {
-            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
         return bundle;
     }
@@ -366,12 +365,12 @@ public class HomeFragment extends Fragment {
                             }
                         });
             } else {
-                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.sm_int), R.drawable.ic_toast_erro);
                 MainActivity.dismissProgressBar();
+                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         } else {
-            Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
             MainActivity.dismissProgressBar();
+            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
     }
 
@@ -485,10 +484,10 @@ public class HomeFragment extends Fragment {
                         bundle.putBoolean("master", getArguments().getBoolean("master"));
                         Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
                     } else {
-                        Toast.makeText(getContext(), requireContext().getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                        Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 } else {
-                    Toast.makeText(getContext(), requireContext().getString(R.string.sm_prm_na_vis_doc), Toast.LENGTH_LONG).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_prm_na_vis_doc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             }
     );
@@ -503,7 +502,7 @@ public class HomeFragment extends Fragment {
                     intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
                     startActivity(Intent.createChooser(intent, getString(R.string.part_me_cod_qr)));
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.sm_perm_n_pod_part_cod_qr), Toast.LENGTH_SHORT).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_part_cod_qr), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             }
     );
