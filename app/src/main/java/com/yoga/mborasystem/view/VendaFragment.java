@@ -237,7 +237,7 @@ public class VendaFragment extends Fragment {
                         menu.findItem(R.id.importarvenda).setVisible(false);
                     }
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
 
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -398,7 +398,7 @@ public class VendaFragment extends Fragment {
                                 });
                             }
                         } else {
-                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     } else {
                         if (getArguments() != null) {
@@ -414,7 +414,7 @@ public class VendaFragment extends Fragment {
                                 menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
                             }
                         } else {
-                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     }
                 });
@@ -543,10 +543,10 @@ public class VendaFragment extends Fragment {
                 if (isMaster) {
                     alert.show();
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.nao_alt_ope), Toast.LENGTH_LONG).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } else {
-                Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         }
     }
@@ -567,7 +567,7 @@ public class VendaFragment extends Fragment {
                                     try {
                                         readTextFromUri(uri);
                                     } catch (IOException e) {
-                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                        Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                     }
                                 })
                                 .show();
@@ -608,12 +608,8 @@ public class VendaFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     vendas.add(line);
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
             vendaViewModel.importarVenda(vendas);
         });
