@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -47,7 +46,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteCantinaViewModel;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -332,7 +330,7 @@ public class ListaClienteFragment extends Fragment {
             try {
                 clienteCantinaViewModel.exportarClientes();
             } catch (Exception e) {
-                handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
+                handler.post(() -> Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
             }
         });
         dialogInterface.dismiss();
@@ -367,7 +365,7 @@ public class ListaClienteFragment extends Fragment {
                                     try {
                                         readTextFromUri(uri);
                                     } catch (IOException e) {
-                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                        Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                     }
                                 })
                                 .show();
@@ -388,10 +386,8 @@ public class ListaClienteFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     clientes.add(line);
                 }
-            } catch (FileNotFoundException e) {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
             clienteCantinaViewModel.crud = true;
             clienteCantinaViewModel.importarClientes(clientes, handler);
