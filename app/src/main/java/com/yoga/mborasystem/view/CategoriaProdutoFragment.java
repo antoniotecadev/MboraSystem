@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -113,7 +112,7 @@ public class CategoriaProdutoFragment extends Fragment {
                         binding.btncriarCategoriaDialog.setVisibility(View.GONE);
                     }
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
                 if (isLixeira) {
                     menu.findItem(R.id.exinpCategoria).setVisible(false);
@@ -225,10 +224,10 @@ public class CategoriaProdutoFragment extends Fragment {
                 if (isMaster) {
                     alert.show();
                 } else {
-                    Toast.makeText(getContext(), getString(R.string.nao_alt_ope), Toast.LENGTH_LONG).show();
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } else {
-                Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         }
     }
@@ -292,7 +291,7 @@ public class CategoriaProdutoFragment extends Fragment {
                                 });
                             }
                         } else {
-                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     } else {
                         if (getArguments() != null) {
@@ -307,7 +306,7 @@ public class CategoriaProdutoFragment extends Fragment {
                                 });
                             }
                         } else {
-                            Toast.makeText(getContext(), getString(R.string.arg_null), Toast.LENGTH_LONG).show();
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     }
                 });
