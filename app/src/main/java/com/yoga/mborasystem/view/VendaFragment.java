@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,7 +52,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -347,6 +347,7 @@ public class VendaFragment extends Fragment {
             return new VendaViewHolder(FragmentVendaBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull VendaViewHolder h, int position) {
             Venda venda = getItem(position);
@@ -365,7 +366,7 @@ public class VendaFragment extends Fragment {
                 h.binding.textValBas.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_base())));
                 h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_iva())));
                 h.binding.textForPag.setText(venda.getPagamento());
-                h.binding.textDatVen.setText(venda.getData_cria());
+                h.binding.textDatVen.setText(venda.getData_cria() + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
                 h.binding.textOper.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA0"));
                 h.binding.btnEntrar.setOnClickListener(v -> {
                     VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
