@@ -322,7 +322,7 @@
                     android:background="?android:attr/listDivider" />
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/textViewDesconto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margem_lateral_formulario"
@@ -336,8 +336,8 @@
                     android:layout_marginStart="@dimen/margem_lateral_formulario"
                     android:layout_marginEnd="@dimen/margem_lateral_formulario"
                     android:layout_marginBottom="@dimen/margem_lateral_formulario"
-                    android:background="#C6C6C6"
-                    android:spinnerMode="dialog"
+                    android:background="#979797"
+                    android:spinnerMode="dropdown"
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat

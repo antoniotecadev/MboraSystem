@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -292,8 +293,21 @@ public class FacturaFragment extends Fragment {
             pagingAdapter.notifyDataSetChanged();
         });
         binding.textTaxa.setText(Ultilitario.getTaxaIva(requireActivity()) + "%");
-        Ultilitario.addItemOnSpinner(binding.spinnerDesconto, 100, getContext(), 0);
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
+        Ultilitario.addItemOnSpinner(binding.spinnerDesconto, 100, getContext(), 0);
+        binding.spinnerDesconto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int percentagem = Integer.parseInt(parent.getItemAtPosition(position).toString());
+                String desconto = String.valueOf((total * percentagem) / 100);
+                binding.textDesconto.setText(Ultilitario.formatPreco(desconto));
+                binding.textViewDesconto.setText(getText(R.string.desconto) + "(" + percentagem + "%)");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
         binding.textDesconto.addTextChangedListener(new TextWatcher() {
             @Override
