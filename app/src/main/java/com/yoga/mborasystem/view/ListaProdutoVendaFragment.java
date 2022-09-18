@@ -82,7 +82,7 @@ public class ListaProdutoVendaFragment extends Fragment {
                             precoProduto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_total())));
                             precoProdutoFronecedor.setText(getString(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_fornecedor())));
                             quantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
-                            referenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId());
+                            referenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId() + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
                             codigoQr.setText(getText(R.string.venda) + "Qr: " + produto.getCodigo_Barra());
                             if (produto.isIva()) {
                                 estadoProduto.setChecked(true);
