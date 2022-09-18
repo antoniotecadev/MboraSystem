@@ -49,7 +49,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ProdutoViewModel;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -153,6 +152,7 @@ public class ListProdutoFragment extends Fragment {
                 if (getArguments() != null) {
                     if (!getArguments().getBoolean("master")) {
                         menu.findItem(R.id.dialogCriarProduto).setVisible(false);
+                        menu.findItem(R.id.exinpProduto).setVisible(false);
                         binding.btnCriarProdutoFragment.setVisibility(View.GONE);
                     }
                 }
