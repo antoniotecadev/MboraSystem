@@ -248,7 +248,7 @@ public class ListaClienteFragment extends Fragment {
                 h.binding.imgBtnMenu.setOnClickListener(View::showContextMenu);
                 h.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
                     menu1.setHeaderTitle(ct.getNome());
-                    menu1.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {
+                    menu1.add(getString(R.string.vendas)).setOnMenuItemClickListener(item -> {
                         ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
                         Navigation.findNavController(requireView()).navigate(direction);
                         return false;
