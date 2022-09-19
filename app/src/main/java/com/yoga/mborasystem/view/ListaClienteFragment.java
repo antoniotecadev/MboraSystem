@@ -128,6 +128,11 @@ public class ListaClienteFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_cliente, menu);
+                if (getArguments() != null)
+                    if (!getArguments().getBoolean("master")) {
+                        menu.findItem(R.id.exportarcliente).setVisible(false);
+                        menu.findItem(R.id.importarcliente).setVisible(false);
+                    }
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
                 SearchView searchView = (SearchView) menuItem.getActionView();
