@@ -188,6 +188,7 @@ public class HomeFragment extends Fragment {
                         menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
                         menu.findItem(R.id.estadoCliente).setEnabled(false);
                         menu.findItem(R.id.config).setEnabled(false);
+                        menu.findItem(R.id.baseDeDados).setEnabled(false);
                     } else {
                         menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
                     }
