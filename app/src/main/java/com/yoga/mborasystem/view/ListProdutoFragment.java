@@ -405,7 +405,7 @@ public class ListProdutoFragment extends Fragment {
                 } else {
                     h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                         menu.setHeaderTitle(produto.getNome());
-                        menu.add(getString(R.string.editar)).setOnMenuItemClickListener(item -> {
+                        menu.add(getArguments().getBoolean("master") ? getString(R.string.editar) : getString(R.string.abrir)).setOnMenuItemClickListener(item -> {
                             entrarProduto(getItem(position));
                             return false;
                         });
