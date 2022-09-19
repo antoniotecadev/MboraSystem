@@ -123,7 +123,11 @@ public class HomeFragment extends Fragment {
         binding.floatingActionButtonProduto.setOnClickListener(v -> entrarProdutos());
 
         binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendas());
-
+        if (getArguments() != null)
+            if (!getArguments().getBoolean("master")) {
+                MainActivity.navigationView.getMenu().findItem(R.id.usuarioFragment).setVisible(false);
+                MainActivity.navigationView.getMenu().findItem(R.id.dashboardFragment).setVisible(false);
+            }
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
             switch (item.getItemId()) {
