@@ -183,6 +183,7 @@ public class LoginFragment extends Fragment {
             try {
                 Ultilitario.setValueSharedPreferences(requireContext(), "imei", cliente.get(0).getImei());
                 Ultilitario.setValueSharedPreferences(requireContext(), "nomeempresa", cliente.get(0).getNomeEmpresa());
+                Ultilitario.setBooleanPreference(requireContext(), true, "master");
                 Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
             } catch (Exception e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -192,6 +193,7 @@ public class LoginFragment extends Fragment {
             bundle.putString("nome", usuario.getNome());
             bundle.putBoolean("master", false);
             bundle.putLong("idusuario", usuario.getId());
+            Ultilitario.setBooleanPreference(requireContext(), false, "master");
             Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
         });
 

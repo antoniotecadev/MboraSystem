@@ -392,6 +392,7 @@ public class ClienteViewModel extends AndroidViewModel {
                         bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
                         bundle.putBoolean("master", cliente.get(0).isMaster());
                         bundle.putParcelable("cliente", cliente.get(0));
+                        Ultilitario.setBooleanPreference(getApplication().getApplicationContext(), true, "master");
                         Ultilitario.setValueSharedPreferences(getApplication().getApplicationContext(), "imei", cliente.get(0).getImei());
                         Ultilitario.setValueSharedPreferences(getApplication().getApplicationContext(), "nomeempresa", cliente.get(0).getNomeEmpresa());
                         handler.post(() -> Navigation.findNavController(requireView).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle));
