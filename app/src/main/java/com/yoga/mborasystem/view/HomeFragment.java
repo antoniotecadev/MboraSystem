@@ -190,7 +190,6 @@ public class HomeFragment extends Fragment {
                         binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
                         binding.btnDashboard.setCardBackgroundColor(Color.GRAY);
                         menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
-                        menu.findItem(R.id.estadoCliente).setEnabled(false);
                         menu.findItem(R.id.config).setEnabled(false);
                         menu.findItem(R.id.baseDeDados).setEnabled(false);
                     } else {
@@ -248,7 +247,7 @@ public class HomeFragment extends Fragment {
                             MainActivity.getProgressBar();
                             if (isNetworkConnected(requireContext())) {
                                 if (internetIsConnected()) {
-                                    estadoConta(cliente.getImei());
+                                    estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
                                 } else {
                                     MainActivity.dismissProgressBar();
                                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
