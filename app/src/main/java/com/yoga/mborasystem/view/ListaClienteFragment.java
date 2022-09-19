@@ -91,7 +91,7 @@ public class ListaClienteFragment extends Fragment {
         clienteCantinaViewModel.getQuantidadeCliente().observe(getViewLifecycleOwner(), quantidade -> {
             this.quantidade = quantidade.intValue();
             binding.chipQuantidadeCliente.setText(String.valueOf(quantidade));
-            binding.recyclerViewListaCliente.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : clienteAdapter);
+            binding.recyclerViewListaCliente.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.venda_nao_encontrada) : clienteAdapter);
         });
         consultarClientes(false, false, null);
         clienteCantinaViewModel.getListaClientesCantina().observe(getViewLifecycleOwner(), clientes -> {
