@@ -578,7 +578,6 @@
     <string name="n_most_nov">Não mostrar novamente.</string>
     <string name="n_most_nov_config">Não mostrar novamente \na caixa de mensagem de venda efectuada ao fechar</string>
     <string name="br_na_enc_mun">Bairros não encotrados neste município</string>
-    <string name="meu_qr_code">Meu código Qr</string>
     <string name="part_me_cod_qr">Partilhar meu código QR</string>
     <string name="sm_perm_n_pod_part_cod_qr">Sem permissão não pode partilhar o seu código QR</string>
     <string name="guard_part">Guardar + Partilhar</string>

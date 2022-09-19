@@ -555,7 +555,6 @@
     <string name="sm_prm_na_vis_doc">Without permission cannot view documents</string>
     <string name="n_most_nov">Do not show again.</string>
     <string name="br_na_enc_mun">Neighborhoods not found in this municipality</string>
-    <string name="meu_qr_code">My qr code</string>
     <string name="part_me_cod_qr">Share my QR code</string>
     <string name="sm_perm_n_pod_part_cod_qr">Without permission cannot share your QR code</string>
     <string name="guard_part">Save + Share</string>

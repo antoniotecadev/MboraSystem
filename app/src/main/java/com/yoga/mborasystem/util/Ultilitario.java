@@ -38,7 +38,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -138,7 +137,7 @@ public class Ultilitario {
         } else {
             new androidx.appcompat.app.AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_baseline_store_24)
-                    .setTitle(R.string.meu_qr_code)
+                    .setTitle(R.string.cod_qr)
                     .setMessage(context.getString(R.string.nm) + ": " + nome + "\n" + context.getString(R.string.estab) + ": " + estabalecimento + "\n" + "IMEI: " + imei)
                     .setView(view)
                     .setNegativeButton(R.string.guard_part, (dialogInterface, i) -> requestPermissionLauncherShareQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))

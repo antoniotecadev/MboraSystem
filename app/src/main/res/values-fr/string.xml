@@ -555,7 +555,6 @@
     <string name="sm_prm_na_vis_doc">Sans autorisation, impossible de visualiser les documents</string>
     <string name="n_most_nov">Ne pas montrer de nouveau.</string>
     <string name="br_na_enc_mun">Quartiers introuvables dans cette commune</string>
-    <string name="meu_qr_code">Mon code QR</string>
     <string name="part_me_cod_qr">Partager mon code QR</string>
     <string name="sm_perm_n_pod_part_cod_qr">Sans autorisation, vous ne pouvez pas partager votre code QR</string>
     <string name="guard_part">Enregistrer + Partager</string>

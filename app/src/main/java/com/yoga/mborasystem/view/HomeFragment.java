@@ -97,8 +97,7 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
                     break;
                 case R.id.gerarQrCode:
-                    if (getArguments() != null)
-                        Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
+                    getQrCode();
                     break;
                 case R.id.sairApp:
                     sairApp();
@@ -256,8 +255,7 @@ public class HomeFragment extends Fragment {
                         }
                         break;
                     case R.id.gerarCodigoQr:
-                        if (getArguments() != null)
-                            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
+                        getQrCode();
                         break;
                     case R.id.config:
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
@@ -302,11 +300,19 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private Bitmap gerarCodigoQr() {
+    private void getQrCode() {
+        if (getArguments() != null)
+            if (getArguments().getBoolean("master"))
+                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei()), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
+            else
+                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), true, requestPermissionLauncherShareQrCode, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
+    }
+
+    private Bitmap gerarCodigoQr(String imei) {
         Bitmap bitmap = null;
         try {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            bitmap = barcodeEncoder.encodeBitmap(cliente.getImei(), BarcodeFormat.QR_CODE, 500, 500);
+            bitmap = barcodeEncoder.encodeBitmap(imei, BarcodeFormat.QR_CODE, 500, 500);
         } catch (Exception e) {
             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
@@ -494,7 +500,7 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncherShareQrCode = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(), getString(R.string.cod_qr) + "-" + getString(R.string.estab) + "-" + cliente.getNomeEmpresa(), null);
+                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), getString(R.string.cod_qr) + "-" + getString(R.string.estab) + "-" + cliente.getNomeEmpresa(), null);
                     Uri bitmapUri = Uri.parse(bitmapPath);
 
                     Intent intent = new Intent(Intent.ACTION_SEND);

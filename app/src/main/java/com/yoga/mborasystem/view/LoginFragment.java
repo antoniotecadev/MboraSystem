@@ -181,6 +181,8 @@ public class LoginFragment extends Fragment {
             bundle.putBoolean("master", cliente.get(0).isMaster());
             bundle.putParcelable("cliente", cliente.get(0));
             try {
+                Ultilitario.setValueSharedPreferences(requireContext(), "imei", cliente.get(0).getImei());
+                Ultilitario.setValueSharedPreferences(requireContext(), "nomeempresa", cliente.get(0).getNomeEmpresa());
                 Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
             } catch (Exception e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
