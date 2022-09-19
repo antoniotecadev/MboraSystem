@@ -157,7 +157,7 @@ public class VendaFragment extends Fragment {
             this.quantidade = quantidade.intValue();
             vazio = quantidade == 0;
             binding.chipQuantVenda.setText(String.valueOf(quantidade));
-            binding.recyclerViewListaVenda.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada) : vendaAdapter);
+            binding.recyclerViewListaVenda.setAdapter(quantidade == 0 ? Ultilitario.naoEncontrado(getContext(), adapter, R.string.venda_nao_encontrada) : vendaAdapter);
         });
 
         consultarVendas(false, false, false, null);
