@@ -566,7 +566,7 @@
     <string name="n_most_nov_config">Ne plus afficher \\nla boîte de message de vente lors de la fermeture</string>
     <string name="vend_ago">Vendre maintenant</string>
     <string name="br_car">Quartiers chargés</string>
-    <string name="aut_bio">Authentification biométrique</string>
+    <string name="aut">Authentification</string>
     <string name="usu_n_enc">Utilisateur non trouvé</string>
     <string name="subtitlte_biometricprompt">Connectez-vous à l\'aide de votre identifiant biométrique</string>
     <string name="titlte_biometricprompt">Connexion biométrique pour mon application</string>

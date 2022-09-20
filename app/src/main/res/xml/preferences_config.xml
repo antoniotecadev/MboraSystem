@@ -49,7 +49,7 @@
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/aut_bio"
+        android:title="@string/aut"
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreference
             android:defaultValue="true"
