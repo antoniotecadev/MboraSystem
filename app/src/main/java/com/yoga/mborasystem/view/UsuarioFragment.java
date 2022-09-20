@@ -145,13 +145,13 @@ public class UsuarioFragment extends Fragment {
                 h.binding.txtTel.setText(us.getTelefone() + " / MSU" + us.getId());
                 h.binding.txtEnd.setText(us.getEndereco());
                 h.binding.txtBloquear.setText(us.getEstado() == 1 ? getString(R.string.estado_desbloqueado) : getString(R.string.estado_bloqueado));
-                h.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> {
-                    UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment().setIdusuario(us.getId()).setNomeUsuario(us.getNome());
-                    Navigation.findNavController(requireView()).navigate(direction);
-                });
-
+                h.itemView.findViewById(R.id.btnEntrar).setOnClickListener(v -> verVendas(us));
                 h.itemView.findViewById(R.id.btnEntrar).setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                     menu.setHeaderTitle(us.getNome());
+                    menu.add(R.string.vendas).setOnMenuItemClickListener(item -> {
+                        verVendas(us);
+                        return false;
+                    });
                     menu.add(R.string.editar).setOnMenuItemClickListener(item -> {
                         verDadosUsuario(us);
                         return false;
@@ -161,7 +161,6 @@ public class UsuarioFragment extends Fragment {
                         return false;
                     });
                 });
-
                 h.itemView.findViewById(R.id.btnEliminar).setOnClickListener(v -> deleteUser(getString(R.string.tem_certeza_eliminar_usuario), us));
             }
         }
@@ -173,6 +172,11 @@ public class UsuarioFragment extends Fragment {
             }
             bundle.putParcelable("usuario", usuario);
             Navigation.findNavController(requireView()).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario, bundle);
+        }
+
+        private void verVendas(Usuario us) {
+            UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment().setIdusuario(us.getId()).setNomeUsuario(us.getNome());
+            Navigation.findNavController(requireView()).navigate(direction);
         }
 
         private void deleteUser(String msg, Usuario usuario) {
