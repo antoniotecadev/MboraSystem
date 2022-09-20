@@ -55,7 +55,7 @@
             android:defaultValue="true"
             android:key="autenticacaobiometrica"
             android:title="@string/act_aut_biom"
-            app:icon="@drawable/ic_baseline_fingerprint_24"
+            app:icon="@drawable/ic_baseline_login_24"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
