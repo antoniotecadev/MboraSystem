@@ -104,8 +104,8 @@ public class CategoriaProdutoFragment extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_pesquisar_criar_categoria, menu);
                 if (getArguments() != null) {
-                    if (getArguments().getBoolean("master")) {
-                        bundle.putBoolean("master", getArguments().getBoolean("master"));
+                    if (Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                        bundle.putBoolean("master", true);
                     } else {
                         menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
                         menu.findItem(R.id.exinpCategoria).setVisible(false);
@@ -116,6 +116,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 }
                 if (isLixeira) {
                     menu.findItem(R.id.exinpCategoria).setVisible(false);
+                    menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
                     if (!Ultilitario.getBooleanPreference(requireContext(), "master")) {
                         menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                         menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
@@ -278,24 +279,20 @@ public class CategoriaProdutoFragment extends Fragment {
                             listaProdutos(ct.getId(), ct.getCategoria());
                             return false;
                         });//groupId, itemId, order, title
-                        if (getArguments() != null) {
-                            if (getArguments().getBoolean("master")) {
-                                menu1.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(item -> {
-                                    bundle.putParcelable("categoria", ct);
-                                    Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
-                                    return false;
-                                });
-                                menu1.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(ct, getString(R.string.env_lx), "(" + ct.getCategoria() + ")\n" + getString(R.string.env_cat_lixe), false);
-                                    return false;
-                                });
-                                menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(ct, getString(R.string.elim_cat_perm), "(" + ct.getCategoria() + ")\n" + getString(R.string.env_cat_n_lix), true);
-                                    return false;
-                                });
-                            }
-                        } else {
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        if (Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                            menu1.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(item -> {
+                                bundle.putParcelable("categoria", ct);
+                                Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
+                                return false;
+                            });
+                            menu1.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(ct, getString(R.string.env_lx), "(" + ct.getCategoria() + ")\n" + getString(R.string.env_cat_lixe), false);
+                                return false;
+                            });
+                            menu1.add(getString(R.string.eliminar_categoria)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(ct, getString(R.string.elim_cat_perm), "(" + ct.getCategoria() + ")\n" + getString(R.string.env_cat_n_lix), true);
+                                return false;
+                            });
                         }
                     } else {
                         if (getArguments() != null) {
