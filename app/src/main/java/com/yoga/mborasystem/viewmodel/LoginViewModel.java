@@ -2,17 +2,23 @@ package com.yoga.mborasystem.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Usuario;
+import com.yoga.mborasystem.repository.ClienteRepository;
 import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
@@ -27,14 +33,18 @@ import io.reactivex.rxjava3.disposables.Disposable;
 public class LoginViewModel extends AndroidViewModel {
 
     private int contar = 0;
+    private final Bundle bundle;
     private final Disposable disposable;
     private ExecutorService executor;
     private MutableLiveData<String> infoPin;
+    private final ClienteRepository clienteRepository;
     private final UsuarioRepository usuarioRepository;
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
+        bundle = new Bundle();
         disposable = new CompositeDisposable();
+        clienteRepository = new ClienteRepository(application);
         usuarioRepository = new UsuarioRepository(application);
     }
 
@@ -66,21 +76,24 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void logar(String cp) {
+    public void logar(String cp, Context context, View view) {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
             try {
                 List<Usuario> usuario = usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(cp));
                 if (usuario.isEmpty()) {
-                    infoPin.postValue(getApplication().getString(R.string.infoPinIncorreto));
-                    contarIntroducaoPin();
-                } else {
-                    if (usuario.get(0).getEstado() == Ultilitario.DOIS) {
-                        infoPin.postValue(getApplication().getString(R.string.usuario_bloqueado) + "\n" + getApplication().getString(R.string.info_usuario_bloqueado));
+                    if (Ultilitario.getBooleanPreference(context, "actpin") && PreferenceManager.getDefaultSharedPreferences(context).getString("pinadmin", "0").equals(cp)) {
+                        logar(view, handler);
                     } else {
-                        getUsuarioMutableLiveData().postValue(usuario.get(0));
+                        infoPin.postValue(getApplication().getString(R.string.infoPinIncorreto));
+                        contarIntroducaoPin();
                     }
+                } else {
+                    if (usuario.get(0).getEstado() == Ultilitario.DOIS)
+                        infoPin.postValue(getApplication().getString(R.string.usuario_bloqueado) + "\n" + getApplication().getString(R.string.info_usuario_bloqueado));
+                    else
+                        getUsuarioMutableLiveData().postValue(usuario.get(0));
                 }
                 MainActivity.dismissProgressBar();
             } catch (Exception e) {
@@ -92,14 +105,20 @@ public class LoginViewModel extends AndroidViewModel {
         });
     }
 
+    public void logar(View view, Handler handler) throws Exception {
+        Ultilitario.setValueUsuarioMaster(bundle, clienteRepository.clienteExiste(), getApplication().getApplicationContext());
+        handler.post(() -> Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_navigation, bundle));
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable.isDisposed()) {
+        if (disposable.isDisposed())
             disposable.dispose();
-        }
         if (executor != null)
             executor.shutdownNow();
+        if (bundle != null)
+            bundle.clear();
     }
 
 }

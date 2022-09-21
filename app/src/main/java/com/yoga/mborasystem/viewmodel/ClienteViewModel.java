@@ -389,12 +389,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 try {
                     if (Ultilitario.validateSenhaPin(Objects.requireNonNull(senha.getText()).toString(), cliente.get(0).getSenha())
                             || Objects.requireNonNull(senha.getText()).toString().equals(Ultilitario.MBORASYSTEM)) {
-                        bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
-                        bundle.putBoolean("master", cliente.get(0).isMaster());
-                        bundle.putParcelable("cliente", cliente.get(0));
-                        Ultilitario.setBooleanPreference(getApplication().getApplicationContext(), true, "master");
-                        Ultilitario.setValueSharedPreferences(getApplication().getApplicationContext(), "imei", cliente.get(0).getImei());
-                        Ultilitario.setValueSharedPreferences(getApplication().getApplicationContext(), "nomeempresa", cliente.get(0).getNomeEmpresa());
+                        Ultilitario.setValueUsuarioMaster(bundle, clienteRepository.clienteExiste(), getApplication().getApplicationContext());
                         handler.post(() -> Navigation.findNavController(requireView).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle));
                     } else {
                         MainActivity.dismissProgressBar();
@@ -476,13 +471,11 @@ public class ClienteViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable.isDisposed()) {
+        if (disposable.isDisposed())
             disposable.dispose();
-        }
         if (executor != null)
             executor.shutdownNow();
-        if (bundle != null) {
+        if (bundle != null)
             bundle.clear();
-        }
     }
 }

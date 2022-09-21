@@ -177,13 +177,8 @@ public class LoginFragment extends Fragment {
         });
 
         clienteViewModel.getClienteMutableLiveData().observe(getViewLifecycleOwner(), cliente -> {
-            bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
-            bundle.putBoolean("master", cliente.get(0).isMaster());
-            bundle.putParcelable("cliente", cliente.get(0));
             try {
-                Ultilitario.setValueSharedPreferences(requireContext(), "imei", cliente.get(0).getImei());
-                Ultilitario.setValueSharedPreferences(requireContext(), "nomeempresa", cliente.get(0).getNomeEmpresa());
-                Ultilitario.setBooleanPreference(requireContext(), true, "master");
+                Ultilitario.setValueUsuarioMaster(bundle, cliente, requireContext());
                 Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
             } catch (Exception e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -275,7 +270,7 @@ public class LoginFragment extends Fragment {
             binding.tvinfoCodigoPin.setError(getString(R.string.infoPinIncorreto));
         } else {
             MainActivity.getProgressBar();
-            loginViewModel.logar(codigoPin.toString());
+            loginViewModel.logar(codigoPin.toString(), requireContext(), requireView());
         }
     }
 

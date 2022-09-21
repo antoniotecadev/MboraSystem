@@ -22,6 +22,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
@@ -57,6 +58,7 @@ import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
+import com.yoga.mborasystem.model.entidade.Cliente;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -976,5 +978,14 @@ public class Ultilitario {
         } finally {
             MainActivity.dismissProgressBar();
         }
+    }
+
+    public static void setValueUsuarioMaster(Bundle bundle, List<Cliente> cliente, Context context) {
+        bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
+        bundle.putBoolean("master", cliente.get(0).isMaster());
+        bundle.putParcelable("cliente", cliente.get(0));
+        Ultilitario.setBooleanPreference(context, true, "master");
+        Ultilitario.setValueSharedPreferences(context, "imei", cliente.get(0).getImei());
+        Ultilitario.setValueSharedPreferences(context, "nomeempresa", cliente.get(0).getNomeEmpresa());
     }
 }

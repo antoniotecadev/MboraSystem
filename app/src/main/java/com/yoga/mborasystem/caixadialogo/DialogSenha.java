@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -93,19 +94,13 @@ public class DialogSenha extends DialogFragment {
     }
 
     private void alterarCodigoPin(AlertDialog ad) throws NoSuchAlgorithmException {
-        if (isCampoVazio(Objects.requireNonNull(binding.pin.getText()).toString()) || numero.matcher(binding.pin.getText().toString()).find()) {
+        if (isCampoVazio(Objects.requireNonNull(binding.pin.getText()).toString()) || numero.matcher(binding.pin.getText().toString()).find() || PreferenceManager.getDefaultSharedPreferences(requireContext()).getString("pinadmin", "0").equals(binding.pin.getText().toString().trim())) {
             binding.pin.requestFocus();
             binding.pin.setError(getString(R.string.codigopin_invalido));
-        } else if (isCampoVazio(Objects.requireNonNull(binding.pinRepete.getText()).toString()) || numero.matcher(binding.pinRepete.getText().toString()).find()) {
-            binding.pinRepete.requestFocus();
-            binding.pinRepete.setError(getString(R.string.codigopin_invalido));
         } else if (binding.pin.length() > 6 || binding.pin.length() < 6) {
             binding.pin.requestFocus();
             binding.pin.setError(getString(R.string.codigopin_incompleto));
-        } else if (binding.pinRepete.length() > 6 || binding.pinRepete.length() < 6) {
-            binding.pinRepete.requestFocus();
-            binding.pinRepete.setError(getString(R.string.codigopin_incompleto));
-        } else if (!binding.pin.getText().toString().equals(binding.pinRepete.getText().toString())) {
+        } else if (!binding.pin.getText().toString().equals(Objects.requireNonNull(binding.pinRepete.getText()).toString())) {
             binding.pinRepete.requestFocus();
             binding.pinRepete.setError(getString(R.string.pin_diferente));
         } else {

@@ -3,11 +3,17 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
 
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.yoga.mborasystem.R;
+
+import java.util.Objects;
 
 public class ConfiguracaoFragment extends PreferenceFragmentCompat {
 
@@ -17,9 +23,23 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_config, rootKey);
+        EditTextPreference pin = findPreference("pinadmin");
         ListPreference listaIdioma = findPreference("lista_idioma");
         ListPreference taxaIva = findPreference("taxa_iva");
         motivoIsento = findPreference("motivo_isencao");
+
+        if (pin != null) {
+            pin.setSummaryProvider((Preference.SummaryProvider<EditTextPreference>) preference -> {
+                if (TextUtils.isEmpty(preference.getText()))
+                    return getString(R.string.nao_def);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < Objects.requireNonNull(pin.getText()).length(); i++) {
+                    sb.append("●");
+                }
+                return sb.toString();
+            });
+            pin.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD));
+        }
 
         if (taxaIva != null) {
             desabilitarMotivoIsencao(taxaIva.getValue(), motivoIsento);
