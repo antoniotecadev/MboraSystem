@@ -1,6 +1,8 @@
 package com.yoga.mborasystem.view;
 
 
+import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
+import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
 import static com.yoga.mborasystem.util.Ultilitario.getSharedPreferencesIdioma;
 
 import android.net.Uri;
@@ -11,24 +13,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yoga.mborasystem.R;
-import com.yoga.mborasystem.util.Ultilitario;
-import com.yoga.mborasystem.viewmodel.ClienteViewModel;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.util.Ultilitario;
+import com.yoga.mborasystem.viewmodel.ClienteViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class SplashFragment extends Fragment {
 
+    private Bundle bundle;
     private ClienteViewModel clienteViewModel;
     private static final String composeFactura = "android.intent.action.VIEW";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bundle = new Bundle();
         if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Francês")) {
             Ultilitario.getSelectedIdioma(requireActivity(), "FR", null, false, true);
         } else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Inglês")) {
@@ -39,28 +47,41 @@ public class SplashFragment extends Fragment {
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             clienteViewModel.clienteExiste(false, null);
-            clienteViewModel.getExisteMutableLiveData().observe(getViewLifecycleOwner(), existe -> {
-                switch (existe) {
-                    case SIM:
+            clienteViewModel.getExisteMutableLiveData().observe(getViewLifecycleOwner(), clienteMap -> {
+                for (Map.Entry<Enum, Cliente> entry : clienteMap.entrySet())
+                    if (SIM.equals(entry.getKey())) {
                         if (composeFactura.equals(requireActivity().getIntent().getAction())) {
                             Uri uri = Uri.parse("https://mborasystem://factura");
                             Navigation.findNavController(requireView()).navigate(uri);
                         } else {
-                            if (Objects.requireNonNull(Navigation.findNavController(requireView()).getCurrentDestination()).getId() == R.id.splashFragment)
+                            if (Ultilitario.getBooleanPreference(requireContext(), "bloaut")) {
+                                List<Cliente> clienteList = new ArrayList<>();
+                                clienteList.add(entry.getValue());
+                                Ultilitario.setValueUsuarioMaster(bundle, clienteList, requireContext());
+                                Navigation.findNavController(requireView()).navigate(R.id.navigation, bundle);
+                            } else if (Objects.requireNonNull(Navigation.findNavController(requireView()).getCurrentDestination()).getId() == R.id.splashFragment)
                                 Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_loginFragment);
                         }
                         break;
-                    case NAO:
+                    } else if (NAO.equals(entry.getKey())) {
                         Navigation.findNavController(requireView()).navigate(R.id.action_splashFragment_to_cadastrarClienteFragment);
                         break;
-                }
+                    }
             });
         }, 5000);
         return inflater.inflate(R.layout.fragment_splash, container, false);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (bundle != null)
+            bundle.clear();
     }
 }

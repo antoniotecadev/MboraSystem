@@ -672,6 +672,8 @@
     <string name="pin">PIN (6 dígitos)</string>
     <string name="actpin">Activar PIN</string>
     <string name="nao_def">Não definido</string>
+    <string name="bloaut">Bloquear autenticação</string>
+    <string name="bloaut_msg">Os usuários já não precisarão efectuar o login para entrar na aplicação.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

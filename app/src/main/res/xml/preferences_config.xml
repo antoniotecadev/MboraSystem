@@ -14,13 +14,13 @@
     <PreferenceCategory
         android:title="@string/view"
         tools:ignore="TouchTargetSizeCheck">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="switch_most_nov"
             android:title="@string/n_most_nov_config"
             app:icon="@android:drawable/ic_menu_view"
             app:useSimpleSummaryProvider="true" />
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="switch_qr_code"
             android:title="@string/ocult_qrcode"
@@ -41,7 +41,7 @@
     <PreferenceCategory
         android:title="@string/rasc"
         tools:ignore="TouchTargetSizeCheck">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="activarrascunho"
             android:title="@string/act_rasc_fact"
@@ -51,7 +51,12 @@
     <PreferenceCategory
         android:title="@string/aut"
         tools:ignore="TouchTargetSizeCheck">
-        <SwitchPreference
+        <SwitchPreferenceCompat
+            android:key="bloaut"
+            android:title="@string/bloaut"
+            app:icon="@drawable/ic_baseline_block_24"
+            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
             android:key="actpin"
             android:title="@string/actpin"
             app:icon="@drawable/ic_done"
@@ -62,7 +67,7 @@
             app:dialogIcon="@drawable/ic_baseline_store_24"
             app:icon="@drawable/ic_baseline_fiber_pin_24"
             app:useSimpleSummaryProvider="true" />
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="autenticacaobiometrica"
             android:title="@string/act_aut_biom"

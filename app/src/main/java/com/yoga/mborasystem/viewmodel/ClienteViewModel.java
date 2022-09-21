@@ -32,7 +32,9 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,7 +47,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-
+@SuppressWarnings("rawtypes")
 public class ClienteViewModel extends AndroidViewModel {
 
     private byte estado;
@@ -82,9 +84,9 @@ public class ClienteViewModel extends AndroidViewModel {
         return valido;
     }
 
-    private MutableLiveData<Ultilitario.Existe> existeMutableLiveData;
+    private MutableLiveData<Map<Enum, Cliente>> existeMutableLiveData;
 
-    public MutableLiveData<Ultilitario.Existe> getExisteMutableLiveData() {
+    public MutableLiveData<Map<Enum, Cliente>> getExisteMutableLiveData() {
         if (existeMutableLiveData == null) {
             existeMutableLiveData = new MutableLiveData<>();
         }
@@ -266,6 +268,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void clienteExiste(boolean limitCadastro, Cliente c) {
+        Map<Enum, Cliente> clienteMap = new HashMap<>();
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
@@ -276,14 +279,16 @@ public class ClienteViewModel extends AndroidViewModel {
                     if (limitCadastro) {
                         cadastrarCliente(c);
                     } else {
-                        getExisteMutableLiveData().postValue(Ultilitario.Existe.NAO);
+                        clienteMap.put(Ultilitario.Existe.NAO, null);
+                        getExisteMutableLiveData().postValue(clienteMap);
                         MainActivity.dismissProgressBar();
                     }
                 } else {
                     if (limitCadastro) {
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_cliente_ja_existe), R.drawable.ic_toast_erro);
                     } else {
-                        getExisteMutableLiveData().postValue(Ultilitario.Existe.SIM);
+                        clienteMap.put(Ultilitario.Existe.SIM, cliente.get(0));
+                        getExisteMutableLiveData().postValue(clienteMap);
                     }
                     MainActivity.dismissProgressBar();
                 }

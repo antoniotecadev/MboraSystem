@@ -10,8 +10,10 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.Objects;
 
@@ -23,10 +25,19 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_config, rootKey);
+        SwitchPreferenceCompat bloAut = findPreference("bloaut");
         EditTextPreference pin = findPreference("pinadmin");
         ListPreference listaIdioma = findPreference("lista_idioma");
         ListPreference taxaIva = findPreference("taxa_iva");
         motivoIsento = findPreference("motivo_isencao");
+
+        if (bloAut != null) {
+            bloAut.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (!bloAut.isChecked())
+                    Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.bloaut_msg), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                return true;
+            });
+        }
 
         if (pin != null) {
             pin.setSummaryProvider((Preference.SummaryProvider<EditTextPreference>) preference -> {
