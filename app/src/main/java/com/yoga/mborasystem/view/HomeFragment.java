@@ -1,7 +1,6 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
-import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
@@ -300,7 +299,7 @@ public class HomeFragment extends Fragment {
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
-        binding.textNomeUsuario.setText(getArguments().getString("nome", ""));
+        binding.textNomeUsuario.setText(requireArguments().getString("nome", ""));
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
