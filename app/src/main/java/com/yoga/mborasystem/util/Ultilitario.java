@@ -622,7 +622,8 @@ public class Ultilitario {
     }
 
     public static String getAPN(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getString("apn", "");
+        String apn = PreferenceManager.getDefaultSharedPreferences(context).getString("apn", "");
+        return apn.isEmpty() ? "http://192.168.18.3" : apn;
     }
 
     public static void setAPN(Context context, String apn) {
