@@ -118,11 +118,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        binding.floatingActionButtonCategoria.setOnClickListener(v -> entrarCategorias());
+        binding.floatingActionButtonCategoria.setOnClickListener(v -> entrarCategoriasLx());
 
-        binding.floatingActionButtonProduto.setOnClickListener(v -> entrarProdutos());
+        binding.floatingActionButtonProduto.setOnClickListener(v -> entrarProdutosLx());
 
-        binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendas());
+        binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendasLx());
         if (getArguments() != null)
             if (!getArguments().getBoolean("master")) {
                 MainActivity.navigationView.getMenu().findItem(R.id.usuarioFragment).setVisible(false);
@@ -131,14 +131,33 @@ public class HomeFragment extends Fragment {
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
             switch (item.getItemId()) {
-                case R.id.categoriaProdutoFragment1:
-                    entrarCategorias();
+                case R.id.categoriaProdutoFragmentH:
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
                     break;
-                case R.id.produtoFragment:
-                    entrarProdutos();
+                case R.id.usuarioFragmentH:
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
                     break;
-                case R.id.vendaFragment1:
-                    entrarVendas();
+                case R.id.vendaFragmentH:
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
+                    break;
+                case R.id.listaClienteFragmentH:
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
+                    break;
+                case R.id.dashboardFragmentH:
+                    MainActivity.getProgressBar();
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
+                    break;
+                case R.id.facturaFragmentH:
+                    entrarFacturacao();
+                    break;
+                case R.id.categoriaProdutoFragmentLx:
+                    entrarCategoriasLx();
+                    break;
+                case R.id.produtoFragmentLx:
+                    entrarProdutosLx();
+                    break;
+                case R.id.vendaFragmentLx:
+                    entrarVendasLx();
                     break;
                 case R.id.documentoFragmentMenu:
                     requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -150,13 +169,7 @@ public class HomeFragment extends Fragment {
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
-        binding.floatingActionButtonVenda.setOnClickListener(v -> {
-            MainActivity.getProgressBar();
-            if (getArguments() != null)
-                bundle.putBoolean("master", getArguments().getBoolean("master"));
-            bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
-        });
+        binding.floatingActionButtonVenda.setOnClickListener(v -> entrarFacturacao());
 
         binding.btnUsuario.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster()));
 
@@ -394,7 +407,7 @@ public class HomeFragment extends Fragment {
                 .show();
     }
 
-    private void entrarCategorias() {
+    private void entrarCategoriasLx() {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
             HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
@@ -402,7 +415,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void entrarProdutos() {
+    private void entrarProdutosLx() {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
             HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
@@ -410,12 +423,20 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void entrarVendas() {
+    private void entrarVendasLx() {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
             HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
             Navigation.findNavController(requireView()).navigate(direction);
         }
+    }
+
+    private void entrarFacturacao() {
+        MainActivity.getProgressBar();
+        if (getArguments() != null)
+            bundle.putBoolean("master", getArguments().getBoolean("master"));
+        bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
+        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
     }
 
     private String estado;

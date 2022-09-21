@@ -2,29 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/categoriaProdutoFragment"
+        android:id="@+id/categoriaProdutoFragmentH"
         android:icon="@drawable/ic_produto_60"
         android:title="@string/categoria_produto" />
     <item
-        android:id="@+id/usuarioFragment"
+        android:id="@+id/usuarioFragmentH"
         android:icon="@drawable/ic_usario_60"
         android:title="@string/usuario" />
     <item
-        android:id="@+id/vendaFragment"
+        android:id="@+id/vendaFragmentH"
         android:icon="@drawable/ic_venda_60"
         android:title="@string/venda" />
     <item
-        android:id="@+id/listaClienteFragment"
+        android:id="@+id/listaClienteFragmentH"
         android:icon="@drawable/ic_cliente_60"
         android:title="@string/cliente" />
 
     <item
-        android:id="@+id/dashboardFragment"
+        android:id="@+id/dashboardFragmentH"
         android:icon="@drawable/ic_dashboard_60"
         android:title="@string/dashboard" />
 
     <item
-        android:id="@+id/facturaFragment"
+        android:id="@+id/facturaFragmentH"
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/fctrc" />
 
@@ -39,15 +39,15 @@
         android:title="@string/lix">
         <menu>
             <item
-                android:id="@+id/categoriaProdutoFragment1"
+                android:id="@+id/categoriaProdutoFragmentLx"
                 android:icon="@android:drawable/ic_menu_delete"
                 android:title="@string/cat" />
             <item
-                android:id="@+id/produtoFragment"
+                android:id="@+id/produtoFragmentLx"
                 android:icon="@android:drawable/ic_menu_delete"
                 android:title="@string/prod" />
             <item
-                android:id="@+id/vendaFragment1"
+                android:id="@+id/vendaFragmentLx"
                 android:icon="@android:drawable/ic_menu_delete"
                 android:title="@string/venda" />
         </menu>
