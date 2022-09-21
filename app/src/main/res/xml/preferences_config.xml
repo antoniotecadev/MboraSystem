@@ -31,7 +31,6 @@
         android:title="@string/rasc"
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreferenceCompat
-            android:defaultValue="true"
             android:key="activarrascunho"
             android:title="@string/act_rasc_fact"
             app:icon="@android:drawable/ic_menu_save"
