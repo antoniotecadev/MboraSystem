@@ -18,13 +18,13 @@
             android:defaultValue="false"
             android:key="switch_most_nov"
             android:title="@string/n_most_nov_config"
-            app:icon="@android:drawable/ic_menu_view"
+            app:icon="@drawable/ic_baseline_disabled_visible_24"
             app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="switch_qr_code"
             android:title="@string/ocult_qrcode"
-            app:icon="@android:drawable/ic_menu_view"
+            app:icon="@drawable/ic_baseline_disabled_visible_24"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory
