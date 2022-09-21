@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -312,7 +312,7 @@ public class HomeFragment extends Fragment {
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
-        binding.textNomeUsuario.setText(requireArguments().getString("nome", ""));
+        binding.textNomeUsuario.setText("✔ " + requireArguments().getString("nome", ""));
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
