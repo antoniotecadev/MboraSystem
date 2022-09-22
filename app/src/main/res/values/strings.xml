@@ -88,7 +88,7 @@
     <string name="tipo">Tipo:</string>
     <string name="desactivado">Desactivado</string>
     <string name="estado_desbloqueado">Desbloqueado</string>
-    <string name="risc_text">&lt;s&gt;%1$s&lt;/s&gt;</string>
+    <string name="risc_text" translatable="false">&lt;s&gt;%1$s&lt;/s&gt;</string>
     <string name="estado_bloqueado">Bloqueado</string>
     <string name="salvar_alteracao">Salvar Alteração</string>
     <string name="falha_lista_usuario">Falha ao carregar lista de usuários</string>
@@ -456,7 +456,7 @@
         <item>Luanda</item>
     </string-array>
     <string-array name="municipios">
-        <item></item>
+        <item> </item>
         <item>Belas</item>
         <item>Cazenga</item>
         <item>Cacuaco</item>
@@ -602,7 +602,7 @@
     <string name="cli_import">Cliente(s) importado(s)</string>
     <string name="dad_emp">Dados da empresa</string>
     <string name="ctcs">Contactos</string>
-    <string name="website">Website</string>
+    <string name="website" translatable="false">Website</string>
     <string name="cdd">Cidade*</string>
     <string name="paisrgfsc">País (Região fiscal da empresa)*</string>
     <string name="ipt_pre_def">Imposto Predefinido</string>
@@ -624,7 +624,7 @@
     <string name="dds_cmc">Dados Comerciais (Factura)</string>
     <string name="nm_cmc">Nome Comercial</string>
     <string name="nib">NIB (Conta Bancária)</string>
-    <string name="iban">IBAN</string>
+    <string name="iban" translatable="false">IBAN</string>
     <string name="ocult_qrcode">Ocultar Código Qr na Factura</string>
     <string name="view">Visualização</string>
     <string name="text_rdp_fact">Texto Rodapé  (Factura)</string>
@@ -634,7 +634,7 @@
     <string name="eml">Email</string>
     <string name="vldr">Validar</string>
     <string name="pes_cli">Pesquisar cliente</string>
-    <string name="nif_bi">NIF/BI</string>
+    <string name="nif_bi" translatable="false">NIF/BI</string>
     <string name="vld">Válido</string>
     <string name="rsdc">Residência</string>
     <string name="ivld">Inválido</string>
