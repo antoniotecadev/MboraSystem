@@ -373,12 +373,15 @@ public class DocumentoFragment extends Fragment {
             ImageButton menu = viewHolder.itemView.findViewById(R.id.imgBtnMenu);
             String[] refFact = TextUtils.split(documento.getNome(), "_");
             try {
-                titulo = refFact[0].trim() + "/" + refFact[1].trim();
+                if (pasta.equals("Facturas"))
+                    titulo = refFact[0].trim() + "/" + refFact[1].trim();
+                else if (pasta.equals("Relatorios"))
+                    titulo = documento.getNome();
             } catch (ArrayIndexOutOfBoundsException e) {
                 titulo = documento.getNome();
             }
             nomeDocumento.setText(titulo);
-            descricao.setText(documento.getNome() + "\n" + Ultilitario.converterData(documento.getData_cria(), true) + " - " + formatSize(documento.getTamanho()));
+            descricao.setText(Ultilitario.converterData(documento.getData_cria(), true) + "\n" + formatSize(documento.getTamanho()));
             viewHolder.itemView.setOnClickListener(this::abrirDocumentoPDF);
             registerForContextMenu(menu);
             menu.setOnClickListener(View::showContextMenu);
