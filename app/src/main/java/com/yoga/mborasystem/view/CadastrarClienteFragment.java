@@ -52,7 +52,6 @@ public class CadastrarClienteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
 //        query = FirebaseDatabase.getInstance().getReference("cliente").limitToLast(1);
-        Ultilitario.setAPN(requireContext(), getString(R.string.apn_mborasystem));
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 

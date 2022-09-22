@@ -623,7 +623,7 @@ public class Ultilitario {
 
     public static String getAPN(Context context) {
         String apn = PreferenceManager.getDefaultSharedPreferences(context).getString("apn", "");
-        return apn.isEmpty() ? "http://192.168.18.3" : apn;
+        return apn.isEmpty() ? context.getString(R.string.apn_mborasystem) : apn;
     }
 
     public static void setAPN(Context context, String apn) {
