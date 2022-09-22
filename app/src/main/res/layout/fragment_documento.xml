@@ -25,17 +25,8 @@
                 tools:context=".view.DocumentoFragment"
                 tools:listitem="@layout/layout_documento_fragment"/>
 
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottom_nav"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:background="@color/cor_castanha"
-                app:itemTextColor="@color/white"
-                app:menu="@menu/menu_bottom_doc" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_quant_doc"
@@ -50,4 +41,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/cor_castanha"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/menu_bottom_doc" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
