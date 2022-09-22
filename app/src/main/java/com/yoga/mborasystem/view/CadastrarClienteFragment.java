@@ -207,6 +207,7 @@ public class CadastrarClienteFragment extends Fragment {
                 menu.findItem(R.id.itemSair).setVisible(false);
                 menu.findItem(R.id.bloquearFragment).setVisible(false);
                 menu.findItem(R.id.idioma).setVisible(false);
+                menu.findItem(R.id.baseDeDados).setVisible(false);
             }
 
             @Override
