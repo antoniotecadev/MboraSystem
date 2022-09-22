@@ -914,7 +914,7 @@ public class Ultilitario {
             }
             cursor.close();
             File direct = new File(Environment.getExternalStorageDirectory() + "/MboraSystem/DATABASE-BACKUP");
-            if (!direct.exists()) direct.mkdir();
+            if (!direct.exists()) direct.mkdirs();
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
             if (sd.canWrite()) {
