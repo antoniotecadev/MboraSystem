@@ -39,8 +39,6 @@ import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.view.FacturaFragmentDirections;
 
-import org.apache.xerces.impl.dv.util.Base64;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -248,11 +246,15 @@ public class VendaViewModel extends AndroidViewModel {
                         sb.append(venda.getCodigo_qr()).append("/").append(idvenda).append(";");
                         sb.append(formatarValor(grossTotal)).append(";");
                         String hashVendaLast = Ultilitario.getValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", "");
-                        sb.append(hashVendaLast.isEmpty() ? "" : Base64.decode(hashVendaLast));
+                        sb.append(hashVendaLast.isEmpty() ? "" : hashVendaLast);
                         try {
-                            String hashVenda = EncriptaDecriptaRSA.assinarTexto(sb.toString(), getFilePathCache(getApplication().getApplicationContext(), "privatekey.key").getAbsolutePath());
-                            Ultilitario.setValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", hashVenda);
-                            insertHashVenda(hashVenda, idvenda);
+                            String hashVenda = EncriptaDecriptaRSA.assinarTexto(sb.toString(), getFilePathCache(getApplication().getApplicationContext(), "privatekey.key").getAbsolutePath(), getFilePathCache(getApplication().getApplicationContext(), "publickey.key").getAbsolutePath());
+                            if (hashVenda == null)
+                                Toast.makeText(getApplication().getApplicationContext(), getApplication().getString(R.string.err_ass), Toast.LENGTH_LONG).show();
+                            else {
+                                Ultilitario.setValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", hashVenda);
+                                insertHashVenda(hashVenda, idvenda);
+                            }
                         } catch (Exception e) {
                             Toast.makeText(getApplication().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }

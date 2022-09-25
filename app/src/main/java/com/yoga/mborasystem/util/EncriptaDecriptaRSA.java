@@ -1,7 +1,6 @@
 package com.yoga.mborasystem.util;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.xerces.impl.dv.util.Base64;
@@ -17,6 +16,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 
 import javax.crypto.Cipher;
 
@@ -34,7 +34,6 @@ public class EncriptaDecriptaRSA {
                 writeKey(PATH_CHAVE_PRIVADA, key.getPrivate());
                 writeKey(PATH_CHAVE_PUBLICA, key.getPublic());
             }
-            descriptografarTexto(assinarTexto("2018-05-18;2018-05-18T11:22:19;FAC 001/18;53.002;", EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA));
         } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -47,17 +46,16 @@ public class EncriptaDecriptaRSA {
         chave.close();
     }
 
-    public static String assinarTexto(String texto, String filePath) throws Exception {
+    public static String criptografarTexto(String texto, String filePath) throws Exception {
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filePath));
-        final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
-        return criptografa(texto, privateKey);
+        final PublicKey publicKey = (PublicKey) inputStream.readObject();
+        return criptografa(texto, publicKey);
     }
 
     private static void descriptografarTexto(String texto) throws Exception {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(EncriptaDecriptaRSA.PATH_CHAVE_PUBLICA));
-        final PublicKey publicKey = (PublicKey) inputStream.readObject();
-        final String textoCriptografado = decriptografa(texto, publicKey);
-        Log.i("RSA", "Mensagem Descriptografada: " + textoCriptografado);
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA));
+        final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
+        decriptografa(texto, privateKey);
     }
 
 
@@ -65,20 +63,42 @@ public class EncriptaDecriptaRSA {
         return new File(PATH_CHAVE_PUBLICA).exists() && new File(PATH_CHAVE_PRIVADA).exists();
     }
 
-    public static String criptografa(String texto, PrivateKey privateKey) throws Exception {
+    public static String criptografa(String texto, PublicKey publicKey) throws Exception {
         byte[] cipherText;
         final Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         cipherText = cipher.doFinal(texto.getBytes());
         return Base64.encode(cipherText);
     }
 
-    public static String decriptografa(String texto, PublicKey publicKey) throws Exception {
+    public static String decriptografa(String texto, PrivateKey privateKey) throws Exception {
         byte[] dectyptedText;
         final Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, publicKey);
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
         dectyptedText = cipher.doFinal(Base64.decode(texto));
         return new String(dectyptedText);
+    }
+
+    public static String assinarTexto(String text, String filePathPrivate, String filePathPublic) throws Exception {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filePathPrivate));
+        final PrivateKey key = (PrivateKey) inputStream.readObject();
+        Signature s = Signature.getInstance("SHA1withRSA");
+        s.initSign(key);
+        s.update(text.getBytes());
+        byte[] signature = s.sign();
+        return verificarAssinaturaText(text.getBytes(), filePathPublic, signature);
+    }
+
+    public static String verificarAssinaturaText(byte[] text, String filePath, byte[] signature) throws Exception {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filePath));
+        final PublicKey key = (PublicKey) inputStream.readObject();
+        Signature s = Signature.getInstance("SHA1withRSA");
+        s.initVerify(key);
+        s.update(text);
+        if (s.verify(signature))
+            return Base64.encode(signature);
+        else
+            return null;
     }
 
 }
