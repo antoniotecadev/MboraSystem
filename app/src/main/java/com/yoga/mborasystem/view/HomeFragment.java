@@ -211,6 +211,8 @@ public class HomeFragment extends Fragment {
                         menu.findItem(R.id.baseDeDados).setEnabled(false);
                     } else {
                         menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
+                        menu.findItem(R.id.device).setEnabled(false);
+                        menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
                     }
                 }
                 Locale primaryLocale;
