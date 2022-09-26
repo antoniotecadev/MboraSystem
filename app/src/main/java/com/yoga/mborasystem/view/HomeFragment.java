@@ -284,18 +284,16 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
                         break;
                     case R.id.expoBd:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                             requestPermissionLauncherDeviceId.launch(Manifest.permission.READ_PHONE_STATE);
-                        } else {
+                        else
                             exportarBD();
-                        }
                         break;
                     case R.id.impoBd:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                             Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
-                        } else {
+                        else
                             alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
                         break;
                     case R.id.termosCondicoes:
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));

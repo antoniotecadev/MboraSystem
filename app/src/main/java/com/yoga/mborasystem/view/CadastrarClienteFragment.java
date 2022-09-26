@@ -1,11 +1,21 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
+import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
+import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
+import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+import static com.yoga.mborasystem.util.Ultilitario.reverse;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -38,11 +50,14 @@ import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CadastrarClienteFragment extends Fragment {
 
     private String imei;
     private Query query;
+    private ExecutorService executor;
     private DatabaseReference mDatabase;
     private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
@@ -207,14 +222,19 @@ public class CadastrarClienteFragment extends Fragment {
                 menu.findItem(R.id.itemSair).setVisible(false);
                 menu.findItem(R.id.bloquearFragment).setVisible(false);
                 menu.findItem(R.id.idioma).setVisible(false);
-                menu.findItem(R.id.baseDeDados).setVisible(false);
+                menu.findItem(R.id.expoBd).setVisible(false);
             }
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                if (menuItem.getItemId() == R.id.config) {
+                if (menuItem.getItemId() == R.id.config)
                     Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoFragment2);
+                else if (menuItem.getItemId() == R.id.impoBd) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                        Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
+                    else
+                        alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
@@ -245,6 +265,43 @@ public class CadastrarClienteFragment extends Fragment {
         cliente.setVisualizado(false);
         mDatabase.child(cliente.getImei()).setValue(cliente);
     }
+
+    private String uriPath;
+    ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Uri uri;
+                    if (data != null) {
+                        uri = data.getData();
+                        try {
+                            uriPath = TextUtils.split(uri.getPath(), "/")[4];
+                        } catch (IndexOutOfBoundsException e) {
+                            alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                                .setTitle(getString(R.string.impoBd))
+                                .setMessage(uri.getPath() + "\n\n" + getString(R.string.imp_elim_bd))
+                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                    try {
+                                        String stringHash = TextUtils.split(uriPath, "-")[2];
+                                        byte[] bytesHash = getHash(reverse(getDeviceUniqueID(requireActivity())));
+                                        if (bytesToHex(bytesHash).equals(stringHash)) {
+                                            MainActivity.getProgressBar();
+                                            executor = Executors.newSingleThreadExecutor();
+                                            executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
+                                        } else
+                                            alertDialog(getString(R.string.erro), getString(R.string.inc_bd), requireContext(), R.drawable.ic_baseline_close_24);
+                                    } catch (Exception e) {
+                                        alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                    }
+                                })
+                                .show();
+                    }
+                }
+            });
 
     @Override
     public void onDestroyView() {
