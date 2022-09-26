@@ -123,6 +123,7 @@ public class FacturaFragment extends Fragment {
     private int total, totaldesconto, valorBase, valorIva, desconto, troco, valorPago, valorDivida;
     private Map<Long, Integer> precoTotal, iva, valor, posicao;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
+    private static final String composeFactura = "android.intent.action.VIEW";
 
     private final BarcodeCallback callback = new BarcodeCallback() {
         @Override
@@ -1158,6 +1159,8 @@ public class FacturaFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        if (composeFactura.equals(requireActivity().getIntent().getAction()))
+            System.exit(0);
     }
 
     @Override
