@@ -1,10 +1,14 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
+import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
+import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
+import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+import static com.yoga.mborasystem.util.Ultilitario.reverse;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -278,9 +282,11 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
                         break;
                     case R.id.expoBd:
-                        MainActivity.getProgressBar();
-                        executor = Executors.newSingleThreadExecutor();
-                        executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper())));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissionLauncherDeviceId.launch(Manifest.permission.READ_PHONE_STATE);
+                        } else {
+                            exportarBD();
+                        }
                         break;
                     case R.id.impoBd:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -557,12 +563,37 @@ public class HomeFragment extends Fragment {
                                 .setMessage(uri.getPath() + "\n\n" + getString(R.string.imp_elim_bd))
                                 .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
                                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
-                                    MainActivity.getProgressBar();
-                                    executor = Executors.newSingleThreadExecutor();
-                                    executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
+                                    try {
+                                        String stringHash = TextUtils.split(uriPath, "-")[2];
+                                        byte[] bytesHash = getHash(reverse(getDeviceUniqueID(requireActivity())) + "-" + reverse(cliente.getImei()));
+                                        if (bytesToHex(bytesHash).equals(stringHash)) {
+                                            MainActivity.getProgressBar();
+                                            executor = Executors.newSingleThreadExecutor();
+                                            executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
+                                        } else
+                                            alertDialog(getString(R.string.erro), getString(R.string.inc_bd), requireContext(), R.drawable.ic_baseline_close_24);
+                                    } catch (Exception e) {
+                                        alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                    }
                                 })
                                 .show();
                     }
                 }
             });
+
+    private void exportarBD() {
+        MainActivity.getProgressBar();
+        executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper()), getDeviceUniqueID(requireActivity()), cliente.getImei()));
+    }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherDeviceId = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                if (result) {
+                    exportarBD();
+                } else {
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_expo_db), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                }
+            }
+    );
 }

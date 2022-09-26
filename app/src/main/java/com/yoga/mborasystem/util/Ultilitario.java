@@ -28,7 +28,9 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -626,10 +628,6 @@ public class Ultilitario {
         return apn.isEmpty() ? context.getString(R.string.apn_mborasystem) : apn;
     }
 
-    public static void setAPN(Context context, String apn) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("apn", apn).apply();
-    }
-
     public static boolean getActivarAutenticacaoBiometrica(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("autenticacaobiometrica", true);
     }
@@ -901,8 +899,9 @@ public class Ultilitario {
         }
     }
 
-    public static void exportDB(Context context, Handler handler) {
+    public static void exportDB(Context context, Handler handler, String deviceID, String imei) {
         try {
+            byte[] bytesID = getHash(reverse(deviceID) + "-" + reverse(imei));
             WeakReference<Context> contextWeakReference = new WeakReference<>(context);
             AppDataBase appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
             String query = "PRAGMA wal_checkpoint(full)";
@@ -919,7 +918,7 @@ public class Ultilitario {
             File data = Environment.getDataDirectory();
             if (sd.canWrite()) {
                 String hora = TextUtils.split(getDateCurrent(), "-")[3];
-                String nameDB = "database-mborasystem-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora + ".db";
+                String nameDB = "database-mborasystem-" + bytesToHex(bytesID) + "-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora + ".db";
                 String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
                 String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + nameDB;
                 File currentDB = new File(data, currentDBPath);
@@ -981,6 +980,12 @@ public class Ultilitario {
         }
     }
 
+    public static String reverse(String str) {
+        StringBuilder sb = new StringBuilder(str);
+        sb.reverse();
+        return sb.toString();
+    }
+
     public static void setValueUsuarioMaster(Bundle bundle, List<Cliente> cliente, Context context) {
         bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
         bundle.putBoolean("master", cliente.get(0).isMaster());
@@ -988,5 +993,35 @@ public class Ultilitario {
         Ultilitario.setBooleanPreference(context, true, "master");
         Ultilitario.setValueSharedPreferences(context, "imei", cliente.get(0).getImei());
         Ultilitario.setValueSharedPreferences(context, "nomeempresa", cliente.get(0).getNomeEmpresa());
+    }
+
+    public static String getDeviceUniqueID(Activity activity) {
+        if (getIMEI(activity) == null)
+            return getAndroidID(activity);
+        else
+            return getIMEI(activity);
+    }
+
+    private static String getIMEI(Activity activity) {
+        TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return telephonyManager.getImei();
+        } else {
+            return telephonyManager.getDeviceId();
+        }
+    }
+
+    private static String getAndroidID(Activity activity) {
+        return Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    public static byte[] getHash(String text) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(text.getBytes());
+        return md.digest();
+    }
+
+    public static String bytesToHex(byte[] md) {
+        return String.format("%064x", new BigInteger(1, md));
     }
 }

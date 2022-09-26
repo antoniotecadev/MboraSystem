@@ -675,6 +675,8 @@
     <string name="bloaut">Bloquear autenticação</string>
     <string name="bloaut_msg">Os usuários já não precisarão efectuar o login para entrar na aplicação.</string>
     <string name="err_ass">Erro na assinatura</string>
+    <string name="sm_perm_n_pod_expo_db">Sem permissão não pode exportar base de dados.</string>
+    <string name="inc_bd">Incompatibilidade de base de dados.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
