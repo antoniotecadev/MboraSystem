@@ -59,9 +59,9 @@ public class ListaProdutoVendaFragment extends Fragment {
         vendaViewModel.getProdutosVenda(idvenda, codQr, null, false, false, null);
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
             adapter.clear();
-            if (produtos.isEmpty()) {
+            if (produtos.isEmpty())
                 Ultilitario.naoEncontrado(getContext(), adapter, R.string.produto_nao_encontrada);
-            } else {
+            else {
                 for (ProdutoVenda produto : produtos)
                     adapter.add(new Item<GroupieViewHolder>() {
 
