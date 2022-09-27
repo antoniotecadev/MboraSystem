@@ -64,7 +64,7 @@ import java.util.concurrent.Executors;
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
-    String nomeOperador, language = "";
+    String nomeOperador, languageCode = "";
     private Cliente cliente;
     private boolean isOpen = false;
     private ExecutorService executor;
@@ -218,8 +218,8 @@ public class HomeFragment extends Fragment {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     primaryLocale = getResources().getConfiguration().getLocales().get(0);
                     String locale = primaryLocale.getDisplayLanguage();
-                    language = primaryLocale.getLanguage();
-                    menu.findItem(R.id.idioma).setTitle(locale);
+                    languageCode = primaryLocale.getLanguage();
+                    menu.findItem(R.id.idioma).setTitle(locale + "(" + languageCode.toLowerCase(Locale.ROOT) + ")");
                 } else
                     menu.findItem(R.id.idioma).setTitle("");
             }
@@ -230,6 +230,7 @@ public class HomeFragment extends Fragment {
                 switch (menuItem.getItemId()) {
                     case R.id.idioma:
                         new AlertDialog.Builder(requireContext())
+                                .setCancelable(false)
                                 .setIcon(R.drawable.ic_baseline_store_24)
                                 .setTitle(R.string.alt_idm)
                                 .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(requireContext()), (dialogInterface, i) -> {
@@ -250,8 +251,16 @@ public class HomeFragment extends Fragment {
                                             break;
                                     }
                                 })
-                                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> dialogInterface.dismiss())
-                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false)).show();
+                                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> {
+                                    codigoIdioma = null;
+                                    dialogInterface.dismiss();
+                                })
+                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                                    if (codigoIdioma == null || languageCode.equalsIgnoreCase(codigoIdioma))
+                                        dialogInterface.dismiss();
+                                    else
+                                        getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false);
+                                }).show();
                         break;
                     case R.id.dialogAlterarCliente:
                         if (getArguments() != null) {
