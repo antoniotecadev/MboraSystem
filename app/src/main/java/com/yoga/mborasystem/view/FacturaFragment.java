@@ -565,6 +565,11 @@ public class FacturaFragment extends Fragment {
                     menu.findItem(R.id.itemEliminarRascunho).setVisible(false);
                 else
                     requireActivity().setTitle(getString(R.string.rasc));
+
+                if (composeFactura.equals(requireActivity().getIntent().getAction())) {
+                    menu.findItem(R.id.itemAbrApp).setVisible(true);
+                    menu.findItem(R.id.itemSair).setVisible(true);
+                }
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
                 SearchView searchView = (SearchView) menuItem.getActionView();
@@ -612,7 +617,11 @@ public class FacturaFragment extends Fragment {
                 } else if (itemId == R.id.itemEliminarRascunho) {
                     eliminarRascunho();
                     Snackbar.make(binding.myCoordinatorLayout, getText(R.string.rasc_elm), Snackbar.LENGTH_LONG).show();
-                }
+                } else if (itemId == R.id.itemAbrApp) {
+                    requireActivity().getIntent().setAction("android.intent.action.MAIN").addCategory("android.intent.category.LAUNCHER");
+                    restartActivity(requireActivity());
+                } else if (itemId == R.id.itemSair)
+                    sairAtalho();
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
@@ -1138,16 +1147,18 @@ public class FacturaFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (composeFactura.equals(requireActivity().getIntent().getAction())) {
-            new android.app.AlertDialog.Builder(getContext())
-                    .setIcon(R.drawable.ic_baseline_store_24)
-                    .setTitle(getString(R.string.sair))
-                    .setMessage(getString(R.string.sair_atal))
-                    .setNeutralButton(getString(R.string.abr_app_com), (dialog, which) -> restartActivity(requireActivity()))
-                    .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.sim), (dialog, which) -> requireActivity().finish())
-                    .show();
-        }
+        if (composeFactura.equals(requireActivity().getIntent().getAction()))
+            sairAtalho();
+    }
+
+    private void sairAtalho() {
+        new android.app.AlertDialog.Builder(getContext())
+                .setIcon(R.drawable.ic_baseline_store_24)
+                .setTitle(getString(R.string.sair))
+                .setMessage(getString(R.string.sair_atal))
+                .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getString(R.string.sim), (dialog, which) -> System.exit(0))
+                .show();
     }
 
     @Override

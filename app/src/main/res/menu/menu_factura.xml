@@ -21,8 +21,22 @@
 
   <item
       android:id="@+id/itemEliminarRascunho"
-      android:icon="@android:drawable/ic_menu_day"
+      android:icon="@drawable/ic_baseline_delete_40"
       android:title="@string/elm_rasc"
+      app:showAsAction="collapseActionView" />
+
+  <item
+      android:id="@+id/itemAbrApp"
+      android:icon="@drawable/ic_baseline_store_24"
+      android:title="@string/abr_app_com"
+      android:visible="false"
+      app:showAsAction="collapseActionView" />
+
+  <item
+      android:id="@+id/itemSair"
+      android:icon="@drawable/ic_baseline_exit_to_app_24"
+      android:title="@string/sair"
+      android:visible="false"
       app:showAsAction="collapseActionView" />
 
 </menu>
