@@ -122,11 +122,10 @@ public class CadastrarClienteFragment extends Fragment {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
                             bairros.add(parceiro.get("br").getAsString());
                         }
-                        if (bairros.getItem(1).isEmpty()) {
+                        if (bairros.getItem(1).isEmpty())
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.br_na_enc_mun), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        } else {
+                        else
                             Snackbar.make(requireView(), getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
-                        }
                     } catch (Exception ex) {
                         Ultilitario.alertDialog(getString(R.string.erro), ex.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     } finally {
@@ -147,11 +146,10 @@ public class CadastrarClienteFragment extends Fragment {
                 MainActivity.getProgressBar();
                 if (isNetworkConnected(requireContext())) {
                     if (internetIsConnected()) {
-                        if (!parent.getItemAtPosition(position).toString().isEmpty()) {
+                        if (!parent.getItemAtPosition(position).toString().isEmpty())
                             spinnerBairros(parent.getItemAtPosition(position).toString());
-                        } else {
+                        else
                             MainActivity.dismissProgressBar();
-                        }
                     } else {
                         MainActivity.dismissProgressBar();
                         Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
