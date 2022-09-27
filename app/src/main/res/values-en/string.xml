@@ -174,7 +174,7 @@
     <string name="subscricao_pacote">Package subscription</string>
     <string name="bloquear">To block</string>
     <string name="sair">To go out</string>
-    <string name="tem_certeza_sair_app">Are you sure you want to exit MboraSystem</string>
+    <string name="tem_certeza_sair_app">Are you sure you want to exit MboraSystem ?</string>
     <string name="nao">Not</string>
     <string name="sim">Yes</string>
     <string name="nome_loja">Store Name</string>
@@ -382,7 +382,8 @@
     <string name="exp_tds_vd_dvd_cli">Export all debt sales of the selected client.</string>
     <string name="exp_tds_vd_dvd_use">Export all user sales with debt.</string>
     <string name="exp_tds_vd_use">Export all sales of the selected user.</string>
-    <string name="acerca">Management and invoicing system created by startup YOGA for:\n
+    <string name="acerca">
+        Management and invoicing system created by startup YOGA for:\n
         ✔ Canteens\n
         ✔ Bars\n
         ✔ Barbershops\n
@@ -392,7 +393,7 @@
         ✔ Countertop sales\n
         ✔ Restaurant\n
         ✔ Bakery\n
-        ✔ Much more...\n\n
+        ✔ Much more\n\n
         VERSION: 1.0.0</string>
     <string name="ace">About</string>
     <string name="rvr_car">Remover</string>

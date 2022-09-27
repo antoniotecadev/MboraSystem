@@ -174,7 +174,7 @@
     <string name="subscricao_pacote">abonnement forfait</string>
     <string name="bloquear">Bloquer</string>
     <string name="sair">Sortir</string>
-    <string name="tem_certeza_sair_app">Êtes-vous sûr de vouloir quitter MboraSystem</string>
+    <string name="tem_certeza_sair_app">Êtes-vous sûr de vouloir quitter MboraSystem ?</string>
     <string name="nao">Pas</string>
     <string name="sim">Ouais</string>
     <string name="nome_loja">Nom du magasin</string>
@@ -382,7 +382,8 @@
     <string name="exp_tds_vd_dvd_cli">Exportez toutes les ventes de dettes du client sélectionné.</string>
     <string name="exp_tds_vd_dvd_use">Exportez toutes les ventes des utilisateurs avec dette.</string>
     <string name="exp_tds_vd_use">Exporter toutes les ventes de l\'utilisateur sélectionné.</string>
-    <string name="acerca">Système de gestion et de facturation créé par la startup YOGA pour :\n
+    <string name="acerca">
+        Système de gestion et de facturation créé par la startup YOGA pour :\n
         ✔ Cantines\n
         Barres\n
         ✔ Salons de coiffure\n
@@ -391,8 +392,8 @@
         ✔ Vente de rue\n
         ✔ Ventes de comptoir\n
         ✔ Restaurant\n
-        Boulangerie\n
-        Bien plus...\n\n
+        ✔ Boulangerie\n
+        ✔ Bien plus\n\n
         VERSION : 1.0.0</string>
     <string name="ace">Sur</string>
     <string name="rvr_car">Dissolvant</string>

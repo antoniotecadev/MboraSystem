@@ -187,7 +187,7 @@
     <string name="subscricao_pacote">Subscrição de pacote</string>
     <string name="bloquear">Bloquear</string>
     <string name="sair">Sair</string>
-    <string name="tem_certeza_sair_app">Tem a certeza que quer sair do MboraSystem</string>
+    <string name="tem_certeza_sair_app">Tem a certeza que quer sair do MboraSystem ?</string>
     <string name="nao">Não</string>
     <string name="sim">Sim</string>
     <string name="nome_loja">Nome da Loja</string>
