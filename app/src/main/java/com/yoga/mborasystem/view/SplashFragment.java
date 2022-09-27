@@ -38,13 +38,13 @@ public class SplashFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
-        if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Francês")) {
+        if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Francês"))
             Ultilitario.getSelectedIdioma(requireActivity(), "FR", null, false, true);
-        } else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Inglês")) {
+        else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Inglês"))
             Ultilitario.getSelectedIdioma(requireActivity(), "EN", null, false, true);
-        } else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Português")) {
+        else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Português"))
             Ultilitario.getSelectedIdioma(requireActivity(), "PT", null, false, true);
-        }
+
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
