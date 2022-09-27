@@ -83,27 +83,24 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     private MutableLiveData<PagingData<ClienteCantina>> listaClientesCantina;
 
     public MutableLiveData<PagingData<ClienteCantina>> getListaClientesCantina() {
-        if (listaClientesCantina == null) {
+        if (listaClientesCantina == null)
             listaClientesCantina = new MutableLiveData<>();
-        }
         return listaClientesCantina;
     }
 
     private MutableLiveData<List<ClienteCantina>> cliente;
 
     public MutableLiveData<List<ClienteCantina>> getCliente() {
-        if (cliente == null) {
+        if (cliente == null)
             cliente = new MutableLiveData<>();
-        }
         return cliente;
     }
 
     private MutableLiveData<Event<List<ClienteCantina>>> listaClienteExport;
 
     public MutableLiveData<Event<List<ClienteCantina>>> getListaClientesExport() {
-        if (listaClienteExport == null) {
+        if (listaClienteExport == null)
             listaClienteExport = new MutableLiveData<>();
-        }
         return listaClienteExport;
     }
 
@@ -237,9 +234,9 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        if (dg != null) {
+                        if (dg != null)
                             dg.dismiss();
-                        }
+
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cli_elim), R.drawable.ic_toast_feito);
                     }
 
@@ -263,12 +260,12 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable.isDisposed()) {
+        if (disposable.isDisposed())
             disposable.dispose();
-        }
-        if (compositeDisposable.isDisposed()) {
+
+        if (compositeDisposable.isDisposed())
             compositeDisposable.dispose();
-        }
+
     }
 
 }

@@ -49,30 +49,27 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<String> getinfoPin() {
-        if (infoPin == null) {
+        if (infoPin == null)
             infoPin = new MutableLiveData<>();
-        }
         return infoPin;
     }
 
     MutableLiveData<Usuario> usuarioMutableLiveData;
 
     public MutableLiveData<Usuario> getUsuarioMutableLiveData() {
-        if (usuarioMutableLiveData == null) {
+        if (usuarioMutableLiveData == null)
             usuarioMutableLiveData = new MutableLiveData<>();
-        }
         return usuarioMutableLiveData;
     }
 
     private void contarIntroducaoPin() {
         ++contar;
-        if (contar == Ultilitario.TRES) {
+        if (contar == Ultilitario.TRES)
             infoPin.postValue(getApplication().getString(R.string.infoAviso1));
-        } else if (contar == Ultilitario.QUATRO) {
+        else if (contar == Ultilitario.QUATRO)
             infoPin.postValue(getApplication().getString(R.string.infoAviso2));
-        } else if (contar > Ultilitario.QUATRO) {
+        else if (contar > Ultilitario.QUATRO)
             infoPin.postValue(String.valueOf(Ultilitario.QUATRO));
-        }
     }
 
     @SuppressLint("CheckResult")
@@ -83,9 +80,9 @@ public class LoginViewModel extends AndroidViewModel {
             try {
                 List<Usuario> usuario = usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(cp));
                 if (usuario.isEmpty()) {
-                    if (Ultilitario.getBooleanPreference(context, "actpin") && PreferenceManager.getDefaultSharedPreferences(context).getString("pinadmin", "0").equals(cp)) {
+                    if (Ultilitario.getBooleanPreference(context, "actpin") && PreferenceManager.getDefaultSharedPreferences(context).getString("pinadmin", "0").equals(cp))
                         logar(view, handler);
-                    } else {
+                    else {
                         infoPin.postValue(getApplication().getString(R.string.infoPinIncorreto));
                         contarIntroducaoPin();
                     }

@@ -81,9 +81,8 @@ public class UsuarioViewModel extends AndroidViewModel {
     private MutableLiveData<PagingData<Usuario>> listaUsuarios;
 
     public MutableLiveData<PagingData<Usuario>> getListaUsuarios() {
-        if (listaUsuarios == null) {
+        if (listaUsuarios == null)
             listaUsuarios = new MutableLiveData<>();
-        }
         return listaUsuarios;
     }
 
@@ -192,9 +191,9 @@ public class UsuarioViewModel extends AndroidViewModel {
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
             try {
-                if (usuarioRepository.confirmarCodigoPin(us.getCodigoPin()).isEmpty()) {
+                if (usuarioRepository.confirmarCodigoPin(us.getCodigoPin()).isEmpty())
                     criarUsuario(us, dg);
-                } else {
+                else {
                     handler.post(() -> {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.codigopin_invalido), R.drawable.ic_toast_erro);
@@ -224,9 +223,9 @@ public class UsuarioViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
-                        if (dg != null) {
+                        if (dg != null)
                             dg.dismiss();
-                        }
+
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.usuario_eliminado), R.drawable.ic_toast_feito);
                     }
 
@@ -257,9 +256,9 @@ public class UsuarioViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable.isDisposed()) {
+        if (disposable.isDisposed())
             disposable.dispose();
-        }
+
         if (executor != null)
             executor.shutdownNow();
     }

@@ -63,18 +63,16 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     private MutableLiveData<PagingData<Categoria>> listaCategorias;
 
     public MutableLiveData<PagingData<Categoria>> getListaCategorias() {
-        if (listaCategorias == null) {
+        if (listaCategorias == null)
             listaCategorias = new MutableLiveData<>();
-        }
         return listaCategorias;
     }
 
     private MutableLiveData<Event<List<Categoria>>> listaCategoriasSpinner;
 
     public MutableLiveData<Event<List<Categoria>>> getListaCategoriasSpinner() {
-        if (listaCategoriasSpinner == null) {
+        if (listaCategoriasSpinner == null)
             listaCategoriasSpinner = new MutableLiveData<>();
-        }
         return listaCategoriasSpinner;
     }
 
@@ -212,11 +210,10 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        if (todasCategorias) {
+                        if (todasCategorias)
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cats_rests), R.drawable.ic_toast_feito);
-                        } else {
+                        else
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_rest), R.drawable.ic_toast_feito);
-                        }
                     }
 
                     @Override
@@ -239,11 +236,10 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        if (!isLixeira || eliminarTodasLixeira) {
+                        if (!isLixeira || eliminarTodasLixeira)
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.cts_elims) : getApplication().getString(R.string.categoria_eliminada), R.drawable.ic_toast_feito);
-                        } else {
+                        else
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.cat_env_lx), R.drawable.ic_toast_feito);
-                        }
                     }
 
                     @Override

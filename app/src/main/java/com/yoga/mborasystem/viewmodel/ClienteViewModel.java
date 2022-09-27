@@ -69,27 +69,24 @@ public class ClienteViewModel extends AndroidViewModel {
     MutableLiveData<List<Cliente>> clienteMutableLiveData;
 
     public MutableLiveData<List<Cliente>> getClienteMutableLiveData() {
-        if (clienteMutableLiveData == null) {
+        if (clienteMutableLiveData == null)
             clienteMutableLiveData = new MutableLiveData<>();
-        }
         return clienteMutableLiveData;
     }
 
     private MutableLiveData<Ultilitario.Operacao> valido;
 
     public MutableLiveData<Ultilitario.Operacao> getValido() {
-        if (valido == null) {
+        if (valido == null)
             valido = new MutableLiveData<>();
-        }
         return valido;
     }
 
     private MutableLiveData<Map<Enum, Cliente>> existeMutableLiveData;
 
     public MutableLiveData<Map<Enum, Cliente>> getExisteMutableLiveData() {
-        if (existeMutableLiveData == null) {
+        if (existeMutableLiveData == null)
             existeMutableLiveData = new MutableLiveData<>();
-        }
         return existeMutableLiveData;
     }
 
@@ -191,9 +188,8 @@ public class ClienteViewModel extends AndroidViewModel {
                 cliente.setImei(imei);
                 cliente.setCodigoEquipa(codigoEquipa.getText().toString());
                 verificarCodigoEquipa(codigoEquipa.getText().toString(), cliente);
-            } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
+            } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR))
                 actualizarEmpresa(cliente);
-            }
         }
 
     }
@@ -276,17 +272,17 @@ public class ClienteViewModel extends AndroidViewModel {
                 List<Cliente> cliente;
                 cliente = clienteRepository.clienteExiste();
                 if (cliente.isEmpty()) {
-                    if (limitCadastro) {
+                    if (limitCadastro)
                         cadastrarCliente(c);
-                    } else {
+                    else {
                         clienteMap.put(Ultilitario.Existe.NAO, null);
                         getExisteMutableLiveData().postValue(clienteMap);
                         MainActivity.dismissProgressBar();
                     }
                 } else {
-                    if (limitCadastro) {
+                    if (limitCadastro)
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_cliente_ja_existe), R.drawable.ic_toast_erro);
-                    } else {
+                    else {
                         clienteMap.put(Ultilitario.Existe.SIM, cliente.get(0));
                         getExisteMutableLiveData().postValue(clienteMap);
                     }
@@ -372,11 +368,10 @@ public class ClienteViewModel extends AndroidViewModel {
             try {
                 List<Cliente> cliente;
                 cliente = clienteRepository.clienteExiste();
-                if (!cliente.isEmpty()) {
+                if (!cliente.isEmpty())
                     getClienteMutableLiveData().postValue(cliente);
-                } else {
+                else
                     handler.post(() -> Toast.makeText(getApplication(), getApplication().getString(R.string.usu_n_enc), Toast.LENGTH_LONG).show());
-                }
             } catch (Exception e) {
                 handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
             }
@@ -433,9 +428,8 @@ public class ClienteViewModel extends AndroidViewModel {
                                 if (codigo.isEmpty() || estado == Ultilitario.ZERO) {
                                     MainActivity.dismissProgressBar();
                                     Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
-                                } else {
+                                } else
                                     clienteExiste(true, cliente);
-                                }
                             } catch (Exception ex) {
                                 MainActivity.dismissProgressBar();
                                 Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
