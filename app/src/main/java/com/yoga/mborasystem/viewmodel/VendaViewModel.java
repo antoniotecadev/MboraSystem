@@ -83,55 +83,48 @@ public class VendaViewModel extends AndroidViewModel {
     MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento, enviarWhatsApp;
 
     public MutableLiveData<Long> getQuantidadeVenda() {
-        if (quantidade == null) {
+        if (quantidade == null)
             quantidade = new MutableLiveData<>();
-        }
         return quantidade;
     }
 
     public MutableLiveData<Event<Long>> getPrintLiveData() {
-        if (imprimir == null) {
+        if (imprimir == null)
             imprimir = new MutableLiveData<>();
-        }
         return imprimir;
     }
 
     public MutableLiveData<Event<Long>> getGuardarPdfLiveData() {
-        if (guardarPdf == null) {
+        if (guardarPdf == null)
             guardarPdf = new MutableLiveData<>();
-        }
         return guardarPdf;
     }
 
     public MutableLiveData<Event<String>> getEnviarWhatsAppLiveData() {
-        if (enviarWhatsApp == null) {
+        if (enviarWhatsApp == null)
             enviarWhatsApp = new MutableLiveData<>();
-        }
         return enviarWhatsApp;
     }
 
     MutableLiveData<List<Cliente>> dataAdminMaster;
 
     public MutableLiveData<List<Cliente>> getAdminMasterLiveData() {
-        if (dataAdminMaster == null) {
+        if (dataAdminMaster == null)
             dataAdminMaster = new MutableLiveData<>();
-        }
         return dataAdminMaster;
     }
 
     MutableLiveData<Event<AlertDialog>> dialog;
 
     public MutableLiveData<Event<AlertDialog>> getAlertDialogLiveData() {
-        if (dialog == null) {
+        if (dialog == null)
             dialog = new MutableLiveData<>();
-        }
         return dialog;
     }
 
     public MutableLiveData<Boolean> getSelectedDataMutableLiveData() {
-        if (selectedData == null) {
+        if (selectedData == null)
             selectedData = new MutableLiveData<>();
-        }
         return selectedData;
     }
 
@@ -139,69 +132,60 @@ public class VendaViewModel extends AndroidViewModel {
     MutableLiveData<Event<List<Venda>>> vendas, vendasGuardarImprimir;
 
     public MutableLiveData<PagingData<Venda>> getListaVendasLiveData() {
-        if (listaVendas == null) {
+        if (listaVendas == null)
             listaVendas = new MutableLiveData<>();
-        }
         return listaVendas;
     }
 
     public MutableLiveData<Event<List<Venda>>> getVendasGuardarImprimir() {
-        if (vendasGuardarImprimir == null) {
+        if (vendasGuardarImprimir == null)
             vendasGuardarImprimir = new MutableLiveData<>();
-        }
         return vendasGuardarImprimir;
     }
 
     public MutableLiveData<Event<String>> getDataExportAppLiveData() {
-        if (dataExport == null) {
+        if (dataExport == null)
             dataExport = new MutableLiveData<>();
-        }
         return dataExport;
     }
 
     public MutableLiveData<Event<String>> getVendaDatatAppLiveData() {
-        if (dataVenda == null) {
+        if (dataVenda == null)
             dataVenda = new MutableLiveData<>();
-        }
         return dataVenda;
     }
 
     public MutableLiveData<Event<String>> getDocumentoDatatAppLiveData() {
-        if (dataDocumento == null) {
+        if (dataDocumento == null)
             dataDocumento = new MutableLiveData<>();
-        }
         return dataDocumento;
     }
 
     public MutableLiveData<Event<List<Venda>>> getVendasParaExportar() {
-        if (vendas == null) {
+        if (vendas == null)
             vendas = new MutableLiveData<>();
-        }
         return vendas;
     }
 
     public MutableLiveData<Event<Boolean>> getExportarLocalLiveData() {
-        if (exportLocal == null) {
+        if (exportLocal == null)
             exportLocal = new MutableLiveData<>();
-        }
         return exportLocal;
     }
 
     MutableLiveData<Event<List<ProdutoVenda>>> produtosVenda;
 
     public MutableLiveData<Event<List<ProdutoVenda>>> getProdutosVendaLiveData() {
-        if (produtosVenda == null) {
+        if (produtosVenda == null)
             produtosVenda = new MutableLiveData<>();
-        }
         return produtosVenda;
     }
 
     private MutableLiveData<List<Venda>> vendasDashboard;
 
     public MutableLiveData<List<Venda>> getVendasDashboard() {
-        if (vendasDashboard == null) {
+        if (vendasDashboard == null)
             vendasDashboard = new MutableLiveData<>();
-        }
         return vendasDashboard;
     }
 
@@ -286,11 +270,10 @@ public class VendaViewModel extends AndroidViewModel {
             try {
                 List<Cliente> cliente;
                 cliente = clienteRepository.clienteExiste();
-                if (cliente.isEmpty()) {
+                if (cliente.isEmpty())
                     handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.dados_admin_nao), R.drawable.ic_toast_erro));
-                } else {
+                else
                     getAdminMasterLiveData().postValue(cliente);
-                }
             } catch (Exception e) {
                 handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
             }
@@ -405,11 +388,10 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        if (isLixeira || eliminarTodasLixeira) {
+                        if (isLixeira || eliminarTodasLixeira)
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
-                        } else {
+                        else
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_env_lx), R.drawable.ic_toast_feito);
-                        }
                     }
 
                     @Override
@@ -432,11 +414,10 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        if (todasVendas) {
+                        if (todasVendas)
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vends_rests), R.drawable.ic_toast_feito);
-                        } else {
+                        else
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_rest), R.drawable.ic_toast_feito);
-                        }
                     }
 
                     @Override
@@ -457,12 +438,12 @@ public class VendaViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable.isDisposed()) {
+        if (disposable.isDisposed())
             disposable.dispose();
-        }
-        if (compositeDisposable.isDisposed()) {
+
+        if (compositeDisposable.isDisposed())
             compositeDisposable.dispose();
-        }
+
         if (executor != null)
             executor.shutdownNow();
     }
