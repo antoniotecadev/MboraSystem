@@ -564,7 +564,7 @@
     <string name="avs">Warning</string>
     <string name="exp_dis_api_sup">Export is only available for API level 19 or higher</string>
     <string name="imp_dis_api_sup">Import is only available for API level 19 or higher</string>
-    <string name="n_most_nov_config">Don\'t show again \\nthe sale message box when closing</string>
+    <string name="n_most_nov_config">Don\'t show again \\nthe message box about unsaved invoice</string>
     <string name="vend_ago">Sell now</string>
     <string name="br_car">Loaded neighborhoods</string>
     <string name="aut">Authentication</string>
@@ -573,7 +573,7 @@
     <string name="titlte_biometricprompt">Biometric login for my app</string>
     <string name="fal_aut">Authentication failed</string>
     <string name="config_rede">Network settings</string>
-    <string name="act_aut_biom">Enable biometric authentication</string>
+    <string name="act_aut_biom">Biometric authentication</string>
     <string name="err_aut">Authentication error:</string>
     <string name="exportcli">Export client(s)</string>
     <string name="importcli">Import client(s)</string>
@@ -618,7 +618,7 @@
     <string name="cst_tds_prod">Consult all products</string>
     <string name="elm_rasc">Delete draft</string>
     <string name="rasc">Draft</string>
-    <string name="act_rasc_fact">Activate draft in invoicing</string>
+    <string name="act_rasc_fact">Draft in invoicing</string>
     <string name="rasc_elm">Draft deleted</string>
     <string name="sem_prod_stoc">No product in stock</string>
     <string name="sem_prod_stoc_msg">To sell this product (%1$s) increase its quantity or uncheck your stock control.</string>

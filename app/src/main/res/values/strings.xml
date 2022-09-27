@@ -576,7 +576,7 @@
     <string name="tem_cert_fech">Tem a certeza que quer fechar sem guardar ou imprimir esta venda?</string>
     <string name="sm_prm_na_vis_doc">Sem permissão não pode ver documentos</string>
     <string name="n_most_nov">Não mostrar novamente.</string>
-    <string name="n_most_nov_config">Não mostrar novamente \na caixa de mensagem de venda efectuada ao fechar</string>
+    <string name="n_most_nov_config">Não mostrar novamente \na caixa de mensagem sobre factura não guardada</string>
     <string name="br_na_enc_mun">Bairros não encotrados neste município</string>
     <string name="part_me_cod_qr">Partilhar meu código QR</string>
     <string name="sm_perm_n_pod_part_cod_qr">Sem permissão não pode partilhar o seu código QR</string>
@@ -596,7 +596,7 @@
     <string name="fal_aut">Falha na autenticação</string>
     <string name="err_aut">"Erro de autenticação: "</string>
     <string name="config_rede">Configurações de rede</string>
-    <string name="act_aut_biom">Activar autenticação biométrica</string>
+    <string name="act_aut_biom">Autenticação biométrica</string>
     <string name="exportcli">Exportar cliente(s)</string>
     <string name="importcli">Importar cliente(s)</string>
     <string name="cli_import">Cliente(s) importado(s)</string>
@@ -644,7 +644,7 @@
     <string name="cst_tds_prod">Consultar todos produtos</string>
     <string name="elm_rasc">Eliminar rascunho</string>
     <string name="rasc">Rascunho</string>
-    <string name="act_rasc_fact">Activar rascunho na facturação</string>
+    <string name="act_rasc_fact">Rascunho na facturação</string>
     <string name="rasc_elm">Rascunho eliminado</string>
     <string name="sem_prod_stoc">Sem produto em stock</string>
     <string name="sem_prod_stoc_msg">Para vender este produto (%1$s) aumente a sua quantidade ou desmarque o seu controle de stock.</string>

@@ -564,7 +564,7 @@
     <string name="avs">Avertissement</string>
     <string name="exp_dis_api_sup">L\'exportation n\'est disponible que pour le niveau d\'API 19 ou supérieur</string>
     <string name="imp_dis_api_sup">L\'importation n\'est disponible que pour le niveau d\'API 19 ou supérieur</string>
-    <string name="n_most_nov_config">Ne plus afficher \\nla boîte de message de vente lors de la fermeture</string>
+    <string name="n_most_nov_config">Ne plus afficher \\nla boîte de message de la facture non enregistrée</string>
     <string name="vend_ago">Vendre maintenant</string>
     <string name="br_car">Quartiers chargés</string>
     <string name="aut">Authentification</string>
@@ -573,7 +573,7 @@
     <string name="titlte_biometricprompt">Connexion biométrique pour mon application</string>
     <string name="fal_aut">Authentification échouée</string>
     <string name="config_rede">Paramètres réseau</string>
-    <string name="act_aut_biom">Activer l\'authentification biométrique</string>
+    <string name="act_aut_biom">Authentification biométrique</string>
     <string name="err_aut">Erreur d\'authentification:</string>
     <string name="exportcli">Client(s) export</string>
     <string name="importcli">Importer des clients</string>
@@ -618,7 +618,7 @@
     <string name="cst_tds_prod">Consulter tous les produits</string>
     <string name="elm_rasc">Supprimer le brouillon</string>
     <string name="rasc">Brouillon</string>
-    <string name="act_rasc_fact">Activer le brouillon dans la facturation</string>
+    <string name="act_rasc_fact">Le brouillon dans la facturation</string>
     <string name="rasc_elm">Brouillon supprimé</string>
     <string name="sem_prod_stoc">Aucun produit en stock</string>
     <string name="sem_prod_stoc_msg">Pour vendre ce produit (%1$s), augmentez sa quantité ou décochez votre gestion des stocks.</string>
