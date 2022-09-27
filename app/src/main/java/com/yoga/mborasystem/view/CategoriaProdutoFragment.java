@@ -104,16 +104,16 @@ public class CategoriaProdutoFragment extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_pesquisar_criar_categoria, menu);
                 if (getArguments() != null) {
-                    if (Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                    if (Ultilitario.getBooleanPreference(requireContext(), "master"))
                         bundle.putBoolean("master", true);
-                    } else {
+                    else {
                         menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
                         menu.findItem(R.id.exinpCategoria).setVisible(false);
                         binding.btncriarCategoriaDialog.setVisibility(View.GONE);
                     }
-                } else {
+                } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
+
                 if (isLixeira) {
                     menu.findItem(R.id.exinpCategoria).setVisible(false);
                     menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
@@ -151,11 +151,10 @@ public class CategoriaProdutoFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        if (newText.isEmpty()) {
+                        if (newText.isEmpty())
                             consultarCategorias(false, null, false);
-                        } else {
+                        else
                             consultarCategorias(true, newText, true);
-                        }
                         return false;
                     }
                 });
@@ -165,17 +164,17 @@ public class CategoriaProdutoFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
                 int itemId = menuItem.getItemId();
-                if (itemId == R.id.dialogCriarCategoria) {
+                if (itemId == R.id.dialogCriarCategoria)
                     Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
-                } else if (itemId == R.id.exportarcategoria) {
+                else if (itemId == R.id.exportarcategoria)
                     exportarImportar(Ultilitario.EXPORTAR_CATEGORIA);
-                } else if (itemId == R.id.importarcategoria) {
+                else if (itemId == R.id.importarcategoria)
                     exportarImportar(Ultilitario.IMPORTAR_CATEGORIA);
-                } else if (itemId == R.id.btnEliminarTodosLixo) {
+                else if (itemId == R.id.btnEliminarTodosLixo)
                     dialogEliminarReataurarTodasCategoriasLixeira(getString(R.string.elim_cts), getString(R.string.tem_cert_elim_cts), true);
-                } else if (itemId == R.id.btnRestaurarTodosLixo) {
+                else if (itemId == R.id.btnRestaurarTodosLixo)
                     dialogEliminarReataurarTodasCategoriasLixeira(getString(R.string.rest_cts), getString(R.string.rest_tdas_cats), false);
-                }
+
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
@@ -209,9 +208,9 @@ public class CategoriaProdutoFragment extends Fragment {
 
     private void dialogEliminarReataurarTodasCategoriasLixeira(String titulo, String msg, boolean isEliminar) {
         categoriaProdutoViewModel.crud = true;
-        if (vazio) {
+        if (vazio)
             Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
-        } else {
+        else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
                 alert.setIcon(R.drawable.ic_baseline_delete_40);
@@ -220,24 +219,21 @@ public class CategoriaProdutoFragment extends Fragment {
             alert.setTitle(titulo);
             alert.setMessage(msg);
             alert.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss());
-            if (isEliminar) {
+            if (isEliminar)
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.eliminarCategoria(null, false, true));
-            } else {
+            else
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, 0, true));
-            }
+
             if (getArguments() != null) {
-                if (isMaster) {
+                if (isMaster)
                     alert.show();
-                } else {
+                else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
-            } else {
+            } else
                 Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
         }
     }
 
-    //    class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder> {
     class CategoriaAdapter extends PagingDataAdapter<Categoria, CategoriaAdapter.CategoriaViewHolder> {
 
         public CategoriaAdapter(@NonNull DiffUtil.ItemCallback<Categoria> diffCallback) {
@@ -306,9 +302,8 @@ public class CategoriaProdutoFragment extends Fragment {
                                     return false;
                                 });
                             }
-                        } else {
+                        } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
                     }
                 });
             }
