@@ -2,7 +2,7 @@
     <shortcut
         android:shortcutId="composeFactura"
         android:icon="@drawable/ic_baseline_shopping_cart"
-        android:shortcutShortLabel="@string/factura"
+        android:shortcutShortLabel="@string/fctrc"
         android:shortcutLongLabel="@string/vend_ago">
         <intent
             android:action="android.intent.action.VIEW"
