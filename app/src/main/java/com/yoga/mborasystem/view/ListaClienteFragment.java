@@ -109,12 +109,12 @@ public class ListaClienteFragment extends Fragment {
         binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "clientecantina"));
         clienteCantinaViewModel.getListaClientesExport().observe(getViewLifecycleOwner(), new EventObserver<>(cliente -> {
             StringBuilder dt = new StringBuilder();
-            if (cliente.isEmpty()) {
+            if (cliente.isEmpty())
                 Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.cliente_nao_encontrado), R.drawable.ic_toast_erro);
-            } else {
-                for (ClienteCantina clienteCantina : cliente) {
+            else {
+                for (ClienteCantina clienteCantina : cliente)
                     dt.append(clienteCantina.getNome().isEmpty() ? " " : clienteCantina.getNome()).append(",").append(clienteCantina.getTelefone().isEmpty() ? " " : clienteCantina.getTelefone()).append(",").append(clienteCantina.getEmail().isEmpty() ? " " : clienteCantina.getEmail()).append(",").append(clienteCantina.getEndereco().isEmpty() ? " " : clienteCantina.getEndereco()).append(",").append(clienteCantina.getNif().isEmpty() ? " " : clienteCantina.getNif()).append("\n");
-                }
+
                 data = dt;
                 exportarClientes(getString(R.string.clientes), tipo == 0 && Ultilitario.isLocal);
             }
@@ -159,11 +159,10 @@ public class ListaClienteFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        if (newText.isEmpty()) {
+                        if (newText.isEmpty())
                             consultarClientes(false, false, null);
-                        } else {
+                        else
                             consultarClientes(true, true, newText);
-                        }
                         return false;
                     }
                 });
@@ -172,13 +171,12 @@ public class ListaClienteFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                if (menuItem.getItemId() == R.id.criarClienteCantina) {
+                if (menuItem.getItemId() == R.id.criarClienteCantina)
                     criarCliente();
-                } else if (menuItem.getItemId() == R.id.exportarcliente) {
+                else if (menuItem.getItemId() == R.id.exportarcliente)
                     exportarCliente();
-                } else if (menuItem.getItemId() == R.id.importarcliente) {
+                else if (menuItem.getItemId() == R.id.importarcliente)
                     importarClientes();
-                }
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
@@ -198,22 +196,19 @@ public class ListaClienteFragment extends Fragment {
 
     private void exportarClientes(String nomeFicheiro, boolean isLocal) {
         if (isLocal) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 Ultilitario.exportarLocal(exportClientActivityResultLauncher, getActivity(), nomeFicheiro, Ultilitario.getDateCurrent());
-            } else {
+            else
                 Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-        } else {
+        } else
             Ultilitario.exportarNuvem(getContext(), data, "clientes.csv", nomeFicheiro, Ultilitario.getDateCurrent());
-        }
     }
 
     private void importarClientes() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             Ultilitario.importarCategoriasProdutosClientes(importClientActivityResultLauncher, requireActivity(), false);
-        } else {
+        else
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-        }
     }
 
     class ClienteAdapter extends PagingDataAdapter<ClienteCantina, ClienteAdapter.ClienteViewHolder> {
