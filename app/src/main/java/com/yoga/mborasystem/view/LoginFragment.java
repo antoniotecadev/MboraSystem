@@ -194,9 +194,9 @@ public class LoginFragment extends Fragment {
 
         binding.btnAuthBiometric.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));
 
-        if (!Ultilitario.getActivarAutenticacaoBiometrica(requireContext())) {
+        if (!Ultilitario.getActivarAutenticacaoBiometrica(requireContext()))
             binding.btnAuthBiometric.setVisibility(View.INVISIBLE);
-        }
+
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
@@ -263,12 +263,12 @@ public class LoginFragment extends Fragment {
 
     private void logarComTecladoPersonalizado() throws NoSuchAlgorithmException {
         StringBuilder codigoPin = new StringBuilder();
-        for (String pin : digitos) {
+        for (String pin : digitos)
             codigoPin.append(pin);
-        }
-        if (codigoPin.length() != 6) {
+
+        if (codigoPin.length() != 6)
             binding.tvinfoCodigoPin.setError(getString(R.string.infoPinIncorreto));
-        } else {
+        else {
             MainActivity.getProgressBar();
             loginViewModel.logar(codigoPin.toString(), requireContext(), requireView());
         }
@@ -322,21 +322,18 @@ public class LoginFragment extends Fragment {
     @SuppressLint("MissingPermission")
     public void vibrarTelefone(Context context) {
 
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26)
             ((Vibrator) context.getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
+        else
             ((Vibrator) context.getSystemService(VIBRATOR_SERVICE)).vibrate(500);
-        }
-
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (bundle != null) {
+        if (bundle != null)
             bundle.clear();
-        }
     }
 
     @Override
