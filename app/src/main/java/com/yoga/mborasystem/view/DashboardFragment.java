@@ -105,23 +105,21 @@ public class DashboardFragment extends Fragment {
 
         vendaViewModel.getProdutoMaisVendido(dataActual[0] + "-" + dataActual[1] + "-" + dataActual[2]).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
-                for (ProdutoVenda pdVd : produtoVendas) {
+                for (ProdutoVenda pdVd : produtoVendas)
                     produtosMaisVendidos(mBarChartm, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
-                }
         });
 
         vendaViewModel.getProdutoMenosVendido(dataActual[0] + "-" + dataActual[1] + "-" + dataActual[2]).observe(getViewLifecycleOwner(), produtoVendas -> {
             if (!produtoVendas.isEmpty())
-                for (ProdutoVenda pdVd : produtoVendas) {
+                for (ProdutoVenda pdVd : produtoVendas)
                     produtosMenosVendidos(mBarChartme, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
-                }
         });
 
         vendaViewModel.consultarVendasDashboard(false, null);
         vendaViewModel.getVendasDashboard().observe(getViewLifecycleOwner(), vendas -> {
-            if (vendas.isEmpty()) {
+            if (vendas.isEmpty())
                 Toast.makeText(getContext(), getString(R.string.venda_nao_encontrada), Toast.LENGTH_LONG).show();
-            } else {
+            else {
                 int qtv = 0;
                 int janc = 0, fevc = 0, marc = 0, abrc = 0, maic = 0, junc = 0, julc = 0, agoc = 0, setc = 0, outc = 0, novc = 0, dezc = 0;
                 long jan = 0, fev = 0, mar = 0, abr = 0, mai = 0, jun = 0, jul = 0, ago = 0, set = 0, out = 0, nov = 0, dez = 0;
@@ -290,9 +288,8 @@ public class DashboardFragment extends Fragment {
             if (!produtos.isEmpty()) {
                 for (Produto prod : produtos) {
                     String[] data = TextUtils.split(prod.getData_cria(), "-");
-                    if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
+                    if (data[2].trim().equalsIgnoreCase(dataActual[2].trim()))
                         totalPrecoFornecedor += prod.getPrecofornecedor();
-                    }
                 }
                 binding.valCusto.setText(getString(R.string.cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
                 mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
@@ -300,9 +297,8 @@ public class DashboardFragment extends Fragment {
                 if (totalVenda > totalPrecoFornecedor) {
                     binding.valLucro.setText(getString(R.string.lc) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda - totalPrecoFornecedor)));
                     mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (totalVenda - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
-                } else {
+                } else
                     binding.valLucro.setText(getString(R.string.lc) + ": " + (totalVenda - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
-                }
             }
         });
 
@@ -330,9 +326,9 @@ public class DashboardFragment extends Fragment {
 
         vendaViewModel.getVendasGuardarImprimir().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             this.vendas.clear();
-            if (vendas.isEmpty()) {
+            if (vendas.isEmpty())
                 Ultilitario.alertDialog(getString(R.string.vendas), getString(R.string.nao_tem_venda) + " (" + this.data + ")", requireContext(), R.drawable.ic_baseline_insert_drive_file_24);
-            } else {
+            else {
                 this.vendas.addAll(vendas);
                 vendaViewModel.getProdutosVenda(0, null, this.data, true, false, null);
             }
@@ -455,11 +451,10 @@ public class DashboardFragment extends Fragment {
         Handler handler = new Handler(Looper.getMainLooper());
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            if (i == 0) {
+            if (i == 0)
                 getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler, getView());
-            } else if (i == 1) {
+            else if (i == 1)
                 getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler, getView());
-            }
         });
     }
 
