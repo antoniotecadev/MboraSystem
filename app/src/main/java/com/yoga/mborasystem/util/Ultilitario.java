@@ -686,7 +686,7 @@ public class Ultilitario {
         }
     }
 
-    private static void restartActivity(Activity activity) {
+    public static void restartActivity(Activity activity) {
         activity.finish();
         activity.startActivity(activity.getIntent());
     }

@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
+import static com.yoga.mborasystem.util.Ultilitario.restartActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -1137,8 +1138,16 @@ public class FacturaFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (composeFactura.equals(requireActivity().getIntent().getAction()))
-            System.exit(0);
+        if (composeFactura.equals(requireActivity().getIntent().getAction())) {
+            new android.app.AlertDialog.Builder(getContext())
+                    .setIcon(R.drawable.ic_baseline_store_24)
+                    .setTitle(getString(R.string.sair))
+                    .setMessage(getString(R.string.sair_atal))
+                    .setNeutralButton(getString(R.string.abr_app_com), (dialog, which) -> restartActivity(requireActivity()))
+                    .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(getString(R.string.sim), (dialog, which) -> requireActivity().finish())
+                    .show();
+        }
     }
 
     @Override
