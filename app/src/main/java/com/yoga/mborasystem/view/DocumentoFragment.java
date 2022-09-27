@@ -127,11 +127,10 @@ public class DocumentoFragment extends Fragment {
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> getDocumentos(null, false, "", false));
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtoVendas -> {
             try {
-                if (getArguments() != null) {
+                if (getArguments() != null)
                     new SaftXMLDocument().criarDocumentoSaft(requireContext(), getArguments().getParcelable("cliente"), getDataFormatMonth(Objects.requireNonNull(dataInicio.getText()).toString()), getDataFormatMonth(Objects.requireNonNull(dataFim.getText()).toString()), this.clienteCantinas, produtoVendas, this.vendas);
-                } else {
+                else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
             } catch (ParserConfigurationException | TransformerException | IOException | SAXException e) {
                 Ultilitario.alertDialog(getString(R.string.exp_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
@@ -155,9 +154,9 @@ public class DocumentoFragment extends Fragment {
                 dataFim.setText(data);
         }));
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
-            if (vendas.isEmpty()) {
+            if (vendas.isEmpty())
                 Ultilitario.alertDialog(getString(R.string.exp_saft), getString(R.string.nao_tem_venda), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            } else {
+            else {
                 this.vendas = vendas;
                 List<Long> idcliente = new ArrayList<>();
                 for (Venda venda : vendas)
@@ -199,11 +198,10 @@ public class DocumentoFragment extends Fragment {
 
                                                       @Override
                                                       public boolean onQueryTextChange(String newText) {
-                                                          if (newText.isEmpty()) {
+                                                          if (newText.isEmpty())
                                                               getDocumentos(null, false, "", false);
-                                                          } else {
+                                                          else
                                                               getDocumentos(newText.replace("/", "_"), true, "", false);
-                                                          }
                                                           return false;
                                                       }
                                                   });
@@ -212,9 +210,9 @@ public class DocumentoFragment extends Fragment {
                                               @Override
                                               public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                                                   NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                                                  if (menuItem.getItemId() == R.id.itemData) {
+                                                  if (menuItem.getItemId() == R.id.itemData)
                                                       getData(0);
-                                                  } else if (menuItem.getItemId() == R.id.itemSaft) {
+                                                  else if (menuItem.getItemId() == R.id.itemSaft) {
                                                       Dexter.withContext(requireContext())
                                                               .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                                               .withListener(new PermissionListener() {
@@ -308,11 +306,10 @@ public class DocumentoFragment extends Fragment {
 
     private void getDocumentos(String ficheiro, boolean isPesquisa, String data,
                                boolean isPesquisaData) {
-        if (pasta.equalsIgnoreCase("Facturas")) {
+        if (pasta.equalsIgnoreCase("Facturas"))
             getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, isPesquisa, ficheiro, data, isPesquisaData);
-        } else {
+        else
             getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, isPesquisa, ficheiro, data, isPesquisaData);
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -323,9 +320,9 @@ public class DocumentoFragment extends Fragment {
         List<Ultilitario.Documento> pdfList = new ArrayList<>(getPdfList(pasta, isPesquisa, ficheiro, requireContext()));
         binding.chipQuantDoc.setText(String.valueOf(pdfList.size()));
         adapter.clear();
-        if (pdfList.isEmpty()) {
+        if (pdfList.isEmpty())
             Ultilitario.naoEncontrado(getContext(), adapter, msg);
-        } else {
+        else {
             if (isPesquisaData) {
                 int i = 0;
                 for (Ultilitario.Documento documento : pdfList) {
@@ -340,9 +337,8 @@ public class DocumentoFragment extends Fragment {
                 }
             } else {
                 Ultilitario.swipeRefreshLayout(binding.mySwipeRefreshLayout);
-                for (Ultilitario.Documento documento : pdfList) {
+                for (Ultilitario.Documento documento : pdfList)
                     adapter.add(new ItemDocumento(documento, requireContext(), pasta, title, msg));
-                }
             }
         }
         MainActivity.dismissProgressBar();
@@ -427,9 +423,9 @@ public class DocumentoFragment extends Fragment {
                                             } catch (IOException e) {
                                                 Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                             }
-                                            if (file.exists()) {
+                                            if (file.exists())
                                                 requireContext().deleteFile(file.getName());
-                                            } else {
+                                            else {
                                                 Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
                                                 getDocumentPDF(pasta, title, msg, false, null, "", false);
                                             }
@@ -459,11 +455,11 @@ public class DocumentoFragment extends Fragment {
             v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
             new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
             File file = new File(documento.getCaminho());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
-            } else {
+            else
                 fileURI = Uri.fromFile(file);
-            }
+
             Intent target = new Intent(Intent.ACTION_VIEW);
             target.setDataAndType(fileURI, "application/pdf");
             target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -474,11 +470,10 @@ public class DocumentoFragment extends Fragment {
             PackageManager packageManager = context.getPackageManager();
             List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
             try {
-                if (activities.size() > 0) {
+                if (activities.size() > 0)
                     context.startActivity(intent);
-                } else {
+                else
                     Ultilitario.alertDialog(context.getString(R.string.fal_ab_pdf), context.getString(R.string.inst_app), context, R.drawable.ic_baseline_store_24);
-                }
             } catch (ActivityNotFoundException e) {
                 Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
