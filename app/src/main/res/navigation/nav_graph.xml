@@ -241,7 +241,7 @@
                 app:popExitAnim="@android:anim/fade_out" />
             <deepLink
                 android:id="@+id/deepLink"
-                app:uri="https://mborasystem://factura" />
+                app:uri="https://mborasystem://facturacao" />
             <action
                 android:id="@+id/action_facturaFragment_to_calculadoraFragment"
                 app:destination="@id/calculadoraFragment" />

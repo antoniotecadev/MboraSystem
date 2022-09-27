@@ -80,7 +80,7 @@ public class SplashFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (composeFactura.equals(requireActivity().getIntent().getAction())) {
-            Uri uri = Uri.parse("https://mborasystem://factura");
+            Uri uri = Uri.parse("https://mborasystem://facturacao");
             Navigation.findNavController(requireView()).navigate(uri);
         }
     }
