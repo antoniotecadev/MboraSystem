@@ -119,9 +119,8 @@ public class ListProdutoFragment extends Fragment {
 
         binding.btnCriarProdutoFragment.setOnClickListener(v ->
         {
-            if (!categoria.isEmpty()) {
+            if (!categoria.isEmpty())
                 createProduto(idcategoria, categoria);
-            }
         });
         binding.floatingActionButtonCima.setOnClickListener(view -> binding.recyclerViewListaProduto.smoothScrollToPosition(0));
         binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewListaProduto.smoothScrollToPosition(quantidade));
@@ -135,12 +134,12 @@ public class ListProdutoFragment extends Fragment {
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod ->
         {
             StringBuilder dt = new StringBuilder();
-            if (prod.isEmpty()) {
+            if (prod.isEmpty())
                 Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
-            } else {
-                for (Produto produto : prod) {
+            else {
+                for (Produto produto : prod)
                     dt.append(produto.getNome()).append(",").append(produto.getTipo()).append(",").append(produto.getUnidade()).append(",").append(produto.getCodigoMotivoIsencao()).append(",").append(produto.getPercentagemIva()).append(",").append(produto.getPreco()).append(",").append(produto.getPrecofornecedor()).append(",").append(produto.getQuantidade()).append(",").append(produto.getCodigoBarra()).append(",").append(produto.isIva()).append(",").append(produto.getEstado()).append(",").append(produto.isStock()).append(",").append(produto.getIdcategoria()).append("\n");
-                }
+
                 data = dt;
                 exportarProdutos(this.categoria, tipo == 0 && Ultilitario.isLocal);
             }
@@ -196,11 +195,10 @@ public class ListProdutoFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        if (newText.isEmpty()) {
+                        if (newText.isEmpty())
                             consultarProdutos(false, null, false);
-                        } else {
+                        else
                             consultarProdutos(true, newText, true);
-                        }
                         return false;
                     }
                 });
@@ -210,22 +208,20 @@ public class ListProdutoFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 int itemId = menuItem.getItemId();
                 if (itemId == R.id.dialogCriarProduto) {
-                    if (!categoria.isEmpty()) {
+                    if (!categoria.isEmpty())
                         createProduto(idcategoria, categoria);
-                    }
-                } else if (itemId == R.id.dialogFiltrarProduto) {
+                } else if (itemId == R.id.dialogFiltrarProduto)
                     filtrarProduto(idcategoria);
-                } else if (itemId == R.id.btnScannerBack) {
+                else if (itemId == R.id.btnScannerBack)
                     scanearCodigoQr();
-                } else if (itemId == R.id.exportarproduto) {
+                else if (itemId == R.id.exportarproduto)
                     exportarProduto();
-                } else if (itemId == R.id.importarproduto) {
+                else if (itemId == R.id.importarproduto)
                     importarProdutos();
-                } else if (itemId == R.id.btnEliminarTodosLixo) {
+                else if (itemId == R.id.btnEliminarTodosLixo)
                     dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.elim_pds), getString(R.string.tem_cert_elim_pds), true);
-                } else if (itemId == R.id.btnRestaurarTodosLixo) {
+                else if (itemId == R.id.btnRestaurarTodosLixo)
                     dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.rest_pds), getString(R.string.rest_tdos_prods), false);
-                }
                 return false;
             }
         }, getViewLifecycleOwner());
@@ -244,22 +240,19 @@ public class ListProdutoFragment extends Fragment {
 
     private void exportarProdutos(String nomeCategoria, boolean isLocal) {
         if (isLocal) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), nomeCategoria, Ultilitario.getDateCurrent());
-            } else {
+            else
                 Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-        } else {
+        } else
             Ultilitario.exportarNuvem(getContext(), data, nomeCategoria + Ultilitario.getDateCurrent() + "_produtos.csv", nomeCategoria, Ultilitario.getDateCurrent());
-        }
     }
 
     private void importarProdutos() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             Ultilitario.importarCategoriasProdutosClientes(importProductActivityResultLauncher, requireActivity(), false);
-        } else {
+        else
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-        }
     }
 
     private void createProduto(long id, String categoria) {
@@ -318,9 +311,9 @@ public class ListProdutoFragment extends Fragment {
 
     private void dialogEliminarReataurarTodasProdutosLixeira(String titulo, String msg, boolean isEliminar) {
         produtoViewModel.crud = true;
-        if (vazio) {
+        if (vazio)
             Snackbar.make(binding.mySwipeRefreshLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
-        } else {
+        else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
                 alert.setIcon(R.drawable.ic_baseline_delete_40);
@@ -333,18 +326,16 @@ public class ListProdutoFragment extends Fragment {
                 Produto prod = new Produto();
                 prod.setIdcategoria(idcategoria);
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.eliminarProduto(prod, false, null, true));
-            } else {
+            } else
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> produtoViewModel.restaurarProduto(Ultilitario.UM, 0, true));
-            }
+
             if (getArguments() != null) {
-                if (isMaster) {
+                if (isMaster)
                     alert.show();
-                } else {
+                else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
-            } else {
+            } else
                 Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
         }
     }
 
@@ -402,14 +393,13 @@ public class ListProdutoFragment extends Fragment {
                                     return false;
                                 });
                             }
-                        } else {
+                        } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
                     });
                 } else {
                     h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                         menu.setHeaderTitle(produto.getNome());
-                        menu.add(getArguments().getBoolean("master") ? getString(R.string.editar) : getString(R.string.abrir)).setOnMenuItemClickListener(item -> {
+                        menu.add(requireArguments().getBoolean("master") ? getString(R.string.editar) : getString(R.string.abrir)).setOnMenuItemClickListener(item -> {
                             entrarProduto(getItem(position));
                             return false;
                         });
@@ -424,9 +414,8 @@ public class ListProdutoFragment extends Fragment {
                                     return false;
                                 });
                             }
-                        } else {
+                        } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
                     });
                 }
             }
@@ -503,9 +492,8 @@ public class ListProdutoFragment extends Fragment {
                     Intent data = result.getData();
                     IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
                     consultarProdutos(true, r.getContents(), true);
-                } else {
+                } else
                     Toast.makeText(requireActivity(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
-                }
             });
     ActivityResultLauncher<Intent> exportProductActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -567,9 +555,9 @@ public class ListProdutoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (bundle != null) {
+        if (bundle != null)
             bundle.clear();
-        }
+
         if (executor != null)
             executor.shutdownNow();
     }
