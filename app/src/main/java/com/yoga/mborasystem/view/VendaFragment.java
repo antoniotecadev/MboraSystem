@@ -89,13 +89,12 @@ public class VendaFragment extends Fragment {
         nomeUsuario = VendaFragmentArgs.fromBundle(getArguments()).getNomeUsuario();
         nomeCliente = VendaFragmentArgs.fromBundle(getArguments()).getNomeCliente();
 
-        if (idcliente > 0) {
+        if (idcliente > 0)
             requireActivity().setTitle(nomeCliente);
-        } else if (idusuario > 0) {
+        else if (idusuario > 0)
             requireActivity().setTitle(nomeUsuario);
-        } else {
+        else
             requireActivity().setTitle(getString(R.string.vds));
-        }
     }
 
     @SuppressLint({"NonConstantResourceId", "NotifyDataSetChanged"})
@@ -120,25 +119,25 @@ public class VendaFragment extends Fragment {
             switch (item.getItemId()) {
                 case R.id.tdsVd:
                     isDivida = false;
-                    if (idcliente > 0) {
+                    if (idcliente > 0)
                         requireActivity().setTitle(nomeCliente);
-                    } else if (idusuario > 0) {
+                    else if (idusuario > 0)
                         requireActivity().setTitle(nomeUsuario);
-                    } else {
+                    else
                         requireActivity().setTitle(getString(R.string.vds));
-                    }
+
                     vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, false, idusuario, false, null, getViewLifecycleOwner());
                     consultarVendas(false, false, false, null);
                     break;
                 case R.id.vdDvd:
                     isDivida = true;
-                    if (idcliente > 0) {
+                    if (idcliente > 0)
                         requireActivity().setTitle(nomeCliente);
-                    } else if (idusuario > 0) {
+                    else if (idusuario > 0)
                         requireActivity().setTitle(nomeUsuario);
-                    } else {
+                    else
                         requireActivity().setTitle(getString(R.string.dvd));
-                    }
+
                     vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, true, idusuario, false, null, getViewLifecycleOwner());
                     consultarVendas(false, true, false, null);
                     break;
@@ -177,9 +176,8 @@ public class VendaFragment extends Fragment {
 
         vendaViewModel.getSelectedDataMutableLiveData().setValue(false);
         vendaViewModel.getSelectedDataMutableLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
-            if (aBoolean) {
+            if (aBoolean)
                 Navigation.findNavController(requireView()).navigate(R.id.action_dialogExportarImportarVenda_to_datePickerExpImp2);
-            }
         });
 
         vendaViewModel.getDataExportAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
@@ -191,9 +189,9 @@ public class VendaFragment extends Fragment {
         }));
 
         vendaViewModel.getExportarLocalLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(aBoolean -> {
-            if (this.data.isEmpty()) {
+            if (this.data.isEmpty())
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.selec_data), R.drawable.ic_toast_erro);
-            } else {
+            else {
                 executor = Executors.newSingleThreadExecutor();
                 isLocal = aBoolean;
                 executor.execute(() -> vendaViewModel.getVendasPorDataExport(this.data));
@@ -201,22 +199,20 @@ public class VendaFragment extends Fragment {
         }));
         vendaViewModel.getVendasParaExportar().observe(getViewLifecycleOwner(), new EventObserver<>(vendas -> {
             StringBuilder dt = new StringBuilder();
-            if (vendas.isEmpty()) {
+            if (vendas.isEmpty())
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.nao_tem_venda), R.drawable.ic_toast_erro);
-            } else {
-                for (Venda venda : vendas) {
+            else {
+                for (Venda venda : vendas)
                     dt.append(venda.getNome_cliente()).append(",").append(venda.getCodigo_qr()).append(",").append(venda.getQuantidade()).append(",").append(venda.getTotal_venda()).append(",").append(venda.getDesconto()).append(",").append(venda.getTotal_desconto()).append(",").append(venda.getValor_pago()).append(",").append(venda.getDivida()).append(",").append(venda.getValor_base()).append(",").append(venda.getValor_iva()).append(",").append(venda.getPagamento()).append(",").append(venda.getData_cria()).append(",").append(venda.getIdoperador()).append(",").append(venda.getIdclicant()).append(",").append(venda.getData_elimina()).append(",").append(venda.getEstado()).append("\n");
-                }
+
                 dataBuilder = dt;
                 if (isLocal) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                         Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), getString(R.string.vendas), this.data);
-                    } else {
+                    else
                         Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    }
-                } else {
+                } else
                     Ultilitario.exportarNuvem(getContext(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
-                }
             }
             this.data = "";
         }));
@@ -240,9 +236,8 @@ public class VendaFragment extends Fragment {
                         menu.findItem(R.id.exportarvenda).setVisible(false);
                         menu.findItem(R.id.importarvenda).setVisible(false);
                     }
-                } else {
+                } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
 
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
@@ -271,11 +266,10 @@ public class VendaFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        if (newText.isEmpty()) {
+                        if (newText.isEmpty())
                             consultarVendas(false, isDivida, false, null);
-                        } else {
+                        else
                             consultarVendas(true, isDivida, true, newText);
-                        }
                         return false;
                     }
                 });
@@ -299,9 +293,8 @@ public class VendaFragment extends Fragment {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             //Importa as vendas
                             Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null, false);
-                        } else {
+                        } else
                             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
                         break;
                     case R.id.btnEliminarTodosLixo:
                         dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
@@ -402,9 +395,8 @@ public class VendaFragment extends Fragment {
                                     return false;
                                 });
                             }
-                        } else {
+                        } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
                     } else {
                         if (getArguments() != null) {
                             if (getArguments().getBoolean("master") || isMaster) {
@@ -418,9 +410,8 @@ public class VendaFragment extends Fragment {
                                 });
                                 menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
                             }
-                        } else {
+                        } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
                     }
                 });
             }
@@ -488,12 +479,10 @@ public class VendaFragment extends Fragment {
                         if (venda.getDivida() >= Ultilitario.removerKZ(editText)) {
                             vendaViewModel.crud = true;
                             vendaViewModel.liquidarDivida(venda.getDivida() - Ultilitario.removerKZ(editText), venda.getId());
-                        } else {
+                        } else
                             Ultilitario.alertDialog(titulo, getString(R.string.vl_n_sp), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
-                    } else {
+                    } else
                         Ultilitario.alertDialog(titulo, getString(R.string.vl_inv), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    }
                 } else {
                     vendaViewModel.crud = true;
                     vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
@@ -522,9 +511,9 @@ public class VendaFragment extends Fragment {
     }
 
     private void dialogEliminarReataurarTodasVendasLixeira(String titulo, String msg, boolean isEliminar) {
-        if (vazio) {
+        if (vazio)
             Snackbar.make(binding.myCoordinatorLayout, getString(R.string.lx_vz), Snackbar.LENGTH_LONG).show();
-        } else {
+        else {
             AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
             if (isEliminar)
                 alert.setIcon(R.drawable.ic_baseline_delete_40);
@@ -545,14 +534,12 @@ public class VendaFragment extends Fragment {
                 });
             }
             if (getArguments() != null) {
-                if (isMaster) {
+                if (isMaster)
                     alert.show();
-                } else {
+                else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
-            } else {
+            } else
                 Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
         }
     }
 
@@ -597,9 +584,8 @@ public class VendaFragment extends Fragment {
                     Intent data = result.getData();
                     IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
                     consultarVendas(true, isDivida, true, r.getContents());
-                } else {
+                } else
                     Toast.makeText(requireActivity(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
-                }
             });
 
     public void readTextFromUri(Uri uri) throws IOException {
