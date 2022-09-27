@@ -4,6 +4,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
 import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
 import static com.yoga.mborasystem.util.Ultilitario.getSharedPreferencesIdioma;
+import static com.yoga.mborasystem.util.Ultilitario.restartActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -80,8 +82,22 @@ public class SplashFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (composeFactura.equals(requireActivity().getIntent().getAction())) {
-            Uri uri = Uri.parse("https://mborasystem://facturacao");
-            Navigation.findNavController(requireView()).navigate(uri);
+            if (PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean("rascfact", false) && !Ultilitario.getValueSharedPreferences(requireContext(), "imei", "").isEmpty()) {
+                Uri uri = Uri.parse("https://mborasystem://facturacao");
+                Navigation.findNavController(requireView()).navigate(uri);
+            } else {
+                new android.app.AlertDialog.Builder(getContext())
+                        .setCancelable(false)
+                        .setIcon(R.drawable.ic_baseline_shopping_cart)
+                        .setTitle(getString(R.string.atalho))
+                        .setMessage(getString(R.string.atl_des))
+                        .setNegativeButton(getString(R.string.abr_app_com), (dialog, which) -> {
+                            requireActivity().getIntent().setAction("android.intent.action.MAIN").addCategory("android.intent.category.LAUNCHER");
+                            restartActivity(requireActivity());
+                        })
+                        .setPositiveButton(getString(R.string.sair), (dialog, which) -> System.exit(0))
+                        .show();
+            }
         }
     }
 

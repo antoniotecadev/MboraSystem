@@ -12,6 +12,24 @@
         app:icon="@drawable/ic_baseline_translate_24"
         app:useSimpleSummaryProvider="true" />
     <PreferenceCategory
+        android:title="@string/atalho"
+        tools:ignore="TouchTargetSizeCheck">
+        <SwitchPreferenceCompat
+            android:key="rascfact"
+            android:title="@string/act_ata_fact"
+            app:icon="@drawable/ic_baseline_cart"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/rasc"
+        tools:ignore="TouchTargetSizeCheck">
+        <SwitchPreferenceCompat
+            android:key="activarrascunho"
+            android:title="@string/act_rasc_fact"
+            app:icon="@android:drawable/ic_menu_save"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/view"
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreferenceCompat
@@ -25,15 +43,6 @@
             android:key="switch_qr_code"
             android:title="@string/ocult_qrcode"
             app:icon="@drawable/ic_baseline_disabled_visible_24"
-            app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/rasc"
-        tools:ignore="TouchTargetSizeCheck">
-        <SwitchPreferenceCompat
-            android:key="activarrascunho"
-            android:title="@string/act_rasc_fact"
-            app:icon="@android:drawable/ic_menu_save"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory

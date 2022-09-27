@@ -679,6 +679,9 @@
     <string name="inc_bd">Incompatibilidade de base de dados.</string>
     <string name="sair_atal">Sair do atalho ?</string>
     <string name="abr_app_com">Abrir APP completa</string>
+    <string name="atalho">Atalho</string>
+    <string name="act_ata_fact">Atalho de facturação</string>
+    <string name="atl_des">Atalho desactivado, entra em configurações para activar.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
