@@ -44,9 +44,8 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
                 if (TextUtils.isEmpty(preference.getText()))
                     return getString(R.string.nao_def);
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < Objects.requireNonNull(pin.getText()).length(); i++) {
+                for (int i = 0; i < Objects.requireNonNull(pin.getText()).length(); i++)
                     sb.append("●");
-                }
                 return sb.toString();
             });
             pin.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD));
