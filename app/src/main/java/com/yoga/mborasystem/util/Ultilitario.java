@@ -165,11 +165,10 @@ public class Ultilitario {
         float parsed;
         String formatted;
         String cleanSting = preco.replaceAll("[^\\d.]", "");
-        if (cleanSting.isEmpty()) {
+        if (cleanSting.isEmpty())
             parsed = Float.parseFloat("0");
-        } else {
+        else
             parsed = Float.parseFloat(cleanSting);
-        }
         formatted = NumberFormat.getCurrencyInstance(pt_AO).format((parsed / 100));
         return formatted;
     }
@@ -196,11 +195,11 @@ public class Ultilitario {
                     preco.removeTextChangedListener(this);
                     String cleanSting = s.toString().replaceAll("[^\\d.]", "");
                     try {
-                        if (cleanSting.isEmpty()) {
+                        if (cleanSting.isEmpty())
                             parsed = Float.parseFloat("0");
-                        } else {
+                        else
                             parsed = Float.parseFloat(cleanSting);
-                        }
+
                         formatted = NumberFormat.getCurrencyInstance(pt_AO).format((parsed / 100));
                         current = formatted;
                         preco.setText(formatted);
@@ -253,11 +252,10 @@ public class Ultilitario {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
-        if (paddingLength > 0) {
+        if (paddingLength > 0)
             return String.format("%0" + paddingLength + "d", 0) + hex;
-        } else {
+        else
             return hex;
-        }
     }
 
     public static boolean validateSenhaPin(String sp, String storedSP) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -271,17 +269,15 @@ public class Ultilitario {
         byte[] secretKey = skf.generateSecret(ks).getEncoded();
 
         int diff = hash.length ^ secretKey.length;
-        for (int i = 0; i < hash.length && i < secretKey.length; i++) {
+        for (int i = 0; i < hash.length && i < secretKey.length; i++)
             diff |= hash[i] ^ secretKey[i];
-        }
         return diff == 0;
     }
 
     private static byte[] fromHex(String hex) {
         byte[] bytes = new byte[hex.length() / 2];
-        for (int i = 0; i < bytes.length; i++) {
+        for (int i = 0; i < bytes.length; i++)
             bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
-        }
         return bytes;
     }
 
@@ -295,9 +291,8 @@ public class Ultilitario {
         StringBuilder sb = new StringBuilder();
         for (byte b : digest) {
             String hex = Integer.toHexString(0xFF & b);
-            if (hex.length() == 1) {
+            if (hex.length() == 1)
                 sb.append(0);
-            }
             sb.append(hex);
         }
         return sb.toString();
@@ -312,9 +307,9 @@ public class Ultilitario {
                 if (backPressedTime + 2000 > System.currentTimeMillis()) {
                     activity.finish();
                     return;
-                } else {
+                } else
                     Toast.makeText(context, (R.string.pressior_sair), Toast.LENGTH_SHORT).show();
-                }
+
                 backPressedTime = System.currentTimeMillis();
             }
         };
@@ -354,9 +349,9 @@ public class Ultilitario {
 
     public static void addItemOnSpinner(AppCompatSpinner spinner, int qtd, Context context, int inicio) {
         ArrayList<Integer> listaQuantidade = new ArrayList<>();
-        for (int i = inicio; i <= qtd; ++i) {
+        for (int i = inicio; i <= qtd; ++i)
             listaQuantidade.add(i);
-        }
+
         ArrayAdapter<Integer> itemAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listaQuantidade);
         spinner.setAdapter(itemAdapter);
     }
@@ -378,11 +373,11 @@ public class Ultilitario {
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/csv");
             intent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data + ".csv");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
-            } else {
+            else
                 Toast.makeText(activity, "API >= 26", Toast.LENGTH_LONG).show();
-            }
+
             exportActivityResultLauncher.launch(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -433,21 +428,19 @@ public class Ultilitario {
         intent.setType("*/*");
         if (isDB)
             mimetypes = new String[]{"application/x-sqlite3", "application/vnd.sqlite3", "application/octet-stream"};
-        else {
+        else
             mimetypes = new String[]{"text/csv", "text/comma-separated-values", "application/csv"};
-        }
+
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
-        if (importActivityResultLauncher == null) {
+        if (importActivityResultLauncher == null)
             activity.startActivityForResult(intent, QUATRO);
-        } else {
+        else
             importActivityResultLauncher.launch(intent);
-        }
     }
 
     public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout) {
-        if (mySwipeRefreshLayout != null) {
+        if (mySwipeRefreshLayout != null)
             mySwipeRefreshLayout.setRefreshing(false);
-        }
     }
 
     public static void zerarPreco(TextInputEditText preco) {
@@ -703,13 +696,12 @@ public class Ultilitario {
     }
 
     public static int getIdIdioma(Context context) {
-        if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Francês")) {
+        if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Francês"))
             return 0;
-        } else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Inglês")) {
+        else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Inglês"))
             return 1;
-        } else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Português")) {
+        else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Português"))
             return 2;
-        }
         return 2;
     }
 
@@ -741,11 +733,11 @@ public class Ultilitario {
                     + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
             selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", mimeType};
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
-        } else {
+        else
             collection = MediaStore.Files.getContentUri("external");
-        }
+
         try (Cursor cursor = context.getContentResolver().query(collection, projection, selection, selectionArgs, sortOrder)) {
             assert cursor != null;
             if (cursor.moveToFirst()) {
@@ -841,11 +833,10 @@ public class Ultilitario {
     public static String converterData(long data, boolean comHora) {
         SimpleDateFormat dateFormat;
         Date d = new Date(data * 1000);
-        if (comHora) {
+        if (comHora)
             dateFormat = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", Locale.getDefault());
-        } else {
+        else
             dateFormat = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
-        }
         return dateFormat.format(d);  // formatted date in string
     }
 
@@ -883,11 +874,11 @@ public class Ultilitario {
         try {
             Uri fileURI;
             File file = new File(filePath);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
-            } else {
+            else
                 fileURI = Uri.fromFile(file);
-            }
+
             Intent share = new Intent();
             share.setAction(Intent.ACTION_SEND);
             share.setType(fileType);
@@ -1004,11 +995,10 @@ public class Ultilitario {
 
     private static String getIMEI(Activity activity) {
         TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             return telephonyManager.getImei();
-        } else {
+        else
             return telephonyManager.getDeviceId();
-        }
     }
 
     private static String getAndroidID(Activity activity) {

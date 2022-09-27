@@ -328,9 +328,8 @@ public class SaftXMLDocument {
         final String[] codigo = context.getResources().getStringArray(R.array.array_motivo_isecao_valor);
         final String[] rasao = context.getResources().getStringArray(R.array.array_motivo_isecao);
         for (int i = 0; i <= codigo.length; i++) {
-            if (codigoRasaoISE.equalsIgnoreCase(codigo[i])) {
+            if (codigoRasaoISE.equalsIgnoreCase(codigo[i]))
                 return rasao[i];
-            }
         }
         return "";
     }

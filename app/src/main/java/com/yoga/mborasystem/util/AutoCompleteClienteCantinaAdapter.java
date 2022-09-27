@@ -55,14 +55,13 @@ public class AutoCompleteClienteCantinaAdapter extends ArrayAdapter<ClienteCanti
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
             List<ClienteCantina> clienteCantinas = new ArrayList<>();
-            if (constraint == null || constraint.length() == 0) {
+            if (constraint == null || constraint.length() == 0)
                 clienteCantinas.addAll(clienteCantinaList);
-            } else {
+            else {
                 String filterPatern = constraint.toString().toLowerCase().trim();
                 for (ClienteCantina clienteCantina : clienteCantinaList) {
-                    if (clienteCantina.getNome().toLowerCase().contains(filterPatern) || clienteCantina.getTelefone().toLowerCase().contains(filterPatern) || clienteCantina.getNif().toLowerCase().contains(filterPatern)) {
+                    if (clienteCantina.getNome().toLowerCase().contains(filterPatern) || clienteCantina.getTelefone().toLowerCase().contains(filterPatern) || clienteCantina.getNif().toLowerCase().contains(filterPatern))
                         clienteCantinas.add(clienteCantina);
-                    }
                 }
             }
             filterResults.values = clienteCantinas;

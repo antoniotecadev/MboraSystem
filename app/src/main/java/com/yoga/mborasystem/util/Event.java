@@ -9,9 +9,9 @@ public class Event<T> {
     }
 
     public T getContentIfNotHandled() {
-        if (hasBeenHandled) {
+        if (hasBeenHandled)
             return null;
-        } else {
+        else {
             hasBeenHandled = true;
             return content;
         }

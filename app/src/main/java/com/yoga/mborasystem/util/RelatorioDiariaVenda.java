@@ -134,13 +134,11 @@ public class RelatorioDiariaVenda {
             handler.post(() -> Snackbar.make(view, activity.getString(R.string.rel_ven_dia_gua), Snackbar.LENGTH_LONG).show());
             addFileContentProvider(activity.getApplicationContext(), "/Relatorios/" + facturaPath);
             if (!isGuardar)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                     printPDF(activity, activity.getBaseContext(), facturaPath, "Relatorios");
-                } else {
+                else
                     Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
-                }
         } catch (Exception e) {
-            e.printStackTrace();
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
             MainActivity.dismissProgressBar();
