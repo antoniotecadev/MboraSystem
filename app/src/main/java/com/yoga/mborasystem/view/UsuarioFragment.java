@@ -85,14 +85,12 @@ public class UsuarioFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 if (getArguments() != null) {
-                    if (getArguments().getBoolean("master")) {
+                    if (getArguments().getBoolean("master"))
                         menuInflater.inflate(R.menu.menu_criar_usuario, menu);
-                    } else {
+                    else
                         binding.criarUsuarioFragment.setVisibility(View.GONE);
-                    }
-                } else {
+                } else
                     binding.criarUsuarioFragment.setVisibility(View.INVISIBLE);
-                }
             }
 
             @Override
@@ -223,8 +221,7 @@ public class UsuarioFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (bundle != null) {
+        if (bundle != null)
             bundle.clear();
-        }
     }
 }
