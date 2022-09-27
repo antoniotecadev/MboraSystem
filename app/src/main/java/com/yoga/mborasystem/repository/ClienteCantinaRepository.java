@@ -56,9 +56,8 @@ public class ClienteCantinaRepository {
     }
 
     public void delete(ClienteCantina clienteCantina) {
-        if (clienteCantina != null) {
+        if (clienteCantina != null)
             clienteCantinaDao.delete(clienteCantina);
-        }
     }
 
     public List<ClienteCantina> getClientesExport() throws Exception {

@@ -31,32 +31,29 @@ public class ProdutoRepository {
     }
 
     public void delete(Produto pd, boolean lx, boolean eliminarTodasLixeira) {
-        if (eliminarTodasLixeira) {
+        if (eliminarTodasLixeira)
             produtoDao.deleteAllProdutoLixeira(3);
-        } else {
-            if (lx && (pd != null)) {
+        else {
+            if (lx && (pd != null))
                 produtoDao.deleteLixeira(pd.getEstado(), Ultilitario.monthInglesFrances(pd.getData_elimina()), pd.getId());
-            } else {
+            else
                 produtoDao.delete(pd);
-            }
         }
     }
 
     public LiveData<Long> getQuantidadeProduto(long idcategoria, boolean isLixeira) {
-        if (isLixeira) {
+        if (isLixeira)
             return produtoDao.getQuantidadeProdutoLixeira();
-        } else {
+        else
             return produtoDao.getQuantidadeProduto(idcategoria);
-        }
     }
 
     public PagingSource<Integer, Produto> getProdutos(long idcategoria, boolean isLixeira, boolean isSearch, String produto, boolean isFactura, boolean isTodosProdutos) {
         if (isLixeira) {
-            if (isSearch) {
+            if (isSearch)
                 return produtoDao.searchProdutosLixeira(produto);
-            } else {
+            else
                 return produtoDao.getProdutosLixeira();
-            }
         } else {
             if (!isFactura) {
                 if (isSearch)
@@ -96,11 +93,10 @@ public class ProdutoRepository {
     }
 
     public void restaurarProduto(int estado, long idproduto, boolean todosProdutoss) {
-        if (todosProdutoss) {
+        if (todosProdutoss)
             produtoDao.restaurarTodosProdutos(estado);
-        } else {
+        else
             produtoDao.restaurarProduto(estado, idproduto);
-        }
     }
 
     public PagingSource<Integer, Produto> getFilterProdutos(long idcat, String idprodnome, String codigoBar, int precoMin, int precoMax, int estadoProd) {

@@ -101,23 +101,21 @@ public class VendaRepository {
     }
 
     public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
-        if (eliminarTodasLixeira) {
+        if (eliminarTodasLixeira)
             vendaDao.deleteAllVendaLixeira(3);
-        } else {
-            if (isLixeira) {
+        else {
+            if (isLixeira)
                 vendaDao.deleteVendas(venda);
-            } else {
+            else
                 vendaDao.deleteLixeira(estado, Ultilitario.monthInglesFrances(data), venda.getId());
-            }
         }
     }
 
     public void restaurarVenda(int estado, long idvenda, boolean todasVendas) {
-        if (todasVendas) {
+        if (todasVendas)
             vendaDao.restaurarTodasVendas(estado);
-        } else {
+        else
             vendaDao.restaurarVenda(estado, idvenda);
-        }
     }
 
     public LiveData<List<ProdutoVenda>> produtoMaisVendido(String data) {

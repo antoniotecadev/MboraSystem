@@ -35,17 +35,15 @@ public class UsuarioRepository {
     }
 
     public void update(Usuario us, boolean isCodigoPin) {
-        if (isCodigoPin) {
+        if (isCodigoPin)
             usuarioDao.update(us.getCodigoPin(), us.getId());
-        } else {
+        else
             usuarioDao.update(us.getNome(), us.getTelefone(), us.getEndereco(), us.getEstado(), us.getData_modifica(), us.getId());
-        }
     }
 
     public void delete(Usuario us) {
-        if (us != null) {
+        if (us != null)
             usuarioDao.delete(us);
-        }
     }
 
     public List<Usuario> confirmarCodigoPin(String cp) throws Exception {

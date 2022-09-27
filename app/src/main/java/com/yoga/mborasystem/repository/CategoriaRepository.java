@@ -38,47 +38,42 @@ public class CategoriaRepository {
     }
 
     public void delete(Categoria cat, boolean lx, boolean eliminarTodasLixeira) {
-        if (eliminarTodasLixeira) {
+        if (eliminarTodasLixeira)
             categoriaDao.deleteAllCategoriaLixeira(3);
-        } else {
-            if (lx && (cat != null)) {
+        else {
+            if (lx && (cat != null))
                 categoriaDao.deleteLixeira(cat.getEstado(), cat.getData_elimina(), cat.getId());
-            } else {
+            else
                 categoriaDao.delete(cat);
-            }
         }
     }
 
     public void restaurarCategoria(int estado, long idcategoria, boolean todasCategorias) {
-        if (todasCategorias) {
+        if (todasCategorias)
             categoriaDao.restaurarCategoria(estado);
-        } else {
+        else
             categoriaDao.restaurarCategoria(estado, idcategoria);
-        }
     }
 
     public PagingSource<Integer, Categoria> getCategorias(boolean isLixeira, boolean isSearch, String produto) {
         if (isLixeira) {
-            if (isSearch) {
+            if (isSearch)
                 return categoriaDao.searchCategoriasLixeira(produto);
-            } else {
+            else
                 return categoriaDao.getCategoriasLixeira();
-            }
         } else {
-            if (isSearch) {
+            if (isSearch)
                 return categoriaDao.searchCategorias(produto);
-            } else {
+            else
                 return categoriaDao.getCategorias();
-            }
         }
     }
 
     public LiveData<Long> getQuantidadeCategoria(boolean isLixeira) {
-        if (isLixeira) {
+        if (isLixeira)
             return categoriaDao.getQuantidadeCategoriaLixeira();
-        } else {
+        else
             return categoriaDao.getQuantidadeCategoria();
-        }
     }
 
     public Maybe<List<Categoria>> categoriasSpinner(boolean isFactura) {
