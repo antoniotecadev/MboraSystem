@@ -115,11 +115,10 @@ public class HomeFragment extends Fragment {
         binding.floatingActionButton.setOnClickListener(v -> alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca), requireContext(), R.drawable.ic_baseline_store_24));
 
         binding.floatingActionButtonLixo.setOnClickListener(v -> {
-            if (isOpen) {
+            if (isOpen)
                 animationLixeira(FabClose, FabRanticlockwise, false);
-            } else {
+            else
                 animationLixeira(FabOpen, FabRClockwise, true);
-            }
         });
 
         binding.floatingActionButtonCategoria.setOnClickListener(v -> entrarCategoriasLx());
@@ -221,9 +220,8 @@ public class HomeFragment extends Fragment {
                     String locale = primaryLocale.getDisplayLanguage();
                     language = primaryLocale.getLanguage();
                     menu.findItem(R.id.idioma).setTitle(locale);
-                } else {
+                } else
                     menu.findItem(R.id.idioma).setTitle("");
-                }
             }
 
             @Override
@@ -265,9 +263,9 @@ public class HomeFragment extends Fragment {
                         if (getArguments() != null) {
                             MainActivity.getProgressBar();
                             if (isNetworkConnected(requireContext())) {
-                                if (internetIsConnected()) {
+                                if (internetIsConnected())
                                     estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
-                                } else {
+                                else {
                                     MainActivity.dismissProgressBar();
                                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                 }
@@ -359,9 +357,8 @@ public class HomeFragment extends Fragment {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
             bundle.putBoolean("master", getArguments().getBoolean("master"));
-        } else {
+        } else
             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-        }
         return bundle;
     }
 
@@ -502,9 +499,8 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (bundle != null) {
+        if (bundle != null)
             bundle.clear();
-        }
     }
 
     @Override
@@ -520,12 +516,10 @@ public class HomeFragment extends Fragment {
                         bundle.putParcelable("cliente", cliente);
                         bundle.putBoolean("master", getArguments().getBoolean("master"));
                         Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
-                    } else {
+                    } else
                         Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    }
-                } else {
+                } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_prm_na_vis_doc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
             }
     );
     private final ActivityResultLauncher<String> requestPermissionLauncherShareQrCode = registerForActivityResult(
@@ -538,9 +532,8 @@ public class HomeFragment extends Fragment {
                     intent.setType("image/png");
                     intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
                     startActivity(Intent.createChooser(intent, getString(R.string.part_me_cod_qr)));
-                } else {
+                } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_part_cod_qr), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
             }
     );
 
@@ -589,11 +582,10 @@ public class HomeFragment extends Fragment {
 
     private final ActivityResultLauncher<String> requestPermissionLauncherDeviceId = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
-                if (result) {
+                if (result)
                     exportarBD();
-                } else {
+                else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_expo_db), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
             }
     );
 }
