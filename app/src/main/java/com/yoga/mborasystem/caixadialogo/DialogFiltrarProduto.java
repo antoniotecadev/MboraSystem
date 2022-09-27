@@ -36,9 +36,8 @@ public class DialogFiltrarProduto extends DialogFragment {
 
         bundle = new Bundle();
 
-        if (getArguments() != null) {
+        if (getArguments() != null)
             idcategoria = getArguments().getLong("idcategoria");
-        }
 
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         binding = DialogFiltrarProdutoBinding.inflate(getLayoutInflater());
@@ -59,19 +58,17 @@ public class DialogFiltrarProduto extends DialogFragment {
         binding.btnLimparMax.setOnClickListener(v -> limparPrecoFormat(binding.txtPrecoProdutoMax, formatted));
 
         binding.switchEstado.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            if (isChecked)
                 buttonView.setText(getString(R.string.estado_bloqueado));
-            } else {
+            else
                 buttonView.setText(getString(R.string.estado_desbloqueado));
-            }
         });
 
         binding.checkBoxNomeReferencia.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            if (isChecked)
                 binding.inputReferenciaNomeProduto.setVisibility(View.VISIBLE);
-            } else {
+            else
                 binding.inputReferenciaNomeProduto.setVisibility(View.GONE);
-            }
         });
 
         binding.checkBoxPreco.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -87,11 +84,10 @@ public class DialogFiltrarProduto extends DialogFragment {
         });
 
         binding.checkBoxCodigoBarra.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            if (isChecked)
                 binding.inputCodigoBar.setVisibility(View.VISIBLE);
-            } else {
+            else
                 binding.inputCodigoBar.setVisibility(View.GONE);
-            }
         });
 
         binding.checkBoxEstado.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -151,9 +147,8 @@ public class DialogFiltrarProduto extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if (bundle != null) {
+        if (bundle != null)
             bundle.clear();
-        }
     }
 
     @Override

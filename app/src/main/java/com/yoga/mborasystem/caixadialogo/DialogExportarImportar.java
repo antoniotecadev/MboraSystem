@@ -116,22 +116,19 @@ public class DialogExportarImportar extends DialogFragment {
         }
         this.data = data;
         if (isLocal) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), "categorias", Ultilitario.getDateCurrent());
-            } else {
+            else
                 Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-        } else {
+        } else
             Ultilitario.exportarNuvem(getContext(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
-        }
     }
 
     private void importarCategorias() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             Ultilitario.importarCategoriasProdutosClientes(importCategoryActivityResultLauncher, null, false);
-        } else {
+        else
             Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-        }
     }
 
     @SuppressLint("StaticFieldLeak")

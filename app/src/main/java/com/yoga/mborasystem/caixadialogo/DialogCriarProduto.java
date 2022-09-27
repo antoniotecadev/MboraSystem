@@ -165,9 +165,8 @@ public class DialogCriarProduto extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty())
                     calularMargemLucro(binding);
-                }
             }
 
             @Override
@@ -178,11 +177,10 @@ public class DialogCriarProduto extends DialogFragment {
         binding.spinnerIva.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (produto != null) {
+                if (produto != null)
                     binding.checkIva.setText(getText(R.string.montante_iva) + "(" + (produto.getPercentagemIva() == 0 ? parent.getItemAtPosition(position).toString() : produto.getPercentagemIva()) + "%)");
-                } else {
+                else
                     binding.checkIva.setText(getText(R.string.montante_iva) + "(" + parent.getItemAtPosition(position).toString() + "%)");
-                }
             }
 
             @Override
@@ -202,14 +200,12 @@ public class DialogCriarProduto extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (produto != null) {
-                    if (Integer.parseInt(parent.getItemAtPosition(position).toString()) != Integer.parseInt(Objects.requireNonNull(binding.txtQuantidadeProduto.getText()).toString())) {
+                    if (Integer.parseInt(parent.getItemAtPosition(position).toString()) != Integer.parseInt(Objects.requireNonNull(binding.txtQuantidadeProduto.getText()).toString()))
                         binding.txtQuantidadeProduto.setText(parent.getItemAtPosition(position).toString());
-                    } else {
+                    else
                         binding.txtQuantidadeProduto.setText(String.valueOf(produto.getQuantidade()));
-                    }
-                } else {
+                } else
                     binding.txtQuantidadeProduto.setText(parent.getItemAtPosition(position).toString());
-                }
             }
 
             @Override
@@ -250,9 +246,8 @@ public class DialogCriarProduto extends DialogFragment {
         final String[] motivo = getResources().getStringArray(R.array.array_motivo_isecao);
         final String[] codigo = getResources().getStringArray(R.array.array_motivo_isecao_valor);
         for (int i = 0; i <= motivo.length; i++) {
-            if (binding.spinnerMotivoIsecao.getSelectedItem().toString().equalsIgnoreCase(motivo[i])) {
+            if (binding.spinnerMotivoIsecao.getSelectedItem().toString().equalsIgnoreCase(motivo[i]))
                 return codigo[i];
-            }
         }
         return "";
     }
@@ -261,9 +256,8 @@ public class DialogCriarProduto extends DialogFragment {
         final String[] tipo = getResources().getStringArray(R.array.array_tipo);
         final String[] valor = getResources().getStringArray(R.array.array_tipo_valor);
         for (int i = 0; i <= tipo.length; i++) {
-            if (binding.spinnerTipo.getSelectedItem().toString().equalsIgnoreCase(tipo[i])) {
+            if (binding.spinnerTipo.getSelectedItem().toString().equalsIgnoreCase(tipo[i]))
                 return valor[i];
-            }
         }
         return "P";
     }
@@ -325,11 +319,11 @@ public class DialogCriarProduto extends DialogFragment {
         if (isChecked) {
             float montanteIVA;
             preco = Ultilitario.removerKZ(b.txtPrecoProduto);
-            if (Integer.parseInt(b.spinnerIva.getSelectedItem().toString()) > 9) {
+            if (Integer.parseInt(b.spinnerIva.getSelectedItem().toString()) > 9)
                 montanteIVA = preco * Float.parseFloat("0." + b.spinnerIva.getSelectedItem().toString());
-            } else {
+            else
                 montanteIVA = preco * Float.parseFloat("0.0" + b.spinnerIva.getSelectedItem().toString());
-            }
+
             b.txtPrecoProduto.setText(String.valueOf(preco + montanteIVA));
             b.textMontanteIva.setText(getString(R.string.valor) + ": " + Ultilitario.formatPreco(String.valueOf((int) montanteIVA)));
             binding.txtPrecoProduto.setEnabled(false);
@@ -340,11 +334,11 @@ public class DialogCriarProduto extends DialogFragment {
         } else {
             binding.txtPrecoProduto.setEnabled(true);
             binding.btnLimparPreco.setEnabled(true);
-            if (Integer.parseInt(b.spinnerIva.getSelectedItem().toString()) > 9) {
+            if (Integer.parseInt(b.spinnerIva.getSelectedItem().toString()) > 9)
                 b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1." + b.spinnerIva.getSelectedItem().toString())));
-            } else {
+            else
                 b.txtPrecoProduto.setText(String.valueOf(preco / Float.parseFloat("1.0" + b.spinnerIva.getSelectedItem().toString())));
-            }
+
             b.textMontanteIva.setText(getString(R.string.valor) + ": " + Ultilitario.formatPreco("0"));
             b.spinnerTaxaImposto.setEnabled(true);
 
@@ -359,9 +353,8 @@ public class DialogCriarProduto extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().contains("Kz")) {
+                if (s.toString().contains("Kz"))
                     calularMargemLucro(binding);
-                }
             }
 
             @Override
@@ -376,9 +369,8 @@ public class DialogCriarProduto extends DialogFragment {
                     Intent data = result.getData();
                     IntentResult r = IntentIntegrator.parseActivityResult(result.getResultCode(), data);
                     produtoViewModel.codigoBarra(r.getContents(), binding.txtCodigoBar);
-                } else {
+                } else
                     Toast.makeText(requireActivity(), R.string.scaner_code_bar_cancelado, Toast.LENGTH_SHORT).show();
-                }
             });
 
     @Override

@@ -69,11 +69,10 @@ public class DialogCriarCategoria extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
 
         binding.switchEstado.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            if (isChecked)
                 buttonView.setText(getString(R.string.estado_bloqueado));
-            } else {
+            else
                 buttonView.setText(getString(R.string.estado_desbloqueado));
-            }
         });
 
         binding.buttonFechar.setOnClickListener(v -> dialog.dismiss());

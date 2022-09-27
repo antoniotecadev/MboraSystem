@@ -57,11 +57,10 @@ public class DatePickerFragment extends DialogFragment
             vendaViewModel.consultarVendas(this, idcliente, isDivida, idusuario, isLixeira, true, null, true, data);
             vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, isDivida, idusuario, true, data, this);
         } else {
-            if (isPesquisa) {
+            if (isPesquisa)
                 vendaViewModel.getDocumentoDatatAppLiveData().setValue(new Event<>(data));
-            } else {
+            else
                 vendaViewModel.getVendaDatatAppLiveData().setValue(new Event<>(data));
-            }
         }
     }
 

@@ -75,18 +75,18 @@ public class DialogCriarClienteCantina extends DialogFragment {
             StringBuilder sb = new StringBuilder();
             if (isNetworkConnected(requireContext())) {
                 if (internetIsConnected()) {
-                    if (letraNumero.matcher(Objects.requireNonNull(binding.txtNIF.getText()).toString()).find() || binding.txtNIF.length() > 14 || binding.txtNIF.length() < 10) {
+                    if (letraNumero.matcher(Objects.requireNonNull(binding.txtNIF.getText()).toString()).find() || binding.txtNIF.length() > 14 || binding.txtNIF.length() < 10)
                         Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.nif_bi) + " " + getString(R.string.ivld), R.drawable.ic_toast_erro);
-                    } else {
+                    else {
                         MainActivity.getProgressBar();
                         Ion.with(requireActivity())
                                 .load("https://api.gov.ao/consultarBI/v2/?bi=" + binding.txtNIF.getText().toString().toUpperCase())
                                 .asJsonArray()
                                 .setCallback((e, jsonElements) -> {
                                     try {
-                                        if (jsonElements.size() == 0) {
+                                        if (jsonElements.size() == 0)
                                             Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dados_nao_encontrado), R.drawable.ic_toast_erro);
-                                        } else {
+                                        else {
                                             JsonObject cliente = jsonElements.get(0).getAsJsonObject();
                                             sb.append(getString(R.string.nm)).append(": ").append("\n").append(cliente.get("FIRST_NAME").getAsString()).append(" ").append(cliente.get("LAST_NAME").getAsString()).append("\n")
                                                     .append(getString(R.string.rsdc)).append(": ").append("\n").append(cliente.get("RESIDENCE_ADDRESS")).append("\n").append(cliente.get("RESIDENCE_NEIGHBOR"))

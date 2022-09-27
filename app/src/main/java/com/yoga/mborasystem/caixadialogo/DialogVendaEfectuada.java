@@ -52,9 +52,8 @@ public class DialogVendaEfectuada extends DialogFragment {
             if (numeroWhatsApp.isEmpty()) {
                 binding.numeroWhatsApp.requestFocus();
                 binding.inputLayoutNumeroWhatsapp.setError(getString(R.string.digite_numero_w));
-            } else {
+            } else
                 vendaViewModel.getEnviarWhatsAppLiveData().setValue(new Event<>(numeroWhatsApp));
-            }
         });
         binding.btnFechar.setOnClickListener(v -> vendaViewModel.getAlertDialogLiveData().setValue(new Event<>(dialog)));
         return dialog;
