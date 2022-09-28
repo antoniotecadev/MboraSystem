@@ -540,6 +540,7 @@ public class FacturaFragment extends Fragment {
                     layout.addView(check);
                     check.setOnCheckedChangeListener((compoundButton, b) -> Ultilitario.setNaoMostrarNovamente(requireActivity(), b));
                     new AlertDialog.Builder(requireContext())
+                            .setCancelable(false)
                             .setIcon(R.drawable.ic_baseline_store_24)
                             .setTitle(R.string.fechar)
                             .setMessage(R.string.tem_cert_fech)
@@ -1152,11 +1153,22 @@ public class FacturaFragment extends Fragment {
     }
 
     private void sairAtalho() {
+        LinearLayoutCompat layout = new LinearLayoutCompat(requireContext());
+        MaterialCheckBox check = new MaterialCheckBox(requireContext());
+        check.setText(getString(R.string.desa_atal_fact));
+        layout.setPadding(45, 0, 0, 0);
+        layout.addView(check);
+        check.setOnCheckedChangeListener((compoundButton, b) -> PreferenceManager.getDefaultSharedPreferences(MainActivity.progressDialog.getContext()).edit().putBoolean("atalfact", !b).apply());
         new android.app.AlertDialog.Builder(getContext())
+                .setCancelable(false)
                 .setIcon(R.drawable.ic_baseline_store_24)
                 .setTitle(getString(R.string.sair))
                 .setMessage(getString(R.string.sair_atal))
-                .setNegativeButton(getString(R.string.nao), (dialog, which) -> dialog.dismiss())
+                .setView(layout)
+                .setNegativeButton(getString(R.string.nao), (dialog, which) -> {
+                    PreferenceManager.getDefaultSharedPreferences(MainActivity.progressDialog.getContext()).edit().putBoolean("atalfact", true).apply();
+                    dialog.dismiss();
+                })
                 .setPositiveButton(getString(R.string.sim), (dialog, which) -> System.exit(0))
                 .show();
     }

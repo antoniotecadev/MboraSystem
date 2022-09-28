@@ -82,7 +82,7 @@ public class SplashFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (composeFactura.equals(requireActivity().getIntent().getAction())) {
-            if (PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean("rascfact", false) && !Ultilitario.getValueSharedPreferences(requireContext(), "imei", "").isEmpty()) {
+            if (PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean("atalfact", false) && !Ultilitario.getValueSharedPreferences(requireContext(), "imei", "").isEmpty()) {
                 Uri uri = Uri.parse("https://mborasystem://facturacao");
                 Navigation.findNavController(requireView()).navigate(uri);
             } else {
