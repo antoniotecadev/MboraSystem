@@ -626,11 +626,11 @@ public class Ultilitario {
     }
 
     public static boolean getBooleanPreference(Context context, String idvalue) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(idvalue, false);
+        return context.getSharedPreferences("VALUE_BOOLEAN", Context.MODE_PRIVATE).getBoolean(idvalue, false);
     }
 
     public static void setBooleanPreference(Context context, boolean value, String idvalue) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(idvalue, value).apply();
+        context.getSharedPreferences("VALUE_BOOLEAN", Context.MODE_PRIVATE).edit().putBoolean(idvalue, value).apply();
     }
 
     public static String monthInglesFrances(String data) {
