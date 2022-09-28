@@ -126,11 +126,7 @@ public class HomeFragment extends Fragment {
         binding.floatingActionButtonProduto.setOnClickListener(v -> entrarProdutosLx());
 
         binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendasLx());
-        if (getArguments() != null)
-            if (!getArguments().getBoolean("master")) {
-                MainActivity.navigationView.getMenu().findItem(R.id.usuarioFragment).setVisible(false);
-                MainActivity.navigationView.getMenu().findItem(R.id.dashboardFragment).setVisible(false);
-            }
+
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
             switch (item.getItemId()) {
@@ -138,7 +134,8 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
                     break;
                 case R.id.usuarioFragmentH:
-                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
+                    if (Ultilitario.getBooleanPreference(requireContext(), "master"))
+                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
                     break;
                 case R.id.vendaFragmentH:
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
@@ -147,8 +144,10 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
                     break;
                 case R.id.dashboardFragmentH:
-                    MainActivity.getProgressBar();
-                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
+                    if (Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                        MainActivity.getProgressBar();
+                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
+                    }
                     break;
                 case R.id.facturaFragmentH:
                     entrarFacturacao();
