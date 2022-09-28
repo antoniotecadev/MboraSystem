@@ -564,7 +564,7 @@
     <string name="avs">Avertissement</string>
     <string name="exp_dis_api_sup">L\'exportation n\'est disponible que pour le niveau d\'API 19 ou supérieur</string>
     <string name="imp_dis_api_sup">L\'importation n\'est disponible que pour le niveau d\'API 19 ou supérieur</string>
-    <string name="n_most_nov_config">Ne plus afficher \\nla boîte de message de la facture non enregistrée</string>
+    <string name="n_most_nov_config">Ne plus afficher la boîte de message de la facture non enregistrée</string>
     <string name="vend_ago">Vendre maintenant</string>
     <string name="br_car">Quartiers chargés</string>
     <string name="aut">Authentification</string>

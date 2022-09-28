@@ -564,7 +564,7 @@
     <string name="avs">Warning</string>
     <string name="exp_dis_api_sup">Export is only available for API level 19 or higher</string>
     <string name="imp_dis_api_sup">Import is only available for API level 19 or higher</string>
-    <string name="n_most_nov_config">Don\'t show again \\nthe message box about unsaved invoice</string>
+    <string name="n_most_nov_config">Don\'t show again the message box about unsaved invoice</string>
     <string name="vend_ago">Sell now</string>
     <string name="br_car">Loaded neighborhoods</string>
     <string name="aut">Authentication</string>
