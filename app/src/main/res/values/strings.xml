@@ -683,6 +683,7 @@
     <string name="act_ata_fact">Atalho de facturação</string>
     <string name="atl_des">Atalho desactivado, entra em configurações para activar.</string>
     <string name="desa_atal_fact">Desactivar atalho de facturação.</string>
+    <string name="mod_esc">Modo escuro</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
@@ -774,5 +775,15 @@
     <string-array name="array_unidade">
         <item>UN</item>
         <item>KG</item>
+    </string-array>
+    <string-array name="array_mod_esc">
+        <item>Activado</item>
+        <item>Desactivado</item>
+        <item>Definido pelo sistema</item>
+    </string-array>
+    <string-array name="array_mod_esc_value">
+        <item>1</item>
+        <item>0</item>
+        <item>2</item>
     </string-array>
 </resources>

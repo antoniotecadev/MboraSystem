@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     tools:ignore="MissingDefaultResource">
 
   <TextView
@@ -193,6 +194,7 @@
       android:layout_marginBottom="16dp"
       android:text="●"
       android:textSize="@dimen/tamanho_bolinha_480"
+      android:textColor="@color/textColor"
       app:layout_constraintBottom_toTopOf="@+id/gridLayout"
       app:layout_constraintEnd_toEndOf="@+id/tvinfoCodigoPin"
       app:layout_constraintStart_toEndOf="@+id/d5" />
@@ -204,6 +206,7 @@
       android:layout_marginBottom="16dp"
       android:text="●"
       android:textSize="@dimen/tamanho_bolinha_480"
+      android:textColor="@color/textColor"
       app:layout_constraintBottom_toTopOf="@+id/gridLayout"
       app:layout_constraintEnd_toStartOf="@+id/d2"
       app:layout_constraintHorizontal_bias="0.0"
@@ -216,6 +219,7 @@
       android:layout_marginBottom="16dp"
       android:text="●"
       android:textSize="@dimen/tamanho_bolinha_480"
+      android:textColor="@color/textColor"
       app:layout_constraintBottom_toTopOf="@+id/gridLayout"
       app:layout_constraintEnd_toStartOf="@+id/d4"
       app:layout_constraintStart_toEndOf="@+id/d2" />
@@ -227,6 +231,7 @@
       android:layout_marginBottom="16dp"
       android:text="●"
       android:textSize="@dimen/tamanho_bolinha_480"
+      android:textColor="@color/textColor"
       app:layout_constraintBottom_toTopOf="@+id/gridLayout"
       app:layout_constraintEnd_toStartOf="@+id/d6"
       app:layout_constraintStart_toEndOf="@+id/d4" />
@@ -238,6 +243,7 @@
       android:layout_marginBottom="16dp"
       android:text="●"
       android:textSize="@dimen/tamanho_bolinha_480"
+      android:textColor="@color/textColor"
       app:layout_constraintBottom_toTopOf="@+id/gridLayout"
       app:layout_constraintEnd_toStartOf="@+id/d3"
       app:layout_constraintStart_toEndOf="@+id/d1" />
@@ -249,6 +255,7 @@
       android:layout_marginBottom="16dp"
       android:text="●"
       android:textSize="@dimen/tamanho_bolinha_480"
+      android:textColor="@color/textColor"
       app:layout_constraintBottom_toTopOf="@+id/gridLayout"
       app:layout_constraintEnd_toStartOf="@+id/d5"
       app:layout_constraintStart_toEndOf="@+id/d3" />
