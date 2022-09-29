@@ -12,7 +12,7 @@
     <color name="cor_click_recyclerview">#6BD3D8D7</color>
     <!--  For normal/Ligth mode -->
     <color name="backgroundColor">#FCFCFC</color>
-    <color name="textColor">#000000</color>
-    <color name="textColorButton">@color/white</color>
+    <color name="textColor">@color/black</color>
+    <color name="textColorM">#B3000000</color>
     <color name="toolBarColor">@color/cor_castanha</color>
 </resources>

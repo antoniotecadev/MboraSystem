@@ -43,7 +43,6 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:background="@color/cor_castanha"
-            app:itemTextColor="@color/textColorButton"
             app:menu="@menu/menu_bottom_venda" />
 
     </RelativeLayout>
@@ -58,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="0"
-        android:textColor="@color/textColorButton"
+        android:textColor="@color/textColor"
         app:chipBackgroundColor="@color/cor_castanha"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

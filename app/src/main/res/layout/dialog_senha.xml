@@ -96,8 +96,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="@dimen/margem_lateral_formulario"
         android:layout_marginRight="@dimen/margem_lateral_formulario"
-        android:text="@string/entrar"
-        android:textColor="@color/textColorButton" />
+        android:text="@string/entrar" />
 
     <Button
         android:id="@+id/btnAlterar"
@@ -116,6 +115,5 @@
         android:layout_marginRight="@dimen/margem_lateral_formulario"
         android:layout_marginBottom="20dp"
         android:text="@string/fechar"
-        android:textColor="@color/textColorButton"
         app:backgroundTint="@android:color/holo_orange_light" />
 </androidx.appcompat.widget.LinearLayoutCompat>

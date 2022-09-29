@@ -27,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="0"
-        android:textColor="@color/textColorButton"
+        android:textColor="@color/white"
         app:chipBackgroundColor="@color/cor_castanha"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

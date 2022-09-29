@@ -69,21 +69,22 @@
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/activity_main.xml" value="0.11614583333333334" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/barcodescanner.xml" value="0.14855072463768115" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/cliente_autocomplete_row.xml" value="0.1381340579710145" />
-        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_categoria.xml" value="0.20416666666666666" />
-        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_cliente_cantina.xml" value="0.20416666666666666" />
-        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_produto.xml" value="0.26812585499316005" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_categoria.xml" value="0.33" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_cliente_cantina.xml" value="0.5" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_produto.xml" value="0.30267558528428096" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_criar_usuario.xml" value="0.17074275362318841" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_exportar_importar.xml" value="0.14855072463768115" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_exportar_importar_venda.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_filtrar_produto.xml" value="0.33" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_senha.xml" value="0.20416666666666666" />
-        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_venda_efectuada.xml" value="0.33" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/dialog_venda_efectuada.xml" value="0.22294022617124395" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_activar_mborasytem.xml" value="0.1" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_cadastrar_cliente.xml" value="0.15806159420289856" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_calculadora.xml" value="0.25" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_categoria.xml" value="0.20416666666666666" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_categoria_produto.xml" value="0.18" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_cliente.xml" value="0.15353260869565216" />
-        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_dashboard.xml" value="0.20416666666666666" />
+        <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_dashboard.xml" value="0.10664605873261206" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_documento.xml" value="0.22" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_factura.xml" value="0.18" />
         <entry key="..\:/Projectos/Android/MboraSystem/app/src/main/res/layout/fragment_lista_cliente.xml" value="0.2" />

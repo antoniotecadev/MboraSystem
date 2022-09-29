@@ -39,7 +39,7 @@
         android:layout_marginStart="@dimen/margem_lateral_formulario"
         android:layout_marginTop="90dp"
         android:layout_marginEnd="@dimen/margem_lateral_formulario"
-        android:background="@color/backgroundColor"
+        android:background="@color/white"
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/cor_castanha"
@@ -94,7 +94,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/categoria_produto"
                             android:textAlignment="center"
-                            android:textColor="@color/textColorButton"
+                            android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -147,7 +147,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/usuario"
                             android:textAlignment="center"
-                            android:textColor="@color/textColorButton"
+                            android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -206,7 +206,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/venda"
                             android:textAlignment="center"
-                            android:textColor="@color/textColorButton"
+                            android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -259,7 +259,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/cliente"
                             android:textAlignment="center"
-                            android:textColor="@color/textColorButton"
+                            android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -318,7 +318,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/dashboard"
                             android:textAlignment="center"
-                            android:textColor="@color/textColorButton"
+                            android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 

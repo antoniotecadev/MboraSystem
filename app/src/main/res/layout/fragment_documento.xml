@@ -50,6 +50,5 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:background="@color/cor_castanha"
-        app:itemTextColor="@color/textColorButton"
         app:menu="@menu/menu_bottom_doc" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

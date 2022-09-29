@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
                 android:layout_marginEnd="150dp"
+                android:textColor="@color/textColor"
                 android:text="@string/tp_pd" />
 
             <TextView
@@ -67,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margem_lateral_formulario"
                 android:gravity="end"
+                android:textColor="@color/textColor"
                 android:text="@string/tp_un" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -106,6 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
+                android:textColor="@color/textColor"
                 android:text="@string/ipt" />
 
             <androidx.appcompat.widget.AppCompatSpinner
@@ -120,7 +123,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margem_lateral_formulario"
-            android:text="@string/mtv_isc" />
+            android:text="@string/mtv_isc"
+            android:textColor="@color/textColor" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerMotivoIsecao"
@@ -232,12 +236,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margem_lateral_formulario"
+            android:textColor="@color/textColor"
             android:text="@string/montante_iva" />
 
             <TextView
                 android:id="@+id/textMontanteIva"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/textColor"
                 android:layout_marginStart="@dimen/margem_lateral_formulario" />
 
             <androidx.appcompat.widget.AppCompatSpinner
@@ -314,13 +320,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
                 android:text="@string/possivel_receita"
-                android:textColor="#000000" />
+                android:textColor="@color/textColor" />
 
             <TextView
                 android:id="@+id/textPossivelReceita"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="22dp" />
+                android:layout_marginStart="22dp"
+                android:textColor="@color/textColorM" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -337,7 +344,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
                 android:text="@string/possivel_lucro"
-                android:textColor="#000000" />
+                android:textColor="@color/textColor" />
 
             <TextView
                 android:id="@+id/textPossivelLucro"
@@ -361,7 +368,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
                 android:text="@string/possivel_lucro_percentagem"
-                android:textColor="#000000" />
+                android:textColor="@color/textColor" />
 
             <TextView
                 android:id="@+id/textPossivelLucroPercentagem"
@@ -429,7 +436,6 @@
             android:text="@string/scanear"
             android:textAllCaps="false"
             android:textSize="12sp"
-            android:textColor="@color/textColorButton"
             app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
         <View
@@ -445,7 +451,6 @@
             android:text="@string/scanear"
             android:textAllCaps="false"
             android:textSize="12sp"
-            android:textColor="@color/textColorButton"
             app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -461,6 +466,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margem_lateral_formulario"
+            android:textColor="@color/textColorM"
             android:text="@string/estado" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -470,6 +476,7 @@
             android:layout_marginLeft="@dimen/margem_lateral_formulario"
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:checked="false"
+            android:textColor="@color/textColor"
             android:text="@string/estado_desbloqueado" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -481,6 +488,7 @@
             android:layout_marginLeft="@dimen/margem_lateral_formulario"
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:checked="false"
+            android:textColor="@color/textColor"
             android:text="@string/cont_stoc" />
 
         <View
@@ -495,6 +503,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margem_lateral_formulario"
             android:layout_marginRight="@dimen/margem_lateral_formulario"
+            android:textColor="@color/textColor"
             android:text="@string/continuar_criar_produto" />
 
         <View
@@ -509,6 +518,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margem_lateral_formulario"
+            android:textColor="@color/textColorM"
             android:visibility="gone" />
 
         <TextView
@@ -518,6 +528,7 @@
             android:layout_marginStart="@dimen/margem_lateral_formulario"
             android:layout_marginTop="@dimen/margem_lateral_formulario"
             android:layout_marginBottom="@dimen/margem_lateral_formulario"
+            android:textColor="@color/textColorM"
             android:visibility="gone" />
 
         <View
@@ -543,7 +554,6 @@
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:text="@string/salvar_alteracao"
             android:visibility="gone"
-            android:textColor="@color/textColorButton"
             app:backgroundTint="@android:color/holo_green_light" />
 
         <Button
@@ -554,7 +564,6 @@
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:text="@string/eliminar_produto"
             android:visibility="gone"
-            android:textColor="@color/textColorButton"
             app:backgroundTint="@android:color/holo_red_light" />
 
         <Button
@@ -565,7 +574,6 @@
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:layout_marginBottom="@dimen/margem_lateral_formulario"
             android:text="@string/fechar"
-            android:textColor="@color/textColorButton"
             app:backgroundTint="@android:color/holo_orange_light" />
     </LinearLayout>
     </ScrollView>

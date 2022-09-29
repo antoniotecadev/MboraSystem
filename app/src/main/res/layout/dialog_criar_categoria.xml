@@ -64,7 +64,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margem_lateral_formulario"
-        android:text="@string/estado" />
+        android:text="@string/estado"
+        android:textColor="@color/textColor" />
 
     <Switch
         android:id="@+id/switch_estado"
@@ -73,6 +74,7 @@
         android:layout_marginLeft="@dimen/margem_lateral_formulario"
         android:layout_marginRight="@dimen/margem_lateral_formulario"
         android:checked="false"
+        android:textColor="@color/textColorM"
         android:text="@string/estado_desbloqueado" />
 
     <View
@@ -86,6 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margem_lateral_formulario"
+        android:textColor="@color/textColorM"
         android:visibility="gone" />
 
     <TextView
@@ -95,6 +98,7 @@
         android:layout_marginStart="@dimen/margem_lateral_formulario"
         android:layout_marginTop="@dimen/margem_lateral_formulario"
         android:layout_marginBottom="@dimen/margem_lateral_formulario"
+        android:textColor="@color/textColorM"
         android:visibility="gone" />
 
     <View
@@ -119,7 +123,6 @@
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:layout_marginBottom="20dp"
             android:text="@string/fechar"
-            android:textColor="@color/textColorButton"
             app:backgroundTint="@android:color/holo_orange_light" />
 
         <View
@@ -134,9 +137,6 @@
             android:layout_height="60dp"
             android:layout_marginLeft="@dimen/margem_lateral_formulario"
             android:layout_marginRight="@dimen/margem_lateral_formulario"
-            android:text="@string/criar"
-            android:textColor="@color/textColorButton" />
-
+            android:text="@string/criar" />
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 </androidx.appcompat.widget.LinearLayoutCompat>

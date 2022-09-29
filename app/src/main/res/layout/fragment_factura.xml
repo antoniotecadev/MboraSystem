@@ -122,6 +122,7 @@
                     android:layout_marginLeft="@dimen/margem_lateral_formulario"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:text="@string/cst_tds_prod"
+                    android:textColor="@color/textColor"
                     android:textSize="20sp" />
 
                 <TextView
@@ -186,7 +187,6 @@
                         android:text="@string/scanear"
                         android:textAllCaps="false"
                         android:textSize="12sp"
-                        android:textColor="@color/textColorButton"
                         app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
                     <Button
@@ -196,7 +196,6 @@
                         android:text="@string/fechar"
                         android:textAllCaps="false"
                         android:textSize="12sp"
-                        android:textColor="@color/textColorButton"
                         app:backgroundTint="#E53935" />
 
                     <Button
@@ -206,7 +205,6 @@
                         android:text="@string/scanear"
                         android:textAllCaps="false"
                         android:textSize="12sp"
-                        android:textColor="@color/textColorButton"
                         app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -232,7 +230,7 @@
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
                     android:text="0,00"
                     android:textAlignment="center"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColor"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -255,7 +253,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
                         android:text="@string/taxa"
-                        android:textColor="#000000"
+                        android:textColor="@color/textColor"
                         android:visibility="gone" />
 
                     <TextView
@@ -263,20 +261,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="70dp"
                         android:text="@string/valor"
-                        android:textColor="#000000" />
+                        android:textColor="@color/textColor"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="70dp"
                         android:text="@string/montante_iva"
-                        android:textColor="#000000" />
+                        android:textColor="@color/textColor" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/total"
-                        android:textColor="#000000" />
+                        android:textColor="@color/textColor"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <View
@@ -297,26 +295,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
-                        android:textColor="#000000"
+                        android:textColor="@color/textColorM"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/textValor"
                         android:layout_width="95dp"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000" />
+                        android:textColor="@color/textColorM"/>
 
                     <TextView
                         android:id="@+id/textIva"
                         android:layout_width="95dp"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000" />
+                        android:textColor="@color/textColorM" />
 
                     <TextView
                         android:id="@+id/txtTot"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000" />
+                        android:textColor="@color/textColorM" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <View
@@ -331,6 +329,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margem_lateral_formulario"
                     android:text="@string/desconto"
+                    android:textColor="@color/textColorM"
                     android:textSize="20sp" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
@@ -394,7 +393,7 @@
                     android:layout_height="wrap_content"
                     android:text="0,00"
                     android:textAlignment="center"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColor"
                     android:textSize="20sp" />
 
                 <View
@@ -408,6 +407,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margem_lateral_formulario"
                     android:text="@string/valor_pago"
+                    android:textColor="@color/textColorM"
                     android:textSize="20sp" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -460,7 +460,7 @@
                     android:layout_height="wrap_content"
                     android:text="0,00"
                     android:textAlignment="center"
-                    android:textColor="#000000"
+                    android:textColor="@color/textColor"
                     android:textSize="20sp" />
 
                 <View
@@ -480,6 +480,7 @@
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
                         android:text="@string/dvd"
+                        android:textColor="@color/textColorM"
                         android:textSize="20sp" />
 
                     <com.google.android.material.checkbox.MaterialCheckBox
@@ -487,6 +488,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/se_val_pag"
+                        android:textColor="@color/textColorM"
                         android:textSize="20sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -536,6 +538,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margem_lateral_formulario"
                     android:text="@string/alter"
+                    android:textColor="@color/textColorM"
                     android:textSize="20sp" />
 
                 <View
@@ -549,6 +552,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margem_lateral_formulario"
+                    android:textColor="@color/textColorM"
                     android:text="@string/forma_pagamento" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -562,6 +566,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textColor="@color/textColor"
                         android:text="Numerário" />
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -589,6 +594,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textColor="@color/textColor"
                         android:text="@string/cartao_multicaixa" />
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -615,6 +621,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textColor="@color/textColor"
                         android:text="@string/deposito_bancario" />
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -641,6 +648,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textColor="@color/textColor"
                         android:text="@string/transferencia_bancario" />
 
                     <com.google.android.material.textfield.TextInputEditText

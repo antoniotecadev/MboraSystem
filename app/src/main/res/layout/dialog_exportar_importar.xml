@@ -30,7 +30,6 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
-                android:textColor="@color/textColorButton"
                 android:text="@string/exportar_local" />
 
             <Button
@@ -39,7 +38,6 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
-                android:textColor="@color/textColorButton"
                 android:text="@string/exportar_nuvem" />
 
             <Button
@@ -50,7 +48,6 @@
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:layout_marginBottom="@dimen/margem_lateral_formulario"
                 android:text="@string/fechar"
-                android:textColor="@color/textColorButton"
                 app:backgroundTint="@android:color/holo_orange_light" />
         </LinearLayout>
     </ScrollView>

@@ -23,6 +23,7 @@
         android:layout_marginTop="8dp"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textSize="18sp"
+        android:textColor="@color/textColor"
         app:layout_constraintEnd_toStartOf="@+id/txtQuantidadeProduto"
         app:layout_constraintStart_toEndOf="@+id/imgCategoriaProduto"
         app:layout_constraintTop_toTopOf="parent" />
@@ -55,6 +56,7 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="14sp"
+        android:textColor="@color/textColor"
         app:layout_constraintEnd_toStartOf="@+id/imgBtnMenu"
         app:layout_constraintTop_toBottomOf="@+id/divider9" />
 
@@ -64,6 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="TextView"
+        android:textColor="@color/textColorM"
         app:layout_constraintEnd_toStartOf="@+id/txtQuantidadeProduto"
         app:layout_constraintStart_toEndOf="@+id/imgCategoriaProduto"
         app:layout_constraintTop_toBottomOf="@+id/txtNomeCategoria" />

@@ -33,7 +33,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textColor="@color/black"
+        android:textColor="@color/textColor"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/imgBtnMenu"
         app:layout_constraintStart_toEndOf="@+id/imgCliente"
@@ -44,6 +44,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:textColor="@color/textColorM"
         app:layout_constraintEnd_toStartOf="@+id/imgBtnMenu"
         app:layout_constraintStart_toEndOf="@+id/imgCliente"
         app:layout_constraintTop_toBottomOf="@+id/txtNomeCliente" />
@@ -52,6 +53,7 @@
         android:id="@+id/textDataCriacao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/textColorM"
         app:layout_constraintEnd_toEndOf="@+id/txtTelefone"
         app:layout_constraintStart_toStartOf="@+id/txtTelefone"
         app:layout_constraintTop_toBottomOf="@+id/txtTelefone" />
@@ -61,6 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:textColor="@color/textColorM"
         app:layout_constraintEnd_toEndOf="@+id/textDataCriacao"
         app:layout_constraintStart_toStartOf="@+id/textDataCriacao"
         app:layout_constraintTop_toBottomOf="@+id/textDataCriacao" />
