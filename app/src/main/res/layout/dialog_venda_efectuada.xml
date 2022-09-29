@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     tools:context=".caixadialogo.DialogVendaEfectuada">
 
     <ScrollView
@@ -100,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/guardar_pdf"
                         android:textAlignment="center"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColorButton"
                         android:textSize="16sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -141,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/guard_imprimi"
                         android:textAlignment="center"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColorButton"
                         android:textSize="16sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -182,7 +183,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/enviar_whatsapp"
                         android:textAlignment="center"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColorButton"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.cardview.widget.CardView>
@@ -224,6 +225,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/fechar"
+                android:textColor="@color/textColorButton"
                 app:backgroundTint="@android:color/holo_orange_light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/inputLayoutNumeroWhatsapp"

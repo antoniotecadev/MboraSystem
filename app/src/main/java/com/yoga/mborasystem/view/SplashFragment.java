@@ -6,6 +6,8 @@ import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
 import static com.yoga.mborasystem.util.Ultilitario.getSharedPreferencesIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.restartActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -40,13 +43,7 @@ public class SplashFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
-        if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Francês"))
-            Ultilitario.getSelectedIdioma(requireActivity(), "FR", null, false, true);
-        else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Inglês"))
-            Ultilitario.getSelectedIdioma(requireActivity(), "EN", null, false, true);
-        else if (getSharedPreferencesIdioma(requireContext()).equalsIgnoreCase("Português"))
-            Ultilitario.getSelectedIdioma(requireActivity(), "PT", null, false, true);
-
+        definirIdioma(requireActivity());
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
@@ -76,6 +73,15 @@ public class SplashFragment extends Fragment {
             }, 5000);
         }
         return inflater.inflate(R.layout.fragment_splash, container, false);
+    }
+
+    private void definirIdioma(Activity activity) {
+        if (getSharedPreferencesIdioma(activity).equalsIgnoreCase("Francês"))
+            Ultilitario.getSelectedIdioma(activity, "FR", null, false, true);
+        else if (getSharedPreferencesIdioma(activity).equalsIgnoreCase("Inglês"))
+            Ultilitario.getSelectedIdioma(activity, "EN", null, false, true);
+        else if (getSharedPreferencesIdioma(activity).equalsIgnoreCase("Português"))
+            Ultilitario.getSelectedIdioma(activity, "PT", null, false, true);
     }
 
     @Override

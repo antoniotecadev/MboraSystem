@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/backgroundColor">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/mySwipeRefreshLayout"
@@ -28,11 +29,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_nav"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             app:layoutManager="LinearLayoutManager"
             tools:context=".view.VendaFragment"
-            tools:listitem="@layout/fragment_venda"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"/>
+            tools:listitem="@layout/fragment_venda" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
@@ -42,13 +43,12 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:background="@color/cor_castanha"
-            app:itemTextColor="@color/white"
+            app:itemTextColor="@color/textColorButton"
             app:menu="@menu/menu_bottom_venda" />
 
     </RelativeLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_quant_venda"
@@ -58,7 +58,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="0"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textColorButton"
         app:chipBackgroundColor="@color/cor_castanha"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/backgroundColor">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputSenha"
@@ -95,7 +96,8 @@
         android:layout_height="60dp"
         android:layout_marginLeft="@dimen/margem_lateral_formulario"
         android:layout_marginRight="@dimen/margem_lateral_formulario"
-        android:text="@string/entrar" />
+        android:text="@string/entrar"
+        android:textColor="@color/textColorButton" />
 
     <Button
         android:id="@+id/btnAlterar"
@@ -114,5 +116,6 @@
         android:layout_marginRight="@dimen/margem_lateral_formulario"
         android:layout_marginBottom="20dp"
         android:text="@string/fechar"
+        android:textColor="@color/textColorButton"
         app:backgroundTint="@android:color/holo_orange_light" />
 </androidx.appcompat.widget.LinearLayoutCompat>

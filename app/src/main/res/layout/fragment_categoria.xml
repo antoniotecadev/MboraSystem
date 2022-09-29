@@ -22,7 +22,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/txtQuantidadeProduto"
         app:layout_constraintStart_toEndOf="@+id/imgCategoriaProduto"
@@ -45,6 +44,7 @@
         android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/backgroundColor"
         android:src="@drawable/ic_menu_more_vert" />
 
     <TextView

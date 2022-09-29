@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewListaProduto"
@@ -16,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".view.ListaProdutoVendaFragment"
-        tools:listitem="@layout/fragment_produto"></androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/fragment_produto"/>
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_quantidade_produto"
@@ -26,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="0"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textColorButton"
         app:chipBackgroundColor="@color/cor_castanha"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

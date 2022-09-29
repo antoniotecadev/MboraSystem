@@ -5,7 +5,13 @@ import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -22,6 +28,15 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
     private String codigoIdioma;
     private ListPreference motivoIsento;
 
+
+    @NonNull
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view.setBackgroundColor(getResources().getColor(R.color.backgroundColor));
+        return view;
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_config, rootKey);
@@ -30,6 +45,19 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         ListPreference listaIdioma = findPreference("lista_idioma");
         ListPreference taxaIva = findPreference("taxa_iva");
         motivoIsento = findPreference("motivo_isencao");
+        ListPreference modEsc = findPreference("mod_esc");
+
+        if (modEsc != null) {
+            modEsc.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (newValue.equals("0"))
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                else if (newValue.equals("1"))
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                else if (newValue.equals("2"))
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                return true;
+            });
+        }
 
         if (bloAut != null) {
             bloAut.setOnPreferenceChangeListener((preference, newValue) -> {

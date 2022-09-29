@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundColor"
     tools:context=".caixadialogo.DialogExportarImportarVenda">
 
     <ScrollView
@@ -30,6 +31,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:text="@string/selec_data"
+                android:textColor="@color/textColorButton"
                 app:backgroundTint="#7CB342" />
 
             <View
@@ -45,6 +47,7 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:textColor="@color/textColorButton"
                 android:text="@string/exportar_local" />
 
             <Button
@@ -53,6 +56,7 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:textColor="@color/textColorButton"
                 android:text="@string/exportar_nuvem" />
 
             <Button
@@ -63,6 +67,7 @@
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:layout_marginBottom="@dimen/margem_lateral_formulario"
                 android:text="@string/fechar"
+                android:textColor="@color/textColorButton"
                 app:backgroundTint="@android:color/holo_orange_light" />
         </LinearLayout>
     </ScrollView>

@@ -5,7 +5,8 @@
     android:id="@+id/myCoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.FacturaFragment">
+    tools:context=".view.FacturaFragment"
+    android:background="@color/backgroundColor">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/mySwipeRefreshLayout"
@@ -185,6 +186,7 @@
                         android:text="@string/scanear"
                         android:textAllCaps="false"
                         android:textSize="12sp"
+                        android:textColor="@color/textColorButton"
                         app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
                     <Button
@@ -194,6 +196,7 @@
                         android:text="@string/fechar"
                         android:textAllCaps="false"
                         android:textSize="12sp"
+                        android:textColor="@color/textColorButton"
                         app:backgroundTint="#E53935" />
 
                     <Button
@@ -203,6 +206,7 @@
                         android:text="@string/scanear"
                         android:textAllCaps="false"
                         android:textSize="12sp"
+                        android:textColor="@color/textColorButton"
                         app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>

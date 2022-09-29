@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/backgroundColor">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/mySwipeRefreshLayout"
@@ -49,6 +50,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:background="@color/cor_castanha"
-        app:itemTextColor="@color/white"
+        app:itemTextColor="@color/textColorButton"
         app:menu="@menu/menu_bottom_doc" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

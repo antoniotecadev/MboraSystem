@@ -5,6 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/backgroundColor"
     tools:context=".caixadialogo.DialogCriarClienteCantina">
 
     <ScrollView
@@ -52,6 +53,7 @@
                     android:layout_marginEnd="@dimen/margem_lateral_formulario"
                     android:layout_weight="1"
                     android:textSize="10sp"
+                    android:textColor="@color/textColorButton"
                     android:text="@string/vldr"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -161,6 +163,7 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
+                android:textColor="@color/textColorButton"
                 android:text="@string/criar" />
 
             <Button
@@ -190,6 +193,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:text="@string/cancelar"
+                android:textColor="@color/textColorButton"
                 app:backgroundTint="@android:color/holo_orange_light" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>

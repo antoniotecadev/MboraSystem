@@ -43,6 +43,7 @@
         android:id="@+id/imgBtnMenu"
         android:layout_width="40dp"
         android:layout_height="70dp"
+        android:background="@color/textColorButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/ic_menu_more_vert" />

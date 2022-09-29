@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/backgroundColor"
     tools:context=".caixadialogo.DialogCriarUsuario">
 
     <ScrollView
@@ -195,7 +196,8 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
-                android:text="@string/criar" />
+                android:text="@string/criar"
+                android:textColor="@color/textColorButton"/>
 
             <Button
                 android:id="@+id/buttonGuardar"
@@ -205,6 +207,7 @@
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:text="@string/salvar_alteracao"
                 android:visibility="gone"
+                android:textColor="@color/textColorButton"
                 app:backgroundTint="@android:color/holo_green_light" />
 
             <Button
@@ -215,6 +218,7 @@
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:text="@string/eliminar_usuario"
                 android:visibility="gone"
+                android:textColor="@color/textColorButton"
                 app:backgroundTint="@android:color/holo_red_light" />
 
             <Button
@@ -224,6 +228,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginRight="@dimen/margem_lateral_formulario"
                 android:text="@string/cancelar"
+                android:textColor="@color/textColorButton"
                 app:backgroundTint="@android:color/holo_orange_light" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>

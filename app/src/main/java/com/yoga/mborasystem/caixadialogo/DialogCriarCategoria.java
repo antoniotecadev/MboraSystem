@@ -37,7 +37,6 @@ public class DialogCriarCategoria extends DialogFragment {
         if (getArguments() != null) {
             categoria = getArguments().getParcelable("categoria");
             if (categoria != null) {
-                builder.setTitle(R.string.alterar_categoria);
                 binding.btnCriarCategoria.setText(getString(R.string.salvar));
                 binding.nomeCategoria.setText(categoria.getCategoria());
                 binding.descricao.setText(categoria.getDescricao());
@@ -57,7 +56,6 @@ public class DialogCriarCategoria extends DialogFragment {
                 });
             }
         } else {
-            builder.setTitle(R.string.nova_categoria);
             binding.btnCriarCategoria.setOnClickListener(v -> {
                 categoriaProdutoViewModel.crud = true;
                 categoriaProdutoViewModel.validarCategoria(Ultilitario.Operacao.CRIAR, binding.nomeCategoria, binding.descricao, binding.switchEstado, dialog, 0);

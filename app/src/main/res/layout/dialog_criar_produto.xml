@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundColor"
     tools:context=".caixadialogo.DialogCriarProduto">
 
     <ScrollView
@@ -428,6 +429,7 @@
             android:text="@string/scanear"
             android:textAllCaps="false"
             android:textSize="12sp"
+            android:textColor="@color/textColorButton"
             app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
         <View
@@ -443,6 +445,7 @@
             android:text="@string/scanear"
             android:textAllCaps="false"
             android:textSize="12sp"
+            android:textColor="@color/textColorButton"
             app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -540,6 +543,7 @@
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:text="@string/salvar_alteracao"
             android:visibility="gone"
+            android:textColor="@color/textColorButton"
             app:backgroundTint="@android:color/holo_green_light" />
 
         <Button
@@ -550,6 +554,7 @@
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:text="@string/eliminar_produto"
             android:visibility="gone"
+            android:textColor="@color/textColorButton"
             app:backgroundTint="@android:color/holo_red_light" />
 
         <Button
@@ -560,6 +565,7 @@
             android:layout_marginRight="@dimen/margem_lateral_formulario"
             android:layout_marginBottom="@dimen/margem_lateral_formulario"
             android:text="@string/fechar"
+            android:textColor="@color/textColorButton"
             app:backgroundTint="@android:color/holo_orange_light" />
     </LinearLayout>
     </ScrollView>
