@@ -164,7 +164,7 @@ public class CategoriaProdutoFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
                 int itemId = menuItem.getItemId();
-                if (itemId == R.id.dialogCriarCategoria)
+                if (itemId == R.id.dialogCriarCategoriaFragment)
                     Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria);
                 else if (itemId == R.id.exportarcategoria)
                     exportarImportar(Ultilitario.EXPORTAR_CATEGORIA);
