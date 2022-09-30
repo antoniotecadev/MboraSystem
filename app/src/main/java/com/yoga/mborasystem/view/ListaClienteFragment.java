@@ -242,6 +242,7 @@ public class ListaClienteFragment extends Fragment {
                 registerForContextMenu(h.binding.imgBtnMenu);
                 h.binding.imgBtnMenu.setOnClickListener(View::showContextMenu);
                 h.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
+                    menu1.setHeaderIcon(R.drawable.ic_cliente_60);
                     menu1.setHeaderTitle(ct.getNome());
                     menu1.add(getString(R.string.vendas)).setOnMenuItemClickListener(item -> {
                         ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
@@ -306,7 +307,7 @@ public class ListaClienteFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         new android.app.AlertDialog.Builder(requireContext())
-                .setIcon(R.drawable.ic_baseline_store_24)
+                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
                 .setTitle(R.string.exportar)
                 .setSingleChoiceItems(R.array.array_local_nuvem, 3, (dialogInterface, i) -> {
                     switch (i) {

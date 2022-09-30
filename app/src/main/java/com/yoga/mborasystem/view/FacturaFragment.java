@@ -1164,7 +1164,7 @@ public class FacturaFragment extends Fragment {
         check.setOnCheckedChangeListener((compoundButton, b) -> PreferenceManager.getDefaultSharedPreferences(MainActivity.progressDialog.getContext()).edit().putBoolean("atalfact", !b).apply());
         new android.app.AlertDialog.Builder(getContext())
                 .setCancelable(false)
-                .setIcon(R.drawable.ic_baseline_store_24)
+                .setIcon(R.drawable.ic_baseline_input_150)
                 .setTitle(getString(R.string.sair))
                 .setMessage(getString(R.string.sair_atal))
                 .setView(layout)

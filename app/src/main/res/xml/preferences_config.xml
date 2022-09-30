@@ -8,7 +8,7 @@
         android:entryValues="@array/array_idioma"
         android:key="lista_idioma"
         android:title="@string/idm"
-        app:dialogIcon="@drawable/ic_baseline_store_24"
+        app:dialogIcon="@drawable/ic_baseline_translate_24"
         app:icon="@drawable/ic_baseline_translate_24"
         app:useSimpleSummaryProvider="true" />
     <PreferenceCategory
@@ -69,7 +69,7 @@
         <EditTextPreference
             android:key="pinadmin"
             android:title="@string/pin"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@drawable/ic_baseline_fiber_pin_24"
             app:icon="@drawable/ic_baseline_fiber_pin_24"
             app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
@@ -93,21 +93,21 @@
         <EditTextPreference
             android:key="textorodape"
             android:title="@string/text_rdp_fact"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@drawable/ic_baseline_short_text_24"
             app:icon="@drawable/ic_baseline_short_text_24"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:key="nib"
             android:title="@string/nib"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@drawable/ic_baseline_credit_card_24"
             app:icon="@drawable/ic_baseline_credit_card_24"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:key="iban"
             android:title="@string/iban"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@drawable/ic_baseline_credit_card_24"
             app:icon="@drawable/ic_baseline_credit_card_24"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
@@ -121,7 +121,7 @@
             android:entryValues="@array/array_moeda_valor"
             android:key="moeda"
             android:title="@string/md"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@drawable/ic_baseline_moeda_24"
             app:icon="@drawable/ic_baseline_moeda_24"
             app:useSimpleSummaryProvider="true" />
         <ListPreference
@@ -130,7 +130,7 @@
             android:entryValues="@array/array_taxa_iva_valor"
             android:key="taxa_iva"
             android:title="@string/tx_iva_pdf"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@drawable/ic_baseline_vertical_align_center_24"
             app:icon="@drawable/ic_baseline_vertical_align_center_24"
             app:useSimpleSummaryProvider="true" />
         <ListPreference
@@ -139,7 +139,7 @@
             android:entryValues="@array/array_motivo_isecao_valor"
             android:key="motivo_isencao"
             android:title="@string/mtv_pdf_isc"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@drawable/ic_baseline_vertical_align_center_24"
             app:icon="@drawable/ic_baseline_vertical_align_center_24"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
@@ -150,7 +150,7 @@
             android:defaultValue="@string/apn_mborasystem"
             android:key="apn"
             android:title="@string/apn"
-            app:dialogIcon="@drawable/ic_baseline_store_24"
+            app:dialogIcon="@android:drawable/ic_lock_idle_charging"
             app:icon="@android:drawable/ic_lock_idle_charging"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>

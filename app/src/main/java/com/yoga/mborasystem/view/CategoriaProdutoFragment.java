@@ -267,7 +267,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 }
                 h.binding.imgBtnMenu.setOnClickListener(View::showContextMenu);
                 h.itemView.setOnCreateContextMenuListener((menu1, v, menuInfo) -> {
-                    menu1.setHeaderIcon(R.drawable.ic_baseline_store_24);
+                    menu1.setHeaderIcon(R.drawable.ic_baseline_folder_60);
                     menu1.setHeaderTitle(ct.getCategoria());
                     if (!isLixeira) {
                         menu1.add(getString(R.string.entrar)).setOnMenuItemClickListener(item -> {

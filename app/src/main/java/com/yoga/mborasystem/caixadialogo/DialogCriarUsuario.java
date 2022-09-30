@@ -38,7 +38,7 @@ public class DialogCriarUsuario extends DialogFragment {
         usuarioViewModel = new ViewModelProvider(requireActivity()).get(UsuarioViewModel.class);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setIcon(R.drawable.ic_baseline_store_24);
+        builder.setIcon(R.drawable.ic_usario_60);
         builder.setTitle(getString(R.string.criar_usuario));
 
         if (getArguments() != null) {
