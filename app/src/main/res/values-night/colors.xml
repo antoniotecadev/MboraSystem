@@ -6,8 +6,8 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="blackM">#212121</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="cor_fundo_tela_inicial">#000000</color>
     <color name="cor_castanha">#795548</color>
     <color name="cor_click_recyclerview">#6BD3D8D7</color>
     <!--  For nigth/Dark mode -->

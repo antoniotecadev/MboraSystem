@@ -48,6 +48,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
@@ -1013,5 +1014,19 @@ public class Ultilitario {
 
     public static String bytesToHex(byte[] md) {
         return String.format("%064x", new BigInteger(1, md));
+    }
+
+    public static void definirModoEscuro(Context context) {
+        switch (PreferenceManager.getDefaultSharedPreferences(context).getString("mod_esc", "")) {
+            case "1":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case "2":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+        }
     }
 }

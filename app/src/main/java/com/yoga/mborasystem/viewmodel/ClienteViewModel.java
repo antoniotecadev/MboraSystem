@@ -1,10 +1,13 @@
 package com.yoga.mborasystem.viewmodel;
 
+import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
+import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,9 +35,7 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,7 +48,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-@SuppressWarnings("rawtypes")
 public class ClienteViewModel extends AndroidViewModel {
 
     private byte estado;
@@ -80,14 +80,6 @@ public class ClienteViewModel extends AndroidViewModel {
         if (valido == null)
             valido = new MutableLiveData<>();
         return valido;
-    }
-
-    private MutableLiveData<Map<Enum, Cliente>> existeMutableLiveData;
-
-    public MutableLiveData<Map<Enum, Cliente>> getExisteMutableLiveData() {
-        if (existeMutableLiveData == null)
-            existeMutableLiveData = new MutableLiveData<>();
-        return existeMutableLiveData;
     }
 
     private final Pattern numero = Pattern.compile("[^0-9 ]");
@@ -263,8 +255,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void clienteExiste(boolean limitCadastro, Cliente c) {
-        Map<Enum, Cliente> clienteMap = new HashMap<>();
+    public void clienteExiste(boolean limitCadastro, Cliente c, Context context, View view) {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
@@ -275,17 +266,14 @@ public class ClienteViewModel extends AndroidViewModel {
                     if (limitCadastro)
                         cadastrarCliente(c);
                     else {
-                        clienteMap.put(Ultilitario.Existe.NAO, null);
-                        getExisteMutableLiveData().postValue(clienteMap);
+                        handler.post(() -> getResultado(Ultilitario.Existe.NAO, null, view, null));
                         MainActivity.dismissProgressBar();
                     }
                 } else {
                     if (limitCadastro)
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_cliente_ja_existe), R.drawable.ic_toast_erro);
-                    else {
-                        clienteMap.put(Ultilitario.Existe.SIM, cliente.get(0));
-                        getExisteMutableLiveData().postValue(clienteMap);
-                    }
+                    else
+                        handler.post(() -> getResultado(SIM, context, view, cliente));
                     MainActivity.dismissProgressBar();
                 }
             } catch (Exception e) {
@@ -295,6 +283,19 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
             }
         });
+    }
+
+    private void getResultado(Ultilitario.Existe existe, Context context, View view, List<Cliente> cliente) {
+        if (SIM.equals(existe)) {
+            if (Ultilitario.getBooleanPreference(context, "bloaut")) {
+                Ultilitario.setValueUsuarioMaster(bundle, cliente, context);
+                Navigation.findNavController(view).navigate(R.id.navigation, bundle);
+            } else
+                Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_loginFragment);
+//            } else if (Objects.requireNonNull(Navigation.findNavController(view).getCurrentDestination()).getId() == R.id.splashFragment)
+//                Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_loginFragment);
+        } else if (NAO.equals(existe))
+            Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_cadastrarClienteFragment);
     }
 
     @SuppressLint("CheckResult")
@@ -429,7 +430,7 @@ public class ClienteViewModel extends AndroidViewModel {
                                     MainActivity.dismissProgressBar();
                                     Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
                                 } else
-                                    clienteExiste(true, cliente);
+                                    clienteExiste(true, cliente, null, null);
                             } catch (Exception ex) {
                                 MainActivity.dismissProgressBar();
                                 Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
