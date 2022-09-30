@@ -167,13 +167,6 @@
                     tools:context=".view.FacturaFragment"
                     tools:listitem="@layout/fragment_lista_produto" />
 
-                <View
-                    android:id="@+id/divider1"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:background="?android:attr/listDivider" />
-
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -206,14 +199,7 @@
                         android:textAllCaps="false"
                         android:textSize="12sp"
                         app:icon="@drawable/ic_baseline_qr_code_scanner_24" />
-
                 </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <View
-                    android:id="@+id/divider12"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewFactura"
@@ -239,7 +225,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
-                    android:background="?android:attr/listDivider" />
+                    android:background="@color/textColorM" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -281,7 +267,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
-                    android:background="?android:attr/listDivider" />
+                    android:background="@color/textColorM" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -321,7 +307,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
-                    android:background="?android:attr/listDivider" />
+                    android:layout_marginBottom="@dimen/margem_lateral_formulario"
+                    android:background="@color/textColorM" />
 
                 <TextView
                     android:id="@+id/textViewDesconto"
@@ -381,12 +368,6 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margem_lateral_formulario"
-                    android:background="?android:attr/listDivider" />
-
                 <TextView
                     android:id="@+id/totalDesconto"
                     android:layout_width="match_parent"
@@ -399,6 +380,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margem_lateral_formulario"
+                    android:layout_marginBottom="@dimen/margem_lateral_formulario"
                     android:background="?android:attr/listDivider" />
 
                 <TextView
@@ -448,12 +431,6 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margem_lateral_formulario"
-                    android:background="?android:attr/listDivider" />
-
                 <TextView
                     android:id="@+id/troco"
                     android:layout_width="match_parent"
@@ -466,6 +443,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margem_lateral_formulario"
+                    android:layout_marginBottom="@dimen/margem_lateral_formulario"
                     android:background="?android:attr/listDivider" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -545,7 +524,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
-                    android:background="?android:attr/listDivider" />
+                    android:background="@color/textColorM" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -576,6 +555,7 @@
                         android:ems="10"
                         android:enabled="false"
                         android:hint="@string/valor_kwanza"
+                        android:textColor="@color/textColorM"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="15"
@@ -604,6 +584,7 @@
                         android:ems="10"
                         android:enabled="false"
                         android:hint="@string/valor_kwanza"
+                        android:textColor="@color/textColorM"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="15"
@@ -631,6 +612,7 @@
                         android:ems="10"
                         android:enabled="false"
                         android:hint="@string/valor_kwanza"
+                        android:textColor="@color/textColorM"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="15"
@@ -658,6 +640,7 @@
                         android:ems="10"
                         android:enabled="false"
                         android:hint="@string/valor_kwanza"
+                        android:textColor="@color/textColorM"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="15"
@@ -668,7 +651,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
-                    android:background="?android:attr/listDivider" />
+                    android:background="@color/textColorM" />
 
                 <Button
                     android:id="@+id/btnEfectuarVenda"
