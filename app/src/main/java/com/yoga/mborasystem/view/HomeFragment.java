@@ -218,7 +218,7 @@ public class HomeFragment extends Fragment {
                     primaryLocale = getResources().getConfiguration().getLocales().get(0);
                     String locale = primaryLocale.getDisplayLanguage();
                     languageCode = primaryLocale.getLanguage();
-                    menu.findItem(R.id.idioma).setTitle(locale + "(" + languageCode.toLowerCase(Locale.ROOT) + ")");
+                    menu.findItem(R.id.idioma).setTitle(locale + "(" + languageCode.toLowerCase(Locale.ROOT) + ") 🔻");
                 } else
                     menu.findItem(R.id.idioma).setTitle("");
             }
