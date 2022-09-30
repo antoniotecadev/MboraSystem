@@ -7,6 +7,7 @@ import static com.yoga.mborasystem.util.Ultilitario.restartActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -102,6 +103,7 @@ public class FacturaFragment extends Fragment {
     private Gson gson;
     private Bundle bundle;
     private Cliente cliente;
+    private Activity activity;
     private long idc, idcliente;
     private BeepManager beepManager;
     private Map<Long, View> itemView;
@@ -149,6 +151,7 @@ public class FacturaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = requireActivity();
         gson = new Gson();
         iva = new HashMap<>();
         bundle = new Bundle();
@@ -1169,7 +1172,7 @@ public class FacturaFragment extends Fragment {
                     PreferenceManager.getDefaultSharedPreferences(MainActivity.progressDialog.getContext()).edit().putBoolean("atalfact", true).apply();
                     dialog.dismiss();
                 })
-                .setPositiveButton(getString(R.string.sim), (dialog, which) -> System.exit(0))
+                .setPositiveButton(getString(R.string.sim), (dialog, which) -> activity.finish())
                 .show();
     }
 
