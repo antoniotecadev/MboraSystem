@@ -49,6 +49,7 @@
         android:layout_gravity="bottom"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:background="@color/cor_castanha"
+        app:itemTextColor="@color/textColor"
+        android:background="@color/toolBarColor"
         app:menu="@menu/menu_bottom_doc" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
