@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -31,11 +32,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.paging.PagingDataAdapter;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
@@ -52,6 +56,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,6 +66,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("rawtypes")
 public class ListProdutoFragment extends Fragment {
 
+    private Gson gson;
     private int tipo, quantidade;
     private boolean vazio;
     private Bundle bundle;
@@ -69,19 +75,24 @@ public class ListProdutoFragment extends Fragment {
     private StringBuilder data;
     private boolean isLixeira, isMaster;
     private GroupAdapter adapter;
+    private List<Long> idprodutoCarrinho;
     private ProdutoViewModel produtoViewModel;
     private FragmentProdutoListBinding binding;
     private ProdutoAdapter pagingAdapter;
     private ExecutorService executor;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gson = new Gson();
         bundle = new Bundle();
         data = new StringBuilder();
         adapter = new GroupAdapter();
+        idprodutoCarrinho = new ArrayList<>();
         pagingAdapter = new ProdutoAdapter(new ProdutoComparator());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
+        sharedPreferences = requireContext().getSharedPreferences("PRODUTO_CARRINHO", Context.MODE_PRIVATE);
     }
 
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
@@ -232,6 +243,33 @@ public class ListProdutoFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void addProdutoCarrinho(Long idproduto, String nomeProduto) {
+        if (!idprodutoCarrinho.contains(idproduto)) {
+            idprodutoCarrinho.add(idproduto);
+            sharedPreferences.edit().putString("idprodutocarrinho", gson.toJson(idprodutoCarrinho)).apply();
+            Toast.makeText(requireContext(), getText(R.string.prod_add_car), Toast.LENGTH_LONG).show();
+        } else
+            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.prod_ja_add, nomeProduto), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+    }
+
+    private void removeProdutoCarrinho(Long idproduto) {
+        idprodutoCarrinho.remove(idproduto);
+        sharedPreferences.edit().putString("idprodutocarrinho", gson.toJson(idprodutoCarrinho)).apply();
+        Toast.makeText(requireContext(), getText(R.string.prod_elim_car), Toast.LENGTH_LONG).show();
+    }
+
+    private List<Long> getProdutoCarrinho() {
+        List<Long> idprodutoList = new ArrayList<>();
+        String idproduto = sharedPreferences.getString("idprodutocarrinho", null);
+        if (idproduto != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Long>>() {
+            }.getType();
+            idprodutoList = gson.fromJson(idproduto, type);
+        }
+        return idprodutoList;
+    }
+
     private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
         Ultilitario.setBooleanPreference(requireContext(), switchHidden, "produto");
         binding.floatingActionButtonCima.setVisibility(view);
@@ -361,7 +399,8 @@ public class ListProdutoFragment extends Fragment {
         public void onBindViewHolder(@NonNull ProdutoViewHolder h, int position) {
             Produto produto = getItem(position);
             if (produto != null) {
-                h.binding.txtNomeProduto.setText(produto.getNome());
+                List<Long> carrinho = getProdutoCarrinho();
+                h.binding.txtNomeProduto.setText(produto.getNome() + " " + (carrinho.contains(produto.getId()) ? "©" : ""));
                 h.binding.txtPrecoProduto.setText(getText(R.string.preco) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco())) + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
                 h.binding.txtPrecoProdutoFornecedor.setText(getText(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
                 h.binding.txtQuantidadeProduto.setTextColor(!produto.isStock() ? Color.BLACK : produto.getQuantidade() == 0 ? Color.RED : Color.parseColor("#43A047"));
@@ -403,6 +442,20 @@ public class ListProdutoFragment extends Fragment {
                             entrarProduto(getItem(position));
                             return false;
                         });
+                        if (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarcarrinho", false))
+                            if (!carrinho.contains(produto.getId())) {
+                                menu.add(getString(R.string.addCart)).setOnMenuItemClickListener(item -> {
+                                    addProdutoCarrinho(produto.getId(), produto.getNome());
+                                    notifyItemChanged(position);
+                                    return false;
+                                });
+                            } else {
+                                menu.add(getString(R.string.elmCart)).setOnMenuItemClickListener(item -> {
+                                    removeProdutoCarrinho(produto.getId());
+                                    notifyItemChanged(position);
+                                    return false;
+                                });
+                            }
                         if (getArguments() != null) {
                             if (getArguments().getBoolean("master") || isMaster) {
                                 menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {

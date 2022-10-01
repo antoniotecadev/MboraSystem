@@ -20,7 +20,7 @@
       app:showAsAction="collapseActionView" />
 
   <item
-      android:id="@+id/itemEliminarRascunho"
+      android:id="@+id/itemEliminarCarrinho"
       android:icon="@drawable/ic_baseline_delete_40"
       android:title="@string/elm_pro_car"
       app:showAsAction="collapseActionView" />

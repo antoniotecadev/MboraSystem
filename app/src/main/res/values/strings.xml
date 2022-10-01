@@ -686,6 +686,12 @@
     <string name="mod_esc">Modo escuro</string>
     <string name="preco_zero_sem_kz" translatable="false">0,00</string>
     <string name="most_mais">Mostrar mais</string>
+    <string name="addCart">Adicionar ao carrinho</string>
+    <string name="car">Carrinho</string>
+    <string name="prod_add_car">Produto adicionado ao carrinho</string>
+    <string name="prod_ja_add">(%1$s) já foi adicionado ao carrinho.</string>
+    <string name="elmCart">Eliminar do carrinho</string>
+    <string name="prod_elim_car">Produto eliminado de carrinho</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

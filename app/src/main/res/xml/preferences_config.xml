@@ -11,24 +11,23 @@
         app:dialogIcon="@drawable/ic_baseline_translate_24"
         app:icon="@drawable/ic_baseline_translate_24"
         app:useSimpleSummaryProvider="true" />
+
     <PreferenceCategory
-        android:title="@string/atalho"
+        android:title="@string/fctrc"
         tools:ignore="TouchTargetSizeCheck">
+        <SwitchPreferenceCompat
+            android:key="activarcarrinho"
+            android:title="@string/act_car_comp"
+            app:icon="@drawable/ic_baseline_cart"
+            app:useSimpleSummaryProvider="true" />
+
         <SwitchPreferenceCompat
             android:key="atalfact"
             android:title="@string/act_ata_fact"
             app:icon="@drawable/ic_baseline_cart"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/rasc"
-        tools:ignore="TouchTargetSizeCheck">
-        <SwitchPreferenceCompat
-            android:key="activarrascunho"
-            android:title="@string/act_car_comp"
-            app:icon="@drawable/ic_baseline_cart"
-            app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/view"
         tools:ignore="TouchTargetSizeCheck">

@@ -38,7 +38,6 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -112,13 +111,13 @@ public class FacturaFragment extends Fragment {
     private Map<Long, Produto> produtos;
     private GroupAdapter adapterFactura;
     private VendaViewModel vendaViewModel;
-    private List<Long> idprodutoRascunho;
+    private List<Long> idprodutocarrinho;
     private FragmentFacturaBinding binding;
     private ArrayList<String> listaCategoria;
     private ProdutoViewModel produtoViewModel;
     private ProdutoFacturaAdapter pagingAdapter;
     private SharedPreferences sharedPreferences;
-    private boolean addScaner, load, addRascunho;
+    private boolean addScaner, load, addCarrinho;
     private String resultCodeBar, referenciaFactura = "", facturaPath, dataEmissao = "";
     private ClienteCantinaViewModel clienteCantinaViewModel;
     @SuppressLint("StaticFieldLeak")
@@ -165,13 +164,13 @@ public class FacturaFragment extends Fragment {
         precoTotal = new HashMap<>();
         listaCategoria = new ArrayList<>();
         adapterFactura = new GroupAdapter();
-        idprodutoRascunho = new ArrayList<>();
+        idprodutocarrinho = new ArrayList<>();
         pagingAdapter = new ProdutoFacturaAdapter(new ProdutoFacturaComparator());
         vendaViewModel = new ViewModelProvider(requireActivity()).get(VendaViewModel.class);
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
         clienteCantinaViewModel = new ViewModelProvider(requireActivity()).get(ClienteCantinaViewModel.class);
         categoriaProdutoViewModel = new ViewModelProvider(requireActivity()).get(CategoriaProdutoViewModel.class);
-        sharedPreferences = requireContext().getSharedPreferences("PRODUTO_RASCUNHO", Context.MODE_PRIVATE);
+        sharedPreferences = requireContext().getSharedPreferences("PRODUTO_CARRINHO", Context.MODE_PRIVATE);
     }
 
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
@@ -583,10 +582,10 @@ public class FacturaFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_factura, menu);
-                if (getProdutoRascunho().isEmpty())
-                    menu.findItem(R.id.itemEliminarRascunho).setVisible(false);
+                if (getProdutoCarrinho().isEmpty())
+                    menu.findItem(R.id.itemEliminarCarrinho).setVisible(false);
                 else
-                    requireActivity().setTitle(getString(R.string.rasc));
+                    requireActivity().setTitle(getString(R.string.car));
 
                 if (composeFactura.equals(requireActivity().getIntent().getAction())) {
                     menu.findItem(R.id.itemAbrApp).setVisible(true);
@@ -636,8 +635,8 @@ public class FacturaFragment extends Fragment {
                 else if (itemId == R.id.itemData) {
                     FacturaFragmentDirections.ActionFacturaFragmentToDatePickerFragment direction = FacturaFragmentDirections.actionFacturaFragmentToDatePickerFragment(false).setIdcliente(1).setIsDivida(false).setIdusuario(1).setIsPesquisa(true);
                     Navigation.findNavController(requireView()).navigate(direction);
-                } else if (itemId == R.id.itemEliminarRascunho) {
-                    eliminarRascunho();
+                } else if (itemId == R.id.itemEliminarCarrinho) {
+                    eliminarCarrinho();
                     Snackbar.make(binding.myCoordinatorLayout, getText(R.string.pro_car_elm), Snackbar.LENGTH_LONG).show();
                 } else if (itemId == R.id.itemAbrApp) {
                     requireActivity().getIntent().setAction("android.intent.action.MAIN").addCategory("android.intent.category.LAUNCHER");
@@ -647,7 +646,7 @@ public class FacturaFragment extends Fragment {
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
-        consultarRascunho();
+        consultarCarrinho();
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
@@ -669,19 +668,19 @@ public class FacturaFragment extends Fragment {
         }
     }
 
-    private void consultarRascunho() {
-        if (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarrascunho", false))
-            if (!getProdutoRascunho().isEmpty()) {
+    private void consultarCarrinho() {
+        if (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarcarrinho", false))
+            if (!getProdutoCarrinho().isEmpty()) {
                 binding.checkboxTodosProdutos.setChecked(false);
                 Ultilitario.setBooleanPreference(requireContext(), false, "checkboxTodosProdutos");
-                consultarProdutos(0, true, null, false, true, getProdutoRascunho());
+                consultarProdutos(0, true, null, false, true, getProdutoCarrinho());
             }
     }
 
-    private void consultarProdutos(long idcategoria, boolean iScrud, String produto, boolean isPesquisa, boolean isRascunho, List<Long> produtoRascunho) {
-        addRascunho = isRascunho;
+    private void consultarProdutos(long idcategoria, boolean iScrud, String produto, boolean isPesquisa, boolean isCarrinho, List<Long> produtoCarrinho) {
+        addCarrinho = isCarrinho;
         produtoViewModel.crud = iScrud;
-        produtoViewModel.consultarProdutos(idcategoria, produto, false, isPesquisa, getViewLifecycleOwner(), true, Ultilitario.getBooleanPreference(requireContext(), "checkboxTodosProdutos"), isRascunho, produtoRascunho);
+        produtoViewModel.consultarProdutos(idcategoria, produto, false, isPesquisa, getViewLifecycleOwner(), true, Ultilitario.getBooleanPreference(requireContext(), "checkboxTodosProdutos"), isCarrinho, produtoCarrinho);
     }
 
     private void fecharAlertDialog(AlertDialog alertDialog) {
@@ -691,7 +690,7 @@ public class FacturaFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void restaurar() {
-        eliminarRascunho();
+        eliminarCarrinho();
         binding.txtNomeCliente.setText("");
         estado.clear();
         produtos.clear();
@@ -858,9 +857,9 @@ public class FacturaFragment extends Fragment {
             return binding.checkboxNumerario.isChecked() || binding.checkboxCartaoMulticaixa.isChecked() || binding.checkboxDepositoBancario.isChecked() || binding.checkboxTransferenciaBancaria.isChecked();
     }
 
-    private List<Long> getProdutoRascunho() {
+    private List<Long> getProdutoCarrinho() {
         List<Long> idprodutoList = new ArrayList<>();
-        String idproduto = sharedPreferences.getString("idprodutorascunho", null);
+        String idproduto = sharedPreferences.getString("idprodutocarrinho", null);
         if (idproduto != null) {
             Gson gson = new Gson();
             Type type = new TypeToken<List<Long>>() {
@@ -870,10 +869,10 @@ public class FacturaFragment extends Fragment {
         return idprodutoList;
     }
 
-    private void eliminarRascunho() {
+    private void eliminarCarrinho() {
         requireActivity().setTitle(getString(R.string.fctrc));
-        idprodutoRascunho.clear();
-        sharedPreferences.edit().putString("idprodutorascunho", null).apply();
+        idprodutocarrinho.clear();
+        sharedPreferences.edit().putString("idprodutocarrinho", null).apply();
     }
 
     class ProdutoFacturaAdapter extends PagingDataAdapter<Produto, ProdutoFacturaAdapter.ProdutoFacturaViewHolder> {
@@ -904,7 +903,7 @@ public class FacturaFragment extends Fragment {
                 else
                     h.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 h.itemView.setOnClickListener(v -> addProduto(v, produto, produto.getId(), produto.getNome()));
-                if (addScaner || addRascunho) {
+                if (addScaner || addCarrinho) {
                     addScaner = false;
                     adicionarProduto(produto.getId(), produto, h.itemView, true);
                 }
@@ -961,7 +960,7 @@ public class FacturaFragment extends Fragment {
 
                 habilitarDesabilitarButtonEfectuarVenda();
                 v.setBackgroundColor(Color.parseColor("#FFE6FBD0"));
-                setProdutoRascunho(id);
+                addProdutoCarrinho(id);
             }
         }
 
@@ -991,7 +990,7 @@ public class FacturaFragment extends Fragment {
 
             view.setBackgroundColor(Color.parseColor("#FFFFFF"));
             habilitarDesabilitarButtonEfectuarVenda();
-            removeProdutoRascunho(id);
+            removeProdutoCarrinho(id);
         }
 
         @SuppressLint("SetTextI18n")
@@ -1027,18 +1026,17 @@ public class FacturaFragment extends Fragment {
             binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(totalGer)));
         }
 
-
-        private void setProdutoRascunho(Long idproduto) {
-            if (!idprodutoRascunho.contains(idproduto) && (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarrascunho", false))) {
-                idprodutoRascunho.add(idproduto);
-                sharedPreferences.edit().putString("idprodutorascunho", gson.toJson(idprodutoRascunho)).apply();
+        private void addProdutoCarrinho(Long idproduto) {
+            if (!idprodutocarrinho.contains(idproduto) && (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarcarrinho", false))) {
+                idprodutocarrinho.add(idproduto);
+                sharedPreferences.edit().putString("idprodutocarrinho", gson.toJson(idprodutocarrinho)).apply();
             }
         }
 
-        private void removeProdutoRascunho(Long idproduto) {
-            if (idprodutoRascunho.contains(idproduto) && (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarrascunho", false))) {
-                idprodutoRascunho.remove(idproduto);
-                sharedPreferences.edit().putString("idprodutorascunho", gson.toJson(idprodutoRascunho)).apply();
+        private void removeProdutoCarrinho(Long idproduto) {
+            if (idprodutocarrinho.contains(idproduto) && (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarcarrinho", false))) {
+                idprodutocarrinho.remove(idproduto);
+                sharedPreferences.edit().putString("idprodutocarrinho", gson.toJson(idprodutocarrinho)).apply();
             }
         }
 
