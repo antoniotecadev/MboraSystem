@@ -21,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.fragment);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.splashFragment, R.id.homeFragment, R.id.dialogAlterarCliente, R.id.bloquearFragment, R.id.activarMbora, R.id.cadastrarClienteFragment)
                 .setOpenableLayout(drawerLayout)
                 .build();
