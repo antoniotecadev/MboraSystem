@@ -16,4 +16,5 @@
     <color name="textColorM">#B3EFEFEF</color>
     <color name="toolBarColor">@color/backgroundColor</color>
     <color name="cardColor">@color/black</color>
+    <color name="cardColorNormal">@color/black</color>
 </resources>
