@@ -72,8 +72,8 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/cor_castanha"
-                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="@color/cardColor"
+                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp"
                     android:focusable="true">
 
@@ -105,6 +105,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="@string/categorias_produtos"
+                            android:textColor="@color/textColorM"
                             android:textAlignment="center" />
 
                         <View
@@ -124,8 +125,8 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/cor_castanha"
-                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="@color/cardColor"
+                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -156,6 +157,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="@string/dados_usuarios_actividades"
+                            android:textColor="@color/textColorM"
                             android:textAlignment="center" />
 
                         <View
@@ -181,8 +183,8 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/cor_castanha"
-                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="@color/cardColor"
+                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -212,7 +214,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Venda de produtos efectuadas"
+                            android:text="@string/venda_produtos_efectuadas"
+                            android:textColor="@color/textColorM"
                             android:textAlignment="center" />
 
                         <View
@@ -232,8 +235,8 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/cor_castanha"
-                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="@color/cardColor"
+                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -263,7 +266,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Dados de clientes e suas compras"
+                            android:text="@string/dados_clientes_compras"
+                            android:textColor="@color/textColorM"
                             android:textAlignment="center" />
 
                         <View
@@ -289,8 +293,8 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/cor_castanha"
-                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="@color/cardColor"
+                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -321,6 +325,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="@string/graf_vend"
+                            android:textColor="@color/textColorM"
                             android:textAlignment="center" />
 
                         <View

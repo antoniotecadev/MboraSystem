@@ -15,4 +15,5 @@
     <color name="textColor">@color/black</color>
     <color name="textColorM">#B3000000</color>
     <color name="toolBarColor">@color/cor_castanha</color>
+    <color name="cardColor">@color/cor_castanha</color>
 </resources>
