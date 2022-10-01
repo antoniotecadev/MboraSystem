@@ -378,8 +378,9 @@
                         android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/margem_lateral_formulario"
                         android:layout_weight="1"
-                        android:background="@android:color/holo_orange_light"
-                        app:icon="@drawable/ic_baseline_cleaning_services_24" />
+                        android:backgroundTint="@android:color/holo_orange_light"
+                        app:icon="@drawable/ic_baseline_cleaning_services_24"
+                        tools:targetApi="lollipop" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -442,8 +443,9 @@
                         android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/margem_lateral_formulario"
                         android:layout_weight="1"
-                        android:background="@android:color/holo_orange_light"
-                        app:icon="@drawable/ic_baseline_cleaning_services_24" />
+                        android:backgroundTint="@android:color/holo_orange_light"
+                        app:icon="@drawable/ic_baseline_cleaning_services_24"
+                        tools:targetApi="lollipop" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -533,8 +535,9 @@
                         android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/margem_lateral_formulario"
                         android:layout_weight="1"
-                        android:background="@android:color/holo_orange_light"
-                        app:icon="@drawable/ic_baseline_cleaning_services_24" />
+                        android:backgroundTint="@android:color/holo_orange_light"
+                        app:icon="@drawable/ic_baseline_cleaning_services_24"
+                        tools:targetApi="lollipop" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
