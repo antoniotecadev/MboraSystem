@@ -37,6 +37,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_gravity="start"
+      app:itemIconTint="@color/cor_castanha"
       android:animateLayoutChanges="true"
       android:fitsSystemWindows="true" />
 
