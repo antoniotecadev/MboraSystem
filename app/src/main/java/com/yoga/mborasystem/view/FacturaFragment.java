@@ -38,6 +38,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -293,6 +294,12 @@ public class FacturaFragment extends Fragment {
             pagingAdapter.notifyDataSetChanged();
         });
         binding.textTaxa.setText(Ultilitario.getTaxaIva(requireActivity()) + "%");
+        binding.switchDesconto.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                showHiddenComponent(View.VISIBLE, true, false, false);
+            else
+                showHiddenComponent(View.GONE, true, false, false);
+        });
         Ultilitario.precoFormat(getContext(), binding.textDesconto);
         Ultilitario.addItemOnSpinner(binding.spinnerDesconto, 100, getContext(), 0);
         binding.spinnerDesconto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -372,7 +379,12 @@ public class FacturaFragment extends Fragment {
 
             }
         });
-
+        binding.switchDivida.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                showHiddenComponent(View.VISIBLE, false, true, false);
+            else
+                showHiddenComponent(View.GONE, false, true, false);
+        });
         binding.checkboxDivida.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (valorPago < total)
@@ -388,9 +400,15 @@ public class FacturaFragment extends Fragment {
                 binding.textValorDivida.setEnabled(false);
             }
         });
-
         Ultilitario.precoFormat(getContext(), binding.textValorDivida);
-
+        binding.switchFormaPagamento.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                showHiddenComponent(View.VISIBLE, false, false, true);
+                binding.scrollView.post(() -> binding.scrollView.fullScroll(View.FOCUS_DOWN));
+                binding.textValorPago.clearFocus();
+            } else
+                showHiddenComponent(View.GONE, false, false, true);
+        });
         binding.checkboxSemValorPago.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (binding.checkboxDivida.isChecked()) {
@@ -447,7 +465,7 @@ public class FacturaFragment extends Fragment {
         checkValorFormaPagamento(binding.checkboxNumerario, binding.dinheiroValorPago);
         checkValorFormaPagamento(binding.checkboxCartaoMulticaixa, binding.cartaoValorPago);
         checkValorFormaPagamento(binding.checkboxDepositoBancario, binding.depValorPago);
-        checkValorFormaPagamento(binding.checkboxTransferenciaBancario, binding.transfValorPago);
+        checkValorFormaPagamento(binding.checkboxTransferenciaBancaria, binding.transfValorPago);
 
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
@@ -634,6 +652,23 @@ public class FacturaFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void showHiddenComponent(int view, boolean isDesconto, boolean isDivida, boolean isFormaPagamento) {
+        if (isDesconto) {
+            binding.spinnerDesconto.setVisibility(view);
+            binding.linearLayoutDesconto.setVisibility(view);
+            binding.totalDesconto.setVisibility(view);
+        } else if (isDivida) {
+            binding.checkboxDivida.setVisibility(view);
+            binding.checkboxSemValorPago.setVisibility(view);
+            binding.linearLayoutDivida.setVisibility(view);
+            binding.switchEdit.setVisibility(view);
+        } else if (isFormaPagamento) {
+            binding.linearLayoutCartaoMultcaixa.setVisibility(view);
+            binding.linearLayoutDepositoBancario.setVisibility(view);
+            binding.linearLayoutTransferenciaBancaria.setVisibility(view);
+        }
+    }
+
     private void consultarRascunho() {
         if (PreferenceManager.getDefaultSharedPreferences(requireActivity()).getBoolean("activarrascunho", false))
             if (!getProdutoRascunho().isEmpty()) {
@@ -688,7 +723,7 @@ public class FacturaFragment extends Fragment {
         binding.checkboxNumerario.setChecked(false);
         binding.checkboxCartaoMulticaixa.setChecked(false);
         binding.checkboxDepositoBancario.setChecked(false);
-        binding.checkboxTransferenciaBancario.setChecked(false);
+        binding.checkboxTransferenciaBancaria.setChecked(false);
         Ultilitario.zerarPreco(binding.textDesconto);
         Ultilitario.zerarPreco(binding.textValorPago);
         Ultilitario.zerarPreco(binding.dinheiroValorPago);
@@ -809,7 +844,7 @@ public class FacturaFragment extends Fragment {
         CharSequence dinheiro = binding.checkboxNumerario.isChecked() ? (binding.checkboxNumerario.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.dinheiroValorPago)) : "";
         CharSequence cartaoMulticaixa = binding.checkboxCartaoMulticaixa.isChecked() ? (binding.checkboxCartaoMulticaixa.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.cartaoValorPago)) : "";
         CharSequence depositoBancario = binding.checkboxDepositoBancario.isChecked() ? (binding.checkboxDepositoBancario.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.depValorPago)) : "";
-        CharSequence transferenciaBancario = binding.checkboxTransferenciaBancario.isChecked() ? (binding.checkboxTransferenciaBancario.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.transfValorPago)) : "";
+        CharSequence transferenciaBancario = binding.checkboxTransferenciaBancaria.isChecked() ? (binding.checkboxTransferenciaBancaria.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.transfValorPago)) : "";
         if (binding.checkboxSemValorPago.isChecked())
             return getString(R.string.se_val_pag);
         else
@@ -820,7 +855,7 @@ public class FacturaFragment extends Fragment {
         if (binding.checkboxSemValorPago.isChecked())
             return true;
         else
-            return binding.checkboxNumerario.isChecked() || binding.checkboxCartaoMulticaixa.isChecked() || binding.checkboxDepositoBancario.isChecked() || binding.checkboxTransferenciaBancario.isChecked();
+            return binding.checkboxNumerario.isChecked() || binding.checkboxCartaoMulticaixa.isChecked() || binding.checkboxDepositoBancario.isChecked() || binding.checkboxTransferenciaBancaria.isChecked();
     }
 
     private List<Long> getProdutoRascunho() {

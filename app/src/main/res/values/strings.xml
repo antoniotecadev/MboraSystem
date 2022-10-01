@@ -684,6 +684,8 @@
     <string name="atl_des">Atalho desactivado, entra em configurações para activar.</string>
     <string name="desa_atal_fact">Desactivar atalho de facturação.</string>
     <string name="mod_esc">Modo escuro</string>
+    <string name="preco_zero_sem_kz" translatable="false">0,00</string>
+    <string name="most_mais">Mostrar mais</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
