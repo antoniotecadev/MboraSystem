@@ -58,9 +58,11 @@
             android:layout_height="@dimen/tamanho_teclado_600"
             android:text="1"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn2"
@@ -70,9 +72,11 @@
             android:layout_marginRight="@dimen/margem_teclado"
             android:text="2"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn3"
@@ -80,9 +84,11 @@
             android:layout_height="@dimen/tamanho_teclado_600"
             android:text="3"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn4"
@@ -90,9 +96,11 @@
             android:layout_height="@dimen/tamanho_teclado_600"
             android:text="4"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn5"
@@ -102,9 +110,11 @@
             android:layout_marginRight="@dimen/margem_teclado"
             android:text="5"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn6"
@@ -112,9 +122,11 @@
             android:layout_height="@dimen/tamanho_teclado_600"
             android:text="6"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn7"
@@ -122,9 +134,11 @@
             android:layout_height="@dimen/tamanho_teclado_600"
             android:text="7"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn8"
@@ -134,9 +148,11 @@
             android:layout_marginRight="@dimen/margem_teclado"
             android:text="8"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn9"
@@ -144,21 +160,25 @@
             android:layout_height="@dimen/tamanho_teclado_600"
             android:text="9"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btnMenu"
             android:layout_width="@dimen/tamanho_teclado_600"
             android:layout_height="@dimen/tamanho_teclado_600"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             app:icon="@android:drawable/ic_menu_myplaces"
             app:iconGravity="textEnd"
             tools:ignore="SpeakableTextPresentCheck"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
         <Button
             android:id="@+id/btn0"
@@ -177,12 +197,14 @@
             android:layout_width="@dimen/tamanho_teclado_600"
             android:layout_height="@dimen/tamanho_teclado_600"
             android:textSize="@dimen/tamanho_texto_teclado_600"
-            app:backgroundTint="@color/cor_castanha"
+            app:backgroundTint="@color/cardColor"
+            android:outlineSpotShadowColor="@color/white"
             app:icon="@drawable/ic_baseline_backspace_24"
             app:iconGravity="textEnd"
             tools:ignore="SpeakableTextPresentCheck"
             tools:layout_editor_absoluteX="233dp"
-            tools:layout_editor_absoluteY="376dp" />
+            tools:layout_editor_absoluteY="376dp"
+            tools:targetApi="p" />
 
     </androidx.gridlayout.widget.GridLayout>
 
