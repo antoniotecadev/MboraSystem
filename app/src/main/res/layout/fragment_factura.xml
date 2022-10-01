@@ -492,6 +492,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margem_lateral_formulario"
                         android:textColor="@color/textColorM"
+                        android:textSize="20sp"
                         android:text="@string/dvd" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
