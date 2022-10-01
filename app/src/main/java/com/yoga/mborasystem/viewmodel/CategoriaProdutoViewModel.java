@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Switch;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
@@ -22,6 +21,7 @@ import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.repository.CategoriaRepository;
@@ -80,7 +80,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
     }
 
-    public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, @SuppressLint("UseSwitchCompatOrMaterialCode") Switch estado, AlertDialog dialog, long idcategoria) {
+    public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, SwitchMaterial estado, AlertDialog dialog, long idcategoria) {
         if (isCampoVazio(nome.getText().toString())) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));

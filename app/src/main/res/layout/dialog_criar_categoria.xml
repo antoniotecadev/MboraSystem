@@ -67,7 +67,7 @@
         android:text="@string/estado"
         android:textColor="@color/textColor" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_estado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
