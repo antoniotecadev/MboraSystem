@@ -15,7 +15,8 @@
       android:layout_marginRight="@dimen/margem_card_view"
       android:clickable="true"
       android:foreground="?attr/selectableItemBackground"
-      app:cardBackgroundColor="?attr/colorButtonNormal"
+      app:cardBackgroundColor="@color/cardColorNormal"
+      android:outlineSpotShadowColor="@color/white"
       app:cardElevation="6dp"
       android:focusable="true">
 
@@ -42,7 +43,7 @@
           android:layout_marginLeft="@dimen/margem_lateral_formulario"
           android:layout_marginRight="@dimen/margem_lateral_formulario"
           android:textAppearance="?attr/textAppearanceListItem"
-          android:textColor="@color/black"
+          android:textColor="@color/textColor"
           android:textSize="14sp" />
 
       <TextView
@@ -52,7 +53,7 @@
           android:layout_marginLeft="@dimen/margem_lateral_formulario"
           android:layout_marginRight="@dimen/margem_lateral_formulario"
           android:textAppearance="?attr/textAppearanceListItem"
-          android:textColor="@color/black"
+          android:textColor="@color/textColor"
           android:textSize="14sp" />
 
       <TextView
@@ -62,7 +63,7 @@
           android:layout_marginLeft="@dimen/margem_lateral_formulario"
           android:layout_marginRight="@dimen/margem_lateral_formulario"
           android:textAppearance="?attr/textAppearanceListItem"
-          android:textColor="@color/black"
+          android:textColor="@color/textColor"
           android:textSize="14sp" />
 
       <TextView
@@ -72,7 +73,7 @@
           android:layout_marginLeft="@dimen/margem_lateral_formulario"
           android:layout_marginRight="@dimen/margem_lateral_formulario"
           android:textAppearance="?attr/textAppearanceListItem"
-          android:textColor="@color/black"
+          android:textColor="@color/textColor"
           android:textSize="14sp" />
 
       <View
@@ -93,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/black"
+            android:textColor="@color/textColor"
             android:textSize="14sp" />
 
         <androidx.appcompat.widget.SwitchCompat
