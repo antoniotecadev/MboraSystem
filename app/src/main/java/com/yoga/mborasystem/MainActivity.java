@@ -8,11 +8,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.google.android.material.navigation.NavigationView;
-import com.yoga.mborasystem.view.FacturaFragment;
-
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,10 +15,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.google.android.material.navigation.NavigationView;
+import com.yoga.mborasystem.view.FacturaFragment;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
