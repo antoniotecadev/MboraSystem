@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,7 +19,9 @@
       android:foreground="?attr/selectableItemBackground"
       app:cardBackgroundColor="@color/cardColorNormal"
       android:outlineSpotShadowColor="@color/white"
-      app:cardElevation="6dp">
+      app:cardElevation="6dp"
+      android:focusable="true"
+      tools:targetApi="p">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -70,13 +73,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:drawableRight="@drawable/ic_baseline_delete_40" />
+            app:drawableEndCompat="@drawable/ic_baseline_delete_40" />
 
         <TextView
             android:id="@+id/txtBloquear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margem_lateral_formulario"
+            android:layout_marginStart="@dimen/margem_lateral_formulario"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="@dimen/margem_lateral_formulario"
             android:gravity="end" />

@@ -9,7 +9,7 @@
         android:id="@+id/txtProduto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margem_lateral_formulario"
+        android:layout_marginStart="@dimen/margem_lateral_formulario"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/black" />
 
@@ -17,13 +17,13 @@
         android:id="@+id/txtPreco"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margem_lateral_formulario" />
+        android:layout_marginStart="@dimen/margem_lateral_formulario" />
 
     <TextView
         android:id="@+id/txtQuantidade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margem_lateral_formulario" />
+        android:layout_marginStart="@dimen/margem_lateral_formulario" />
 
     <View
         android:id="@+id/divider9"
