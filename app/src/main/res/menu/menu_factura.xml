@@ -22,7 +22,7 @@
   <item
       android:id="@+id/itemEliminarRascunho"
       android:icon="@drawable/ic_baseline_delete_40"
-      android:title="@string/elm_rasc"
+      android:title="@string/elm_pro_car"
       app:showAsAction="collapseActionView" />
 
   <item

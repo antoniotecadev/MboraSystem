@@ -638,7 +638,7 @@ public class FacturaFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(direction);
                 } else if (itemId == R.id.itemEliminarRascunho) {
                     eliminarRascunho();
-                    Snackbar.make(binding.myCoordinatorLayout, getText(R.string.rasc_elm), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(binding.myCoordinatorLayout, getText(R.string.pro_car_elm), Snackbar.LENGTH_LONG).show();
                 } else if (itemId == R.id.itemAbrApp) {
                     requireActivity().getIntent().setAction("android.intent.action.MAIN").addCategory("android.intent.category.LAUNCHER");
                     restartActivity(requireActivity());

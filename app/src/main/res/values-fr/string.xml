@@ -616,10 +616,10 @@
     <string name="dat_ems_nao_dat_act">La date d\'émission ne peut pas être supérieure à la date actuelle.</string>
     <string name="dat_nao_sel">Date non sélectionnée</string>
     <string name="cst_tds_prod">Consulter tous les produits</string>
-    <string name="elm_rasc">Supprimer le brouillon</string>
+    <string name="elm_pro_car">Supprimer le(s) produit(s) du panier</string>
     <string name="rasc">Brouillon</string>
-    <string name="act_rasc_fact">Le brouillon dans la facturation</string>
-    <string name="rasc_elm">Brouillon supprimé</string>
+    <string name="act_car_comp">panier d\'achat</string>
+    <string name="pro_car_elm">Produit(s) du panier supprimé(s)</string>
     <string name="sem_prod_stoc">Aucun produit en stock</string>
     <string name="sem_prod_stoc_msg">Pour vendre ce produit (%1$s), augmentez sa quantité ou décochez votre gestion des stocks.</string>
     <string name="prod_stoc">Produit en stock</string>

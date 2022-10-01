@@ -616,10 +616,10 @@
     <string name="dat_ems_nao_dat_act">Issue date cannot be greater than the current date.</string>
     <string name="dat_nao_sel">Date not selected</string>
     <string name="cst_tds_prod">Consult all products</string>
-    <string name="elm_rasc">Delete draft</string>
+    <string name="elm_pro_car">Delete product(s) from cart</string>
     <string name="rasc">Draft</string>
-    <string name="act_rasc_fact">Draft in invoicing</string>
-    <string name="rasc_elm">Draft deleted</string>
+    <string name="act_car_comp">Shopping cart</string>
+    <string name="pro_car_elm">Cart product(s) deleted</string>
     <string name="sem_prod_stoc">No product in stock</string>
     <string name="sem_prod_stoc_msg">To sell this product (%1$s) increase its quantity or uncheck your stock control.</string>
     <string name="prod_stoc">Product in stock</string>

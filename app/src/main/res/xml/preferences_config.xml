@@ -25,8 +25,8 @@
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreferenceCompat
             android:key="activarrascunho"
-            android:title="@string/act_rasc_fact"
-            app:icon="@android:drawable/ic_menu_save"
+            android:title="@string/act_car_comp"
+            app:icon="@drawable/ic_baseline_cart"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory

@@ -642,10 +642,10 @@
     <string name="dat_ems_nao_dat_act">Data de emissão não pode ser maior que a data actual.</string>
     <string name="dat_nao_sel">Data não seleccionada</string>
     <string name="cst_tds_prod">Consultar todos produtos</string>
-    <string name="elm_rasc">Eliminar rascunho</string>
+    <string name="elm_pro_car">Eliminar produto(s) de carrinho</string>
     <string name="rasc">Rascunho</string>
-    <string name="act_rasc_fact">Rascunho na facturação</string>
-    <string name="rasc_elm">Rascunho eliminado</string>
+    <string name="act_car_comp">Carrinho de compra</string>
+    <string name="pro_car_elm">Produto(s) de carrinho eliminado</string>
     <string name="sem_prod_stoc">Sem produto em stock</string>
     <string name="sem_prod_stoc_msg">Para vender este produto (%1$s) aumente a sua quantidade ou desmarque o seu controle de stock.</string>
     <string name="prod_stoc">Produto em stock</string>
