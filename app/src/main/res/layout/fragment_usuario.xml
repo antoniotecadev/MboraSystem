@@ -16,7 +16,8 @@
       android:layout_marginBottom="5dp"
       android:clickable="true"
       android:foreground="?attr/selectableItemBackground"
-      app:cardBackgroundColor="?attr/colorButtonNormal"
+      app:cardBackgroundColor="@color/cardColorNormal"
+      android:outlineSpotShadowColor="@color/white"
       app:cardElevation="6dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -32,7 +33,7 @@
           android:layout_marginRight="@dimen/margem_lateral_formulario"
           android:layout_marginBottom="5dp"
           android:textAppearance="?attr/textAppearanceListItem"
-          android:textColor="@color/black"
+          android:textColor="@color/textColor"
           android:textSize="18sp" />
 
       <TextView
