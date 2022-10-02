@@ -337,6 +337,7 @@ public class CategoriaProdutoFragment extends Fragment {
         private void listaProdutos(long id, String categoria) {
             bundle.putLong("idcategoria", id);
             bundle.putString("categoria", categoria);
+            bundle.putLong("idoperador", requireArguments().getLong("idoperador", 0));
             Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_listProdutoFragment, bundle);
         }
 

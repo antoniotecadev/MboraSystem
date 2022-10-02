@@ -217,6 +217,9 @@
                 android:name="isMaster"
                 android:defaultValue="false"
                 app:argType="boolean" />
+            <action
+                android:id="@+id/action_listProdutoFragment_to_facturaFragment"
+                app:destination="@id/facturaFragment" />
         </fragment>
         <dialog
             android:id="@+id/dialogSenha"

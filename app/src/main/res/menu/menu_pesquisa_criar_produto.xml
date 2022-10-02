@@ -13,6 +13,13 @@
         android:icon="@drawable/ic_baseline_add_box_24"
         android:title="@string/criar_produto"
         app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/facturaFragment"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="@string/fctrc"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/dialogFiltrarProduto"
         android:icon="@drawable/ic_baseline_filter_list_24"

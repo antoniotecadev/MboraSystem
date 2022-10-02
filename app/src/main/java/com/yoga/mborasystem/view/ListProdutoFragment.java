@@ -172,6 +172,7 @@ public class ListProdutoFragment extends Fragment {
                     menu.findItem(R.id.btnScannerBack).setVisible(false);
                     menu.findItem(R.id.exportarproduto).setVisible(false);
                     menu.findItem(R.id.importarproduto).setVisible(false);
+                    menu.findItem(R.id.facturaFragment).setVisible(false);
                     if (!Ultilitario.getBooleanPreference(requireContext(), "master")) {
                         menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                         menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
@@ -221,6 +222,9 @@ public class ListProdutoFragment extends Fragment {
                 if (itemId == R.id.dialogCriarProduto) {
                     if (!categoria.isEmpty())
                         createProduto(idcategoria, categoria);
+                } else if (itemId == R.id.facturaFragment) {
+                    bundle.putLong("idoperador", requireArguments().getLong("idoperador", 0));
+                    Navigation.findNavController(requireView()).navigate(R.id.action_listProdutoFragment_to_facturaFragment, bundle);
                 } else if (itemId == R.id.dialogFiltrarProduto)
                     filtrarProduto(idcategoria);
                 else if (itemId == R.id.btnScannerBack)

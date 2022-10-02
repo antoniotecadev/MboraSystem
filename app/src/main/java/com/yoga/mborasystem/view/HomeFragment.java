@@ -175,7 +175,10 @@ public class HomeFragment extends Fragment {
 
         binding.btnUsuario.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster()));
 
-        binding.btnProduto.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster()));
+        binding.btnProduto.setOnClickListener(v -> {
+            bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
+        });
 
         binding.btnVenda.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster()));
 
