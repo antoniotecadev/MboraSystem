@@ -274,7 +274,6 @@
     <string name="valor">Valor</string>
     <string name="ja_scaneado">Produto já foi scaneado</string>
     <string name="falha">\"Falha: \"</string>
-    <string name="partilhar">Partilhar</string>
     <string name="produto_importado">Produtos importados</string>
     <string name="ficheiro_certo">"Erro: Produto não importado, seleccione um ficheiro de produto."</string>
     <string name="zero">0</string>
@@ -579,8 +578,9 @@
     <string name="n_most_nov_config">Não mostrar novamente a caixa de mensagem sobre factura não guardada</string>
     <string name="br_na_enc_mun">Bairros não encotrados neste município</string>
     <string name="part_me_cod_qr">Partilhar meu código QR</string>
-    <string name="sm_perm_n_pod_part_cod_qr">Sem permissão não pode partilhar o seu código QR</string>
-    <string name="guard_part">Guardar + Partilhar</string>
+    <string name="sm_perm_n_pod_gua_cod_qr">Sem permissão não pode guardar o seu código QR</string>
+    <string name="guardar">Guardar</string>
+    <string name="partilhar">Partilhar</string>
     <string name="estab">Estabelecimento</string>
     <string name="apn">APN (Rede de Pontos de Acesso)</string>
     <string name="avs">Aviso</string>

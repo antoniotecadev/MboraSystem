@@ -260,7 +260,6 @@
     <string name="valor">Value</string>
     <string name="ja_scaneado">Product has already been scanned</string>
     <string name="falha">\"Failure: \"</string>
-    <string name="partilhar">Share</string>
     <string name="produto_importado">Imported products</string>
     <string name="ficheiro_certo">"Error: Product not imported, please select a product file."</string>
     <string name="zero">0</string>
@@ -557,8 +556,9 @@
     <string name="n_most_nov">Do not show again.</string>
     <string name="br_na_enc_mun">Neighborhoods not found in this municipality</string>
     <string name="part_me_cod_qr">Share my QR code</string>
-    <string name="sm_perm_n_pod_part_cod_qr">Without permission cannot share your QR code</string>
-    <string name="guard_part">Save + Share</string>
+    <string name="sm_perm_n_pod_gua_cod_qr">Without permission cannot save your QR code</string>
+    <string name="guardar">Save</string>
+    <string name="partilhar">Share</string>
     <string name="estab">Establishment</string>
     <string name="apn">APN (Acess Point Network)</string>
     <string name="avs">Warning</string>

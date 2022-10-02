@@ -128,7 +128,7 @@ public class Ultilitario {
     }
 
     @SuppressLint("WrongConstant")
-    public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser, ActivityResultLauncher<String> requestPermissionLauncherShareQrCode, String nome, String estabalecimento, String imei) {
+    public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser, ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode, String nome, String estabalecimento, String imei) {
         View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
         ImageView img = view.findViewById(R.id.image);
         img.setImageBitmap(qrCode);
@@ -145,7 +145,14 @@ public class Ultilitario {
                     .setTitle(R.string.cod_qr)
                     .setMessage(context.getString(R.string.nm) + ": " + nome + "\n" + context.getString(R.string.estab) + ": " + estabalecimento + "\n" + "IMEI: " + imei)
                     .setView(view)
-                    .setNegativeButton(R.string.guard_part, (dialogInterface, i) -> requestPermissionLauncherShareQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    .setNeutralButton(context.getString(R.string.guardar), (dialogInterface, i) -> requestPermissionLauncherSaveQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> {
+                        try {
+                            partilharImagem(context, qrCode, estabalecimento.replace(".","").replace(",","").trim());
+                        } catch (IOException e) {
+                            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                    })
                     .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss()).show();
         }
     }
@@ -869,6 +876,23 @@ public class Ultilitario {
             }
         }
         return cacheFile;
+    }
+
+    public static void partilharImagem(Context context, Bitmap bitmap, String nomeEmpresa) throws IOException {
+        File cachePath = new File(context.getCacheDir(), "images");
+        cachePath.mkdirs(); // don't forget to make the directory
+        FileOutputStream stream = new FileOutputStream(new File(cachePath, nomeEmpresa + ".jpg")); // overwrites this image every time
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        stream.close();
+        Uri contentUri = FileProvider.getUriForFile(context, "com.yoga.mborasystem", new File(cachePath, nomeEmpresa + ".jpg"));
+        if (contentUri != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+            shareIntent.setDataAndType(contentUri, context.getContentResolver().getType(contentUri));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.part_me_cod_qr)));
+        }
     }
 
     public static void partilharDocumento(String filePath, Context context, String fileType, String titulo) {

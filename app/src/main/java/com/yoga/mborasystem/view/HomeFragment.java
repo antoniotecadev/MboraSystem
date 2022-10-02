@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -335,9 +336,9 @@ public class HomeFragment extends Fragment {
     private void getQrCode() {
         if (getArguments() != null)
             if (getArguments().getBoolean("master"))
-                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei()), true, requestPermissionLauncherShareQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
+                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei()), true, requestPermissionLauncherSaveQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
             else
-                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), true, requestPermissionLauncherShareQrCode, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
+                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), true, requestPermissionLauncherSaveQrCode, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
     }
 
     private Bitmap gerarCodigoQr(String imei) {
@@ -533,18 +534,13 @@ public class HomeFragment extends Fragment {
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_prm_na_vis_doc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
     );
-    private final ActivityResultLauncher<String> requestPermissionLauncherShareQrCode = registerForActivityResult(
+    private final ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), getString(R.string.cod_qr) + " (" + cliente.getNomeEmpresa() + ")", null);
-                    Uri bitmapUri = Uri.parse(bitmapPath);
-
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setType("image/png");
-                    intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
-                    startActivity(Intent.createChooser(intent, getString(R.string.part_me_cod_qr)));
+                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", "").replace("."," ").replace(","," "), null);
+                    Toast.makeText(requireContext(), bitmapPath, Toast.LENGTH_LONG).show();
                 } else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_part_cod_qr), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_gua_cod_qr), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
     );
 

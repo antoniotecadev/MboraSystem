@@ -2,4 +2,5 @@
 <paths>
     <files-path name="data" path="."/>
     <external-path name="external_files" path="."/>
+    <cache-path name="shared_images" path="images/"/>
 </paths>
