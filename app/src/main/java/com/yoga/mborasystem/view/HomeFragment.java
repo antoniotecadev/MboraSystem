@@ -536,7 +536,7 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncherShareQrCode = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), getString(R.string.cod_qr) + "-" + getString(R.string.estab) + "-" + cliente.getNomeEmpresa(), null);
+                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), getString(R.string.cod_qr) + " (" + cliente.getNomeEmpresa() + ")", null);
                     Uri bitmapUri = Uri.parse(bitmapPath);
 
                     Intent intent = new Intent(Intent.ACTION_SEND);
