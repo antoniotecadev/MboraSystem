@@ -62,8 +62,10 @@
         android:layout_marginBottom="62dp"
         android:backgroundTint="@color/cor_castanha"
         android:src="@android:drawable/arrow_up_float"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonBaixo"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:targetApi="lollipop" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonBaixo"
@@ -72,6 +74,7 @@
         android:layout_gravity="center_horizontal|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="62dp"
+        android:visibility="gone"
         android:backgroundTint="@color/cor_castanha"
         android:src="@android:drawable/arrow_down_float"
         app:layout_constraintBottom_toBottomOf="parent"

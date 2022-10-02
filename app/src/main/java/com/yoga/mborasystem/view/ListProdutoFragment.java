@@ -137,11 +137,11 @@ public class ListProdutoFragment extends Fragment {
         binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewListaProduto.smoothScrollToPosition(quantidade));
         binding.switchOcultarFloatCimaBaixo.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b)
-                ocultarFloatButtonCimaBaixo(true, View.GONE);
+                ocultarFloatButtonCimaBaixo(true, View.VISIBLE);
             else
-                ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
+                ocultarFloatButtonCimaBaixo(false, View.GONE);
         });
-        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "produto"));
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "product_list_scroll"));
         produtoViewModel.getListaProdutosisExport().observe(getViewLifecycleOwner(), new EventObserver<>(prod ->
         {
             StringBuilder dt = new StringBuilder();
@@ -275,7 +275,7 @@ public class ListProdutoFragment extends Fragment {
     }
 
     private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
-        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "produto");
+        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "product_list_scroll");
         binding.floatingActionButtonCima.setVisibility(view);
         binding.floatingActionButtonBaixo.setVisibility(view);
     }

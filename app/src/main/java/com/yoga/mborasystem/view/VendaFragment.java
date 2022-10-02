@@ -168,11 +168,11 @@ public class VendaFragment extends Fragment {
         binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewListaVenda.smoothScrollToPosition(quantidade));
         binding.switchOcultarFloatCimaBaixo.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b)
-                ocultarFloatButtonCimaBaixo(true, View.GONE);
+                ocultarFloatButtonCimaBaixo(true, View.VISIBLE);
             else
-                ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
+                ocultarFloatButtonCimaBaixo(false, View.GONE);
         });
-        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "venda"));
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "sale_list_scroll"));
 
         vendaViewModel.getSelectedDataMutableLiveData().setValue(false);
         vendaViewModel.getSelectedDataMutableLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
@@ -315,7 +315,7 @@ public class VendaFragment extends Fragment {
     }
 
     private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
-        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "venda");
+        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "sale_list_scroll");
         binding.floatingActionButtonCima.setVisibility(view);
         binding.floatingActionButtonBaixo.setVisibility(view);
     }

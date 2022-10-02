@@ -90,11 +90,11 @@ public class CategoriaProdutoFragment extends Fragment {
         binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewCategoriaProduto.smoothScrollToPosition(quantidade));
         binding.switchOcultarFloatCimaBaixo.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b)
-                ocultarFloatButtonCimaBaixo(true, View.GONE);
+                ocultarFloatButtonCimaBaixo(true, View.VISIBLE);
             else
-                ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
+                ocultarFloatButtonCimaBaixo(false, View.GONE);
         });
-        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "categoria"));
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "category_list_scroll"));
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
             consultarCategorias(false, null, false);
             categoriaAdapter.notifyDataSetChanged();
@@ -182,7 +182,7 @@ public class CategoriaProdutoFragment extends Fragment {
     }
 
     private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
-        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "categoria");
+        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "category_list_scroll");
         binding.floatingActionButtonCima.setVisibility(view);
         binding.floatingActionButtonBaixo.setVisibility(view);
     }

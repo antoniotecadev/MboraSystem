@@ -102,11 +102,11 @@ public class ListaClienteFragment extends Fragment {
         binding.floatingActionButtonBaixo.setOnClickListener(view -> binding.recyclerViewListaCliente.smoothScrollToPosition(quantidade));
         binding.switchOcultarFloatCimaBaixo.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b)
-                ocultarFloatButtonCimaBaixo(true, View.GONE);
+                ocultarFloatButtonCimaBaixo(true, View.VISIBLE);
             else
-                ocultarFloatButtonCimaBaixo(false, View.VISIBLE);
+                ocultarFloatButtonCimaBaixo(false, View.GONE);
         });
-        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "clientecantina"));
+        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "client_cantina_list_scroll"));
         clienteCantinaViewModel.getListaClientesExport().observe(getViewLifecycleOwner(), new EventObserver<>(cliente -> {
             StringBuilder dt = new StringBuilder();
             if (cliente.isEmpty())
@@ -184,7 +184,7 @@ public class ListaClienteFragment extends Fragment {
     }
 
     private void ocultarFloatButtonCimaBaixo(boolean switchHidden, int view) {
-        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "clientecantina");
+        Ultilitario.setBooleanPreference(requireContext(), switchHidden, "client_cantina_list_scroll");
         binding.floatingActionButtonCima.setVisibility(view);
         binding.floatingActionButtonBaixo.setVisibility(view);
     }
