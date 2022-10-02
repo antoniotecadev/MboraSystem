@@ -116,7 +116,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
                 if (isLixeira) {
                     menu.findItem(R.id.exinpCategoria).setVisible(false);
-                    menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
+                    menu.findItem(R.id.dialogCriarCategoriaFragment).setVisible(false);
                     if (!Ultilitario.getBooleanPreference(requireContext(), "master")) {
                         menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                         menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
