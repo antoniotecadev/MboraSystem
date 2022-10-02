@@ -107,7 +107,7 @@ public class CategoriaProdutoFragment extends Fragment {
                     if (Ultilitario.getBooleanPreference(requireContext(), "master"))
                         bundle.putBoolean("master", true);
                     else {
-                        menu.findItem(R.id.dialogCriarCategoria).setVisible(false);
+                        menu.findItem(R.id.dialogCriarCategoriaFragment).setVisible(false);
                         menu.findItem(R.id.exinpCategoria).setVisible(false);
                         binding.btncriarCategoriaDialog.setVisibility(View.GONE);
                     }
