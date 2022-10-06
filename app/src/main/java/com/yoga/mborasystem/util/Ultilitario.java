@@ -149,7 +149,7 @@ public class Ultilitario {
                     .setNeutralButton(context.getString(R.string.guardar), (dialogInterface, i) -> requestPermissionLauncherSaveQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> {
                         try {
-                            partilharImagem(context, qrCode, estabalecimento.replace(".","").replace(",","").trim());
+                            partilharImagem(context, qrCode, estabalecimento.replace(".", "").replace(",", "").trim());
                         } catch (IOException e) {
                             alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
                         }
@@ -1013,10 +1013,14 @@ public class Ultilitario {
     }
 
     public static String getDeviceUniqueID(Activity activity) {
-        if (getIMEI(activity) == null)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             return getAndroidID(activity);
-        else
-            return getIMEI(activity);
+        else {
+            if (getIMEI(activity) == null)
+                return getAndroidID(activity);
+            else
+                return getIMEI(activity);
+        }
     }
 
     private static String getIMEI(Activity activity) {
@@ -1055,7 +1059,7 @@ public class Ultilitario {
         }
     }
 
-    public static void getDetailDevice(Context context){
+    public static void getDetailDevice(Context context) {
         StringBuilder sb = new StringBuilder();
         sb.append("FABRICANTE: ").append(Build.MANUFACTURER).append("\n");
         sb.append("MARCA: ").append(Build.BRAND).append("\n");
