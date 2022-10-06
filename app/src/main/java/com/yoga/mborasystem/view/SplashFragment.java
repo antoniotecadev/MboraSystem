@@ -47,7 +47,7 @@ public class SplashFragment extends Fragment {
                 View vw = getView();
                 Context context = getContext();
                 if (context != null && vw != null)
-                    clienteViewModel.clienteExiste(false, null, context, vw);
+                    clienteViewModel.clienteExiste(false, null, context, vw, requireActivity());
             }, 5000);
         return view;
     }

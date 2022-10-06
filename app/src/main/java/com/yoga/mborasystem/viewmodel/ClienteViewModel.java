@@ -2,17 +2,21 @@ package com.yoga.mborasystem.viewmodel;
 
 import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
 import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
+import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
@@ -99,7 +103,7 @@ public class ClienteViewModel extends AndroidViewModel {
         return (isCampoVazio(numero) || !Patterns.PHONE.matcher(numero).matches());
     }
 
-    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa, String imei) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa, String imei, Activity activity) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (isCampoVazio(Objects.requireNonNull(nome.getText()).toString()) || letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -179,7 +183,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
                 cliente.setImei(imei);
                 cliente.setCodigoEquipa(codigoEquipa.getText().toString());
-                verificarCodigoEquipa(codigoEquipa.getText().toString(), cliente);
+                verificarCodigoEquipa(codigoEquipa.getText().toString(), cliente, activity);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR))
                 actualizarEmpresa(cliente);
         }
@@ -255,7 +259,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void clienteExiste(boolean limitCadastro, Cliente c, Context context, View view) {
+    public void clienteExiste(boolean limitCadastro, Cliente c, Context context, View view, Activity activity) {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
@@ -264,7 +268,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 cliente = clienteRepository.clienteExiste();
                 if (cliente.isEmpty()) {
                     if (limitCadastro)
-                        cadastrarCliente(c);
+                        cadastrarCliente(c, activity);
                     else {
                         handler.post(() -> getResultado(Ultilitario.Existe.NAO, null, view, null));
                         MainActivity.dismissProgressBar();
@@ -299,7 +303,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void cadastrarCliente(Cliente cliente) {
+    public void cadastrarCliente(Cliente cliente, Activity activity) {
         Completable.fromAction(() -> clienteRepository.insert(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -311,7 +315,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        salvarParceiro(cliente);
+                        salvarParceiro(cliente, activity);
                     }
 
                     @Override
@@ -323,7 +327,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
     }
 
-    private void salvarParceiro(Cliente cliente) {
+    private void salvarParceiro(Cliente cliente, Activity activity) {
         String URL = Ultilitario.getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/contacts";
         Ion.with(getApplication().getApplicationContext())
                 .load("POST", URL)
@@ -335,15 +339,23 @@ public class ClienteViewModel extends AndroidViewModel {
                 .setBodyParameter("email", cliente.getEmail())
                 .setBodyParameter("phone", cliente.getTelefone())
                 .setBodyParameter("alternative_phone", cliente.getTelefonealternativo())
-                .setBodyParameter("cantina", cliente.getNomeEmpresa())
+                .setBodyParameter("empresa", cliente.getNomeEmpresa())
                 .setBodyParameter("municipality", cliente.getMunicipio())
                 .setBodyParameter("district", cliente.getBairro())
                 .setBodyParameter("street", cliente.getRua())
                 .setBodyParameter("imei", cliente.getImei())
+                .setBodyParameter("fabricante", Build.MANUFACTURER)
+                .setBodyParameter("marca", Build.BRAND)
+                .setBodyParameter("produto", Build.PRODUCT)
+                .setBodyParameter("modelo", Build.MODEL)
+                .setBodyParameter("versao", android.os.Build.VERSION.RELEASE)
+                .setBodyParameter("api", String.valueOf(Build.VERSION.SDK_INT))
+                .setBodyParameter("device", getDeviceUniqueID(activity))
                 .asJsonObject()
                 .setCallback((e, jsonObject) -> {
                     try {
                         String retorno = jsonObject.get("insert").getAsString();
+                        Log.i("Erro", retorno);
                         if (retorno.equals("ok")) {
                             getValido().postValue(Ultilitario.Operacao.CRIAR);
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
@@ -412,7 +424,7 @@ public class ClienteViewModel extends AndroidViewModel {
         });
     }
 
-    public void verificarCodigoEquipa(String codigoEquipa, Cliente cliente) {
+    public void verificarCodigoEquipa(String codigoEquipa, Cliente cliente, Activity activity) {
         if (isNetworkConnected(getApplication().getApplicationContext())) {
             if (internetIsConnected()) {
                 String URL = Ultilitario.getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
@@ -430,7 +442,7 @@ public class ClienteViewModel extends AndroidViewModel {
                                     MainActivity.dismissProgressBar();
                                     Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
                                 } else
-                                    clienteExiste(true, cliente, null, null);
+                                    clienteExiste(true, cliente, null, null, activity);
                             } catch (Exception ex) {
                                 MainActivity.dismissProgressBar();
                                 Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
