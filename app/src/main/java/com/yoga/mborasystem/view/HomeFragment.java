@@ -484,7 +484,7 @@ public class HomeFragment extends Fragment {
                                     getString(R.string.Numero_Telefone) + ": " + parceiro.get("phone").getAsString() + "\n" +
                                     getString(R.string.Numero_Telefone_Alternativo) + ": " + parceiro.get("alternative_phone").getAsString() + "\n" +
                                     getString(R.string.Email) + ": " + parceiro.get("email").getAsString() + "\n" +
-                                    getString(R.string.empresa) + ": " + parceiro.get("cantina").getAsString() + "\n" +
+                                    getString(R.string.empresa) + ": " + parceiro.get("empresa").getAsString() + "\n" +
                                     getString(R.string.municipio) + ": " + parceiro.get("municipality").getAsString() + "\n" +
                                     getString(R.string.bairro) + ": " + parceiro.get("district").getAsString() + "\n" +
                                     getString(R.string.rua) + ": " + parceiro.get("street").getAsString() + "\n" +
