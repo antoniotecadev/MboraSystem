@@ -1130,8 +1130,8 @@ public class FacturaFragment extends Fragment {
     }
 
     private boolean equalsDevice;
-    private String mensagem, dispositivo;
-    private byte estadoConta, termina;
+    private byte estadoConta, terminoPrazo;
+    private String mensagem, dispositivo, contactos;
 
     private void estadoConta(String imei, String nomeIDcliente, int quantidadeProduto) {
         String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/" + imei + "/estado";
@@ -1143,17 +1143,17 @@ public class FacturaFragment extends Fragment {
                         for (int i = 0; i < jsonElements.size(); i++) {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
                             estadoConta = Byte.parseByte(parceiro.get("estado").getAsString());
-                            termina = parceiro.get("termina").getAsByte();
-                            String contactos = parceiro.get("contactos").getAsString();
+                            terminoPrazo = parceiro.get("termina").getAsByte();
+                            contactos = parceiro.get("contactos").getAsString();
                             dispositivo = parceiro.get("device").getAsString();
                             equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
-                            mensagem = (!equalsDevice ? getString(R.string.inco_desp) + "\n" : "") +
-                                    (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
                         }
-                        if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM || !equalsDevice) {
+                        boolean isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
+                        mensagem = (!equalsDevice ? getString(R.string.inco_desp) + "\n" : "") + (isFinish ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
+                        if (isFinish || !equalsDevice) {
                             MainActivity.dismissProgressBar();
-                            Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
-                        } else if (estadoConta == Ultilitario.UM && termina == Ultilitario.ZERO) {
+                            Ultilitario.alertDialog(isFinish ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
+                        } else {
                             Ultilitario.setValueSharedPreferences(requireContext(), "data", monthInglesFrances(Ultilitario.getDateCurrent()));
                             vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, quantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         }

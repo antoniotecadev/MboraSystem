@@ -459,7 +459,7 @@ public class HomeFragment extends Fragment {
     }
 
     private String estado;
-    private byte estadoTitulo, termina;
+    private byte estadoConta, terminoPrazo;
 
     private void estadoConta(String imei) {
         String[] pacote = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
@@ -471,14 +471,14 @@ public class HomeFragment extends Fragment {
                     try {
                         for (int i = 0; i < jsonElements.size(); i++) {
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
-                            estadoTitulo = Byte.parseByte(parceiro.get("estado").getAsString());
-                            termina = parceiro.get("termina").getAsByte();
+                            estadoConta = Byte.parseByte(parceiro.get("estado").getAsString());
+                            terminoPrazo = parceiro.get("termina").getAsByte();
                             String contactos = parceiro.get("contactos").getAsString();
                             String dispositivo = parceiro.get("device").getAsString();
                             boolean equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
                             estado = (!equalsDevice ? getString(R.string.inco_desp) + "\n" : "") +
-                                    (termina == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
-                                            (estadoTitulo == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
+                                    (terminoPrazo == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
+                                            (estadoConta == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
@@ -494,8 +494,8 @@ public class HomeFragment extends Fragment {
                                     getString(R.string.rua) + ": " + parceiro.get("street").getAsString() + "\n" +
                                     "IMEI: " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
                         }
-                        alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext(),
-                                estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
+                        boolean isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
+                        alertDialog(isFinish ? getString(R.string.des) : getString(R.string.act), estado, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
                         new AlertDialog.Builder(requireContext())
