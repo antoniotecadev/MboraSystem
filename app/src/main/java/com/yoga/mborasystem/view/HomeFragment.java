@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
+import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
@@ -213,7 +214,6 @@ public class HomeFragment extends Fragment {
                         menu.findItem(R.id.baseDeDados).setEnabled(false);
                     } else {
                         menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
-                        menu.findItem(R.id.device).setEnabled(false);
                         menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
                     }
                 }
@@ -264,6 +264,9 @@ public class HomeFragment extends Fragment {
                                     else
                                         getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false);
                                 }).show();
+                        break;
+                    case R.id.device:
+                        getDetailDevice(requireContext());
                         break;
                     case R.id.dialogAlterarCliente:
                         if (getArguments() != null) {
@@ -537,7 +540,7 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", "").replace("."," ").replace(","," "), null);
+                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", "").replace(".", " ").replace(",", " "), null);
                     Toast.makeText(requireContext(), bitmapPath, Toast.LENGTH_LONG).show();
                 } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_gua_cod_qr), requireContext(), R.drawable.ic_baseline_privacy_tip_24);

@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
+import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
@@ -221,6 +222,7 @@ public class CadastrarClienteFragment extends Fragment {
                 menu.findItem(R.id.bloquearFragment).setVisible(false);
                 menu.findItem(R.id.idioma).setVisible(false);
                 menu.findItem(R.id.expoBd).setVisible(false);
+                menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
             }
 
             @Override
@@ -233,7 +235,8 @@ public class CadastrarClienteFragment extends Fragment {
                         Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
                     else
                         alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
+                } else if (menuItem.getItemId() == R.id.device)
+                    getDetailDevice(requireContext());
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());

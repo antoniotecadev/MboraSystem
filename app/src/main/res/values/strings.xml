@@ -692,6 +692,7 @@
     <string name="prod_ja_add">(%1$s) já foi adicionado ao carrinho.</string>
     <string name="elmCart">Eliminar do carrinho</string>
     <string name="prod_elim_car">Produto eliminado de carrinho</string>
+    <string name="sob_tel">Sobre o telefone</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

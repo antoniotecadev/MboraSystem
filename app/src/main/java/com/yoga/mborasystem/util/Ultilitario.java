@@ -34,6 +34,7 @@ import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1052,5 +1053,16 @@ public class Ultilitario {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 break;
         }
+    }
+
+    public static void getDetailDevice(Context context){
+        StringBuilder sb = new StringBuilder();
+        sb.append("FABRICANTE: ").append(Build.MANUFACTURER).append("\n");
+        sb.append("MARCA: ").append(Build.BRAND).append("\n");
+        sb.append("PRODUTO: ").append(Build.PRODUCT).append("\n");
+        sb.append("MODELO: ").append(Build.MODEL).append("\n");
+        sb.append("VERSÃO: ").append(android.os.Build.VERSION.RELEASE).append("\n");
+        sb.append("API: ").append(android.os.Build.VERSION.SDK_INT);
+        alertDialog(context.getString(R.string.sob_tel), sb.toString(), context, R.drawable.ic_baseline_store_24);
     }
 }
