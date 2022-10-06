@@ -1059,13 +1059,23 @@ public class Ultilitario {
     }
 
     public static void getDetailDevice(Context context) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("FABRICANTE: ").append(Build.MANUFACTURER).append("\n");
-        sb.append("MARCA: ").append(Build.BRAND).append("\n");
-        sb.append("PRODUTO: ").append(Build.PRODUCT).append("\n");
-        sb.append("MODELO: ").append(Build.MODEL).append("\n");
-        sb.append("VERSÃO: ").append(android.os.Build.VERSION.RELEASE).append("\n");
-        sb.append("API: ").append(android.os.Build.VERSION.SDK_INT);
-        alertDialog(context.getString(R.string.sob_tel), sb.toString(), context, R.drawable.ic_baseline_store_24);
+        String data = "FABRICANTE: " + Build.MANUFACTURER + "\n" +
+                "MARCA: " + Build.BRAND + "\n" +
+                "PRODUTO: " + Build.PRODUCT + "\n" +
+                "MODELO: " + Build.MODEL + "\n" +
+                "VERSÃO: " + Build.VERSION.RELEASE + "\n" +
+                "API: " + Build.VERSION.SDK_INT;
+        alertDialog(context.getString(R.string.sob_tel), data, context, R.drawable.ic_baseline_store_24);
+    }
+
+    public static String getDetailDeviceString(Activity activity) {
+        String data = Build.MANUFACTURER +
+                Build.BRAND +
+                Build.PRODUCT +
+                Build.MODEL +
+                Build.VERSION.RELEASE +
+                Build.VERSION.SDK_INT +
+                getDeviceUniqueID(activity);
+        return data.trim();
     }
 }

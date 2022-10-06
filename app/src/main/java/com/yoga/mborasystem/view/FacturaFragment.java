@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
@@ -1128,7 +1129,8 @@ public class FacturaFragment extends Fragment {
         }
     }
 
-    private String mensagem;
+    private boolean equalsDevice;
+    private String mensagem, dispositivo;
     private byte estadoConta, termina;
 
     private void estadoConta(String imei, String nomeIDcliente, int quantidadeProduto) {
@@ -1143,11 +1145,14 @@ public class FacturaFragment extends Fragment {
                             estadoConta = Byte.parseByte(parceiro.get("estado").getAsString());
                             termina = parceiro.get("termina").getAsByte();
                             String contactos = parceiro.get("contactos").getAsString();
-                            mensagem = (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
+                            dispositivo = parceiro.get("device").getAsString();
+                            equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
+                            mensagem = (!equalsDevice ? getString(R.string.inco_desp) + "\n" : "") +
+                                    (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
                         }
-                        if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM) {
+                        if (estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM || !equalsDevice) {
                             MainActivity.dismissProgressBar();
-                            Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), R.drawable.ic_baseline_person_add_disabled_24);
+                            Ultilitario.alertDialog(estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), estadoConta == Ultilitario.ZERO || termina == Ultilitario.UM ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
                         } else if (estadoConta == Ultilitario.UM && termina == Ultilitario.ZERO) {
                             Ultilitario.setValueSharedPreferences(requireContext(), "data", monthInglesFrances(Ultilitario.getDateCurrent()));
                             vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, quantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());

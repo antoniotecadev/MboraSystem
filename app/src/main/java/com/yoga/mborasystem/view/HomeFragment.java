@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
+import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
@@ -473,8 +474,11 @@ public class HomeFragment extends Fragment {
                             estadoTitulo = Byte.parseByte(parceiro.get("estado").getAsString());
                             termina = parceiro.get("termina").getAsByte();
                             String contactos = parceiro.get("contactos").getAsString();
-                            estado = (termina == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
-                                    (estadoTitulo == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
+                            String dispositivo = parceiro.get("device").getAsString();
+                            boolean equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
+                            estado = (!equalsDevice ? getString(R.string.inco_desp) + "\n" : "") +
+                                    (termina == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
+                                            (estadoTitulo == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
@@ -489,7 +493,6 @@ public class HomeFragment extends Fragment {
                                     getString(R.string.bairro) + ": " + parceiro.get("district").getAsString() + "\n" +
                                     getString(R.string.rua) + ": " + parceiro.get("street").getAsString() + "\n" +
                                     "IMEI: " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
-
                         }
                         alertDialog(estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? getString(R.string.des) : getString(R.string.act), estado, requireContext(),
                                 estadoTitulo == Ultilitario.ZERO || termina == Ultilitario.UM ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
