@@ -80,7 +80,7 @@ public class LoginViewModel extends AndroidViewModel {
             try {
                 List<Usuario> usuario = usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(cp));
                 if (usuario.isEmpty()) {
-                    if (Ultilitario.getBooleanPreference(context, "actpin") && PreferenceManager.getDefaultSharedPreferences(context).getString("pinadmin", "0").equals(cp))
+                    if (Ultilitario.getBooleanValue(context, "actpin") && PreferenceManager.getDefaultSharedPreferences(context).getString("pinadmin", "0").equals(cp))
                         logar(view, handler);
                     else {
                         infoPin.postValue(getApplication().getString(R.string.infoPinIncorreto));

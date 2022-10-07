@@ -291,7 +291,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     private void getResultado(Ultilitario.Existe existe, Context context, View view, List<Cliente> cliente) {
         if (SIM.equals(existe)) {
-            if (Ultilitario.getBooleanPreference(context, "bloaut")) {
+            if (Ultilitario.getBooleanValue(context, "bloaut")) {
                 Ultilitario.setValueUsuarioMaster(bundle, cliente, context);
                 Navigation.findNavController(view).navigate(R.id.navigation, bundle);
             } else
