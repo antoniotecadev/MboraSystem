@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
-        android:background="@color/cor_castanha"
+        android:background="@color/toolBarColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -219,7 +219,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:text="@string/provincia"
-                android:textColor="@color/black" />
+                android:textColor="@color/textColorM" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerProvincias"
@@ -256,7 +256,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:text="@string/municipio"
-                android:textColor="@color/black" />
+                android:textColor="@color/textColorM" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerMunicipios"
@@ -275,7 +275,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:text="@string/bairro"
-                android:textColor="@color/black" />
+                android:textColor="@color/textColorM" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerBairros"
@@ -334,7 +334,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:text="@string/paisrgfsc"
-                android:textColor="@color/black" />
+                android:textColor="@color/textColorM" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerPais"
@@ -361,7 +361,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:text="@string/alt_senha"
-                android:textColor="@color/black"
+                android:textColor="@color/textColorM"
                 android:visibility="gone" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -434,7 +434,7 @@
                 android:layout_marginLeft="@dimen/margem_lateral_formulario"
                 android:layout_marginTop="@dimen/margin_top"
                 android:text="@string/equipa"
-                android:textColor="@color/black" />
+                android:textColor="@color/textColorM" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editTextCodEqui"
