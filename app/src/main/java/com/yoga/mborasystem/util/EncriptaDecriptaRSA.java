@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.util;
 
+import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
+
 import android.content.Context;
 import android.widget.Toast;
 
@@ -46,16 +48,16 @@ public class EncriptaDecriptaRSA {
         chave.close();
     }
 
-    public static String criptografarTexto(String texto, String filePath) throws Exception {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filePath));
+    public static byte[] criptografarTexto(String texto, Context context) throws Exception {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(getFilePathCache(context, "publickey.key").getAbsolutePath()));
         final PublicKey publicKey = (PublicKey) inputStream.readObject();
         return criptografa(texto, publicKey);
     }
 
-    private static void descriptografarTexto(String texto) throws Exception {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA));
+    public static String decriptografarTexto(byte[] texto, Context context) throws Exception {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(getFilePathCache(context, "privatekey.key").getAbsolutePath()));
         final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
-        decriptografa(texto, privateKey);
+        return decriptografa(texto, privateKey);
     }
 
 
@@ -63,19 +65,19 @@ public class EncriptaDecriptaRSA {
         return new File(PATH_CHAVE_PUBLICA).exists() && new File(PATH_CHAVE_PRIVADA).exists();
     }
 
-    public static String criptografa(String texto, PublicKey publicKey) throws Exception {
+    private static byte[] criptografa(String texto, PublicKey publicKey) throws Exception {
         byte[] cipherText;
         final Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         cipherText = cipher.doFinal(texto.getBytes());
-        return Base64.encode(cipherText);
+        return cipherText;
     }
 
-    public static String decriptografa(String texto, PrivateKey privateKey) throws Exception {
+    private static String decriptografa(byte[] texto, PrivateKey privateKey) throws Exception {
         byte[] dectyptedText;
         final Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        dectyptedText = cipher.doFinal(Base64.decode(texto));
+        dectyptedText = cipher.doFinal(texto);
         return new String(dectyptedText);
     }
 
