@@ -18,7 +18,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imageView5"
@@ -36,7 +36,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/venda_efectuada"
                 android:textAlignment="center"
-                android:textColor="#000000"
+                android:textColor="@color/textColor"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,6 +51,7 @@
                 android:text="TextView"
                 android:textAlignment="center"
                 android:textSize="24sp"
+                android:textColor="@color/textColor"
                 app:layout_constraintEnd_toEndOf="@+id/textView13"
                 app:layout_constraintStart_toStartOf="@+id/textView13"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" />
@@ -101,6 +102,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/guardar_pdf"
                         android:textAlignment="center"
+                        android:textColor="@color/textColor"
                         android:textSize="16sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -141,6 +143,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/guard_imprimi"
                         android:textAlignment="center"
+                        android:textColor="@color/textColor"
                         android:textSize="16sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -181,6 +184,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/enviar_whatsapp"
                         android:textAlignment="center"
+                        android:textColor="@color/textColor"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.cardview.widget.CardView>
