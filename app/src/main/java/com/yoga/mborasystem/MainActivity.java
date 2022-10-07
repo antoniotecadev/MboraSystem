@@ -1,6 +1,9 @@
 package com.yoga.mborasystem;
 
 import static com.yoga.mborasystem.util.Ultilitario.definirModoEscuro;
+import static com.yoga.mborasystem.util.Ultilitario.getDataSplitDispositivo;
+import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
+import static com.yoga.mborasystem.util.Ultilitario.setBooleanPreference;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,6 +23,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.view.FacturaFragment;
 
 import java.util.Objects;
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (!getDataSplitDispositivo(Ultilitario.getValueSharedPreferences(getApplicationContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent()))))
+            setBooleanPreference(getApplicationContext(), false, "estado_conta");
 
         definirModoEscuro(getApplicationContext());
 

@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.getDataSplitDispositivo;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
@@ -828,11 +829,6 @@ public class FacturaFragment extends Fragment {
                     .show();
         } else
             Ultilitario.alertDialog(getString(R.string.forma_pagamento), getString(R.string.smt_siff), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-    }
-
-    private String getDataSplitDispositivo(String dataSplit) {
-        String[] dataDavice = TextUtils.split(dataSplit, "-");
-        return dataDavice[0].trim() + '-' + dataDavice[1].trim() + '-' + dataDavice[2].trim();
     }
 
     private void openCamera() {

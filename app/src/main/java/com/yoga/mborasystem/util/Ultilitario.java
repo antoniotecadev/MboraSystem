@@ -679,6 +679,11 @@ public class Ultilitario {
             return date[0] + "-" + listMonth.get(date[1]) + "-" + date[2];
     }
 
+    public static String getDataSplitDispositivo(String dataSplit) {
+        String[] dataDavice = TextUtils.split(dataSplit, "-");
+        return dataDavice[0].trim() + '-' + dataDavice[1].trim() + '-' + dataDavice[2].trim();
+    }
+
     public static void getSelectedIdioma(Activity activity, String codigoIdioma, String msg, boolean isHome, boolean isSplash) {
         Locale locale = new Locale(codigoIdioma);
         Locale.setDefault(locale);
