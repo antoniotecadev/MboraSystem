@@ -804,7 +804,8 @@ public class FacturaFragment extends Fragment {
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
-                        if (getDataSplitDispositivo(Ultilitario.getValueSharedPreferences(requireContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent()))))
+                        if (getDataSplitDispositivo(Ultilitario.getValueSharedPreferences(requireContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent())))
+                                && Ultilitario.getBooleanPreference(requireContext(), "estado_conta"))
                             vendaViewModel.cadastrarVenda(nomeIDcliente[0].trim(), binding.textDesconto, finalQuantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         else {
                             if (isNetworkConnected(requireContext())) {
@@ -1153,7 +1154,10 @@ public class FacturaFragment extends Fragment {
                         if (isFinish || !equalsDevice) {
                             MainActivity.dismissProgressBar();
                             Ultilitario.alertDialog(isFinish ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
+                            Ultilitario.setBooleanPreference(requireContext(), false, "estado_conta");
+                            Ultilitario.setValueSharedPreferences(requireContext(), "data", "00-00-0000");
                         } else {
+                            Ultilitario.setBooleanPreference(requireContext(), true, "estado_conta");
                             Ultilitario.setValueSharedPreferences(requireContext(), "data", monthInglesFrances(Ultilitario.getDateCurrent()));
                             vendaViewModel.cadastrarVenda(nomeIDcliente, binding.textDesconto, quantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         }
