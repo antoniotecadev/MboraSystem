@@ -101,7 +101,7 @@ public class Ultilitario {
     private static Locale pt_AO;
     public static String categoria = "";
 
-    public static final String MBORASYSTEM = "ryogamborasystem";
+    public static final String MBORASYSTEM = "8e67fe66551c69731085ffb8d7746f6fec923b1af4f27066ba903219f0c60fb9";
     public static boolean isLocal = true;
     private static String formatted, current = "";
     public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");

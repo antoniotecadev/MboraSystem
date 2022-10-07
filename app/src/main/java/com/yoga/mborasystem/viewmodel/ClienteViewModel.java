@@ -2,7 +2,9 @@ package com.yoga.mborasystem.viewmodel;
 
 import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
 import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
+import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
+import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 
@@ -401,7 +403,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 cliente = clienteRepository.clienteExiste();
                 try {
                     if (Ultilitario.validateSenhaPin(Objects.requireNonNull(senha.getText()).toString(), cliente.get(0).getSenha())
-                            || Objects.requireNonNull(senha.getText()).toString().equals(Ultilitario.MBORASYSTEM)) {
+                            || bytesToHex(getHash(senha.getText().toString())).equalsIgnoreCase(Ultilitario.MBORASYSTEM)) {
                         Ultilitario.setValueUsuarioMaster(bundle, clienteRepository.clienteExiste(), getApplication().getApplicationContext());
                         handler.post(() -> Navigation.findNavController(requireView).navigate(R.id.action_dialogCodigoPin_to_navigation, bundle));
                     } else {
