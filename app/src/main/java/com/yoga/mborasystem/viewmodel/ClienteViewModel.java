@@ -357,7 +357,6 @@ public class ClienteViewModel extends AndroidViewModel {
                 .setCallback((e, jsonObject) -> {
                     try {
                         String retorno = jsonObject.get("insert").getAsString();
-                        Log.i("Erro", retorno);
                         if (retorno.equals("ok")) {
                             getValido().postValue(Ultilitario.Operacao.CRIAR);
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
