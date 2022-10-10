@@ -49,6 +49,7 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/nome"
+                    android:maxLength="25"
                     android:inputType="textPersonName" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -68,6 +69,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="25"
                     android:hint="@string/Sobre_Nome"
                     android:inputType="textPersonName" />
 
@@ -88,6 +90,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="25"
                     android:hint="@string/nifbi"
                     android:inputType="text"
                     android:textAlignment="center"
@@ -110,6 +113,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="20"
                     android:hint="@string/empresa"
                     android:inputType="textPersonName" />
 
@@ -140,6 +144,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="15"
                     android:hint="@string/Numero_Telefone"
                     android:inputType="phone" />
 
@@ -160,6 +165,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="15"
                     android:hint="@string/Numero_Telefone_Alternativo"
                     android:inputType="phone" />
 
@@ -180,6 +186,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="50"
                     android:hint="@string/Email"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -302,6 +309,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="20"
                     android:hint="@string/bairro"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -321,6 +329,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
+                    android:maxLength="20"
                     android:hint="@string/rua"
                     android:inputType="text" />
 
