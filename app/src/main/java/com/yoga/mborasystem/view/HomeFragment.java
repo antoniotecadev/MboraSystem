@@ -298,10 +298,7 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
                         break;
                     case R.id.expoBd:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                            requestPermissionLauncherDeviceId.launch(Manifest.permission.READ_PHONE_STATE);
-                        else
-                            exportarBD();
+                        exportarBD();
                         break;
                     case R.id.impoBd:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
@@ -592,13 +589,4 @@ public class HomeFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper()), getDeviceUniqueID(requireActivity()), cliente.getImei()));
     }
-
-    private final ActivityResultLauncher<String> requestPermissionLauncherDeviceId = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), result -> {
-                if (result)
-                    exportarBD();
-                else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_expo_db), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-    );
 }

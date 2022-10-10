@@ -636,6 +636,7 @@ public class Ultilitario {
     public static boolean getBooleanValue(Context context, String idvalue) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(idvalue, false);
     }
+
     public static boolean getBooleanPreference(Context context, String idvalue) {
         return context.getSharedPreferences("VALUE_BOOLEAN", Context.MODE_PRIVATE).getBoolean(idvalue, false);
     }
@@ -1020,25 +1021,6 @@ public class Ultilitario {
     }
 
     public static String getDeviceUniqueID(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            return getAndroidID(activity);
-        else {
-            if (getIMEI(activity) == null)
-                return getAndroidID(activity);
-            else
-                return getIMEI(activity);
-        }
-    }
-
-    private static String getIMEI(Activity activity) {
-        TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            return telephonyManager.getImei();
-        else
-            return telephonyManager.getDeviceId();
-    }
-
-    private static String getAndroidID(Activity activity) {
         return Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
