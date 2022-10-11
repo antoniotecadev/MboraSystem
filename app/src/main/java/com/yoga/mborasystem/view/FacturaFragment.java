@@ -1146,7 +1146,7 @@ public class FacturaFragment extends Fragment {
                             equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
                         }
                         boolean isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
-                        mensagem = (!equalsDevice ? getString(R.string.inco_desp) + "\n" : "") + (isFinish ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
+                        mensagem = (!equalsDevice ? getString(R.string.inco_desp) + "\n\n" : "") + (isFinish ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
                         if (isFinish || !equalsDevice) {
                             MainActivity.dismissProgressBar();
                             Ultilitario.alertDialog(isFinish ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);

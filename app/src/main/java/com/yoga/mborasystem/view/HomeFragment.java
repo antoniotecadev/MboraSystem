@@ -473,7 +473,7 @@ public class HomeFragment extends Fragment {
                             String contactos = parceiro.get("contactos").getAsString();
                             String dispositivo = parceiro.get("device").getAsString();
                             boolean equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
-                            estado = (!equalsDevice ? getString(R.string.inco_desp) + "\n" : "") +
+                            estado = (!equalsDevice ? getString(R.string.inco_desp) + "\n\n" : "") +
                                     (terminoPrazo == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
                                             (estadoConta == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
