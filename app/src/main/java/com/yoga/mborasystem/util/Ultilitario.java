@@ -152,7 +152,7 @@ public class Ultilitario {
                             alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
                         }
                     })
-                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> dialogInterface.dismiss()).show();
+                    .setPositiveButton(R.string.fechar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
         }
     }
 
