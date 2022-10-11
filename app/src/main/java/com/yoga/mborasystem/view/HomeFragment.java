@@ -489,7 +489,7 @@ public class HomeFragment extends Fragment {
                                     getString(R.string.municipio) + ": " + parceiro.get("municipality").getAsString() + "\n" +
                                     getString(R.string.bairro) + ": " + parceiro.get("district").getAsString() + "\n" +
                                     getString(R.string.rua) + ": " + parceiro.get("street").getAsString() + "\n" +
-                                    "IMEI: " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
+                                    getString(R.string.imei) + ": " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
                         }
                         boolean isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
                         alertDialog(isFinish ? getString(R.string.des) : getString(R.string.act), estado, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
