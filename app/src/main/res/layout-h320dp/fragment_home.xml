@@ -294,7 +294,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/btnDashboard"
-                    android:layout_width="match_parent"
+                    android:layout_width="280dp"
                     android:layout_height="140dp"
                     android:layout_margin="12dp"
                     android:clickable="true"
