@@ -71,11 +71,12 @@
                     android:layout_height="180dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
+                    android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
+                    android:outlineSpotShadowColor="@color/white"
                     app:cardBackgroundColor="@color/cardColor"
-                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
-                    app:cardElevation="6dp"
-                    android:focusable="true">
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
@@ -105,8 +106,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="@string/categorias_produtos"
-                            android:textColor="@color/textColorM"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:textColor="@color/textColorM" />
 
                         <View
                             android:id="@+id/divider6"
@@ -125,8 +126,9 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
+                    android:outlineSpotShadowColor="@color/white"
                     app:cardBackgroundColor="@color/cardColor"
-                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -157,8 +159,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="@string/dados_usuarios_actividades"
-                            android:textColor="@color/textColorM"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:textColor="@color/textColorM" />
 
                         <View
                             android:id="@+id/divider3"
@@ -183,8 +185,9 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
+                    android:outlineSpotShadowColor="@color/white"
                     app:cardBackgroundColor="@color/cardColor"
-                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -215,8 +218,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="@string/venda_produtos_efectuadas"
-                            android:textColor="@color/textColorM"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:textColor="@color/textColorM" />
 
                         <View
                             android:id="@+id/divider22"
@@ -235,8 +238,9 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
+                    android:outlineSpotShadowColor="@color/white"
                     app:cardBackgroundColor="@color/cardColor"
-                    android:outlineSpotShadowColor="@color/white"                    app:cardCornerRadius="10dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -267,8 +271,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="@string/dados_clientes_compras"
-                            android:textColor="@color/textColorM"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:textColor="@color/textColorM" />
 
                         <View
                             android:id="@+id/divider2"
@@ -349,8 +353,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="30dp"
                     android:src="@drawable/ic_logotipo_yoga_original" />
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/slogan_yoga"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:layout_gravity="center" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 

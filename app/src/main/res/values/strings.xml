@@ -699,6 +699,7 @@
     <string name="inco_desp">⛔ ID INCOMPATÍVEL</string>
     <string name="imei" translatable="false">IMEI</string>
     <string name="emps">Empresa</string>
+    <string name="slogan_yoga" translatable="false">TECNOLOGIA COMÉRCIO E SERVIÇOS</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

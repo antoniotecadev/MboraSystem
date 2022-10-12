@@ -357,8 +357,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="30dp"
                     android:src="@drawable/ic_logotipo_yoga_original" />
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/slogan_yoga"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:layout_gravity="center" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.gridlayout.widget.GridLayout>
     </androidx.core.widget.NestedScrollView>

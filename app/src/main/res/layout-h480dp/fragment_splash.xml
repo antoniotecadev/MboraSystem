@@ -45,4 +45,16 @@
         app:layout_constraintTop_toBottomOf="@+id/tvNomeSistema"
         android:src="@drawable/ic_logotipo_yoga_original" />
 
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/slogan_yoga"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView1"
+        app:layout_constraintStart_toStartOf="@+id/imageView1"
+        app:layout_constraintTop_toBottomOf="@+id/imageView1" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
