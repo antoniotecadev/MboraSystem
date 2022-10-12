@@ -406,7 +406,7 @@
     <string name="exp_tds_vd_dvd_use">Exportar todas as vendas do usuário com dívida.</string>
     <string name="exp_tds_vd_use">Exportar todas as vendas do usuário seleccionado.</string>
     <string name="acerca">
-        Sistema de Gestão e facturação criado pela startup YOGA para:\n
+        Sistema de Gestão e facturação adaptado a vários tipos de negócios:\n
         ✔ Cantinas\n
         ✔ Bares\n
         ✔ Boutiques\n
@@ -415,7 +415,10 @@
         ✔ Restaurante\n
         ✔ Padaria\n
         ✔ Muito mais…\n\n
-        VERSÃO: 1.0.0
+          MboraSystem possibilitará ao comerciante ganhos reais em qualidade e produtividade das suas vendas,
+          através de automatização das suas actividades diárias.\n\n
+        VERSÃO: 1.0.0\n\n
+        YOGA - TECNOLOGIA COMÉRCIO E SERVIÇOS
     </string>
     <string name="ace">Acerca</string>
     <string name="rvr_car">Remover</string>

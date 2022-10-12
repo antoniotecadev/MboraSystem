@@ -382,18 +382,20 @@
     <string name="exp_tds_vd_dvd_use">Export all user sales with debt.</string>
     <string name="exp_tds_vd_use">Export all sales of the selected user.</string>
     <string name="acerca">
-        Management and invoicing system created by startup YOGA for:\n
+        Management and invoicing system adapted to various types of business:\n
         ✔ Canteens\n
         ✔ Bars\n
-        ✔ Barbershops\n
-        ✔ Beauty salon\n
         ✔ Boutiques\n
         ✔ Street vending\n
         ✔ Countertop sales\n
         ✔ Restaurant\n
         ✔ Bakery\n
         ✔ Much more\n\n
-        VERSION: 1.0.0</string>
+        MboraSystem will allow the merchant to gain real gains in the quality and productivity of his sales,
+        by automating your daily activities.\n\n
+        VERSION: 1.0.0\n\n
+        YOGA - TRADE AND SERVICES TECHNOLOGY
+    </string>
     <string name="ace">About</string>
     <string name="rvr_car">Remover</string>
     <string name="lix">Bin</string>
