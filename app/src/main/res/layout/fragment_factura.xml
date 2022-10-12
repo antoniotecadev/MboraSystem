@@ -65,6 +65,7 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -97,15 +98,13 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="@dimen/margem_lateral_formulario"
-                        android:textAlignment="textEnd"
                         app:backgroundTint="@android:color/holo_red_light"
                         app:icon="@android:drawable/ic_delete"
-                        app:iconGravity="textStart"
-                        app:iconSize="25dp" />
+                        app:iconGravity="textEnd" />
 
                     <Button
                         android:id="@+id/btnCriarCliente"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="@dimen/margem_lateral_formulario"
@@ -345,7 +344,7 @@
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/linearLayoutDesconto"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:visibility="gone">
@@ -411,7 +410,7 @@
                     android:textSize="20sp" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
@@ -501,7 +500,7 @@
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/linearLayoutDivida"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:visibility="gone">
