@@ -28,9 +28,6 @@
                 android:id="@+id/impoBd"
                 android:title="@string/impoBd"/>
             <item
-                android:id="@+id/politicaBackup"
-                android:title="@string/politica_backup"/>
-            <item
                 android:id="@+id/device"
                 android:title=""/>
         </menu>
