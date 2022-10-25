@@ -37,6 +37,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -66,20 +67,22 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = FirebaseDatabase.getInstance().getReference("cliente");
-//        query = FirebaseDatabase.getInstance().getReference("cliente").limitToLast(1);
+        mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
+//        query = FirebaseDatabase.getInstance().getReference("parceiros").limitToLast(1);
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 //        query.addChildEventListener(new ChildEventListener() {
 //            @Override
 //            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 //                if (snapshot.exists()) {
 //                    Cliente cliente = snapshot.getValue(Cliente.class);
-//                    Log.i("cliente", cliente.getData_cria() + "");
+//                    Log.i("cliente", cliente.getImei() + "");
+//                    Toast.makeText(requireActivity(), cliente.getImei(), Toast.LENGTH_LONG).show();
 //                } else {
 //                    Toast.makeText(requireActivity(), "Vazio", Toast.LENGTH_LONG).show();
 //                }
@@ -106,7 +109,6 @@ public class CadastrarClienteFragment extends Fragment {
 //            }
 //        });
 
-//        setHasOptionsMenu(true);
         return criarCliente(inflater, container);
     }
 
@@ -192,7 +194,7 @@ public class CadastrarClienteFragment extends Fragment {
             switch (operacao) {
                 case CRIAR:
                     try {
-                        writeNewClient(binding, imei);
+                        saveUserInFirebase(imei);
                     } catch (Exception e) {
                         Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
@@ -244,27 +246,18 @@ public class CadastrarClienteFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void writeNewClient(FragmentCadastrarClienteBinding binding, String imei) {
-        Cliente cliente = new Cliente();
-        cliente.setId(1);
-        cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
-        cliente.setSobrenome(Objects.requireNonNull(binding.editTextSobreNome.getText()).toString());
-        cliente.setNifbi(Objects.requireNonNull(binding.editTextNif.getText()).toString());
-        cliente.setMaster(true);
-        cliente.setTelefone(Objects.requireNonNull(binding.editTextNumeroTelefone.getText()).toString());
-        cliente.setTelefonealternativo(Objects.requireNonNull(binding.editTextNumeroTelefoneAlternativo.getText()).toString());
-        cliente.setEmail(Objects.requireNonNull(binding.editTextEmail.getText()).toString());
-        cliente.setNomeEmpresa(Objects.requireNonNull(binding.editTextNomeEmpresa.getText()).toString());
-        cliente.setProvincia(binding.spinnerProvincias.getSelectedItem().toString());
-        cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
-        cliente.setBairro(Objects.requireNonNull(binding.editTextBairro.getText()).toString());
-        cliente.setRua(binding.editTextBairro.getText().toString());
-        cliente.setSenha(Objects.requireNonNull(binding.editTextSenha.getText()).toString());
-        cliente.setImei(imei);
-        cliente.setCodigoEquipa(Objects.requireNonNull(binding.editTextCodigoEquipa.getText()).toString());
-        cliente.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-        cliente.setVisualizado(false);
-        mDatabase.child(cliente.getImei()).setValue(cliente);
+    public void saveUserInFirebase(String imei) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(Objects.requireNonNull(binding.editTextEmail.getText()).toString(), Objects.requireNonNull(binding.editTextSenha.getText()).toString())
+                .addOnCompleteListener(requireActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        Cliente cliente = new Cliente();
+                        cliente.setImei(imei);
+                        cliente.setVisualizado(false);
+                        mDatabase.child(cliente.getImei()).setValue(cliente);
+                    } else {
+                        alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    }
+                });
     }
 
     private String uriPath;
