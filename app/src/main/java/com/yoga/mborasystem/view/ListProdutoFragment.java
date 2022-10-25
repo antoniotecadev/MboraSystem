@@ -1,5 +1,8 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.getImageGallery;
+import static com.yoga.mborasystem.util.Ultilitario.getPath;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -7,6 +10,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -14,13 +19,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -75,6 +84,7 @@ public class ListProdutoFragment extends Fragment {
     private StringBuilder data;
     private boolean isLixeira, isMaster;
     private GroupAdapter adapter;
+    private List<String> detalhes;
     private List<Long> idprodutoCarrinho;
     private ProdutoViewModel produtoViewModel;
     private FragmentProdutoListBinding binding;
@@ -470,6 +480,14 @@ public class ListProdutoFragment extends Fragment {
                                     caixaDialogo(produto, getString(R.string.elim_prod_perm), "(" + produto.getNome() + ")\n" + getString(R.string.env_prod_n_lix), true);
                                     return false;
                                 });
+                                menu.add(getString(R.string.env, getString(R.string.mbora))).setOnMenuItemClickListener(item -> {
+                                    getImageGallery(getImageGalleryActivityResultLauncher);
+                                    detalhes = new ArrayList<>();
+                                    detalhes.add(produto.getNome());
+                                    detalhes.add(String.valueOf(produto.getPreco()));
+                                    detalhes.add(produto.getCodigoBarra());
+                                    return false;
+                                });
                             }
                         } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
@@ -525,7 +543,7 @@ public class ListProdutoFragment extends Fragment {
             alert.setTitle(titulo);
             alert.setMessage(mensagem);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> produtoViewModel.eliminarProduto(produto, !permanente, null, false)
-            ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                    ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
         }
     }
@@ -607,6 +625,43 @@ public class ListProdutoFragment extends Fragment {
             produtoViewModel.importarProdutos(produtos, false, this.idcategoria);
         });
     }
+
+    @SuppressLint("SetTextI18n")
+    ActivityResultLauncher<Intent> getImageGalleryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        try {
+                            Uri uriImage = data.getData();
+                            InputStream imageStream = requireActivity().getContentResolver().openInputStream(uriImage);
+                            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            String picturePath = getPath(requireContext(), uriImage);
+                            Log.i("IMAGE", picturePath);
+                            @SuppressLint("InflateParams") View view = LayoutInflater.from(requireContext()).inflate(R.layout.image_layout, null);
+                            ImageView img = view.findViewById(R.id.image);
+                            TextView detalhe = view.findViewById(R.id.detalhe_text);
+                            detalhe.setTextColor(Color.BLACK);
+                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n CB: " + detalhes.get(2));
+                            img.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+                            img.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+                            img.requestLayout();
+                            img.setScaleType(ImageView.ScaleType.FIT_START);
+                            img.setImageBitmap(selectedImage);
+                            new AlertDialog.Builder(requireContext())
+                                    .setIcon(R.drawable.ic_baseline_cloud_upload_24)
+                                    .setView(view)
+                                    .setTitle(getString(R.string.env, getString(R.string.mbora)))
+                                    .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                    .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+
+                                    }).show();
+                        } catch (Exception e) {
+                            Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                    }
+                }
+            });
 
     @Override
     public void onDestroyView() {

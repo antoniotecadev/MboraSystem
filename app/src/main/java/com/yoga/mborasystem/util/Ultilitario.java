@@ -115,7 +115,7 @@ public class Ultilitario {
     public static void showToast(Context context, int color, String s, int imagem) {
         Toast toast = new Toast(context);
         @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
-        TextView text = view.findViewById(R.id.toast_text);
+        TextView text = view.findViewById(R.id.detalhe_text);
         ImageView img = view.findViewById(R.id.image);
         text.setText(s);
         img.setImageResource(imagem);
@@ -139,6 +139,7 @@ public class Ultilitario {
             toast.setDuration(LENGTH_TOAST);
             toast.show();
         } else {
+            img.setBackground(context.getResources().getDrawable(R.drawable.border_image));
             new androidx.appcompat.app.AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_baseline_store_24)
                     .setTitle(R.string.cod_qr)
@@ -154,6 +155,22 @@ public class Ultilitario {
                     })
                     .setPositiveButton(R.string.fechar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
         }
+    }
+
+    public static String getPath(Context context, Uri uri) {
+        String result = null;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int column_index = cursor.getColumnIndexOrThrow(proj[0]);
+                result = cursor.getString(column_index);
+            }
+            cursor.close();
+        }
+        if (result == null)
+            result = "Not found";
+        return result;
     }
 
     public enum Operacao {
@@ -443,6 +460,12 @@ public class Ultilitario {
             activity.startActivityForResult(intent, QUATRO);
         else
             importActivityResultLauncher.launch(intent);
+    }
+
+    public static void getImageGallery(ActivityResultLauncher<Intent> imageGalleryActivityResultLauncher) {
+        Intent imagePickerIntent = new Intent(Intent.ACTION_PICK);
+        imagePickerIntent.setType("image/*");
+        imageGalleryActivityResultLauncher.launch(imagePickerIntent);
     }
 
     public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout) {

@@ -700,6 +700,8 @@
     <string name="imei" translatable="false">IMEI</string>
     <string name="emps">Empresa</string>
     <string name="slogan_yoga" translatable="false">TECNOLOGIA COMÉRCIO E SERVIÇOS</string>
+    <string name="env">Enviar (%1$s)</string>
+    <string name="mbora" translatable="false">Mbora</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

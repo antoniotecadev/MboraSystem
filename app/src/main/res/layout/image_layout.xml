@@ -12,13 +12,13 @@
       android:id="@+id/image"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:background="@drawable/border_image"
       android:layout_marginStart="20dp" />
 
   <TextView
-      android:id="@+id/toast_text"
+      android:id="@+id/detalhe_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginLeft="2dp"
       android:textColor="@color/white"
       android:textSize="16sp" />
 
