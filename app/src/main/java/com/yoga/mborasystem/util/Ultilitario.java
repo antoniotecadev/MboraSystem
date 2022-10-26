@@ -462,10 +462,25 @@ public class Ultilitario {
             importActivityResultLauncher.launch(intent);
     }
 
-    public static void getImageGallery(ActivityResultLauncher<Intent> imageGalleryActivityResultLauncher) {
-        Intent imagePickerIntent = new Intent(Intent.ACTION_PICK);
-        imagePickerIntent.setType("image/*");
-        imageGalleryActivityResultLauncher.launch(imagePickerIntent);
+    private static void getImageCameraOrGallery(ActivityResultLauncher<Intent> imageActivityResultLauncher, boolean isCamera) {
+        Intent imagePickerIntent;
+        if (isCamera)
+            imagePickerIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        else {
+            imagePickerIntent = new Intent(Intent.ACTION_PICK);
+            imagePickerIntent.setType("image/*");
+        }
+        imageActivityResultLauncher.launch(imagePickerIntent);
+    }
+
+    public static void alertDialogSelectImage(Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+        new androidx.appcompat.app.AlertDialog.Builder(context)
+                .setIcon(R.drawable.ic_baseline_insert_photo_24)
+                .setTitle(context.getString(R.string.selec_image))
+                .setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                .setNegativeButton(context.getString(R.string.camera), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, true))
+                .setPositiveButton(context.getString(R.string.galeria), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, false))
+                .show();
     }
 
     public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout) {

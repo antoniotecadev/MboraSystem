@@ -1,8 +1,8 @@
 package com.yoga.mborasystem.view;
 
-import static com.yoga.mborasystem.util.Ultilitario.getImageGallery;
-import static com.yoga.mborasystem.util.Ultilitario.getPath;
+import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -481,7 +480,7 @@ public class ListProdutoFragment extends Fragment {
                                     return false;
                                 });
                                 menu.add(getString(R.string.env, getString(R.string.mbora))).setOnMenuItemClickListener(item -> {
-                                    getImageGallery(getImageGalleryActivityResultLauncher);
+                                    requestPermissionLauncher.launch(Manifest.permission.CAMERA);
                                     detalhes = new ArrayList<>();
                                     detalhes.add(produto.getNome());
                                     detalhes.add(String.valueOf(produto.getPreco()));
@@ -627,27 +626,32 @@ public class ListProdutoFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    ActivityResultLauncher<Intent> getImageGalleryActivityResultLauncher = registerForActivityResult(
+    ActivityResultLauncher<Intent> imageActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     if (data != null) {
                         try {
                             Uri uriImage = data.getData();
-                            InputStream imageStream = requireActivity().getContentResolver().openInputStream(uriImage);
-                            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                            String picturePath = getPath(requireContext(), uriImage);
-                            Log.i("IMAGE", picturePath);
+                            Bitmap selectedImage;
+                            if (uriImage == null)
+                                selectedImage = (Bitmap) data.getExtras().get("data");
+                            else {
+                                InputStream imageStream = requireActivity().getContentResolver().openInputStream(uriImage);
+                                selectedImage = BitmapFactory.decodeStream(imageStream);
+                            }
+
                             @SuppressLint("InflateParams") View view = LayoutInflater.from(requireContext()).inflate(R.layout.image_layout, null);
                             ImageView img = view.findViewById(R.id.image);
                             TextView detalhe = view.findViewById(R.id.detalhe_text);
                             detalhe.setTextColor(Color.BLACK);
-                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n CB: " + detalhes.get(2));
+                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)));
                             img.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
                             img.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
                             img.requestLayout();
                             img.setScaleType(ImageView.ScaleType.FIT_START);
                             img.setImageBitmap(selectedImage);
+
                             new AlertDialog.Builder(requireContext())
                                     .setIcon(R.drawable.ic_baseline_cloud_upload_24)
                                     .setView(view)
@@ -662,6 +666,15 @@ public class ListProdutoFragment extends Fragment {
                     }
                 }
             });
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                if (result) {
+                    alertDialogSelectImage(requireContext(), imageActivityResultLauncher);
+                } else
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_cam_gal), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
+    );
 
     @Override
     public void onDestroyView() {
