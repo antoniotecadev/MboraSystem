@@ -55,8 +55,7 @@
             android:digits="0123456789"
             android:hint="@string/codigopin"
             android:imeOptions="actionDone"
-            android:inputType="numberPassword"
-            android:maxLength="6">
+            android:inputType="numberPassword">
 
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
@@ -84,8 +83,7 @@
             android:digits="0123456789"
             android:hint="@string/codigopinnovamente"
             android:imeOptions="actionDone"
-            android:inputType="numberPassword"
-            android:maxLength="6">
+            android:inputType="numberPassword">
 
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>

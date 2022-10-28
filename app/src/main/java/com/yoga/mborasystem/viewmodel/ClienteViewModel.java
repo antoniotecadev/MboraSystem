@@ -6,7 +6,10 @@ import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isCampoVazio;
+import static com.yoga.mborasystem.util.Ultilitario.isEmailValido;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNumeroValido;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,8 +20,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
@@ -91,18 +92,6 @@ public class ClienteViewModel extends AndroidViewModel {
     private final Pattern letrasNIFBI = Pattern.compile("[^a-zA-Z0-9 ]");
     private final Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û,-/ ]");
     private final Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9 ]");
-
-    private boolean isCampoVazio(String valor) {
-        return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
-    }
-
-    private boolean isEmailValido(String email) {
-        return (!isCampoVazio(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
-
-    private boolean isNumeroValido(String numero) {
-        return (isCampoVazio(numero) || !Patterns.PHONE.matcher(numero).matches());
-    }
 
     public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa, String imei, Activity activity) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (isCampoVazio(Objects.requireNonNull(nome.getText()).toString()) || letras.matcher(nome.getText().toString()).find()) {

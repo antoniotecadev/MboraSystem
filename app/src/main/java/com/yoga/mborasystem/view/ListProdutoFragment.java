@@ -1,6 +1,8 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
+import static com.yoga.mborasystem.util.Ultilitario.authenticationInFirebase;
+import static com.yoga.mborasystem.util.Ultilitario.verifyAuthenticationInFirebase;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -53,6 +55,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.xwray.groupie.GroupAdapter;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.databinding.FragmentProdutoBinding;
 import com.yoga.mborasystem.databinding.FragmentProdutoListBinding;
 import com.yoga.mborasystem.model.entidade.Produto;
@@ -670,7 +673,12 @@ public class ListProdutoFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    alertDialogSelectImage(requireContext(), imageActivityResultLauncher);
+                    if (verifyAuthenticationInFirebase() != null)
+                        alertDialogSelectImage(requireContext(), imageActivityResultLauncher);
+                    else {
+                        DialogSenhaBinding binding = DialogSenhaBinding.inflate(getLayoutInflater());
+                        authenticationInFirebase(requireActivity(), binding, imageActivityResultLauncher);
+                    }
                 } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_cam_gal), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }

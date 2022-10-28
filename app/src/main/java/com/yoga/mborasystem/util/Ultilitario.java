@@ -31,8 +31,10 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,11 +56,15 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
@@ -126,7 +132,7 @@ public class Ultilitario {
         toast.show();
     }
 
-    @SuppressLint("WrongConstant")
+    @SuppressLint({"WrongConstant", "UseCompatLoadingForDrawables"})
     public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser, ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode, String nome, String estabalecimento, String imei) {
         View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
         ImageView img = view.findViewById(R.id.image);
@@ -474,7 +480,7 @@ public class Ultilitario {
     }
 
     public static void alertDialogSelectImage(Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
-        new androidx.appcompat.app.AlertDialog.Builder(context)
+        new AlertDialog.Builder(context)
                 .setIcon(R.drawable.ic_baseline_insert_photo_24)
                 .setTitle(context.getString(R.string.selec_image))
                 .setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
@@ -561,6 +567,69 @@ public class Ultilitario {
 
         String[] date = TextUtils.split(data.trim(), "-");
         return date[2] + "-" + listData.get(date[1]) + "-" + date[0];
+    }
+
+    public static FirebaseUser verifyAuthenticationInFirebase() {
+        // Check if user is signed in (non-null) and update UI accordingly.
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    public static void authenticationInFirebase(Activity activity, DialogSenhaBinding binding, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+        binding.textInputSenha.setVisibility(View.GONE);
+        binding.layoutPin.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+        binding.buttonFechar.setText(activity.getString(R.string.cancelar));
+
+        editTextLayout(binding.layoutPin, binding.pin, R.string.Email, InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS, activity);
+        editTextLayout(binding.layoutPinRepete, binding.pinRepete, R.string.senha, InputType.TYPE_TEXT_VARIATION_PASSWORD, activity);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(activity)
+                .setIcon(R.drawable.ic_baseline_store_24)
+                .setTitle(activity.getString(R.string.aut) + activity.getString(R.string.nvm))
+                .setView(binding.getRoot())
+                .show();
+
+        binding.btnEntrar.setOnClickListener(view -> {
+            if (isEmailValido(Objects.requireNonNull(binding.pin.getText()).toString())) {
+                binding.pin.requestFocus();
+                binding.layoutPin.setError(activity.getString(R.string.email_invalido));
+            } else if ((isCampoVazio(Objects.requireNonNull(binding.pinRepete.getText()).toString()) || letraNumero.matcher(binding.pinRepete.getText().toString()).find())) {
+                binding.pinRepete.requestFocus();
+                binding.layoutPinRepete.setError(activity.getString(R.string.senha_invalida));
+            } else
+                signInFirebase(activity, binding.pin.getText().toString(), binding.pinRepete.getText().toString(), alertDialog, imageActivityResultLauncher);
+        });
+        binding.buttonFechar.setOnClickListener(view -> alertDialog.dismiss());
+    }
+
+    private static void editTextLayout(TextInputLayout textInputLayout, TextInputEditText textInputEditText, int hint, int inputType, Context context) {
+        textInputLayout.setVisibility(View.VISIBLE);
+        textInputLayout.setHint(context.getString(hint));
+        textInputEditText.setInputType(inputType);
+    }
+
+    private static void signInFirebase(Activity activity, String email, String password, AlertDialog alertDialog, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, task -> {
+                    if (task.isSuccessful()) {
+                        alertDialog.dismiss();
+                        showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
+                        alertDialogSelectImage(activity, imageActivityResultLauncher);
+                    } else
+                        alertDialog(activity.getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
+                });
+    }
+
+    public static boolean isCampoVazio(String valor) {
+        return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
+    }
+
+    public static boolean isEmailValido(String email) {
+        return (isCampoVazio(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+
+    public static boolean isNumeroValido(String numero) {
+        return (isCampoVazio(numero) || !Patterns.PHONE.matcher(numero).matches());
     }
 
     private static class ExportarAsyncTask extends AsyncTask<String, Void, String> {
