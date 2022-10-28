@@ -316,6 +316,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/textViewDesconto"
                         android:layout_width="wrap_content"
@@ -485,25 +486,25 @@
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
                         android:text="@string/dvd"
-                        android:visibility="gone"
-                        android:textColor="@color/textColorM" />
+                        android:textColor="@color/textColorM"
+                        android:visibility="gone" />
 
                     <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/checkboxSemValorPago"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/se_val_pag"
-                        android:visibility="gone"
-                        android:textColor="@color/textColorM" />
+                        android:textColor="@color/textColorM"
+                        android:visibility="gone" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchDivida"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margem_lateral_formulario"
+                        android:text="@string/dvd"
                         android:textColor="@color/textColorM"
-                        android:textSize="20sp"
-                        android:text="@string/dvd" />
+                        android:textSize="20sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -568,30 +569,30 @@
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
                     android:background="@color/textColorM" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margem_lateral_formulario"
-                android:layout_marginTop="@dimen/margem_lateral_formulario"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margem_lateral_formulario"
-                    android:text="@string/forma_pagamento"
-                    android:textColor="@color/textColorM" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchFormaPagamento"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margem_lateral_formulario"
-                    android:text="@string/most_mais"
-                    android:textColor="@color/textColorM" />
+                    android:layout_marginTop="@dimen/margem_lateral_formulario"
+                    android:orientation="horizontal">
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margem_lateral_formulario"
+                        android:text="@string/forma_pagamento"
+                        android:textColor="@color/textColorM" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchFormaPagamento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margem_lateral_formulario"
+                        android:text="@string/most_mais"
+                        android:textColor="@color/textColorM" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -600,25 +601,35 @@
 
                     <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/checkboxNumerario"
-                        android:layout_width="180dp"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textSize="12sp"
                         android:text="@string/numerario"
                         android:textColor="@color/textColor" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/dinheiroValorPago"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:hint="@string/valor_kwanza"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="15"
-                        android:text="@string/preco_zero"
-                        android:textColor="@color/textColorM" />
+                        android:layout_marginEnd="16dp"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/dinheiroValorPago"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:hint="@string/valor_kwanza"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="15"
+                            android:text="@string/preco_zero"
+                            android:textColor="@color/textColorM" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -631,25 +642,35 @@
 
                     <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/checkboxCartaoMulticaixa"
-                        android:layout_width="180dp"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textSize="12sp"
                         android:text="@string/cartao_multicaixa"
                         android:textColor="@color/textColor" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/cartaoValorPago"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:hint="@string/valor_kwanza"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="15"
-                        android:text="@string/preco_zero"
-                        android:textColor="@color/textColorM" />
+                        android:layout_marginEnd="16dp"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/cartaoValorPago"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:hint="@string/valor_kwanza"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="15"
+                            android:text="@string/preco_zero"
+                            android:textColor="@color/textColorM" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -661,25 +682,35 @@
 
                     <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/checkboxDepositoBancario"
-                        android:layout_width="180dp"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textSize="12sp"
                         android:text="@string/deposito_bancario"
                         android:textColor="@color/textColor" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/depValorPago"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:hint="@string/valor_kwanza"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="15"
-                        android:text="@string/preco_zero"
-                        android:textColor="@color/textColorM" />
+                        android:layout_marginEnd="16dp"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/depValorPago"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:hint="@string/valor_kwanza"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="15"
+                            android:text="@string/preco_zero"
+                            android:textColor="@color/textColorM" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -691,25 +722,35 @@
 
                     <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/checkboxTransferenciaBancaria"
-                        android:layout_width="180dp"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
+                        android:textSize="12sp"
                         android:text="@string/transferencia_bancario"
                         android:textColor="@color/textColor" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/transfValorPago"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:enabled="false"
-                        android:hint="@string/valor_kwanza"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:maxLength="15"
-                        android:text="@string/preco_zero"
-                        android:textColor="@color/textColorM" />
+                        android:layout_marginEnd="16dp"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/transfValorPago"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:hint="@string/valor_kwanza"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="15"
+                            android:text="@string/preco_zero"
+                            android:textColor="@color/textColorM" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <View
