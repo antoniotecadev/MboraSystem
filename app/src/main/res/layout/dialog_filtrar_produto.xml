@@ -23,6 +23,9 @@
                 android:layout_height="wrap_content"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -70,6 +73,9 @@
                     android:layout_height="wrap_content"
                     app:boxBackgroundColor="@color/material_on_background_disabled"
                     app:boxStrokeColor="@color/white"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/cor_castanha"
+                    app:endIconTintMode="multiply"
                     app:hintTextColor="@color/white">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -99,6 +105,9 @@
                     android:layout_height="wrap_content"
                     app:boxBackgroundColor="@color/material_on_background_disabled"
                     app:boxStrokeColor="@color/white"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/cor_castanha"
+                    app:endIconTintMode="multiply"
                     app:hintTextColor="@color/white">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -166,6 +175,9 @@
                 android:layout_height="wrap_content"
                 app:boxBackgroundColor="@android:color/holo_blue_light"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText

@@ -576,7 +576,7 @@ public class Ultilitario {
 
     public static void authenticationInFirebase(Activity activity, DialogSenhaBinding binding, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
         binding.textInputSenha.setVisibility(View.GONE);
-        binding.layoutPin.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+        binding.layoutPin.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
         binding.buttonFechar.setText(activity.getString(R.string.cancelar));
 
         editTextLayout(binding.layoutPin, binding.pin, R.string.Email, InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS, activity);

@@ -1,11 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialogCriarCliente"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@color/backgroundColor"
+    android:orientation="vertical"
     tools:context=".caixadialogo.DialogCriarClienteCantina">
 
     <ScrollView
@@ -30,6 +30,9 @@
                     android:layout_height="wrap_content"
                     app:boxBackgroundColor="@color/material_on_background_disabled"
                     app:boxStrokeColor="@color/white"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/cor_castanha"
+                    app:endIconTintMode="multiply"
                     app:hintTextColor="@color/white">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -52,8 +55,8 @@
                     android:layout_height="60dp"
                     android:layout_marginEnd="@dimen/margem_lateral_formulario"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:text="@string/vldr"/>
+                    android:text="@string/vldr"
+                    android:textSize="10sp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -68,6 +71,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -90,6 +96,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -111,6 +120,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -130,6 +142,9 @@
                     android:layout_height="match_parent"
                     app:boxBackgroundColor="@color/material_on_background_disabled"
                     app:boxStrokeColor="@color/white"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/cor_castanha"
+                    app:endIconTintMode="multiply"
                     app:hintTextColor="@color/white">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -141,8 +156,8 @@
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
                         android:ems="10"
                         android:hint="@string/endereco"
-                        android:inputType="textMultiLine|text"
                         android:imeOptions="actionDone"
+                        android:inputType="textMultiLine|text"
                         android:lines="5" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -194,4 +209,4 @@
                 app:backgroundTint="@android:color/holo_orange_light" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -38,6 +38,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -49,8 +52,8 @@
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
                     android:hint="@string/nome"
-                    android:maxLength="25"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="25" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,6 +62,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -69,9 +75,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="25"
                     android:hint="@string/Sobre_Nome"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="25" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,6 +86,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -90,9 +99,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="25"
                     android:hint="@string/nifbi"
                     android:inputType="text"
+                    android:maxLength="25"
                     android:textAlignment="center"
                     android:textAllCaps="true" />
 
@@ -103,6 +112,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -113,9 +125,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="20"
                     android:hint="@string/empresa"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="20" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,6 +146,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -144,9 +159,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="15"
                     android:hint="@string/Numero_Telefone"
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:maxLength="15" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -155,6 +170,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -165,9 +183,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="15"
                     android:hint="@string/Numero_Telefone_Alternativo"
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:maxLength="15" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -176,6 +194,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -186,28 +207,28 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="50"
                     android:hint="@string/Email"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:maxLength="50" />
             </com.google.android.material.textfield.TextInputLayout>
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:boxBackgroundColor="@color/material_on_background_disabled"-->
-<!--                app:boxStrokeColor="@color/white"-->
-<!--                app:hintTextColor="@color/white">-->
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/editTextWebsite"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="@dimen/margem_lateral_formulario"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:layout_marginRight="@dimen/margem_lateral_formulario"-->
-<!--                    android:ems="10"-->
-<!--                    android:hint="@string/website"-->
-<!--                    android:inputType="textWebEditText|textUri" />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:boxBackgroundColor="@color/material_on_background_disabled"-->
+            <!--                app:boxStrokeColor="@color/white"-->
+            <!--                app:hintTextColor="@color/white">-->
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/editTextWebsite"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginLeft="@dimen/margem_lateral_formulario"-->
+            <!--                    android:layout_marginTop="10dp"-->
+            <!--                    android:layout_marginRight="@dimen/margem_lateral_formulario"-->
+            <!--                    android:ems="10"-->
+            <!--                    android:hint="@string/website"-->
+            <!--                    android:inputType="textWebEditText|textUri" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <TextView
                 android:id="@+id/textView5"
@@ -238,23 +259,23 @@
                 android:background="@android:color/darker_gray"
                 android:spinnerMode="dialog" />
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:boxBackgroundColor="@color/material_on_background_disabled"-->
-<!--                app:boxStrokeColor="@color/white"-->
-<!--                app:hintTextColor="@color/white">-->
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/editTextCidade"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="@dimen/margem_lateral_formulario"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:layout_marginRight="@dimen/margem_lateral_formulario"-->
-<!--                    android:ems="10"-->
-<!--                    android:hint="@string/cdd"-->
-<!--                    android:inputType="textEmailAddress" />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:boxBackgroundColor="@color/material_on_background_disabled"-->
+            <!--                app:boxStrokeColor="@color/white"-->
+            <!--                app:hintTextColor="@color/white">-->
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/editTextCidade"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginLeft="@dimen/margem_lateral_formulario"-->
+            <!--                    android:layout_marginTop="10dp"-->
+            <!--                    android:layout_marginRight="@dimen/margem_lateral_formulario"-->
+            <!--                    android:ems="10"-->
+            <!--                    android:hint="@string/cdd"-->
+            <!--                    android:inputType="textEmailAddress" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <TextView
                 android:id="@+id/textMunicipio"
@@ -299,6 +320,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -309,9 +333,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="20"
                     android:hint="@string/bairro"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:maxLength="20" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -319,6 +343,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -329,9 +356,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="@dimen/margem_lateral_formulario"
                     android:ems="10"
-                    android:maxLength="20"
                     android:hint="@string/rua"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:maxLength="20" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -378,9 +405,10 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
-                app:hintTextColor="@color/white"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/cor_castanha">
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextSenha"
@@ -401,9 +429,10 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
-                app:hintTextColor="@color/white"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/cor_castanha">
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
+                app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextSenhaNovamente"
@@ -450,6 +479,9 @@
                 android:layout_height="match_parent"
                 app:boxBackgroundColor="@color/material_on_background_disabled"
                 app:boxStrokeColor="@color/white"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/cor_castanha"
+                app:endIconTintMode="multiply"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText

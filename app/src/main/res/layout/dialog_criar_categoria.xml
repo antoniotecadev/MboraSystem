@@ -11,6 +11,9 @@
         android:layout_height="wrap_content"
         app:boxBackgroundColor="@color/material_on_background_disabled"
         app:boxStrokeColor="@color/white"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/cor_castanha"
+        app:endIconTintMode="multiply"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -34,6 +37,9 @@
         android:layout_height="wrap_content"
         app:boxBackgroundColor="@color/material_on_background_disabled"
         app:boxStrokeColor="@color/white"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/cor_castanha"
+        app:endIconTintMode="multiply"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -74,8 +80,8 @@
         android:layout_marginLeft="@dimen/margem_lateral_formulario"
         android:layout_marginRight="@dimen/margem_lateral_formulario"
         android:checked="false"
-        android:textColor="@color/textColorM"
-        android:text="@string/estado_desbloqueado" />
+        android:text="@string/estado_desbloqueado"
+        android:textColor="@color/textColorM" />
 
     <View
         android:id="@+id/divider"

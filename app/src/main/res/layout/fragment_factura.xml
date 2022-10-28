@@ -77,6 +77,9 @@
                         android:layout_marginEnd="16dp"
                         app:boxBackgroundColor="@color/material_on_background_disabled"
                         app:boxStrokeColor="@color/white"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply"
                         app:hintTextColor="@color/white">
 
                         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -356,6 +359,9 @@
                         android:layout_marginEnd="16dp"
                         app:boxBackgroundColor="@color/material_on_background_disabled"
                         app:boxStrokeColor="@color/white"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply"
                         app:hintTextColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -421,6 +427,9 @@
                         android:layout_marginEnd="16dp"
                         app:boxBackgroundColor="@color/material_on_background_disabled"
                         app:boxStrokeColor="@color/white"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply"
                         app:hintTextColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -512,6 +521,9 @@
                         android:layout_marginEnd="16dp"
                         app:boxBackgroundColor="@color/material_on_background_disabled"
                         app:boxStrokeColor="@color/white"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/cor_castanha"
+                        app:endIconTintMode="multiply"
                         app:hintTextColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
