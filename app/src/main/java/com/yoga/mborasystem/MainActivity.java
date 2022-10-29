@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +33,8 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    public static TextView percentagem;
+    public static ProgressBar progressBar;
     public static DrawerLayout drawerLayout;
     public static ProgressDialog progressDialog;
     public static NavigationView navigationView;
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarMainActivity);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        percentagem = findViewById(R.id.percentagem);
+        progressBar = findViewById(R.id.progressBarFirebase);
 
         setSupportActionBar(toolbar);
 
@@ -83,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
                 navigationView.getMenu().clear();
             }
         });
+    }
+
+    public static void setVisibilityProgressBar(int view) {
+        percentagem.setVisibility(view);
+        progressBar.setVisibility(view);
+    }
+
+    public static void setProgressBar(int progress) {
+        percentagem.setText(progress + " %");
+        progressBar.setProgress(progress);
     }
 
     public static void getProgressBar() {

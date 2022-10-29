@@ -708,6 +708,7 @@
     <string name="sm_perm_cam_gal">Sem permissão não vai poder abrir a camera e a galeria.</string>
     <string name="autent">Autenticado.</string>
     <string name="nvm">(Nuvem)</string>
+    <string name="prod_env_mbo">Produto enviado</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

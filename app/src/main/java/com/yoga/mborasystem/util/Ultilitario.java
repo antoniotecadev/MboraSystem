@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -59,6 +60,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -68,6 +72,7 @@ import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -95,6 +100,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.crypto.SecretKeyFactory;
@@ -618,6 +624,30 @@ public class Ultilitario {
                     } else
                         alertDialog(activity.getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
                 });
+    }
+
+    public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
+        MainActivity.getProgressBar();
+        String filename = UUID.randomUUID().toString();
+        StorageReference reference = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
+
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = reference.putBytes(data);
+
+        uploadTask.addOnFailureListener(e -> {
+            MainActivity.dismissProgressBar();
+            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+        }).addOnSuccessListener(taskSnapshot -> {
+            MainActivity.dismissProgressBar();
+            reference.getDownloadUrl().addOnSuccessListener(uri -> alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24));
+        });
+
     }
 
     public static boolean isCampoVazio(String valor) {

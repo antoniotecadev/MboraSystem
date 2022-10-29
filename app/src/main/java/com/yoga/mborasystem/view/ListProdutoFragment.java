@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.authenticationInFirebase;
+import static com.yoga.mborasystem.util.Ultilitario.storageImageProductInFirebase;
 import static com.yoga.mborasystem.util.Ultilitario.verifyAuthenticationInFirebase;
 
 import android.Manifest;
@@ -660,9 +661,7 @@ public class ListProdutoFragment extends Fragment {
                                     .setView(view)
                                     .setTitle(getString(R.string.env, getString(R.string.mbora)))
                                     .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                    .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
-
-                                    }).show();
+                                    .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> storageImageProductInFirebase(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"), img, detalhes, requireContext())).show();
                         } catch (Exception e) {
                             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
