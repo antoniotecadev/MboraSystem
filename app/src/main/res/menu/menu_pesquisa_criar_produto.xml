@@ -55,4 +55,11 @@
         android:title="@string/rest_tdos"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/itemSairFirebaseAuth"
+        android:icon="@drawable/ic_baseline_exit_to_app_24"
+        android:title="@string/term_sess_nuve"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView" />
+
 </menu>

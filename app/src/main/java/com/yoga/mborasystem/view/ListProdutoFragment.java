@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.authenticationInFirebase;
 import static com.yoga.mborasystem.util.Ultilitario.storageImageProductInFirebase;
@@ -49,6 +50,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -177,7 +179,8 @@ public class ListProdutoFragment extends Fragment {
                         menu.findItem(R.id.dialogCriarProduto).setVisible(false);
                         menu.findItem(R.id.exinpProduto).setVisible(false);
                         binding.btnCriarProdutoFragment.setVisibility(View.GONE);
-                    }
+                    } else
+                        menu.findItem(R.id.itemSairFirebaseAuth).setVisible(verifyAuthenticationInFirebase() != null);
                 }
                 if (isLixeira) {
                     menu.findItem(R.id.dialogCriarProduto).setVisible(false);
@@ -250,6 +253,11 @@ public class ListProdutoFragment extends Fragment {
                     dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.elim_pds), getString(R.string.tem_cert_elim_pds), true);
                 else if (itemId == R.id.btnRestaurarTodosLixo)
                     dialogEliminarReataurarTodasProdutosLixeira(getString(R.string.rest_pds), getString(R.string.rest_tdos_prods), false);
+                else if (itemId == R.id.itemSairFirebaseAuth) {
+                    FirebaseAuth.getInstance().signOut();
+                    if (verifyAuthenticationInFirebase() == null)
+                        alertDialog(getString(R.string.term_sess_nuve) + " " + getString(R.string.nvm), getString(R.string.sess_nuve_term), requireContext(), R.drawable.ic_baseline_done_24);
+                }
                 return false;
             }
         }, getViewLifecycleOwner());
