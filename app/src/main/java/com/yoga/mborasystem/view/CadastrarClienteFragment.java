@@ -279,7 +279,7 @@ public class CadastrarClienteFragment extends Fragment {
                                     cliente.setLatitude(String.valueOf(location.getLatitude()));
                                     cliente.setLongitude(String.valueOf(location.getLongitude()));
                                 }).addOnFailureListener(exception -> Ultilitario.alertDialog(getString(R.string.erro), exception.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
-                        cliente.setUuid(Objects.requireNonNull(task.getResult().getUser()).getUid());
+                        cliente.setUid(Objects.requireNonNull(task.getResult().getUser()).getUid());
                         cliente.setImei(imei);
                         cliente.setVisualizado(false);
                         cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());

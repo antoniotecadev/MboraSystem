@@ -60,6 +60,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -629,6 +631,7 @@ public class Ultilitario {
     public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
         MainActivity.getProgressBar();
         String filename = UUID.randomUUID().toString();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + imei);
         StorageReference reference = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
 
         imageView.setDrawingCacheEnabled(true);
@@ -643,10 +646,25 @@ public class Ultilitario {
         uploadTask.addOnFailureListener(e -> {
             MainActivity.dismissProgressBar();
             alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-        }).addOnSuccessListener(taskSnapshot -> {
+        }).addOnSuccessListener(taskSnapshot -> reference.getDownloadUrl().addOnSuccessListener(uri -> {
+            Map<String, String> produto = new HashMap<>();
+            String key = mDatabase.push().getKey();
+            produto.put("uid", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+            produto.put("nome", detalhes.get(0));
+            produto.put("preco", detalhes.get(1));
+            produto.put("codigoBarra", detalhes.get(2));
+            produto.put("urlImage", uri.toString());
+            mDatabase.child(Objects.requireNonNull(key)).setValue(produto).addOnSuccessListener(unused -> {
+                MainActivity.dismissProgressBar();
+                alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);
+            }).addOnFailureListener(e -> {
+                MainActivity.dismissProgressBar();
+                alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+            });
+        }).addOnFailureListener(e -> {
             MainActivity.dismissProgressBar();
-            reference.getDownloadUrl().addOnSuccessListener(uri -> alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24));
-        });
+            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+        }));
 
     }
 
