@@ -9,13 +9,17 @@ import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +40,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -63,13 +71,17 @@ public class CadastrarClienteFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
+    private CancellationTokenSource cancellationTokenSource;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
 //        query = FirebaseDatabase.getInstance().getReference("parceiros").limitToLast(1);
+        cancellationTokenSource = new CancellationTokenSource();
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
     }
 
     @Override
@@ -180,12 +192,14 @@ public class CadastrarClienteFragment extends Fragment {
         });
 
         binding.buttonCriarConta.setOnClickListener(v -> {
-            try {
-                imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
-                clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei, requireActivity());
-            } catch (Exception e) {
-                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
+            LocationManager service = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+            if (service.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                locationPermissionRequest.launch(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                });
+            else
+                requireActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         });
         binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes"))));
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
@@ -246,13 +260,39 @@ public class CadastrarClienteFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void saveUserInFirebase(String imei) {
+    private void cadastrarParceiro() {
+        try {
+            imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
+            clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei, requireActivity());
+        } catch (Exception e) {
+            Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        }
+    }
+
+    private void saveUserInFirebase(String imei) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(Objects.requireNonNull(binding.editTextEmail.getText()).toString(), Objects.requireNonNull(binding.editTextSenha.getText()).toString())
                 .addOnCompleteListener(requireActivity(), task -> {
+                    Cliente cliente = new Cliente();
                     if (task.isSuccessful()) {
-                        Cliente cliente = new Cliente();
+                        fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken())
+                                .addOnSuccessListener(location -> {
+                                    cliente.setLatitude(String.valueOf(location.getLatitude()));
+                                    cliente.setLongitude(String.valueOf(location.getLongitude()));
+                                }).addOnFailureListener(exception -> Ultilitario.alertDialog(getString(R.string.erro), exception.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
+                        cliente.setUuid(Objects.requireNonNull(task.getResult().getUser()).getUid());
                         cliente.setImei(imei);
                         cliente.setVisualizado(false);
+                        cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
+                        cliente.setSobrenome(Objects.requireNonNull(binding.editTextSobreNome.getText()).toString());
+                        cliente.setEmail(binding.editTextEmail.getText().toString());
+                        cliente.setTelefone(Objects.requireNonNull(binding.editTextNumeroTelefone.getText()).toString());
+                        cliente.setNomeEmpresa(Objects.requireNonNull(binding.editTextNomeEmpresa.getText()).toString());
+                        cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
+                        cliente.setBairro(Objects.requireNonNull(binding.editTextBairro.getText()).toString());
+                        cliente.setRua(Objects.requireNonNull(binding.editTextRua.getText()).toString());
+                        cliente.setCodigoPlus("");
+                        cliente.setFotoCapaUrl("");
+                        cliente.setFotoPefilUrl("");
                         mDatabase.child(cliente.getImei()).setValue(cliente);
                     } else {
                         alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
@@ -297,9 +337,23 @@ public class CadastrarClienteFragment extends Fragment {
                 }
             });
 
+    ActivityResultLauncher<String[]> locationPermissionRequest =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                        Boolean fineLocationGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
+                        Boolean coarseLocationGranted = result.get(Manifest.permission.ACCESS_COARSE_LOCATION);
+                        if (fineLocationGranted != null && fineLocationGranted)
+                            cadastrarParceiro();
+                        else if (coarseLocationGranted != null && coarseLocationGranted)
+                            cadastrarParceiro();
+                        else
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_loc_n_pod_cri), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    }
+            );
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        cancellationTokenSource.cancel();
     }
 }

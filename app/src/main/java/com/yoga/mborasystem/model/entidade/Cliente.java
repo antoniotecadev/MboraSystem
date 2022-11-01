@@ -35,6 +35,12 @@ public class Cliente implements Parcelable {
     @Ignore private String codigoEquipa;
     @Ignore private String data_cria;
     @Ignore private boolean visualizado;
+    @Ignore private String latitude;
+    @Ignore private String longitude;
+    @Ignore private String uuid;
+    @Ignore private String fotoPefilUrl;
+    @Ignore private String fotoCapaUrl;
+    @Ignore private String codigoPlus;
 
     protected Cliente(Parcel in) {
         id = in.readLong();
@@ -208,6 +214,54 @@ public class Cliente implements Parcelable {
 
     public void setVisualizado(boolean visualizado) {
         this.visualizado = visualizado;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getFotoPefilUrl() {
+        return fotoPefilUrl;
+    }
+
+    public void setFotoPefilUrl(String fotoPefilUrl) {
+        this.fotoPefilUrl = fotoPefilUrl;
+    }
+
+    public String getFotoCapaUrl() {
+        return fotoCapaUrl;
+    }
+
+    public void setFotoCapaUrl(String fotoCapaUrl) {
+        this.fotoCapaUrl = fotoCapaUrl;
+    }
+
+    public String getCodigoPlus() {
+        return codigoPlus;
+    }
+
+    public void setCodigoPlus(String codigoPlus) {
+        this.codigoPlus = codigoPlus;
     }
 
     @Override
