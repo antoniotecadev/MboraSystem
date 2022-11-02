@@ -712,6 +712,8 @@
     <string name="sm_perm_loc_n_pod_cri">Sem permissão de localização não pode criar conta de parceiro.</string>
     <string name="term_sess_nuve">Terminar sessão</string>
     <string name="sess_nuve_term">Sessão de usuário terminada.</string>
+    <string name="img_prod_eli">Imagem de produto eliminada.</string>
+    <string name="img_prod_nao_eli">Imagem de produto não eliminada.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
