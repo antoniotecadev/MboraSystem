@@ -44,6 +44,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationTokenSource;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -294,7 +295,15 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setCodigoPlus("");
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPerfilUrl("");
-                        mDatabase.child(uid).setValue(cliente);
+                        mDatabase.child(uid).setValue(cliente).addOnFailureListener(e -> {
+                            FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+
+                                } else {
+
+                                }
+                            });
+                        });
                     } else {
                         alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
