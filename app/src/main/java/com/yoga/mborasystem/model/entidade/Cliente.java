@@ -38,7 +38,7 @@ public class Cliente implements Parcelable {
     @Ignore private String latitude;
     @Ignore private String longitude;
     @Ignore private String uid;
-    @Ignore private String fotoPefilUrl;
+    @Ignore private String fotoPerfilUrl;
     @Ignore private String fotoCapaUrl;
     @Ignore private String codigoPlus;
 
@@ -240,12 +240,12 @@ public class Cliente implements Parcelable {
         this.uid = uid;
     }
 
-    public String getFotoPefilUrl() {
-        return fotoPefilUrl;
+    public String getFotoPerfilUrl() {
+        return fotoPerfilUrl;
     }
 
-    public void setFotoPefilUrl(String fotoPefilUrl) {
-        this.fotoPefilUrl = fotoPefilUrl;
+    public void setFotoPerfilUrl(String fotoPerfilUrl) {
+        this.fotoPerfilUrl = fotoPerfilUrl;
     }
 
     public String getFotoCapaUrl() {

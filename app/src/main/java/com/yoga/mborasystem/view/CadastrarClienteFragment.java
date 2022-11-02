@@ -293,7 +293,7 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setRua(Objects.requireNonNull(binding.editTextRua.getText()).toString());
                         cliente.setCodigoPlus("");
                         cliente.setFotoCapaUrl("");
-                        cliente.setFotoPefilUrl("");
+                        cliente.setFotoPerfilUrl("");
                         mDatabase.child(uid).setValue(cliente);
                     } else {
                         alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
