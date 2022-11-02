@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.authenticationInFirebase;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 import static com.yoga.mborasystem.util.Ultilitario.storageImageProductInFirebase;
 import static com.yoga.mborasystem.util.Ultilitario.verifyAuthenticationInFirebase;
 
@@ -51,6 +52,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -61,6 +64,7 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.databinding.FragmentProdutoBinding;
 import com.yoga.mborasystem.databinding.FragmentProdutoListBinding;
+import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
@@ -161,7 +165,7 @@ public class ListProdutoFragment extends Fragment {
         {
             StringBuilder dt = new StringBuilder();
             if (prod.isEmpty())
-                Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
+                showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.produto_nao_encontrado), R.drawable.ic_toast_erro);
             else {
                 for (Produto produto : prod)
                     dt.append(produto.getNome()).append(",").append(produto.getTipo()).append(",").append(produto.getUnidade()).append(",").append(produto.getCodigoMotivoIsencao()).append(",").append(produto.getPercentagemIva()).append(",").append(produto.getPreco()).append(",").append(produto.getPrecofornecedor()).append(",").append(produto.getQuantidade()).append(",").append(produto.getCodigoBarra()).append(",").append(produto.isIva()).append(",").append(produto.getEstado()).append(",").append(produto.isStock()).append(",").append(produto.getIdcategoria()).append("\n");
@@ -256,7 +260,7 @@ public class ListProdutoFragment extends Fragment {
                 else if (itemId == R.id.itemSairFirebaseAuth) {
                     FirebaseAuth.getInstance().signOut();
                     if (verifyAuthenticationInFirebase() == null)
-                        alertDialog(getString(R.string.term_sess_nuve) + " " + getString(R.string.nvm), getString(R.string.sess_nuve_term), requireContext(), R.drawable.ic_baseline_done_24);
+                        showToast(requireActivity(), Color.rgb(102, 153, 0), getString(R.string.sess_nuve_term), R.drawable.ic_toast_feito);
                 }
                 return false;
             }
@@ -492,6 +496,7 @@ public class ListProdutoFragment extends Fragment {
                                     return false;
                                 });
                                 menu.add(getString(R.string.env, getString(R.string.mbora))).setOnMenuItemClickListener(item -> {
+                                    MainActivity.getProgressBar();
                                     requestPermissionLauncher.launch(Manifest.permission.CAMERA);
                                     detalhes = new ArrayList<>();
                                     detalhes.add(produto.getNome());
@@ -680,14 +685,28 @@ public class ListProdutoFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    if (verifyAuthenticationInFirebase() != null)
-                        alertDialogSelectImage(requireContext(), imageActivityResultLauncher);
-                    else {
+                    if (verifyAuthenticationInFirebase() != null) {
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
+                        reference.child(verifyAuthenticationInFirebase().getUid()).get().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Cliente cliente = task.getResult().getValue(Cliente.class);
+                                MainActivity.dismissProgressBar();
+                                alertDialogSelectImage(Objects.requireNonNull(cliente), requireContext(), imageActivityResultLauncher);
+                            } else {
+                                FirebaseAuth.getInstance().signOut();
+                                MainActivity.dismissProgressBar();
+                                alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireActivity(), R.drawable.ic_baseline_privacy_tip_24);
+                            }
+                        });
+                    } else {
+                        MainActivity.dismissProgressBar();
                         DialogSenhaBinding binding = DialogSenhaBinding.inflate(getLayoutInflater());
                         authenticationInFirebase(requireActivity(), binding, imageActivityResultLauncher);
                     }
-                } else
+                } else {
+                    MainActivity.dismissProgressBar();
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_cam_gal), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                }
             }
     );
 

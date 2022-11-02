@@ -487,10 +487,11 @@ public class Ultilitario {
         imageActivityResultLauncher.launch(imagePickerIntent);
     }
 
-    public static void alertDialogSelectImage(Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+    public static void alertDialogSelectImage(Cliente cliente, Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
         new AlertDialog.Builder(context)
-                .setIcon(R.drawable.ic_baseline_insert_photo_24)
+                .setIcon(R.drawable.ic_baseline_store_24)
                 .setTitle(context.getString(R.string.selec_image))
+                .setMessage(cliente.getImei() + "\n" + cliente.getNome() + "" + cliente.getSobrenome() + "\n" + cliente.getNomeEmpresa() + "\n" + cliente.getTelefone() + "\n" + cliente.getEmail() + "\n" + cliente.getCodigoPlus() + "\n" + cliente.getMunicipio() + ", " + cliente.getBairro() + ", " + cliente.getRua())
                 .setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
                 .setNegativeButton(context.getString(R.string.camera), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, true))
                 .setPositiveButton(context.getString(R.string.galeria), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, false))
@@ -616,23 +617,38 @@ public class Ultilitario {
     }
 
     private static void signInFirebase(Activity activity, String email, String password, AlertDialog alertDialog, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+        MainActivity.getProgressBar();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
                         alertDialog.dismiss();
-                        showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
-                        alertDialogSelectImage(activity, imageActivityResultLauncher);
-                    } else
+                        reference.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                Cliente cliente = task1.getResult().getValue(Cliente.class);
+                                MainActivity.dismissProgressBar();
+                                showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
+                                alertDialogSelectImage(Objects.requireNonNull(cliente), activity, imageActivityResultLauncher);
+                            } else {
+                                mAuth.signOut();
+                                MainActivity.dismissProgressBar();
+                                alertDialog(activity.getString(R.string.erro), Objects.requireNonNull(task1.getException()).getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
+                            }
+                        });
+                    } else {
+                        MainActivity.dismissProgressBar();
                         alertDialog(activity.getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
+                    }
                 });
     }
 
     public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
         MainActivity.getProgressBar();
         String filename = UUID.randomUUID().toString();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + imei);
-        StorageReference reference = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
+        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + uid);
+        StorageReference reference = FirebaseStorage.getInstance().getReference("parceiros/" + uid + "/imagens/produtos/" + filename);
 
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();
