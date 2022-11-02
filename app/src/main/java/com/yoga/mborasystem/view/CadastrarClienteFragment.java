@@ -274,12 +274,13 @@ public class CadastrarClienteFragment extends Fragment {
                 .addOnCompleteListener(requireActivity(), task -> {
                     Cliente cliente = new Cliente();
                     if (task.isSuccessful()) {
+                        String uid = task.getResult().getUser().getUid();
                         fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken())
                                 .addOnSuccessListener(location -> {
                                     cliente.setLatitude(String.valueOf(location.getLatitude()));
                                     cliente.setLongitude(String.valueOf(location.getLongitude()));
                                 }).addOnFailureListener(exception -> Ultilitario.alertDialog(getString(R.string.erro), exception.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
-                        cliente.setUid(Objects.requireNonNull(task.getResult().getUser()).getUid());
+                        cliente.setUid(uid);
                         cliente.setImei(imei);
                         cliente.setVisualizado(false);
                         cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
@@ -293,7 +294,7 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setCodigoPlus("");
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPefilUrl("");
-                        mDatabase.child(cliente.getImei()).setValue(cliente);
+                        mDatabase.child(uid).setValue(cliente);
                     } else {
                         alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
