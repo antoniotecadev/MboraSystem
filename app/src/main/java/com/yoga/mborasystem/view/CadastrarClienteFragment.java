@@ -283,7 +283,6 @@ public class CadastrarClienteFragment extends Fragment {
                                 }).addOnFailureListener(exception -> Ultilitario.alertDialog(getString(R.string.erro), exception.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
                         cliente.setUid(uid);
                         cliente.setImei(imei);
-                        cliente.setVisualizado(false);
                         cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
                         cliente.setSobrenome(Objects.requireNonNull(binding.editTextSobreNome.getText()).toString());
                         cliente.setEmail(binding.editTextEmail.getText().toString());
