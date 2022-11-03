@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.authenticationInFirebase;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 import static com.yoga.mborasystem.util.Ultilitario.storageImageProductInFirebase;
 import static com.yoga.mborasystem.util.Ultilitario.verifyAuthenticationInFirebase;
@@ -674,7 +675,7 @@ public class ListProdutoFragment extends Fragment {
                                     .setView(view)
                                     .setTitle(getString(R.string.env, getString(R.string.mbora)))
                                     .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                    .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> storageImageProductInFirebase(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"), img, detalhes, requireContext())).show();
+                                    .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> storageImageProductInFirebase(getValueSharedPreferences(requireContext(), "imei", "0000000000"), img, detalhes, requireContext())).show();
                         } catch (Exception e) {
                             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
@@ -687,11 +688,14 @@ public class ListProdutoFragment extends Fragment {
                 if (result) {
                     if (verifyAuthenticationInFirebase() != null) {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
-                        reference.child(verifyAuthenticationInFirebase().getUid()).get().addOnCompleteListener(task -> {
+                        reference.child(getValueSharedPreferences(requireContext(), "imei", "0000000000")).get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Cliente cliente = task.getResult().getValue(Cliente.class);
                                 MainActivity.dismissProgressBar();
-                                alertDialogSelectImage(Objects.requireNonNull(cliente), requireContext(), imageActivityResultLauncher);
+                                if (task.getResult().exists()) {
+                                    Cliente cliente = task.getResult().getValue(Cliente.class);
+                                    alertDialogSelectImage(Objects.requireNonNull(cliente), requireContext(), imageActivityResultLauncher);
+                                } else
+                                    showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
                             } else {
                                 FirebaseAuth.getInstance().signOut();
                                 MainActivity.dismissProgressBar();

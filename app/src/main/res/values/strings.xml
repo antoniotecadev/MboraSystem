@@ -714,6 +714,7 @@
     <string name="sess_nuve_term">Sessão de usuário terminada.</string>
     <string name="img_prod_eli">Imagem de produto eliminada.</string>
     <string name="img_prod_nao_eli">Imagem de produto não eliminada.</string>
+    <string name="imei_n_enc">IMEI não encontrado.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

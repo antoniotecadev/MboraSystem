@@ -624,12 +624,15 @@ public class Ultilitario {
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
                         alertDialog.dismiss();
-                        reference.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).get().addOnCompleteListener(task1 -> {
+                        reference.child(getValueSharedPreferences(activity.getBaseContext(), "imei", "0000000000")).get().addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
-                                Cliente cliente = task1.getResult().getValue(Cliente.class);
                                 MainActivity.dismissProgressBar();
-                                showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
-                                alertDialogSelectImage(Objects.requireNonNull(cliente), activity, imageActivityResultLauncher);
+                                if (task1.getResult().exists()) {
+                                    Cliente cliente = task1.getResult().getValue(Cliente.class);
+                                    showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
+                                    alertDialogSelectImage(Objects.requireNonNull(cliente), activity, imageActivityResultLauncher);
+                                } else
+                                    showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
                             } else {
                                 mAuth.signOut();
                                 MainActivity.dismissProgressBar();
@@ -721,9 +724,9 @@ public class Ultilitario {
                 csv.close();
 
             } catch (FileNotFoundException e) {
-                Ultilitario.showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
+                showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
             } catch (IOException e) {
-                Ultilitario.showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
+                showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
             }
             return activity.getString(R.string.expo_concl) + "\n" + uri.getPath();
         }
