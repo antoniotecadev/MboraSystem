@@ -646,9 +646,8 @@ public class Ultilitario {
     public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
         MainActivity.getProgressBar();
         String filename = UUID.randomUUID().toString();
-        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + uid);
-        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + uid + "/imagens/produtos/" + filename);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + imei);
+        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
 
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();
