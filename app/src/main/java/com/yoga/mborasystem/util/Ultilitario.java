@@ -431,10 +431,13 @@ public class Ultilitario {
         } catch (FileNotFoundException e) {
             Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        FileOutputStream fileOutputStream = new FileOutputStream(Objects.requireNonNull(csv).getFileDescriptor());
+        FileOutputStream fileOutputStream = null;
+        if (csv != null)
+            fileOutputStream = new FileOutputStream(csv.getFileDescriptor());
+        else
+            showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
 
         new ExportarAsyncTask(csv, fileOutputStream, uri, activity).execute(data.toString());
-
     }
 
     public static void exportarNuvem(Context context, StringBuilder dataStringBuilder, String ficheiro, String nomeFicheiro, String data) {
@@ -630,18 +633,21 @@ public class Ultilitario {
                                 if (task1.getResult().exists()) {
                                     Cliente cliente = task1.getResult().getValue(Cliente.class);
                                     showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
-                                    alertDialogSelectImage(Objects.requireNonNull(cliente), activity, imageActivityResultLauncher);
+                                    if (cliente != null)
+                                        alertDialogSelectImage(cliente, activity, imageActivityResultLauncher);
+                                    else
+                                        showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
                                 } else
                                     showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
                             } else {
                                 mAuth.signOut();
                                 MainActivity.dismissProgressBar();
-                                alertDialog(activity.getString(R.string.erro), Objects.requireNonNull(task1.getException()).getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
+                                alertDialog(activity.getString(R.string.erro), task1.getException().getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
                             }
                         });
                     } else {
                         MainActivity.dismissProgressBar();
-                        alertDialog(activity.getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
+                        alertDialog(activity.getString(R.string.erro), task.getException().getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
                     }
                 });
     }
@@ -667,12 +673,12 @@ public class Ultilitario {
         }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
             Map<String, String> produto = new HashMap<>();
             String key = mDatabase.push().getKey();
-            produto.put("uid", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+            produto.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
             produto.put("nome", detalhes.get(0));
             produto.put("preco", detalhes.get(1));
             produto.put("codigoBarra", detalhes.get(2));
             produto.put("urlImage", url.toString());
-            mDatabase.child(Objects.requireNonNull(key)).setValue(produto).addOnSuccessListener(unused -> {
+            mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
                 MainActivity.dismissProgressBar();
                 alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);
             }).addOnFailureListener(e -> {
