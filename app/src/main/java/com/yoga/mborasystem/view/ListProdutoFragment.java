@@ -78,7 +78,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -629,7 +628,7 @@ public class ListProdutoFragment extends Fragment {
             List<String> produtos = new ArrayList<>();
             try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
                  BufferedReader reader = new BufferedReader(
-                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+                         new InputStreamReader(inputStream))) {
                 String line;
 
                 while ((line = reader.readLine()) != null) {
@@ -693,13 +692,19 @@ public class ListProdutoFragment extends Fragment {
                                 MainActivity.dismissProgressBar();
                                 if (task.getResult().exists()) {
                                     Cliente cliente = task.getResult().getValue(Cliente.class);
-                                    alertDialogSelectImage(Objects.requireNonNull(cliente), requireContext(), imageActivityResultLauncher);
+                                    if (cliente != null)
+                                        alertDialogSelectImage(cliente, requireContext(), imageActivityResultLauncher);
+                                    else
+                                        showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
                                 } else
                                     showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
                             } else {
                                 FirebaseAuth.getInstance().signOut();
                                 MainActivity.dismissProgressBar();
-                                alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireActivity(), R.drawable.ic_baseline_privacy_tip_24);
+                                if (task.getException() != null)
+                                    alertDialog(getString(R.string.erro), task.getException().getMessage(), requireActivity(), R.drawable.ic_baseline_privacy_tip_24);
+                                else
+                                    showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
                             }
                         });
                     } else {
