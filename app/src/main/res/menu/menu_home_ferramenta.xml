@@ -23,13 +23,13 @@
         <menu>
             <item
                 android:id="@+id/expoBd"
-                android:title="@string/expoBd"/>
+                android:title="@string/expoBd" />
             <item
                 android:id="@+id/impoBd"
-                android:title="@string/impoBd"/>
+                android:title="@string/impoBd" />
             <item
                 android:id="@+id/device"
-                android:title=""/>
+                android:title="" />
         </menu>
     </item>
     <item
@@ -43,8 +43,17 @@
         android:id="@+id/bloquearFragment"
         android:title="@string/bloquear" />
     <item
-        android:id="@+id/acercaMborasytem"
-        android:title="@string/ace" />
+        android:id="@+id/mborasystem"
+        android:title="@string/nome_sistema">
+        <menu>
+            <item
+                android:id="@+id/acercaMborasytem"
+                android:title="@string/ace" />
+            <item
+                android:id="@+id/formaPagamento"
+                android:title="@string/forma_pagamento" />
+        </menu>
+    </item>
     <item
         android:id="@+id/itemSair"
         android:title="@string/sair" />

@@ -11,6 +11,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -49,6 +50,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -57,6 +63,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.ContaBancaria;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
@@ -73,7 +80,9 @@ public class HomeFragment extends Fragment {
     private ExecutorService executor;
     private FragmentHomeBinding binding;
     private String idioma, codigoIdioma;
+    private DatabaseReference reference;
     private ClienteViewModel clienteViewModel;
+    private ValueEventListener valueEventListener;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
     @Override
@@ -321,6 +330,9 @@ public class HomeFragment extends Fragment {
                     case R.id.acercaMborasytem:
                         acercaMboraSystem();
                         break;
+                    case R.id.formaPagamento:
+                        formaPagamento();
+                        break;
                     case R.id.itemSair:
                         sairApp();
                         break;
@@ -510,20 +522,6 @@ public class HomeFragment extends Fragment {
                 });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-        if (bundle != null)
-            bundle.clear();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        MainActivity.dismissProgressBar();
-    }
-
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
@@ -588,5 +586,59 @@ public class HomeFragment extends Fragment {
         MainActivity.getProgressBar();
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper()), getDeviceUniqueID(requireActivity()), cliente.getImei()));
+    }
+
+    public void formaPagamento() {
+        MainActivity.getProgressBar();
+        valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                StringBuilder ddbc = new StringBuilder();
+                if (snapshot.exists()) {
+                    String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
+                    ddbc.append(getString(R.string.info_pagamento, detalhe)).append("\n\n");
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        if (dataSnapshot.exists()) {
+                            ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
+                            if (cb.getNome() != null) {
+                                ddbc.append(getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
+                                ddbc.append(getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
+                                ddbc.append(getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
+                                ddbc.append(getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
+                                ddbc.append("\n\n");
+                            }
+                        } else
+                            showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                    }
+                } else
+                    showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                MainActivity.dismissProgressBar();
+                alertDialog(getString(R.string.forma_pagamento), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                MainActivity.dismissProgressBar();
+                alertDialog(getString(R.string.erro), error.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
+        };
+        reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
+        reference.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        if (bundle != null)
+            bundle.clear();
+        if (reference != null)
+            reference.removeEventListener(valueEventListener);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainActivity.dismissProgressBar();
     }
 }

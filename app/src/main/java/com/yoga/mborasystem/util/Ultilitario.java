@@ -684,7 +684,6 @@ public class Ultilitario {
             MainActivity.dismissProgressBar();
             alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
         }));
-
     }
 
     public static boolean isCampoVazio(String valor) {

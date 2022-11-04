@@ -715,6 +715,18 @@
     <string name="img_prod_eli">Imagem de produto eliminada.</string>
     <string name="img_prod_nao_eli">Imagem de produto não eliminada.</string>
     <string name="imei_n_enc">IMEI não encontrado.</string>
+    <string name="dds_n_enc">Dados não encontrados.</string>
+    <string name="info_pagamento">
+        Faça o pagamento (dpósito/transferência) para activar a sua conta MboraSystem ultilizando as contas bancárias abaixo:\n\n
+        1 - Se o pagamento for por transferência faça - o ao mesmo banco que o seu para que a conta seja activada em 1min.\n\n
+        2 - Caso faça a transferência para um banco diferente do seu, poderá levar 24h para sua conta ser activada.\n\n
+        3 - Caso faça o depósito, independentemente do banco a sua conta será activada em 1min.\n\n
+        4 -  %1$s
+    </string>
+    <string name="nm_bc">BANCO</string>
+    <string name="ppt_bc">PROPRIETÁRIO</string>
+    <string name="nib_bc" translatable="false">NIB</string>
+    <string name="iban_bc" translatable="false">IBAN</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
