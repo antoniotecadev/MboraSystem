@@ -304,7 +304,7 @@ public class CadastrarClienteFragment extends Fragment {
                             });
                         });
                     } else {
-                        alertDialog(getString(R.string.erro), Objects.requireNonNull(task.getException()).getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 });
     }
