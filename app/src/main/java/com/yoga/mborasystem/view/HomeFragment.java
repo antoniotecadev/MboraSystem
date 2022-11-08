@@ -67,7 +67,9 @@ import com.yoga.mborasystem.model.entidade.ContaBancaria;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -471,7 +473,15 @@ public class HomeFragment extends Fragment {
     private byte estadoConta, terminoPrazo;
 
     private void estadoConta(String imei) {
-        String[] pacote = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
+
+        String[] pacote = {  getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
+        String[] tipo = getResources().getStringArray(R.array.tipo_pagamento);
+        Map<String, String> mapTipoPagamento = new HashMap<>();
+        mapTipoPagamento.put("1", tipo[0]);
+        mapTipoPagamento.put("3", tipo[1]);
+        mapTipoPagamento.put("6", tipo[2]);
+        mapTipoPagamento.put("12", tipo[3]);
+
         String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
@@ -489,6 +499,8 @@ public class HomeFragment extends Fragment {
                                     (terminoPrazo == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
                                             (estadoConta == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
+                                    getString(R.string.tipo) + " " + mapTipoPagamento.get(parceiro.get("tipo_pagamento").getAsString()) + "\n" +
+                                    getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto").getAsString() + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
                                     getString(R.string.nome) + ": " + parceiro.get("first_name").getAsString() + "\n" +
