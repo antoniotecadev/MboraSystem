@@ -131,7 +131,7 @@ public class CriarFactura {
                 addNewItem(document, textorodape, Element.ALIGN_CENTER, font);
                 addLineSeparator(document);
             }
-            addNewItem(document, hash.charAt(0) + "" + hash.charAt(10) + "" + hash.charAt(20) + "" + hash.charAt(30) + "-" + "Processado por programa validado n.º 0000/AGT/0000", Element.ALIGN_CENTER, font);
+            addNewItem(document, hash.charAt(0) + "" + hash.charAt(10) + "" + hash.charAt(20) + "" + hash.charAt(30) + "-" + "Processado por programa não validado n.º 0000/AGT/0000", Element.ALIGN_CENTER, font);
             if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_qr_code", false)) {
                 addLineSeparator(document);
                 document.add(qr_code_image);
