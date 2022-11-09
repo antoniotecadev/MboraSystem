@@ -1,7 +1,9 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
+import static com.yoga.mborasystem.util.Ultilitario.formaPagamento;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
@@ -50,6 +52,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -71,6 +74,8 @@ public class CadastrarClienteFragment extends Fragment {
     private ExecutorService executor;
     private DatabaseReference mDatabase;
     private ClienteViewModel clienteViewModel;
+    private DatabaseReference reference;
+    private ValueEventListener valueEventListener;
     private FragmentCadastrarClienteBinding binding;
     private CancellationTokenSource cancellationTokenSource;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -233,9 +238,6 @@ public class CadastrarClienteFragment extends Fragment {
                     } catch (Exception e) {
                         Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
-                    MainActivity.dismissProgressBar();
-                    Ultilitario.dialogConta(getString(R.string.conta_criada), getContext()).show();
-                    Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_bloquearFragment);
                     break;
                 case NENHUMA:
                     Ultilitario.dialogConta(getString(R.string.conta_nao_criada), getContext()).show();
@@ -245,39 +247,51 @@ public class CadastrarClienteFragment extends Fragment {
             }
         });
         requireActivity().addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menuInflater.inflate(R.menu.menu_home_ferramenta, menu);
-                menu.findItem(R.id.dialogAlterarCliente).setVisible(false);
-                menu.findItem(R.id.estadoCliente).setVisible(false);
-                menu.findItem(R.id.gerarCodigoQr).setVisible(false);
-                menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
-                menu.findItem(R.id.termosCondicoes).setVisible(false);
-                menu.findItem(R.id.politicaPrivacidade).setVisible(false);
-                menu.findItem(R.id.acercaMborasytem).setVisible(false);
-                menu.findItem(R.id.itemSair).setVisible(false);
-                menu.findItem(R.id.bloquearFragment).setVisible(false);
-                menu.findItem(R.id.idioma).setVisible(false);
-                menu.findItem(R.id.expoBd).setVisible(false);
-                menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
-            }
+                                              @Override
+                                              public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                                                  menuInflater.inflate(R.menu.menu_home_ferramenta, menu);
+                                                  menu.findItem(R.id.dialogAlterarCliente).setVisible(false);
+                                                  menu.findItem(R.id.estadoCliente).setVisible(false);
+                                                  menu.findItem(R.id.gerarCodigoQr).setVisible(false);
+                                                  menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
+                                                  menu.findItem(R.id.termosCondicoes).setVisible(false);
+                                                  menu.findItem(R.id.politicaPrivacidade).setVisible(false);
+                                                  menu.findItem(R.id.itemSair).setVisible(false);
+                                                  menu.findItem(R.id.bloquearFragment).setVisible(false);
+                                                  menu.findItem(R.id.idioma).setVisible(false);
+                                                  menu.findItem(R.id.expoBd).setVisible(false);
+                                                  menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
+                                              }
 
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                if (menuItem.getItemId() == R.id.config)
-                    Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoFragment2);
-                else if (menuItem.getItemId() == R.id.impoBd) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                        Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
-                    else
-                        alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                } else if (menuItem.getItemId() == R.id.device)
-                    getDetailDevice(requireContext());
-                return NavigationUI.onNavDestinationSelected(menuItem, navController);
-            }
-        }, getViewLifecycleOwner());
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
+                                              @Override
+                                              public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                                                  NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
+                                                  if (menuItem.getItemId() == R.id.config)
+                                                      Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoFragment2);
+                                                  else if (menuItem.getItemId() == R.id.impoBd) {
+                                                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                                                          Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
+                                                      else
+                                                          alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                                  } else if (menuItem.getItemId() == R.id.device) {
+                                                      getDetailDevice(requireContext());
+                                                  } else if (menuItem.getItemId() == R.id.formaPagamento) {
+                                                      formaPagamento(requireContext(), valueEventListener, reference);
+                                                  } else if (menuItem.getItemId() == R.id.acercaMborasytem)
+                                                      acercaMboraSystem(requireContext(), requireActivity());
+                                                  return NavigationUI.onNavDestinationSelected(menuItem, navController);
+                                              }
+                                          },
+
+                getViewLifecycleOwner());
+
+        requireActivity().
+
+                getOnBackPressedDispatcher().
+
+                addCallback(getViewLifecycleOwner(), Ultilitario.
+
+                        sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
 
@@ -303,21 +317,31 @@ public class CadastrarClienteFragment extends Fragment {
                                 }).addOnFailureListener(exception -> Ultilitario.alertDialog(getString(R.string.erro), exception.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
                         cliente.setUid(uid);
                         cliente.setImei(imei);
-                        cliente.setNome(Objects.requireNonNull(binding.editTextNome.getText()).toString());
-                        cliente.setSobrenome(Objects.requireNonNull(binding.editTextSobreNome.getText()).toString());
+                        cliente.setNome(binding.editTextNome.getText().toString());
+                        cliente.setSobrenome(binding.editTextSobreNome.getText().toString());
                         cliente.setEmail(binding.editTextEmail.getText().toString());
-                        cliente.setTelefone(Objects.requireNonNull(binding.editTextNumeroTelefone.getText()).toString());
-                        cliente.setNomeEmpresa(Objects.requireNonNull(binding.editTextNomeEmpresa.getText()).toString());
+                        cliente.setTelefone(binding.editTextNumeroTelefone.getText().toString());
+                        cliente.setNomeEmpresa(binding.editTextNomeEmpresa.getText().toString());
                         cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
-                        cliente.setBairro(Objects.requireNonNull(binding.editTextBairro.getText()).toString());
-                        cliente.setRua(Objects.requireNonNull(binding.editTextRua.getText()).toString());
+                        cliente.setBairro(binding.editTextBairro.getText().toString());
+                        cliente.setRua(binding.editTextRua.getText().toString());
                         cliente.setCodigoPlus("");
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPerfilUrl("");
                         mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {} else {}
+                            if (task1.isSuccessful()) {
+                                MainActivity.dismissProgressBar();
+                                Ultilitario.dialogConta(getString(R.string.conta_criada), getContext()).show();
+                            } else {
+                                MainActivity.dismissProgressBar();
+                                Ultilitario.dialogConta(getString(R.string.conta_criada) + "\n\n" + task.getException().getMessage(), getContext()).show();
+                            }
                         }));
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_bloquearFragment);
+                        }, 1000);
                     } else {
+                        MainActivity.dismissProgressBar();
                         alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 });
@@ -378,5 +402,7 @@ public class CadastrarClienteFragment extends Fragment {
         super.onDestroyView();
         binding = null;
         cancellationTokenSource.cancel();
+        if (reference != null)
+            reference.removeEventListener(valueEventListener);
     }
 }

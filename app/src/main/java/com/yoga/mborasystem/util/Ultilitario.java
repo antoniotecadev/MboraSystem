@@ -60,11 +60,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.JsonObject;
+import com.koushikdutta.ion.Ion;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -73,6 +78,7 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.ContaBancaria;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1245,5 +1251,81 @@ public class Ultilitario {
                 Build.VERSION.SDK_INT +
                 getDeviceUniqueID(activity);
         return data.trim();
+    }
+
+    public static void acercaMboraSystem(Context context, Activity activity) {
+        MainActivity.getProgressBar();
+        if (isNetworkConnected(context)) {
+            if (internetIsConnected()) {
+                String URL = Ultilitario.getAPN(context) + "/mborasystem-admin/public/api/contacts/contactos";
+                Ion.with(activity)
+                        .load(URL)
+                        .asJsonArray()
+                        .setCallback((e, jsonElements) -> {
+                            try {
+                                JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
+                                String contactos = parceiro.get("contactos").getAsString();
+                                alertDialog(context.getString(R.string.nome_sistema), context.getString(R.string.acerca) + "\n" + contactos, context, R.drawable.ic_baseline_store_24);
+                            } catch (Exception ex) {
+                                MainActivity.dismissProgressBar();
+                                new AlertDialog.Builder(context)
+                                        .setIcon(R.drawable.ic_baseline_store_24)
+                                        .setTitle(context.getString(R.string.erro))
+                                        .setMessage(ex.getMessage())
+                                        .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                                        .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                                            dialog.dismiss();
+                                            MainActivity.getProgressBar();
+                                            acercaMboraSystem(context, activity);
+                                        })
+                                        .show();
+                            }
+                        });
+            } else {
+                MainActivity.dismissProgressBar();
+                Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_int), context, R.drawable.ic_baseline_privacy_tip_24);
+            }
+        } else {
+            MainActivity.dismissProgressBar();
+            Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.conec_wif_dad), context, R.drawable.ic_baseline_privacy_tip_24);
+        }
+    }
+
+    public static void formaPagamento(Context context, ValueEventListener valueEventListener, DatabaseReference reference) {
+        MainActivity.getProgressBar();
+        valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                StringBuilder ddbc = new StringBuilder();
+                if (snapshot.exists()) {
+                    String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
+                    ddbc.append(context.getString(R.string.info_pagamento, detalhe)).append("\n\n");
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        if (dataSnapshot.exists()) {
+                            ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
+                            if (cb.getNome() != null) {
+                                ddbc.append(context.getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
+                                ddbc.append(context.getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
+                                ddbc.append(context.getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
+                                ddbc.append(context.getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
+                                ddbc.append("\n\n");
+                            }
+                        } else
+                            showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                    }
+                } else
+                    showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                MainActivity.dismissProgressBar();
+                alertDialog(context.getString(R.string.forma_pagamento), ddbc.toString(), context, R.drawable.ic_baseline_store_24);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                MainActivity.dismissProgressBar();
+                alertDialog(context.getString(R.string.erro), error.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+            }
+        };
+        reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
+        reference.addListenerForSingleValueEvent(valueEventListener);
     }
 }

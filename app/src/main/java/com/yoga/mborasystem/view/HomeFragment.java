@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
@@ -11,7 +12,6 @@ import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
-import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -50,10 +50,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
@@ -63,7 +60,6 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
-import com.yoga.mborasystem.model.entidade.ContaBancaria;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
@@ -330,10 +326,10 @@ public class HomeFragment extends Fragment {
                         }
                         break;
                     case R.id.acercaMborasytem:
-                        acercaMboraSystem();
+                        acercaMboraSystem(requireContext(), requireActivity());
                         break;
                     case R.id.formaPagamento:
-                        formaPagamento();
+                        Ultilitario.formaPagamento(requireContext(), valueEventListener, reference);
                         break;
                     case R.id.itemSair:
                         sairApp();
@@ -389,44 +385,6 @@ public class HomeFragment extends Fragment {
         return bundle;
     }
 
-    private void acercaMboraSystem() {
-        MainActivity.getProgressBar();
-        if (isNetworkConnected(requireContext())) {
-            if (internetIsConnected()) {
-                String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/contactos";
-                Ion.with(requireActivity())
-                        .load(URL)
-                        .asJsonArray()
-                        .setCallback((e, jsonElements) -> {
-                            try {
-                                JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
-                                String contactos = parceiro.get("contactos").getAsString();
-                                alertDialog(getString(R.string.nome_sistema), getString(R.string.acerca) + "\n" + contactos, requireContext(), R.drawable.ic_baseline_store_24);
-                            } catch (Exception ex) {
-                                MainActivity.dismissProgressBar();
-                                new AlertDialog.Builder(requireContext())
-                                        .setIcon(R.drawable.ic_baseline_store_24)
-                                        .setTitle(getString(R.string.erro))
-                                        .setMessage(ex.getMessage())
-                                        .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
-                                        .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
-                                            dialog.dismiss();
-                                            MainActivity.getProgressBar();
-                                            acercaMboraSystem();
-                                        })
-                                        .show();
-                            }
-                        });
-            } else {
-                MainActivity.dismissProgressBar();
-                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-        } else {
-            MainActivity.dismissProgressBar();
-            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-        }
-    }
-
     private void sairApp() {
         new AlertDialog.Builder(getContext())
                 .setIcon(R.drawable.ic_baseline_store_24)
@@ -474,7 +432,7 @@ public class HomeFragment extends Fragment {
 
     private void estadoConta(String imei) {
 
-        String[] pacote = {  getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
+        String[] pacote = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
         String[] tipo = getResources().getStringArray(R.array.tipo_pagamento);
         Map<String, String> mapTipoPagamento = new HashMap<>();
         mapTipoPagamento.put("1", tipo[0]);
@@ -598,44 +556,6 @@ public class HomeFragment extends Fragment {
         MainActivity.getProgressBar();
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper()), getDeviceUniqueID(requireActivity()), cliente.getImei()));
-    }
-
-    public void formaPagamento() {
-        MainActivity.getProgressBar();
-        valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                StringBuilder ddbc = new StringBuilder();
-                if (snapshot.exists()) {
-                    String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
-                    ddbc.append(getString(R.string.info_pagamento, detalhe)).append("\n\n");
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        if (dataSnapshot.exists()) {
-                            ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
-                            if (cb.getNome() != null) {
-                                ddbc.append(getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
-                                ddbc.append(getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
-                                ddbc.append(getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
-                                ddbc.append(getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
-                                ddbc.append("\n\n");
-                            }
-                        } else
-                            showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
-                    }
-                } else
-                    showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
-                MainActivity.dismissProgressBar();
-                alertDialog(getString(R.string.forma_pagamento), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                MainActivity.dismissProgressBar();
-                alertDialog(getString(R.string.erro), error.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-        };
-        reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
-        reference.addListenerForSingleValueEvent(valueEventListener);
     }
 
     @Override
