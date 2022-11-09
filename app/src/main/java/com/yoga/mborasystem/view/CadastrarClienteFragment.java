@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -44,7 +45,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationTokenSource;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -156,6 +156,26 @@ public class CadastrarClienteFragment extends Fragment {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
         Ultilitario.spinnerMunicipios(requireContext(), binding.spinnerMunicipios);
+
+        binding.buttonVerificarEmail.setOnClickListener(view -> {
+            if (binding.editTextEmail.getText().toString().trim().isEmpty())
+                Toast.makeText(requireContext(), getString(R.string.dig_eml), Toast.LENGTH_LONG).show();
+            else {
+                MainActivity.getProgressBar();
+                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(binding.editTextEmail.getText().toString()).addOnCompleteListener(requireActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+                        if (isNewUser)
+                            Ultilitario.alertDialog(getString(R.string.email_valido), getString(R.string.email_valido_msg), requireContext(), R.drawable.ic_baseline_done_24);
+                        else
+                            Ultilitario.alertDialog(getString(R.string.email_invalido), getString(R.string.email_invalido_msg), requireContext(), R.drawable.ic_baseline_close_24);
+                    } else
+                        Ultilitario.alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    MainActivity.dismissProgressBar();
+                });
+            }
+        });
+
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -294,15 +314,9 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setCodigoPlus("");
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPerfilUrl("");
-                        mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> {
-                            FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
-                                if (task1.isSuccessful()) {
-
-                                } else {
-
-                                }
-                            });
-                        });
+                        mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {} else {}
+                        }));
                     } else {
                         alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }

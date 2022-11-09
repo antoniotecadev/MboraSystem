@@ -728,6 +728,11 @@
     <string name="ppt_bc">PROPRIETÁRIO</string>
     <string name="nib_bc" translatable="false">NIB</string>
     <string name="iban_bc" translatable="false">IBAN</string>
+    <string name="verif_email">Verificar email</string>
+    <string name="email_valido">Email válido</string>
+    <string name="email_valido_msg">Este email ainda não foi registado, pode ultilizar para criar a conta.</string>
+    <string name="email_invalido_msg">Este email já foi registado, se criar a conta com este email não poderá ultilizar o serviço do Mbora de momento até que a equipa de suporte o configure por você.\n\nAconselhamos a ultilizar um outro email.</string>
+    <string name="dig_eml">Digite o email</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
