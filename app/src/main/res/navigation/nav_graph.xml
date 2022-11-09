@@ -36,6 +36,14 @@
             app:popExitAnim="@android:anim/fade_out"
             app:popUpTo="@id/bloquearFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="errorCreateUser"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="isCreateUser"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/cadastrarClienteFragment"

@@ -62,7 +62,7 @@ public class LoginFragment extends Fragment {
                                               @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
                 Toast.makeText(requireContext(),
-                        getString(R.string.err_aut) + ": " + errString, Toast.LENGTH_SHORT)
+                                getString(R.string.err_aut) + ": " + errString, Toast.LENGTH_SHORT)
                         .show();
             }
 
@@ -77,7 +77,7 @@ public class LoginFragment extends Fragment {
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
                 Toast.makeText(requireContext(), getString(R.string.fal_aut),
-                        Toast.LENGTH_SHORT)
+                                Toast.LENGTH_SHORT)
                         .show();
             }
         });
@@ -147,6 +147,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 //        if (ContextCompat.checkSelfPermission(getActivity(),
 //                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
 //            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
@@ -158,6 +159,10 @@ public class LoginFragment extends Fragment {
 //                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 //            }
 //        }
+
+        String errorCreateUser = LoginFragmentArgs.fromBundle(getArguments()).getErrorCreateUser();
+        boolean isCreateUser = LoginFragmentArgs.fromBundle(getArguments()).getIsCreateUser();
+
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         instanceOfBiometricPrompt();
         binding.btn1.setOnClickListener(v -> digitarCodigoPin(1));
@@ -196,7 +201,8 @@ public class LoginFragment extends Fragment {
 
         if (!Ultilitario.getActivarAutenticacaoBiometrica(requireContext()))
             binding.btnAuthBiometric.setVisibility(View.INVISIBLE);
-
+        if (isCreateUser)
+            Ultilitario.dialogConta(getString(R.string.conta_criada) + "\n\n" + errorCreateUser, getContext()).show();
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }

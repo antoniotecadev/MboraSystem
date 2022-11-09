@@ -73,6 +73,7 @@ public class CadastrarClienteFragment extends Fragment {
     private Query query;
     private ExecutorService executor;
     private DatabaseReference mDatabase;
+    private String errorClienteUser = "";
     private ClienteViewModel clienteViewModel;
     private DatabaseReference reference;
     private ValueEventListener valueEventListener;
@@ -233,11 +234,7 @@ public class CadastrarClienteFragment extends Fragment {
         clienteViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
             switch (operacao) {
                 case CRIAR:
-                    try {
-                        saveUserInFirebase(imei);
-                    } catch (Exception e) {
-                        Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    }
+                    saveUserInFirebase(imei);
                     break;
                 case NENHUMA:
                     Ultilitario.dialogConta(getString(R.string.conta_nao_criada), getContext()).show();
@@ -329,21 +326,15 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPerfilUrl("");
                         mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                MainActivity.dismissProgressBar();
-                                Ultilitario.dialogConta(getString(R.string.conta_criada), getContext()).show();
-                            } else {
-                                MainActivity.dismissProgressBar();
-                                Ultilitario.dialogConta(getString(R.string.conta_criada) + "\n\n" + task.getException().getMessage(), getContext()).show();
-                            }
+                            if (!task1.isSuccessful())
+                                errorClienteUser = task.getException().getMessage();
                         }));
                         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                            Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_bloquearFragment);
+                            CadastrarClienteFragmentDirections.ActionCadastrarClienteFragmentToBloquearFragment cadastrarClienteBinding = CadastrarClienteFragmentDirections.actionCadastrarClienteFragmentToBloquearFragment().setErrorCreateUser(errorClienteUser.isEmpty() ? "" : errorClienteUser).setIsCreateUser(true);
+                            Navigation.findNavController(requireView()).navigate(cadastrarClienteBinding);
                         }, 1000);
-                    } else {
-                        MainActivity.dismissProgressBar();
+                    } else
                         alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    }
                 });
     }
 
