@@ -362,7 +362,7 @@ public class VendaFragment extends Fragment {
                 h.binding.textDivida.setText(Ultilitario.formatPreco(String.valueOf(venda.getDivida())));
                 h.binding.textValBas.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_base())));
                 h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_iva())));
-                h.binding.textForPag.setText(venda.getPagamento());
+                h.binding.editTextForPag.setText(venda.getPagamento());
                 h.binding.textDatVen.setText(venda.getData_cria() + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
                 h.binding.textOper.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA0"));
                 h.binding.btnEntrar.setOnClickListener(v -> {
