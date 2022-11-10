@@ -83,7 +83,7 @@ public class DocumentoFragment extends Fragment {
 
     private int accao;
     private String pasta;
-    private List<Venda> vendas;
+    private List<Venda> vendas = null;
     private GroupAdapter adapter;
     private VendaViewModel vendaViewModel;
     private FragmentDocumentoBinding binding;
@@ -140,9 +140,13 @@ public class DocumentoFragment extends Fragment {
         clienteCantinaViewModel.getCliente().observe(getViewLifecycleOwner(), clienteCantinas -> {
             this.clienteCantinas = clienteCantinas;
             List<Long> idvenda = new ArrayList<>();
-            for (Venda venda : this.vendas)
-                idvenda.add(venda.getId());
-            vendaViewModel.getProdutosVenda(0, null, null, false, true, idvenda);
+            try {
+                for (Venda venda : vendas)
+                    idvenda.add(venda.getId());
+                vendaViewModel.getProdutosVenda(0, null, null, false, true, idvenda);
+            } catch (Exception e) {
+                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
         });
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             if (accao == 0) {
@@ -259,31 +263,31 @@ public class DocumentoFragment extends Fragment {
         layout.addView(setTextInputEditText(dataFim, 2));
         alert.setView(layout);
         alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
-            try {
-                layout.removeAllViews();
-                if (Objects.requireNonNull(dataInicio.getText()).toString().isEmpty()) {
-                    this.dialogExportarDocumentoSaft();
-                    dataInicio.requestFocus();
-                    Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.pri_dat_vaz), R.drawable.ic_toast_erro);
-                } else if (Objects.requireNonNull(dataFim.getText()).toString().isEmpty()) {
-                    this.dialogExportarDocumentoSaft();
-                    dataFim.requestFocus();
-                    Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
-                } else if (Objects.requireNonNull(sdf.parse(dataFim.getText().toString())).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
-                    MainActivity.getProgressBar();
-                    vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
-                } else {
-                    this.dialogExportarDocumentoSaft();
-                    Ultilitario.alertDialog(getString(R.string.exp_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
-            } catch (ParseException e) {
-                Ultilitario.alertDialog(getString(R.string.exp_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-        }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> {
-            layout.removeAllViews();
-            dialog.dismiss();
-        })
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
+                    try {
+                        layout.removeAllViews();
+                        if (Objects.requireNonNull(dataInicio.getText()).toString().isEmpty()) {
+                            this.dialogExportarDocumentoSaft();
+                            dataInicio.requestFocus();
+                            Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.pri_dat_vaz), R.drawable.ic_toast_erro);
+                        } else if (Objects.requireNonNull(dataFim.getText()).toString().isEmpty()) {
+                            this.dialogExportarDocumentoSaft();
+                            dataFim.requestFocus();
+                            Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
+                        } else if (Objects.requireNonNull(sdf.parse(dataFim.getText().toString())).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
+                            MainActivity.getProgressBar();
+                            vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
+                        } else {
+                            this.dialogExportarDocumentoSaft();
+                            Ultilitario.alertDialog(getString(R.string.exp_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                    } catch (ParseException e) {
+                        Ultilitario.alertDialog(getString(R.string.exp_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    }
+                }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> {
+                    layout.removeAllViews();
+                    dialog.dismiss();
+                })
                 .show();
     }
 
