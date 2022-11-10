@@ -5,12 +5,12 @@
   <item
       android:id="@+id/gerarQrCode"
       android:icon="@drawable/ic_baseline_qr_code_24"
-      android:title="Meu código Qr"
+      android:title="@string/cod_qr"
       app:showAsAction="ifRoom|collapseActionView" />
   <item
       android:id="@+id/bloquearFragment"
       android:icon="@android:drawable/ic_lock_lock"
-      android:title="Bloquear"
+      android:title="@string/bloquear"
       app:showAsAction="ifRoom|collapseActionView" />
   <item
       android:id="@+id/sairApp"
