@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -778,7 +779,7 @@ public class FacturaFragment extends Fragment {
     }
 
     private void dialogVerificarVenda(String[] nomeIDcliente) {
-        if (nomeIDcliente.length == 2)
+        if (nomeIDcliente.length > 1)
             idcliente = Long.parseLong(nomeIDcliente[1].trim());
         else
             idcliente = 0;
