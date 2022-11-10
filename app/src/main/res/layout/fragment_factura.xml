@@ -727,7 +727,7 @@
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
                         android:textSize="12sp"
-                        android:text="@string/transferencia_bancario"
+                        android:text="@string/transferencia_bancaria"
                         android:textColor="@color/textColor" />
 
                     <com.google.android.material.textfield.TextInputLayout

@@ -761,11 +761,33 @@ public class FacturaFragment extends Fragment {
         barcodeView.pause();
     }
 
+    private int somatorio() {
+        int dinheiroValorPago = Ultilitario.removerKZ(binding.dinheiroValorPago);
+        int cartaoValorPago = Ultilitario.removerKZ(binding.cartaoValorPago);
+        int depValorPago = Ultilitario.removerKZ(binding.depValorPago);
+        int transfValorPago = Ultilitario.removerKZ(binding.transfValorPago);
+        int valorPago = Ultilitario.removerKZ(binding.textValorPago);
+        int somatorio = (dinheiroValorPago + cartaoValorPago + depValorPago + transfValorPago);
+        int valor = valorPago - somatorio;
+        if (somatorio > valorPago) {
+            Ultilitario.alertDialog(getString(R.string.forma_pagamento), getString(R.string.smt_siff), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            return 0;
+        } else
+            return valor;
+    }
+
     private void checkValorFormaPagamento(MaterialCheckBox checkBox, TextInputEditText textInputEditText) {
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 textInputEditText.setEnabled(true);
-                binding.dinheiroValorPago.setText(String.valueOf(Ultilitario.removerKZ(binding.textValorPago)));
+                if (buttonView.getText().equals(getString(R.string.numerario)))
+                    binding.dinheiroValorPago.setText(Ultilitario.formatPreco(String.valueOf(somatorio())));
+                else if (buttonView.getText().equals(getString(R.string.cartao_multicaixa)))
+                    binding.cartaoValorPago.setText(Ultilitario.formatPreco(String.valueOf(somatorio())));
+                else if (buttonView.getText().equals(getString(R.string.deposito_bancario)))
+                    binding.depValorPago.setText(Ultilitario.formatPreco(String.valueOf(somatorio())));
+                else if (buttonView.getText().equals(getString(R.string.transferencia_bancaria)))
+                    binding.transfValorPago.setText(Ultilitario.formatPreco(String.valueOf(somatorio())));
             } else {
                 textInputEditText.setEnabled(false);
                 textInputEditText.setText(Ultilitario.formatPreco("0"));
@@ -964,7 +986,7 @@ public class FacturaFragment extends Fragment {
 
         private void desfazer(String message, long id, View view, Produto produto) {
             Snackbar.make(binding.myCoordinatorLayout, message,
-                    Snackbar.LENGTH_LONG)
+                            Snackbar.LENGTH_LONG)
                     .setAction(R.string.desfazer, v -> {
                         if (produto == null)
                             removerProduto(id, view, "", false);

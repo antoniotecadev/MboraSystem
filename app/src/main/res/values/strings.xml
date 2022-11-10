@@ -284,7 +284,7 @@
     <string name="cartao_multicaixa" translatable="false">Cartão Multicaixa</string>
     <string name="numerario" translatable="false">Numerário</string>
     <string name="deposito_bancario" translatable="false">Depósito Bancário</string>
-    <string name="transferencia_bancario" translatable="false">Transf Bancária</string>
+    <string name="transferencia_bancaria" translatable="false">Transf Bancária</string>
     <string name="efectuar_venda">Efectuar Venda</string>
     <string name="verificar_venda">Verificar Venda</string>
     <string name="total_desconto">Total com desconto</string>
