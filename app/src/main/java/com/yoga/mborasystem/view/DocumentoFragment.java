@@ -83,7 +83,7 @@ public class DocumentoFragment extends Fragment {
 
     private int accao;
     private String pasta;
-    private List<Venda> vendas = null;
+    private List<Venda> vendas;
     private GroupAdapter adapter;
     private VendaViewModel vendaViewModel;
     private FragmentDocumentoBinding binding;
@@ -145,7 +145,7 @@ public class DocumentoFragment extends Fragment {
                     idvenda.add(venda.getId());
                 vendaViewModel.getProdutosVenda(0, null, null, false, true, idvenda);
             } catch (Exception e) {
-                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                // Não eliminar este bloco try catch, ele pode gerar uma exceção, quando vendas for null
             }
         });
         vendaViewModel.getDocumentoDatatAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
