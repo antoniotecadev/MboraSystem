@@ -461,16 +461,16 @@ public class HomeFragment extends Fragment {
                                     getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto").getAsString() + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
-                                    getString(R.string.nome) + ": " + parceiro.get("first_name").getAsString() + "\n" +
-                                    getString(R.string.Sobre_Nome) + ": " + parceiro.get("last_name").getAsString() + "\n" +
-                                    getString(R.string.nifbi) + ": " + parceiro.get("nif_bi").getAsString() + "\n" +
-                                    getString(R.string.Numero_Telefone) + ": " + parceiro.get("phone").getAsString() + "\n" +
-                                    getString(R.string.Numero_Telefone_Alternativo) + ": " + parceiro.get("alternative_phone").getAsString() + "\n" +
-                                    getString(R.string.Email) + ": " + parceiro.get("email").getAsString() + "\n" +
-                                    getString(R.string.empresa) + ": " + parceiro.get("empresa").getAsString() + "\n" +
-                                    getString(R.string.municipio) + ": " + parceiro.get("municipality").getAsString() + "\n" +
-                                    getString(R.string.bairro) + ": " + parceiro.get("district").getAsString() + "\n" +
-                                    getString(R.string.rua) + ": " + parceiro.get("street").getAsString() + "\n" +
+                                    getString(R.string.nome).replace("*",": ") + parceiro.get("first_name").getAsString() + "\n" +
+                                    getString(R.string.Sobre_Nome).replace("*",": ") + parceiro.get("last_name").getAsString() + "\n" +
+                                    getString(R.string.nifbi).replace("*",": ") + parceiro.get("nif_bi").getAsString() + "\n" +
+                                    getString(R.string.Numero_Telefone).replace("*",": ") + parceiro.get("phone").getAsString() + "\n" +
+                                    getString(R.string.Numero_Telefone_Alternativo).replace("*",": ") + parceiro.get("alternative_phone").getAsString() + "\n" +
+                                    getString(R.string.Email).replace("*",": ") + parceiro.get("email").getAsString() + "\n" +
+                                    getString(R.string.empresa).replace("*",": ") + parceiro.get("empresa").getAsString() + "\n" +
+                                    getString(R.string.municipio).replace("*",": ") + parceiro.get("municipality").getAsString() + "\n" +
+                                    getString(R.string.bairro).replace("*",": ") + parceiro.get("district").getAsString() + "\n" +
+                                    getString(R.string.rua).replace("*",": ") + parceiro.get("street").getAsString() + "\n" +
                                     getString(R.string.imei) + ": " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
                         }
                         boolean isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
