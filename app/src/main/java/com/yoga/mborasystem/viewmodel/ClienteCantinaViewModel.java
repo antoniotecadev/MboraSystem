@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Patterns;
 
@@ -176,7 +177,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                         getListaClientesCantina().postValue(clientes);
                     else
                         getListaClientesCantina().setValue(clientes);
-                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                }, e -> new Handler(Looper.getMainLooper()).post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_clientes) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void consultarClienteCantina(String cliente, boolean isForDocumentSaft, List<Long> idcliente) {
