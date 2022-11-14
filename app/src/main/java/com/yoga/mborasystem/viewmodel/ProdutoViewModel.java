@@ -5,8 +5,10 @@ import android.app.Application;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -238,8 +240,13 @@ public class ProdutoViewModel extends AndroidViewModel {
                 .subscribe(produto -> {
                     if (crud)
                         getListaProdutosPaging().postValue(produto);
-                    else
-                        getListaProdutosPaging().setValue(produto);
+                    else {
+                        try {
+                            getListaProdutosPaging().setValue(produto);
+                        }catch (Exception e){
+                            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_LONG).show());
+                        }
+                    }
                 }, throwable -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
