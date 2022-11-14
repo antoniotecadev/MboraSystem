@@ -289,7 +289,7 @@ public class VendaViewModel extends AndroidViewModel {
                         getListaVendasLiveData().postValue(vendas);
                     else
                         getListaVendasLiveData().setValue(vendas);
-                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                }, e -> new Handler(Looper.getMainLooper()).post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void consultarVendasDashboard(boolean isReport, String data) {
