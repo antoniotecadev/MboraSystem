@@ -247,7 +247,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                             new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_LONG).show());
                         }
                     }
-                }, throwable -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+                }, throwable -> new Handler(Looper.getMainLooper()).post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     private void filtrar(PagingSource<Integer, Produto> listProduto, AlertDialog dialog) {
