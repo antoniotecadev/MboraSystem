@@ -246,7 +246,7 @@ public class UsuarioViewModel extends AndroidViewModel {
                         getListaUsuarios().postValue(categorias);
                     else
                         getListaUsuarios().setValue(categorias);
-                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                }, e -> new Handler(Looper.getMainLooper()).post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_usuario) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public LiveData<Long> getQuantidadeUsuario() {
