@@ -5,6 +5,7 @@ import android.app.Application;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -141,7 +142,7 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
                         getListaCategorias().postValue(categorias);
                     else
                         getListaCategorias().setValue(categorias);
-                }, e -> new Handler().post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                }, e -> new Handler(Looper.getMainLooper()).post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_categoria) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void categoriasSpinner(boolean isFactura, int operacao, View view) {

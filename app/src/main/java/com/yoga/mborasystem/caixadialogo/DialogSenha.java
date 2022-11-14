@@ -13,7 +13,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogSenhaBinding;
