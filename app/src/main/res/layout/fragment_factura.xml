@@ -627,8 +627,7 @@
                             android:imeOptions="actionNext"
                             android:inputType="number"
                             android:maxLength="15"
-                            android:text="@string/preco_zero"
-                            android:textColor="@color/textColorM" />
+                            android:text="@string/preco_zero" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -668,8 +667,7 @@
                             android:imeOptions="actionNext"
                             android:inputType="number"
                             android:maxLength="15"
-                            android:text="@string/preco_zero"
-                            android:textColor="@color/textColorM" />
+                            android:text="@string/preco_zero" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -687,8 +685,7 @@
                         android:layout_marginLeft="@dimen/margem_lateral_formulario"
                         android:layout_marginRight="@dimen/margem_lateral_formulario"
                         android:textSize="12sp"
-                        android:text="@string/deposito_bancario"
-                        android:textColor="@color/textColor" />
+                        android:text="@string/deposito_bancario" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
@@ -708,8 +705,7 @@
                             android:imeOptions="actionNext"
                             android:inputType="number"
                             android:maxLength="15"
-                            android:text="@string/preco_zero"
-                            android:textColor="@color/textColorM" />
+                            android:text="@string/preco_zero" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -748,8 +744,7 @@
                             android:imeOptions="actionNext"
                             android:inputType="number"
                             android:maxLength="15"
-                            android:text="@string/preco_zero"
-                            android:textColor="@color/textColorM" />
+                            android:text="@string/preco_zero" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
