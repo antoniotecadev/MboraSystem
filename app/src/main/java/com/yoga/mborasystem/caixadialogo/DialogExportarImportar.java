@@ -1,12 +1,13 @@
 
 package com.yoga.mborasystem.caixadialogo;
 
+import static com.yoga.mborasystem.util.Ultilitario.getFileName;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,7 +28,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.CategoriaProdutoViewModel;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -116,19 +116,13 @@ public class DialogExportarImportar extends DialogFragment {
         }
         this.data = data;
         if (isLocal) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), "categorias", Ultilitario.getDateCurrent());
-            else
-                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            Ultilitario.exportarLocal(exportCategoryActivityResultLauncher, getActivity(), "categorias", Ultilitario.getDateCurrent());
         } else
             Ultilitario.exportarNuvem(getContext(), data, "categorias.csv", "categorias", Ultilitario.getDateCurrent());
     }
 
     private void importarCategorias() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            Ultilitario.importarCategoriasProdutosClientes(importCategoryActivityResultLauncher, null, false);
-        else
-            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        Ultilitario.importarCategoriasProdutosClientes(importCategoryActivityResultLauncher, null, false);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -144,8 +138,6 @@ public class DialogExportarImportar extends DialogFragment {
                 while ((line = reader.readLine()) != null) {
                     categorias.add(line);
                 }
-            } catch (FileNotFoundException e) {
-                handler.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
             } catch (IOException e) {
                 handler.post(() -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
             }
@@ -164,7 +156,7 @@ public class DialogExportarImportar extends DialogFragment {
                         new AlertDialog.Builder(requireContext())
                                 .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
                                 .setTitle(getString(R.string.importar))
-                                .setMessage(uri.getPath())
+                                .setMessage(getFileName(uri, requireContext()))
                                 .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
                                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
                                     try {
