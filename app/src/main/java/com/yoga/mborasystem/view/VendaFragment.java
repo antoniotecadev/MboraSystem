@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -210,10 +209,7 @@ public class VendaFragment extends Fragment {
 
                 dataBuilder = dt;
                 if (isLocal) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                        Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), getString(R.string.vendas), this.data);
-                    else
-                        Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    Ultilitario.exportarLocal(exportVendaActivityResultLauncher, getActivity(), getString(R.string.vendas), this.data);
                 } else
                     Ultilitario.exportarNuvem(getContext(), dataBuilder, "vendas.csv", getString(R.string.vendas), this.data);
             }
@@ -293,11 +289,8 @@ public class VendaFragment extends Fragment {
                         exportarVenda();
                         break;
                     case R.id.importarvenda:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                            //Importa as vendas
-                            Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null, false);
-                        } else
-                            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        //Importa as vendas
+                        Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null, false);
                         break;
                     case R.id.btnEliminarTodosLixo:
                         dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
