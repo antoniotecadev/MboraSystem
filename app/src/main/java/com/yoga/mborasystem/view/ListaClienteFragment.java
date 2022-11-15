@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.getFileName;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -8,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -196,19 +197,13 @@ public class ListaClienteFragment extends Fragment {
 
     private void exportarClientes(String nomeFicheiro, boolean isLocal) {
         if (isLocal) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                Ultilitario.exportarLocal(exportClientActivityResultLauncher, getActivity(), nomeFicheiro, Ultilitario.getDateCurrent());
-            else
-                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            Ultilitario.exportarLocal(exportClientActivityResultLauncher, getActivity(), nomeFicheiro, Ultilitario.getDateCurrent());
         } else
             Ultilitario.exportarNuvem(getContext(), data, "clientes.csv", nomeFicheiro, Ultilitario.getDateCurrent());
     }
 
     private void importarClientes() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            Ultilitario.importarCategoriasProdutosClientes(importClientActivityResultLauncher, requireActivity(), false);
-        else
-            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        Ultilitario.importarCategoriasProdutosClientes(importClientActivityResultLauncher, requireActivity(), false);
     }
 
     class ClienteAdapter extends PagingDataAdapter<ClienteCantina, ClienteAdapter.ClienteViewHolder> {
@@ -360,7 +355,7 @@ public class ListaClienteFragment extends Fragment {
                         new AlertDialog.Builder(requireContext())
                                 .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
                                 .setTitle(getString(R.string.importar))
-                                .setMessage(uri.getPath())
+                                .setMessage(getFileName(uri, requireContext()))
                                 .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
                                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
                                     try {

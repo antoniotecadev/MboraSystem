@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.authenticationInFirebase;
+import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 import static com.yoga.mborasystem.util.Ultilitario.storageImageProductInFirebase;
@@ -20,7 +21,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -308,19 +308,13 @@ public class ListProdutoFragment extends Fragment {
 
     private void exportarProdutos(String nomeCategoria, boolean isLocal) {
         if (isLocal) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), nomeCategoria, Ultilitario.getDateCurrent());
-            else
-                Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.exp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            Ultilitario.exportarLocal(exportProductActivityResultLauncher, getActivity(), nomeCategoria, Ultilitario.getDateCurrent());
         } else
             Ultilitario.exportarNuvem(getContext(), data, nomeCategoria + Ultilitario.getDateCurrent() + "_produtos.csv", nomeCategoria, Ultilitario.getDateCurrent());
     }
 
     private void importarProdutos() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            Ultilitario.importarCategoriasProdutosClientes(importProductActivityResultLauncher, requireActivity(), false);
-        else
-            Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        Ultilitario.importarCategoriasProdutosClientes(importProductActivityResultLauncher, requireActivity(), false);
     }
 
     private void createProduto(long id, String categoria) {
@@ -610,7 +604,7 @@ public class ListProdutoFragment extends Fragment {
                         new AlertDialog.Builder(requireContext())
                                 .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
                                 .setTitle(getString(R.string.importar))
-                                .setMessage(uri.getPath())
+                                .setMessage(getFileName(uri, requireContext()))
                                 .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
                                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
                                     try {
@@ -664,7 +658,7 @@ public class ListProdutoFragment extends Fragment {
                             ImageView img = view.findViewById(R.id.image);
                             TextView detalhe = view.findViewById(R.id.detalhe_text);
                             detalhe.setTextColor(Color.BLACK);
-                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)) + "\n" + getString(R.string.cat)+ ": " + detalhes.get(3));
+                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)) + "\n" + getString(R.string.cat) + ": " + detalhes.get(3));
                             img.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
                             img.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
                             img.requestLayout();
