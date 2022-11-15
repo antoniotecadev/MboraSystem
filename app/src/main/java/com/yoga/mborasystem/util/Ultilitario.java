@@ -671,31 +671,46 @@ public class Ultilitario {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
         byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = storeRef.putBytes(data);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long countProduct = snapshot.getChildrenCount();
+                long quantidadeProduto = Long.parseLong(getValueSharedPreferences(context, "pac_qtd_pro", "0"));
+                if (countProduct <= quantidadeProduto) {
+                    UploadTask uploadTask = storeRef.putBytes(data);
+                    uploadTask.addOnFailureListener(e -> {
+                        MainActivity.dismissProgressBar();
+                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+                    }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
+                        Map<String, String> produto = new HashMap<>();
+                        String key = mDatabase.push().getKey();
+                        produto.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        produto.put("nome", detalhes.get(0));
+                        produto.put("preco", detalhes.get(1));
+                        produto.put("codigoBarra", detalhes.get(2));
+                        produto.put("urlImage", url.toString());
+                        mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
+                            MainActivity.dismissProgressBar();
+                            alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);
+                        }).addOnFailureListener(e -> {
+                            FirebaseStorage.getInstance().getReferenceFromUrl(url.toString()).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
+                            MainActivity.dismissProgressBar();
+                            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+                        });
+                    }).addOnFailureListener(e -> {
+                        MainActivity.dismissProgressBar();
+                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+                    }));
+                } else {
+                    alertDialog(context.getString(R.string.erro), context.getString(R.string.atg_limit), context, R.drawable.ic_baseline_privacy_tip_24);
+                }
+            }
 
-        uploadTask.addOnFailureListener(e -> {
-            MainActivity.dismissProgressBar();
-            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-        }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
-            Map<String, String> produto = new HashMap<>();
-            String key = mDatabase.push().getKey();
-            produto.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-            produto.put("nome", detalhes.get(0));
-            produto.put("preco", detalhes.get(1));
-            produto.put("codigoBarra", detalhes.get(2));
-            produto.put("urlImage", url.toString());
-            mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
-                MainActivity.dismissProgressBar();
-                alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);
-            }).addOnFailureListener(e -> {
-                FirebaseStorage.getInstance().getReferenceFromUrl(url.toString()).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
-                MainActivity.dismissProgressBar();
-                alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-            });
-        }).addOnFailureListener(e -> {
-            MainActivity.dismissProgressBar();
-            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-        }));
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                alertDialog(context.getString(R.string.erro), error.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+            }
+        });
     }
 
     public static boolean isCampoVazio(String valor) {
