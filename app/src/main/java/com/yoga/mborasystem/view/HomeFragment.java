@@ -12,6 +12,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
+import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -427,7 +428,7 @@ public class HomeFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
     }
 
-    private String estado;
+    private String estado, quantidadeTipo;
     private byte estadoConta, terminoPrazo;
 
     private void estadoConta(String imei) {
@@ -452,6 +453,7 @@ public class HomeFragment extends Fragment {
                             terminoPrazo = parceiro.get("termina").getAsByte();
                             String contactos = parceiro.get("contactos").getAsString();
                             String dispositivo = parceiro.get("device").getAsString();
+                            quantidadeTipo = parceiro.get("quantidade_produto").getAsString();
                             boolean equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
                             estado = (!equalsDevice ? getString(R.string.inco_desp) + "\n\n" : "") +
                                     (terminoPrazo == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
@@ -461,19 +463,23 @@ public class HomeFragment extends Fragment {
                                     getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto").getAsString() + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
-                                    getString(R.string.nome).replace("*",": ") + parceiro.get("first_name").getAsString() + "\n" +
-                                    getString(R.string.Sobre_Nome).replace("*",": ") + parceiro.get("last_name").getAsString() + "\n" +
-                                    getString(R.string.nifbi).replace("*",": ") + parceiro.get("nif_bi").getAsString() + "\n" +
-                                    getString(R.string.Numero_Telefone).replace("*",": ") + parceiro.get("phone").getAsString() + "\n" +
-                                    getString(R.string.Numero_Telefone_Alternativo).replace("*",": ") + parceiro.get("alternative_phone").getAsString() + "\n" +
-                                    getString(R.string.Email).replace("*",": ") + parceiro.get("email").getAsString() + "\n" +
-                                    getString(R.string.empresa).replace("*",": ") + parceiro.get("empresa").getAsString() + "\n" +
-                                    getString(R.string.municipio).replace("*",": ") + parceiro.get("municipality").getAsString() + "\n" +
-                                    getString(R.string.bairro).replace("*",": ") + parceiro.get("district").getAsString() + "\n" +
-                                    getString(R.string.rua).replace("*",": ") + parceiro.get("street").getAsString() + "\n" +
+                                    getString(R.string.nome).replace("*", ": ") + parceiro.get("first_name").getAsString() + "\n" +
+                                    getString(R.string.Sobre_Nome).replace("*", ": ") + parceiro.get("last_name").getAsString() + "\n" +
+                                    getString(R.string.nifbi).replace("*", ": ") + parceiro.get("nif_bi").getAsString() + "\n" +
+                                    getString(R.string.Numero_Telefone).replace("*", ": ") + parceiro.get("phone").getAsString() + "\n" +
+                                    getString(R.string.Numero_Telefone_Alternativo).replace("*", ": ") + parceiro.get("alternative_phone").getAsString() + "\n" +
+                                    getString(R.string.Email).replace("*", ": ") + parceiro.get("email").getAsString() + "\n" +
+                                    getString(R.string.empresa).replace("*", ": ") + parceiro.get("empresa").getAsString() + "\n" +
+                                    getString(R.string.municipio).replace("*", ": ") + parceiro.get("municipality").getAsString() + "\n" +
+                                    getString(R.string.bairro).replace("*", ": ") + parceiro.get("district").getAsString() + "\n" +
+                                    getString(R.string.rua).replace("*", ": ") + parceiro.get("street").getAsString() + "\n" +
                                     getString(R.string.imei) + ": " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
                         }
                         boolean isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
+                        if (isFinish)
+                            setValueSharedPreferences(requireContext(), "pac_qtd_pro", "0");
+                        else
+                            setValueSharedPreferences(requireContext(), "pac_qtd_pro", quantidadeTipo);
                         alertDialog(isFinish ? getString(R.string.des) : getString(R.string.act), estado, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
