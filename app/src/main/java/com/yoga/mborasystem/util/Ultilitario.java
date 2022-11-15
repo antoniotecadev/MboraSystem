@@ -50,7 +50,6 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.FileProvider;
@@ -418,7 +417,6 @@ public class Ultilitario {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void exportarLocal(ActivityResultLauncher<Intent> exportActivityResultLauncher, Activity activity, String nomeFicheiro, String data) {
         try {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -475,7 +473,6 @@ public class Ultilitario {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void importarCategoriasProdutosClientes(ActivityResultLauncher<Intent> importActivityResultLauncher, Activity activity, boolean isDB) {
         String[] mimetypes;
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -758,8 +755,6 @@ public class Ultilitario {
                 fileOutputStream.close();
                 csv.close();
 
-            } catch (FileNotFoundException e) {
-                showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
             } catch (IOException e) {
                 showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
             }
