@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -312,10 +311,7 @@ public class HomeFragment extends Fragment {
                         exportarBD();
                         break;
                     case R.id.impoBd:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                            Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
-                        else
-                            alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
                         break;
                     case R.id.termosCondicoes:
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));
