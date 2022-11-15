@@ -165,6 +165,9 @@
             <action
                 android:id="@+id/action_homeFragment_to_configuracaoFragment"
                 app:destination="@id/configuracaoFragment" />
+            <action
+                android:id="@+id/action_homeFragment_to_mboraFragment"
+                app:destination="@id/mboraFragment" />
         </fragment>
         <fragment
             android:id="@+id/usuarioFragment"
@@ -461,6 +464,11 @@
                 android:id="@+id/action_documentoFragment_to_datePickerFragment"
                 app:destination="@id/datePickerFragment" />
         </fragment>
+        <fragment
+            android:id="@+id/mboraFragment"
+            android:name="com.yoga.mborasystem.view.MboraFragment"
+            android:label="fragment_mbora"
+            tools:layout="@layout/fragment_mbora" />
 
     </navigation>
     <fragment

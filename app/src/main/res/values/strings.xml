@@ -590,7 +590,7 @@
     <string name="exp_dis_api_sup">A exportação só está disponível para nível de API 19 ou superior</string>
     <string name="imp_dis_api_sup">A importação só está disponível para nível de API 19 ou superior</string>
     <string name="apn_mborasystem" translatable="false">https://yogatcs.site</string>
-<!--    <string name="apn_mborasystem" translatable="false">http://192.168.18.3</string>-->
+    <!--    <string name="apn_mborasystem" translatable="false">http://192.168.18.3</string>-->
     <string name="vend_ago">Vender Agora</string>
     <string name="br_car">Bairros carregados</string>
     <string name="aut">Autenticação</string>
