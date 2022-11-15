@@ -688,6 +688,7 @@ public class Ultilitario {
                         produto.put("nome", detalhes.get(0));
                         produto.put("preco", detalhes.get(1));
                         produto.put("codigoBarra", detalhes.get(2));
+                        produto.put("categoria", detalhes.get(3));
                         produto.put("urlImage", url.toString());
                         mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
                             MainActivity.dismissProgressBar();

@@ -78,6 +78,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -502,6 +503,7 @@ public class ListProdutoFragment extends Fragment {
                                     detalhes.add(produto.getNome());
                                     detalhes.add(String.valueOf(produto.getPreco()));
                                     detalhes.add(produto.getCodigoBarra());
+                                    detalhes.add(categoria.toLowerCase(Locale.ROOT));
                                     return false;
                                 });
                             }
@@ -662,7 +664,7 @@ public class ListProdutoFragment extends Fragment {
                             ImageView img = view.findViewById(R.id.image);
                             TextView detalhe = view.findViewById(R.id.detalhe_text);
                             detalhe.setTextColor(Color.BLACK);
-                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)));
+                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)) + "\n" + getString(R.string.cat)+ ": " + detalhes.get(3));
                             img.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
                             img.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
                             img.requestLayout();
