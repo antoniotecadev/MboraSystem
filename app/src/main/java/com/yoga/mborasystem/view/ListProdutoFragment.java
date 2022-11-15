@@ -691,11 +691,15 @@ public class ListProdutoFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 MainActivity.dismissProgressBar();
                                 if (task.getResult().exists()) {
-                                    Cliente cliente = task.getResult().getValue(Cliente.class);
-                                    if (cliente != null)
-                                        alertDialogSelectImage(cliente, requireContext(), imageActivityResultLauncher);
-                                    else
-                                        showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                                    try {
+                                        Cliente cliente = task.getResult().getValue(Cliente.class);
+                                        if (cliente != null)
+                                            alertDialogSelectImage(cliente, requireContext(), imageActivityResultLauncher);
+                                        else
+                                            showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                                    } catch (Exception e) {
+                                        alertDialog(getString(R.string.erro), e.getMessage(), requireActivity(), R.drawable.ic_baseline_privacy_tip_24);
+                                    }
                                 } else
                                     showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
                             } else {
