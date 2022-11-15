@@ -1,5 +1,8 @@
 package com.yoga.mborasystem.view;
 
+
+import static com.yoga.mborasystem.util.Ultilitario.getFileName;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -557,7 +560,7 @@ public class VendaFragment extends Fragment {
                         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                                 .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
                                 .setTitle(getString(R.string.importar))
-                                .setMessage(uri.getPath())
+                                .setMessage(getFileName(uri, requireContext()))
                                 .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
                                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
                                     try {
@@ -570,6 +573,7 @@ public class VendaFragment extends Fragment {
                     }
                 }
             });
+
     ActivityResultLauncher<Intent> exportVendaActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
