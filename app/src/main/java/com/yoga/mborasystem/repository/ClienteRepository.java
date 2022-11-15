@@ -35,10 +35,10 @@ public class ClienteRepository {
     }
 
     public void alterarSenha(Cliente cliente) {
-        clienteDao.alterarSenha(cliente.getId(), cliente.getSenha());
+        clienteDao.alterarSenha(cliente.getIdcliente(), cliente.getSenha());
     }
 
     public void update(Cliente c) {
-        clienteDao.update(c.getId(), c.getNome(), c.getSobrenome(), c.getNifbi(), c.getTelefone(), c.getTelefonealternativo(), c.getEmail(), c.getNomeEmpresa(), c.getProvincia(), c.getMunicipio(), c.getBairro(), c.getRua());
+        clienteDao.update(c.getIdcliente(), c.getNome(), c.getSobrenome(), c.getNifbi(), c.getTelefone(), c.getTelefonealternativo(), c.getEmail(), c.getNomeEmpresa(), c.getProvincia(), c.getMunicipio(), c.getBairro(), c.getRua());
     }
 }

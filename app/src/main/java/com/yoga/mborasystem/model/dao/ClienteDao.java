@@ -21,9 +21,9 @@ public interface ClienteDao {
     @Delete
     void delete(Cliente cliente);
 
-    @Query("UPDATE cliente SET senha = :senha WHERE id = :idcliente")
+    @Query("UPDATE cliente SET senha = :senha WHERE idcliente = :idcliente")
     void alterarSenha(long idcliente, String senha);
 
-    @Query("UPDATE cliente SET nome = :nome, sobrenome = :sobreNome, nifbi = :nif, telefone = :telefone, telefonealternativo = :telefoneAlternativo, email = :email, nomeempresa = :nomeEmpresa, provincia = :provincia, municipio = :municipio, bairro = :bairro, rua = :rua  WHERE id = :id")
-    void update(long id, String nome, String sobreNome, String nif, String telefone, String telefoneAlternativo, String email, String nomeEmpresa, String provincia, String municipio, String bairro, String rua);
+    @Query("UPDATE cliente SET nome = :nome, sobrenome = :sobreNome, nifbi = :nif, telefone = :telefone, telefonealternativo = :telefoneAlternativo, email = :email, nomeempresa = :nomeEmpresa, provincia = :provincia, municipio = :municipio, bairro = :bairro, rua = :rua  WHERE idcliente = :idcliente")
+    void update(long idcliente, String nome, String sobreNome, String nif, String telefone, String telefoneAlternativo, String email, String nomeEmpresa, String provincia, String municipio, String bairro, String rua);
 }

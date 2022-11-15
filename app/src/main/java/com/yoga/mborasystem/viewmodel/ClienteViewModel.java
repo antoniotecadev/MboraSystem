@@ -156,7 +156,7 @@ public class ClienteViewModel extends AndroidViewModel {
             codigoEquipa.setError(getApplication().getString(R.string.cod_eqp_inv));
         } else {
             MainActivity.getProgressBar();
-            cliente.setId(1);
+            cliente.setIdcliente(1);
             cliente.setNome(nome.getText().toString());
             cliente.setSobrenome(sobreNome.getText().toString());
             cliente.setNifbi(nif.getText().toString());
@@ -217,7 +217,7 @@ public class ClienteViewModel extends AndroidViewModel {
             senhaNovamente.setError(getApplication().getString(R.string.senha_dif));
         } else {
             MainActivity.getProgressBar();
-            cliente.setId(1);
+            cliente.setIdcliente(1);
             cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
             alterarSenha(cliente);
         }

@@ -15,7 +15,7 @@ public class Cliente implements Parcelable {
     }
 
     @PrimaryKey
-    private long id;
+    private long idcliente;
 
     private String nome;
     private String sobrenome;
@@ -32,6 +32,7 @@ public class Cliente implements Parcelable {
     private String bairro;
     private String rua;
     private String imei;
+    @Ignore private String id;
     @Ignore private String codigoEquipa;
     @Ignore private String data_cria;
     @Ignore private String latitude;
@@ -42,7 +43,7 @@ public class Cliente implements Parcelable {
     @Ignore private String codigoPlus;
 
     protected Cliente(Parcel in) {
-        id = in.readLong();
+        idcliente = in.readLong();
         nome = in.readString();
         sobrenome = in.readString();
         email = in.readString();
@@ -71,12 +72,12 @@ public class Cliente implements Parcelable {
         }
     };
 
-    public long getId() {
-        return id;
+    public long getIdcliente() {
+        return idcliente;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setIdcliente(long idcliente) {
+        this.idcliente = idcliente;
     }
 
     public String getNome() {
@@ -255,6 +256,14 @@ public class Cliente implements Parcelable {
         this.codigoPlus = codigoPlus;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -262,7 +271,7 @@ public class Cliente implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
+        dest.writeLong(idcliente);
         dest.writeString(nome);
         dest.writeString(sobrenome);
         dest.writeString(email);
