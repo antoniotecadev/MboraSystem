@@ -13,6 +13,7 @@ import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -50,7 +51,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
@@ -60,6 +64,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentHomeBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.ContaBancaria;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
@@ -328,7 +333,41 @@ public class HomeFragment extends Fragment {
                         acercaMboraSystem(requireContext(), requireActivity());
                         break;
                     case R.id.formaPagamento:
-                        Ultilitario.formaPagamento(requireContext(), valueEventListener, reference);
+                        MainActivity.getProgressBar();
+                        valueEventListener = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                StringBuilder ddbc = new StringBuilder();
+                                if (snapshot.exists()) {
+                                    String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
+                                    ddbc.append(getString(R.string.info_pagamento, detalhe)).append("\n\n");
+                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        if (dataSnapshot.exists()) {
+                                            ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
+                                            if (cb.getNome() != null) {
+                                                ddbc.append(getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
+                                                ddbc.append(getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
+                                                ddbc.append(getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
+                                                ddbc.append(getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
+                                                ddbc.append("\n\n");
+                                            }
+                                        } else
+                                            showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                                    }
+                                } else
+                                    showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                                MainActivity.dismissProgressBar();
+                                alertDialog(getString(R.string.forma_pagamento), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                MainActivity.dismissProgressBar();
+                                alertDialog(getString(R.string.erro), error.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                            }
+                        };
+                        reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
+                        reference.addListenerForSingleValueEvent(valueEventListener);
                         break;
                     case R.id.itemSair:
                         sairApp();

@@ -1310,41 +1310,5 @@ public class Ultilitario {
         }
     }
 
-    public static void formaPagamento(Context context, ValueEventListener valueEventListener, DatabaseReference reference) {
-        MainActivity.getProgressBar();
-        valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                StringBuilder ddbc = new StringBuilder();
-                if (snapshot.exists()) {
-                    String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
-                    ddbc.append(context.getString(R.string.info_pagamento, detalhe)).append("\n\n");
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        if (dataSnapshot.exists()) {
-                            ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
-                            if (cb.getNome() != null) {
-                                ddbc.append(context.getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
-                                ddbc.append(context.getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
-                                ddbc.append(context.getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
-                                ddbc.append(context.getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
-                                ddbc.append("\n\n");
-                            }
-                        } else
-                            showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
-                    }
-                } else
-                    showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
-                MainActivity.dismissProgressBar();
-                alertDialog(context.getString(R.string.forma_pagamento), ddbc.toString(), context, R.drawable.ic_baseline_store_24);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                MainActivity.dismissProgressBar();
-                alertDialog(context.getString(R.string.erro), error.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-            }
-        };
-        reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
-        reference.addListenerForSingleValueEvent(valueEventListener);
-    }
 }

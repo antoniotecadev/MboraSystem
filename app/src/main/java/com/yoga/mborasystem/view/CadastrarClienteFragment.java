@@ -3,7 +3,6 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
-import static com.yoga.mborasystem.util.Ultilitario.formaPagamento;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
@@ -257,6 +256,7 @@ public class CadastrarClienteFragment extends Fragment {
                                                   menu.findItem(R.id.bloquearFragment).setVisible(false);
                                                   menu.findItem(R.id.idioma).setVisible(false);
                                                   menu.findItem(R.id.expoBd).setVisible(false);
+                                                  menu.findItem(R.id.formaPagamento).setVisible(false);
                                                   menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
                                               }
 
@@ -273,7 +273,6 @@ public class CadastrarClienteFragment extends Fragment {
                                                   } else if (menuItem.getItemId() == R.id.device) {
                                                       getDetailDevice(requireContext());
                                                   } else if (menuItem.getItemId() == R.id.formaPagamento) {
-                                                      formaPagamento(requireContext(), valueEventListener, reference);
                                                   } else if (menuItem.getItemId() == R.id.acercaMborasytem)
                                                       acercaMboraSystem(requireContext(), requireActivity());
                                                   return NavigationUI.onNavDestinationSelected(menuItem, navController);
