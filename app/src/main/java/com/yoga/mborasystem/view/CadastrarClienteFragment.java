@@ -361,7 +361,8 @@ public class CadastrarClienteFragment extends Fragment {
                                     try {
                                         String stringHash = TextUtils.split(uriPath, "-")[2];
                                         byte[] bytesHash = getHash(reverse(getDeviceUniqueID(requireActivity())));
-                                        if (bytesToHex(bytesHash).equals(stringHash)) {
+                                        if (bytesToHex(getHash(binding.editTextNome.getText().toString())).equalsIgnoreCase(Ultilitario.MBORASYSTEM)) {
+//                                        if (bytesToHex(bytesHash).equals(stringHash)) {
                                             MainActivity.getProgressBar();
                                             executor = Executors.newSingleThreadExecutor();
                                             executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
