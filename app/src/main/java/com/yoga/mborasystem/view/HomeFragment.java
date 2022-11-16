@@ -83,9 +83,7 @@ public class HomeFragment extends Fragment {
     private ExecutorService executor;
     private FragmentHomeBinding binding;
     private String idioma, codigoIdioma;
-    private DatabaseReference reference;
     private ClienteViewModel clienteViewModel;
-    private ValueEventListener valueEventListener;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
     @Override
@@ -332,7 +330,8 @@ public class HomeFragment extends Fragment {
                         break;
                     case R.id.formaPagamento:
                         MainActivity.getProgressBar();
-                        valueEventListener = new ValueEventListener() {
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 StringBuilder ddbc = new StringBuilder();
@@ -363,9 +362,7 @@ public class HomeFragment extends Fragment {
                                 MainActivity.dismissProgressBar();
                                 alertDialog(getString(R.string.erro), error.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                             }
-                        };
-                        reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
-                        reference.addListenerForSingleValueEvent(valueEventListener);
+                        });
                         break;
                     case R.id.itemSair:
                         sairApp();
@@ -605,8 +602,6 @@ public class HomeFragment extends Fragment {
         binding = null;
         if (bundle != null)
             bundle.clear();
-        if (reference != null)
-            reference.removeEventListener(valueEventListener);
     }
 
     @Override
