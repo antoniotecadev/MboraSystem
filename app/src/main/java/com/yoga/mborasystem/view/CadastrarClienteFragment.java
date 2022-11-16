@@ -16,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,7 +50,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -74,8 +72,6 @@ public class CadastrarClienteFragment extends Fragment {
     private DatabaseReference mDatabase;
     private String errorClienteUser = "";
     private ClienteViewModel clienteViewModel;
-    private DatabaseReference reference;
-    private ValueEventListener valueEventListener;
     private FragmentCadastrarClienteBinding binding;
     private CancellationTokenSource cancellationTokenSource;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -266,10 +262,7 @@ public class CadastrarClienteFragment extends Fragment {
                                                   if (menuItem.getItemId() == R.id.config)
                                                       Navigation.findNavController(requireView()).navigate(R.id.action_cadastrarClienteFragment_to_configuracaoFragment2);
                                                   else if (menuItem.getItemId() == R.id.impoBd) {
-                                                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                                                          Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
-                                                      else
-                                                          alertDialog(getString(R.string.avs), getString(R.string.imp_dis_api_sup), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                                      Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
                                                   } else if (menuItem.getItemId() == R.id.device) {
                                                       getDetailDevice(requireContext());
                                                   } else if (menuItem.getItemId() == R.id.formaPagamento) {
@@ -394,7 +387,5 @@ public class CadastrarClienteFragment extends Fragment {
         super.onDestroyView();
         binding = null;
         cancellationTokenSource.cancel();
-        if (reference != null)
-            reference.removeEventListener(valueEventListener);
     }
 }

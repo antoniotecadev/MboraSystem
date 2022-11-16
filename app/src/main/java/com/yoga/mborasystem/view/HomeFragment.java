@@ -167,8 +167,6 @@ public class HomeFragment extends Fragment {
                 case R.id.facturaFragmentH:
                     entrarFacturacao();
                     break;
-                case R.id.mboraMenu:
-                    break;
                 case R.id.categoriaProdutoFragmentLx:
                     entrarCategoriasLx();
                     break;
