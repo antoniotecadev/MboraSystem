@@ -1,5 +1,8 @@
 package com.yoga.mborasystem.model.entidade;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class ContaBancaria {
 
     private String proprietario;

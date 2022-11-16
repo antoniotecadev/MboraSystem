@@ -1,9 +1,10 @@
 package com.yoga.mborasystem.model.entidade;
 
+import androidx.annotation.Keep;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
+@Keep
 @Entity(tableName = "clientecantina")
 public class ClienteCantina {
 
