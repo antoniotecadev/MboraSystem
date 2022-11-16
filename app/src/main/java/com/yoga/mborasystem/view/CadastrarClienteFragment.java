@@ -9,11 +9,13 @@ import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,6 +49,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -56,6 +59,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.ContaBancaria;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
@@ -87,8 +91,7 @@ public class CadastrarClienteFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 //        query.addChildEventListener(new ChildEventListener() {
 //            @Override
@@ -252,7 +255,6 @@ public class CadastrarClienteFragment extends Fragment {
                                                   menu.findItem(R.id.bloquearFragment).setVisible(false);
                                                   menu.findItem(R.id.idioma).setVisible(false);
                                                   menu.findItem(R.id.expoBd).setVisible(false);
-                                                  menu.findItem(R.id.formaPagamento).setVisible(false);
                                                   menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
                                               }
 
@@ -266,6 +268,37 @@ public class CadastrarClienteFragment extends Fragment {
                                                   } else if (menuItem.getItemId() == R.id.device) {
                                                       getDetailDevice(requireContext());
                                                   } else if (menuItem.getItemId() == R.id.formaPagamento) {
+                                                      MainActivity.getProgressBar();
+                                                      DatabaseReference reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
+                                                      reference.get().addOnCompleteListener(task -> {
+                                                          if (task.isSuccessful()) {
+                                                              StringBuilder ddbc = new StringBuilder();
+                                                              DataSnapshot snapshot = task.getResult();
+                                                              if (snapshot.exists()) {
+                                                                  String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
+                                                                  ddbc.append(getString(R.string.info_pagamento, detalhe)).append("\n\n");
+                                                                  for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                      if (dataSnapshot.exists()) {
+                                                                          ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
+                                                                          if (cb.getNome() != null) {
+                                                                              ddbc.append(getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
+                                                                              ddbc.append(getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
+                                                                              ddbc.append(getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
+                                                                              ddbc.append(getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
+                                                                              ddbc.append("\n\n");
+                                                                          }
+                                                                      } else
+                                                                          showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                                                                  }
+                                                              } else
+                                                                  showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                                                              MainActivity.dismissProgressBar();
+                                                              alertDialog(getString(R.string.forma_pagamento), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
+                                                          } else {
+                                                              MainActivity.dismissProgressBar();
+                                                              alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                                          }
+                                                      });
                                                   } else if (menuItem.getItemId() == R.id.acercaMborasytem)
                                                       acercaMboraSystem(requireContext(), requireActivity());
                                                   return NavigationUI.onNavDestinationSelected(menuItem, navController);

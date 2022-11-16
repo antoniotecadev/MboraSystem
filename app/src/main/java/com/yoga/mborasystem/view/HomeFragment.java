@@ -52,10 +52,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -331,10 +329,10 @@ public class HomeFragment extends Fragment {
                     case R.id.formaPagamento:
                         MainActivity.getProgressBar();
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        reference.get().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
                                 StringBuilder ddbc = new StringBuilder();
+                                DataSnapshot snapshot = task.getResult();
                                 if (snapshot.exists()) {
                                     String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
                                     ddbc.append(getString(R.string.info_pagamento, detalhe)).append("\n\n");
@@ -355,12 +353,9 @@ public class HomeFragment extends Fragment {
                                     showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
                                 MainActivity.dismissProgressBar();
                                 alertDialog(getString(R.string.forma_pagamento), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                            } else {
                                 MainActivity.dismissProgressBar();
-                                alertDialog(getString(R.string.erro), error.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                             }
                         });
                         break;
