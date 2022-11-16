@@ -360,7 +360,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/slogan_yoga"
-                android:textColor="@color/black"
+                android:textColor="@color/textColor"
                 android:textSize="12sp"
                 android:layout_gravity="center" />
             </androidx.appcompat.widget.LinearLayoutCompat>
