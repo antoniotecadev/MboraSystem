@@ -36,6 +36,7 @@
     <item
         android:id="@+id/mboraMenu"
         android:icon="@drawable/ic_baseline_home_work_24"
+        android:visible="false"
         android:title="@string/mbora" />
 
     <item

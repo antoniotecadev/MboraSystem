@@ -163,7 +163,6 @@ public class HomeFragment extends Fragment {
                     entrarFacturacao();
                     break;
                 case R.id.mboraMenu:
-                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_mboraFragment);
                     break;
                 case R.id.categoriaProdutoFragmentLx:
                     entrarCategoriasLx();
