@@ -266,22 +266,22 @@ public class DocumentoFragment extends Fragment {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
                     try {
                         layout.removeAllViews();
-                        if (Objects.requireNonNull(dataInicio.getText()).toString().isEmpty()) {
+                        if (dataInicio.getText().toString().isEmpty()) {
                             this.dialogExportarDocumentoSaft();
                             dataInicio.requestFocus();
                             Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.pri_dat_vaz), R.drawable.ic_toast_erro);
-                        } else if (Objects.requireNonNull(dataFim.getText()).toString().isEmpty()) {
+                        } else if (dataFim.getText().toString().isEmpty()) {
                             this.dialogExportarDocumentoSaft();
                             dataFim.requestFocus();
                             Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
-                        } else if (Objects.requireNonNull(sdf.parse(dataFim.getText().toString())).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
+                        } else if (sdf.parse(dataFim.getText().toString()).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
                             MainActivity.getProgressBar();
-                            vendaViewModel.getVendaSaft(Objects.requireNonNull(dataInicio.getText()).toString(), Objects.requireNonNull(dataFim.getText()).toString());
+                            vendaViewModel.getVendaSaft(dataInicio.getText().toString(), dataFim.getText().toString());
                         } else {
                             this.dialogExportarDocumentoSaft();
                             Ultilitario.alertDialog(getString(R.string.exp_saft), getString(R.string.dat_1_nao_dat_2, dataInicio.getText().toString(), dataFim.getText().toString()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
-                    } catch (ParseException e) {
+                    } catch (Exception e) {
                         Ultilitario.alertDialog(getString(R.string.exp_saft), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> {
