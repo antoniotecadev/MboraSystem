@@ -549,6 +549,16 @@ public class HomeFragment extends Fragment {
     );
 
     private String uriPath;
+    private ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                if (result) {
+                    MainActivity.getProgressBar();
+                    executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
+                } else
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_imp_bd), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
+    );
     ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -571,9 +581,7 @@ public class HomeFragment extends Fragment {
                                         String stringHash = TextUtils.split(uriPath, "-")[2];
                                         byte[] bytesHash = getHash(reverse(getDeviceUniqueID(requireActivity())) + "-" + reverse(cliente.getImei()));
                                         if (bytesToHex(bytesHash).equals(stringHash)) {
-                                            MainActivity.getProgressBar();
-                                            executor = Executors.newSingleThreadExecutor();
-                                            executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
+                                            requestPermissionLauncherImportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                                         } else
                                             alertDialog(getString(R.string.erro), getString(R.string.inc_bd), requireContext(), R.drawable.ic_baseline_close_24);
                                     } catch (Exception e) {
