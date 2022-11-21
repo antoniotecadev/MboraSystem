@@ -455,8 +455,6 @@ public class DocumentoFragment extends Fragment {
 
         private void abrirDocumentoPDF(View v) {
             Uri fileURI;
-            v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-            new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
             File file = new File(documento.getCaminho());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
@@ -491,8 +489,6 @@ public class DocumentoFragment extends Fragment {
         }
 
         private void partilharDocumentoPDF(View v, String titulo) {
-            v.setBackgroundColor(Color.parseColor("#6BD3D8D7"));
-            new Handler(Looper.getMainLooper()).postDelayed(() -> v.setBackgroundColor(Color.WHITE), 1000);
             Ultilitario.partilharDocumento(documento.getCaminho(), context, "application/pdf", getString(R.string.part_doc) + " " + titulo);
         }
 
