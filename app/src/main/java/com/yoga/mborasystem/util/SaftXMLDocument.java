@@ -8,6 +8,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.annotation.Keep;
+
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
@@ -42,7 +44,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-
+@Keep
 public class SaftXMLDocument {
 
     private void criarElemento(Document doc, String elementoFilho, Element elementPai, String valorElementoFilho) {
@@ -333,7 +335,7 @@ public class SaftXMLDocument {
         }
         return "";
     }
-
+    @Keep
     private static class TaxTable {
 
         private final String taxType, taxCode, description, taxPercentage;

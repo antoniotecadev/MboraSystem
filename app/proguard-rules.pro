@@ -41,3 +41,16 @@
     -keepclassmembers class com.yoga.mborasystem.model.entidade.Cliente.** {
       *;
     }
+    #RoomDataBase
+    -keep class * extends androidx.room.RoomDatabase
+    -keep @androidx.room.Entity class *
+    -dontwarn androidx.room.paging.**
+
+    #SAFT-XML
+    -dontwarn org.apache.**
+    -dontwarn org.json.*
+    -dontwarn javax.xml.**
+    -dontwarn android.support.**
+
+    -keep class javax.**  { *; }
+    -keep class org.**  { *; }
