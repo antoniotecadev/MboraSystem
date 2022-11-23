@@ -136,7 +136,7 @@ public class SaftXMLDocument {
         for (ProdutoVenda pv : produtoVendas) {
             String taxType = pv.isIva() ? "IVA" : "NS";
             String taxCode = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "NS";
-            String description = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "Normal" : "Outros") : "Isenta";
+            String description = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "Normal" : "Outros") : "Não Sujeição";
             String taxPercentage = String.valueOf(pv.getPercentagemIva());
             String key = (taxType + taxCode + description + taxPercentage).trim();
             tabelaImposto.put(key, new TaxTable(taxType, taxCode, description, taxPercentage));
