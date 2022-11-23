@@ -135,7 +135,7 @@ public class SaftXMLDocument {
         Map<String, TaxTable> tabelaImposto = new HashMap<>();
         for (ProdutoVenda pv : produtoVendas) {
             String taxType = pv.isIva() ? "IVA" : "NS";
-            String taxCode = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "ISE";
+            String taxCode = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "NS";
             String description = pv.isIva() ? (pv.getPercentagemIva() == 14 ? "Normal" : "Outros") : "Isenta";
             String taxPercentage = String.valueOf(pv.getPercentagemIva());
             String key = (taxType + taxCode + description + taxPercentage).trim();
@@ -238,7 +238,7 @@ public class SaftXMLDocument {
                     line.appendChild(tax);
                     criarElemento(doc, "TaxType", tax, pv.isIva() ? "IVA" : "NS");
                     criarElemento(doc, "TaxCountryRegion", tax, "AO");
-                    criarElemento(doc, "TaxCode", tax, pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "ISE");
+                    criarElemento(doc, "TaxCode", tax, pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "NS");
                     criarElemento(doc, "TaxPercentage", tax, String.valueOf(pv.getPercentagemIva()));
                     if (pv.getPercentagemIva() == 0) {
                         criarElemento(doc, "TaxExemptionReason", line, getRasaoISE(context, pv.getCodigoMotivoIsencao()));
