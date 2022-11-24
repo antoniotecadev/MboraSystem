@@ -6,11 +6,11 @@ import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -192,7 +192,7 @@ public class VendaViewModel extends AndroidViewModel {
     private long idvenda;
 
     @SuppressLint("CheckResult")
-    public void cadastrarVenda(String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
+    public void cadastrarVenda(Context context, String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
         venda.setId(0);
         venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
@@ -224,23 +224,17 @@ public class VendaViewModel extends AndroidViewModel {
                     public void onComplete() {
                         int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getDesconto() - venda.getValor_base();
                         int grossTotal = taxPayable + venda.getValor_base();
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(getDataFormatMonth(venda.getData_cria())).append(";");
-                        sb.append(venda.getData_cria_hora()).append(";");
-                        sb.append(venda.getCodigo_qr()).append("/").append(idvenda).append(";");
-                        sb.append(formatarValor(grossTotal)).append(";");
                         String hashVendaLast = Ultilitario.getValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", "");
-                        sb.append(hashVendaLast.isEmpty() ? "" : hashVendaLast);
+                        String vd = getDataFormatMonth(venda.getData_cria()) + ";" + venda.getData_cria_hora() + ";" + venda.getCodigo_qr() + "/" + idvenda + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
                         try {
-                            String hashVenda = EncriptaDecriptaRSA.assinarTexto(sb.toString(), getFilePathCache(getApplication().getApplicationContext(), "privatekey.key").getAbsolutePath(), getFilePathCache(getApplication().getApplicationContext(), "publickey.key").getAbsolutePath());
+                            String hashVenda = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(context, "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(context, "public_key.der").getAbsolutePath()));
                             if (hashVenda == null)
-                                Toast.makeText(getApplication().getApplicationContext(), getApplication().getString(R.string.err_ass), Toast.LENGTH_LONG).show();
+                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
                             else {
-                                Ultilitario.setValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", hashVenda);
-                                insertHashVenda(hashVenda, idvenda);
+                                insertHashVenda(context, hashVenda.trim(), idvenda);
                             }
                         } catch (Exception e) {
-                            Toast.makeText(getApplication().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
                         }
                         MainActivity.dismissProgressBar();
                         FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada(referenciaFactura).setPrecoTotal(totalVenda).setIdvenda(idvenda);
@@ -255,11 +249,14 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    private void insertHashVenda(String hashVenda, long idvenda) {
+    private void insertHashVenda(Context context, String hashVenda, long idvenda) {
         compositeDisposable.add(Completable.fromAction(() -> vendaRepository.insertHashVenda(hashVenda, idvenda))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> Toast.makeText(getApplication(), "Hash Generated", Toast.LENGTH_LONG), e -> Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_LONG).show()));
+                .subscribe(() -> {
+                    Ultilitario.setValueSharedPreferences(context, "hashvenda", hashVenda);
+                    Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), "", R.drawable.ic_toast_feito);
+                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
     }
 
     @SuppressLint("CheckResult")

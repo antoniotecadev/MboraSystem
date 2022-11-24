@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import org.apache.xerces.impl.dv.util.Base64;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,11 +15,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
@@ -96,6 +100,52 @@ public class EncriptaDecriptaRSA {
         final PublicKey key = (PublicKey) inputStream.readObject();
         Signature s = Signature.getInstance("SHA1withRSA");
         s.initVerify(key);
+        s.update(text);
+        if (s.verify(signature))
+            return Base64.encode(signature);
+        else
+            return null;
+    }
+
+    public static PrivateKey getPrivateKey(String filepath) throws Exception {
+
+        File f = new File(filepath);
+        FileInputStream fis = new FileInputStream(f);
+        DataInputStream dis = new DataInputStream(fis);
+        byte[] keyBytes = new byte[(int) f.length()];
+        dis.readFully(keyBytes);
+        dis.close();
+
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        return kf.generatePrivate(spec);
+    }
+
+    public static PublicKey getPublicKey(String filepath) throws Exception {
+
+        File f = new File(filepath);
+        FileInputStream fis = new FileInputStream(f);
+        DataInputStream dis = new DataInputStream(fis);
+        byte[] keyBytes = new byte[(int) f.length()];
+        dis.readFully(keyBytes);
+        dis.close();
+
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        return kf.generatePublic(spec);
+    }
+
+    public static String assinar(String text, PrivateKey privatekey, PublicKey publickey) throws Exception {
+        Signature s = Signature.getInstance("SHA1withRSA");
+        s.initSign(privatekey);
+        s.update(text.getBytes());
+        byte[] signature = s.sign();
+        return verificarAssinatura(text.getBytes(), publickey, signature);
+    }
+
+    public static String verificarAssinatura(byte[] text, PublicKey publickey, byte[] signature) throws Exception {
+        Signature s = Signature.getInstance("SHA1withRSA");
+        s.initVerify(publickey);
         s.update(text);
         if (s.verify(signature))
             return Base64.encode(signature);
