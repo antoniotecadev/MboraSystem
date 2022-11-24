@@ -103,6 +103,10 @@ public class ProdutoViewModel extends AndroidViewModel {
             codigoBarra.setError(getApplication().getString(R.string.codigobarra_invalido));
         } else if (isCampoVazio(String.valueOf(idcategoria)) || numero.matcher(String.valueOf(idcategoria)).find()) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.idcategoria_nao_encontrado), R.drawable.ic_toast_erro);
+        }else if(!checkIva.isChecked() && taxaIva > 0){
+            preco.requestFocus();
+            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.mc_cx_iv), R.drawable.ic_toast_erro);
+            checkIva.setError(getApplication().getString(R.string.iva));
         } else {
             produto.setNome(nome.getText().toString());
             produto.setTipo(tipo);
