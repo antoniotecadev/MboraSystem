@@ -1004,7 +1004,7 @@ public class FacturaFragment extends Fragment {
             adapterFactura.removeGroupAtAdapterPosition(Objects.requireNonNull(posicao.get(id)));
             adapterFactura.notifyItemRangeRemoved(Objects.requireNonNull(posicao.get(id)), produtos.size());
             precoTotal.remove(id);
-            somarPreco(precoTotal, id, Objects.requireNonNull(produto).isIva(), Ultilitario.UM, true);
+            somarPreco(precoTotal, id, Objects.requireNonNull(produto).isIva(), produto.getPercentagemIva(), Ultilitario.UM, true);
             if (b)
                 desfazer(nome + " " + getString(R.string.produto_removido), id, view, produto);
 
@@ -1014,7 +1014,7 @@ public class FacturaFragment extends Fragment {
         }
 
         @SuppressLint("SetTextI18n")
-        private void somarPreco(Map<Long, Integer> pTotal, long id, boolean isIva, int quant, boolean isRemove) {
+        private void somarPreco(Map<Long, Integer> pTotal, long id, boolean isIva, int percentagemIva, int quant, boolean isRemove) {
             int totalGer = 0, precoUnit = 0, valorGer = 0, ivaGer = 0;
             for (Map.Entry<Long, Integer> precototal : pTotal.entrySet())
                 totalGer += precototal.getValue();
@@ -1026,8 +1026,10 @@ public class FacturaFragment extends Fragment {
                 valor.remove(id);
             } else {
                 if (isIva) {
-                    iva.put(id, (int) ((precoUnit / 1.14) * 0.14) * quant);
-                    valor.put(id, (int) (precoUnit / 1.14) * quant);
+                    float eliminaIva = percentagemIva == 5 ? 1.05f : (percentagemIva == 7 ? 1.07f : 1.14f);
+                    float percentagem = percentagemIva == 5 ? 0.05f : (percentagemIva == 7 ? 0.07f : 0.14f);
+                    iva.put(id, Math.round(((precoUnit / eliminaIva) * percentagem) * quant));
+                    valor.put(id, Math.round((precoUnit / eliminaIva) * quant));
                 } else
                     valor.put(id, precoTotal.get(id));
             }
@@ -1093,7 +1095,7 @@ public class FacturaFragment extends Fragment {
                             totalUnit = produto.getPreco() * quantidade;
                             totaluni.setText(Ultilitario.formatPreco(String.valueOf(totalUnit)));
                             precoTotal.put(produto.getId(), totalUnit);
-                            somarPreco(precoTotal, produto.getId(), produto.isIva(), quantidade, false);
+                            somarPreco(precoTotal, produto.getId(), produto.isIva(), produto.getPercentagemIva(), quantidade, false);
                         }
                     }
 
