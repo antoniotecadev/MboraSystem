@@ -829,7 +829,7 @@ public class FacturaFragment extends Fragment {
                         MainActivity.getProgressBar();
                         if (getDataSplitDispositivo(Ultilitario.getValueSharedPreferences(requireContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent())))
                                 && Ultilitario.getBooleanPreference(requireContext(), "estado_conta"))
-                            vendaViewModel.cadastrarVenda(requireContext(), nomeIDcliente[0].trim(), binding.textDesconto, finalQuantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
+                            vendaViewModel.cadastrarVenda(requireContext(), nomeIDcliente[0].trim(), binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), finalQuantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         else {
                             if (isNetworkConnected(requireContext())) {
                                 if (internetIsConnected())
@@ -1179,7 +1179,7 @@ public class FacturaFragment extends Fragment {
                         } else {
                             Ultilitario.setBooleanPreference(requireContext(), true, "estado_conta");
                             Ultilitario.setValueSharedPreferences(requireContext(), "data", monthInglesFrances(Ultilitario.getDateCurrent()));
-                            vendaViewModel.cadastrarVenda(requireContext(), nomeIDcliente, binding.textDesconto, quantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
+                            vendaViewModel.cadastrarVenda(requireContext(), nomeIDcliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), quantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         }
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
