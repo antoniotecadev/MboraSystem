@@ -192,10 +192,11 @@ public class VendaViewModel extends AndroidViewModel {
     private long idvenda;
 
     @SuppressLint("CheckResult")
-    public void cadastrarVenda(Context context, String txtNomeCliente, TextInputEditText desconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
+    public void cadastrarVenda(Context context, String txtNomeCliente, TextInputEditText desconto, int percentagemDesconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
         venda.setId(0);
         venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
+        venda.setPercentagemDesconto(percentagemDesconto);
         venda.setQuantidade(quantidade);
         venda.setValor_base(valorBase);
         venda.setCodigo_qr(referenciaFactura);

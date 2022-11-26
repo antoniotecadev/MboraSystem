@@ -15,6 +15,7 @@ public class Venda implements Parcelable {
     private long id;
     private String nome_cliente;
     private int desconto;
+    private int percentagemDesconto;
     private int quantidade;
     private int valor_base;
     private String codigo_qr;
@@ -108,6 +109,14 @@ public class Venda implements Parcelable {
 
     public void setDesconto(int desconto) {
         this.desconto = desconto;
+    }
+
+    public int getPercentagemDesconto() {
+        return percentagemDesconto;
+    }
+
+    public void setPercentagemDesconto(int percentagemDesconto) {
+        this.percentagemDesconto = percentagemDesconto;
     }
 
     public int getQuantidade() {
