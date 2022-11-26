@@ -306,7 +306,7 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
                         break;
                     case R.id.expoBd:
-                        exportarBD();
+                        requestPermissionLauncherExportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                         break;
                     case R.id.impoBd:
                         Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
@@ -557,6 +557,14 @@ public class HomeFragment extends Fragment {
                     executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
                 } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_imp_bd), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            }
+    );
+    private ActivityResultLauncher<String> requestPermissionLauncherExportDataBase = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                if (result)
+                    exportarBD();
+                else
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_expo_db), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
     );
     ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
