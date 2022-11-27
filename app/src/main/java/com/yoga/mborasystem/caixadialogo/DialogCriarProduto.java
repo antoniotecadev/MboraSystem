@@ -75,6 +75,13 @@ public class DialogCriarProduto extends DialogFragment {
                 binding.txtPrecoProduto.setText(Ultilitario.formatPreco(String.valueOf(produto.getPreco())));
                 binding.txtPrecoProdutoFornecedor.setText(Ultilitario.formatPreco(String.valueOf(produto.getPrecofornecedor())));
                 binding.checkIva.setChecked(produto.isIva());
+                if (produto.isIva()) {
+                    int percentagemIva = produto.getPercentagemIva();
+                    float eliminaIva = percentagemIva == 5 ? 1.05f : (percentagemIva == 7 ? 1.07f : 1.14f);
+                    float percentagem = percentagemIva == 5 ? 0.05f : (percentagemIva == 7 ? 0.07f : 0.14f);
+                    int montanteIVA = Math.round((((produto.getPreco() / eliminaIva) * percentagem) * 1));
+                    binding.textMontanteIva.setText(getString(R.string.valor) + ": " + Ultilitario.formatPreco(String.valueOf(montanteIVA)));
+                }
                 binding.spinnerTaxaImposto.setEnabled(!produto.isIva());
                 binding.spinnerIva.setSelection(produto.getPercentagemIva() == 0 ? Integer.parseInt(Ultilitario.getTaxaIva(requireActivity())) - 1 : produto.getPercentagemIva() - 1);
                 binding.txtCodigoBar.setText(produto.getCodigoBarra());
