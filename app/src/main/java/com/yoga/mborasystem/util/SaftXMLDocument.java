@@ -44,6 +44,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+
 @Keep
 public class SaftXMLDocument {
 
@@ -158,7 +159,7 @@ public class SaftXMLDocument {
         int totalCredit = 0;
 
         for (Venda vd : vendas)
-            totalCredit += vd.getValor_base();
+            totalCredit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
 
         Element salesInvoices = doc.createElement("SalesInvoices");
         sourceDocuments.appendChild(salesInvoices);
@@ -226,13 +227,13 @@ public class SaftXMLDocument {
                     criarElemento(doc, "ProductDescription", line, pv.getNome_produto().trim());
                     criarElemento(doc, "Quantity", line, String.valueOf(pv.getQuantidade()));
                     criarElemento(doc, "UnitOfMeasure", line, pv.getUnidade());
-                    criarElemento(doc, "UnitPrice", line, pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario));
+                    criarElemento(doc, "UnitPrice", line, vd.getDesconto() > 0 ? formatarValor(precoUnitarioSemIVA - ((precoUnitarioSemIVA * vd.getPercentagemDesconto()) / 100)) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
                     criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getData_cria()));
                     criarElemento(doc, "Description", line, pv.getNome_produto().trim());
 
                     int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
 
-                    criarElemento(doc, "CreditAmount", line, formatarValor(creditAmount));
+                    criarElemento(doc, "CreditAmount", line, formatarValor(vd.getDesconto() > 0 ? creditAmount - ((creditAmount * vd.getPercentagemDesconto()) / 100) : creditAmount));
 
                     Element tax = doc.createElement("Tax");
                     line.appendChild(tax);
@@ -250,11 +251,11 @@ public class SaftXMLDocument {
             Element documentTotals = doc.createElement("DocumentTotals");
             invoice.appendChild(documentTotals);
 
-            int taxPayable = vd.getDesconto() == 0 ? vd.getValor_iva() : vd.getDesconto() - vd.getValor_base();
-            int netTotal = vd.getValor_base();
-            int grossTotal = taxPayable + vd.getValor_base();
+            int taxPayable = vd.getDesconto() == 0 ? vd.getValor_iva() : vd.getValor_iva() - ((vd.getValor_iva() * vd.getPercentagemDesconto()) / 100);
+            int netTotal = vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
+            int grossTotal = vd.getDesconto() == 0 ? taxPayable + vd.getValor_base() : vd.getTotal_venda() - ((vd.getTotal_venda() * vd.getPercentagemDesconto()) / 100);
 
-            criarElemento(doc, "TaxPayable", documentTotals, (taxPayable < 0 ? "-" : "") + formatarValor(taxPayable));
+            criarElemento(doc, "TaxPayable", documentTotals, formatarValor(taxPayable));
             criarElemento(doc, "NetTotal", documentTotals, formatarValor(netTotal));
             criarElemento(doc, "GrossTotal", documentTotals, formatarValor(grossTotal));
 
@@ -271,7 +272,7 @@ public class SaftXMLDocument {
 
             Element withholdingTax = doc.createElement("WithholdingTax");
             invoice.appendChild(withholdingTax);
-            criarElemento(doc, "WithholdingTaxAmount", withholdingTax, (taxPayable < 0 ? "-" : "") + formatarValor(taxPayable)); // Valor do imposto retido na fonte
+            criarElemento(doc, "WithholdingTaxAmount", withholdingTax, formatarValor(taxPayable)); // Valor do imposto retido na fonte
         }
 
         String FILE_PATH_SAFT_AO = Common.getAppPath("SAFT-AO") + dataHora[0] + "T" + dataHora[1] + "SAFT.xml";
@@ -335,6 +336,7 @@ public class SaftXMLDocument {
         }
         return "";
     }
+
     @Keep
     private static class TaxTable {
 
