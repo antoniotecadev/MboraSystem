@@ -310,6 +310,8 @@ public class FacturaFragment extends Fragment {
                 String desconto = String.valueOf((total * percentagem) / 100);
                 binding.textDesconto.setText(Ultilitario.formatPreco(desconto));
                 binding.textViewDesconto.setText(getText(R.string.desconto) + "(" + percentagem + "%)");
+                binding.textValor.setText(Ultilitario.formatPreco(String.valueOf(percentagem == 0 ? valorBase : valorBase - (valorBase * percentagem) / 100)));
+                binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(percentagem == 0 ? valorIva : valorIva - (valorIva * percentagem) / 100)));
             }
 
             @Override
@@ -329,15 +331,15 @@ public class FacturaFragment extends Fragment {
                     desconto = Ultilitario.removerKZ(binding.textDesconto);
                     if (total >= desconto) {
                         totaldesconto = total - desconto;
-                        binding.totalDesconto.setText(getText(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)));
+                        binding.totalDesconto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)));
 
                         if (valorPago >= (total - desconto)) {
                             troco = valorPago - totaldesconto;
                             binding.troco.setText(getText(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)));
                         }
                         if (desconto == 0) {
-                            totaldesconto = 0;
-                            binding.totalDesconto.setText(getText(R.string.total_desconto) + ": " + Ultilitario.formatPreco("0"));
+                            totaldesconto = total;
+                            binding.totalDesconto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
                         }
                     } else {
                         binding.textDesconto.requestFocus();
@@ -528,7 +530,7 @@ public class FacturaFragment extends Fragment {
             if (idvenda > 0) {
                 if (!referenciaFactura.isEmpty()) {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
+                    CriarFactura.getPemissionAcessStoregeExternal(true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
                 } else
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
             }
@@ -538,7 +540,7 @@ public class FacturaFragment extends Fragment {
             if (idvenda > 0) {
                 if (!referenciaFactura.isEmpty()) {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
+                    CriarFactura.getPemissionAcessStoregeExternal(false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
                 } else
                     Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
             }
@@ -657,7 +659,6 @@ public class FacturaFragment extends Fragment {
         if (isDesconto) {
             binding.spinnerDesconto.setVisibility(view);
             binding.linearLayoutDesconto.setVisibility(view);
-            binding.totalDesconto.setVisibility(view);
         } else if (isDivida) {
             binding.checkboxDivida.setVisibility(view);
             binding.checkboxSemValorPago.setVisibility(view);
@@ -811,17 +812,18 @@ public class FacturaFragment extends Fragment {
                 quantidadeProduto += (Objects.requireNonNull(precoTotal.get(produto.getKey())) / produto.getValue().getPreco());
 
             int finalQuantidadeProduto = quantidadeProduto;
+            int percDesc = Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString());
             new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.confirmar_venda)
                     .setMessage(getString(R.string.cliente) + ": " + nomeIDcliente[0] + "\n" +
                             getString(R.string.quantidade) + ": " + quantidadeProduto + "\n"
-                            + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
-                            + getString(R.string.desconto) + ": " + Ultilitario.formatPreco(Objects.requireNonNull(binding.textDesconto.getText()).toString()) + "\n"
-                            + getString(R.string.total_desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
+                            + getString(R.string.subtotal) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
+                            + getString(R.string.desconto) + "(" + percDesc + "%): " + Ultilitario.formatPreco(Objects.requireNonNull(binding.textDesconto.getText()).toString()) + "\n"
+                            + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
                             + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
                             + getString(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)) + "\n"
-                            + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
-                            + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(valorIva)) + "\n"
+                            + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : valorBase - (valorBase * percDesc) / 100)) + "\n"
+                            + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorIva : valorIva - (valorIva * percDesc) / 100)) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                             + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
                     )
@@ -829,7 +831,7 @@ public class FacturaFragment extends Fragment {
                         MainActivity.getProgressBar();
                         if (getDataSplitDispositivo(Ultilitario.getValueSharedPreferences(requireContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent())))
                                 && Ultilitario.getBooleanPreference(requireContext(), "estado_conta"))
-                            vendaViewModel.cadastrarVenda(requireContext(), nomeIDcliente[0].trim(), binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), finalQuantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
+                            vendaViewModel.cadastrarVenda(requireContext(), nomeIDcliente[0].trim(), binding.textDesconto, percDesc, finalQuantidadeProduto, valorBase, referenciaFactura, valorIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         else {
                             if (isNetworkConnected(requireContext())) {
                                 if (internetIsConnected())
@@ -1042,10 +1044,14 @@ public class FacturaFragment extends Fragment {
             total = totalGer;
             valorBase = valorGer;
             valorIva = ivaGer;
-            binding.textTotal.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
-            binding.textValor.setText(Ultilitario.formatPreco(String.valueOf(valorGer)));
-            binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(ivaGer)));
+            binding.textTotal.setText(getText(R.string.subtotal) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
             binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(totalGer)));
+            int percentagem = Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString());
+            int desc = (totalGer * percentagem) / 100;
+            binding.textDesconto.setText(Ultilitario.formatPreco(String.valueOf(desc)));
+            binding.totalDesconto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer - desc)));
+            binding.textValor.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? valorGer : valorGer - (valorGer * percentagem) / 100)));
+            binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? ivaGer : ivaGer - (ivaGer * percentagem) / 100)));
         }
 
         private void addProdutoCarrinho(Long idproduto) {

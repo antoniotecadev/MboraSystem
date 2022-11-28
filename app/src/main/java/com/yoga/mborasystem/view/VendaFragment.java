@@ -352,16 +352,17 @@ public class VendaFragment extends Fragment {
                 h.binding.textReferencia.setText(venda.getCodigo_qr());
                 h.binding.textQtProd.setText(String.valueOf(venda.getQuantidade()));
                 h.binding.textTotVend.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
+                h.binding.textView27.setText(getString(R.string.desconto) + "(" + venda.getPercentagemDesconto() + "%)");
                 h.binding.textDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto())));
                 h.binding.textTotDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_desconto())));
                 h.binding.textPago.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_pago())));
                 h.binding.textDivida.setText(Ultilitario.formatPreco(String.valueOf(venda.getDivida())));
-                h.binding.textValBas.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_base())));
-                h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_iva())));
+                h.binding.textValBas.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_base() : venda.getValor_base() - (venda.getValor_base() * venda.getPercentagemDesconto() / 100))));
+                h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - (venda.getValor_iva() * venda.getPercentagemDesconto() / 100))));
                 h.binding.editTextForPag.setText(venda.getPagamento());
                 try {
                     h.binding.textDatVen.setText(venda.getData_cria() + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
-                }catch (Exception e){
+                } catch (Exception e) {
                     h.binding.textDatVen.setText(venda.getData_cria());
                 }
                 h.binding.textOper.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA0"));
@@ -474,20 +475,20 @@ public class VendaFragment extends Fragment {
             else
                 alert.setIcon(R.drawable.ic_baseline_delete_40);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                if (isliquidar) {
-                    if (editText.length() < 15) {
-                        if (venda.getDivida() >= Ultilitario.removerKZ(editText)) {
+                        if (isliquidar) {
+                            if (editText.length() < 15) {
+                                if (venda.getDivida() >= Ultilitario.removerKZ(editText)) {
+                                    vendaViewModel.crud = true;
+                                    vendaViewModel.liquidarDivida(venda.getDivida() - Ultilitario.removerKZ(editText), venda.getId());
+                                } else
+                                    Ultilitario.alertDialog(titulo, getString(R.string.vl_n_sp), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                            } else
+                                Ultilitario.alertDialog(titulo, getString(R.string.vl_inv), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        } else {
                             vendaViewModel.crud = true;
-                            vendaViewModel.liquidarDivida(venda.getDivida() - Ultilitario.removerKZ(editText), venda.getId());
-                        } else
-                            Ultilitario.alertDialog(titulo, getString(R.string.vl_n_sp), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    } else
-                        Ultilitario.alertDialog(titulo, getString(R.string.vl_inv), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                } else {
-                    vendaViewModel.crud = true;
-                    vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
-                }
-            }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                            vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
+                        }
+                    }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
         }
     }

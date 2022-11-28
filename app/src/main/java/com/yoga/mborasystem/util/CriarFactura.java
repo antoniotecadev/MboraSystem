@@ -7,6 +7,7 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndR
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
+import static com.yoga.mborasystem.util.Ultilitario.removerKZ;
 
 import android.Manifest;
 import android.app.Activity;
@@ -47,18 +48,18 @@ import java.util.Objects;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
+    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
+                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
+                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
                     }
 
                     @Override
@@ -68,7 +69,7 @@ public class CriarFactura {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
+    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -109,11 +110,11 @@ public class CriarFactura {
                 addNewItem(document, produto.getValue().getNome() + " (" + (produto.getValue().isIva() ? produto.getValue().getPercentagemIva() + "%" : produto.getValue().getCodigoMotivoIsencao()) + ") " + Ultilitario.formatPreco(preco).replaceAll("Kz", "") + " " + Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco() + ". " + Ultilitario.formatPreco(valor).replaceAll("Kz", ""), Element.ALIGN_LEFT, font);
             }
             addLineSeparator(document);
-            addNewLineWithLeftAndRight(document, "Total Geral", Ultilitario.formatPreco(String.valueOf(totalVenda)), font, font);
-            addNewLineWithLeftAndRight(document, "Valor Base", Ultilitario.formatPreco(String.valueOf(valorBase)), font, font);
-            addNewLineWithLeftAndRight(document, "Imposto", Ultilitario.formatPreco(String.valueOf(valorIva)), font, font);
-            addNewLineWithLeftAndRight(document, "Desconto", Ultilitario.formatPreco(Objects.requireNonNull(desconto.getText()).toString()), font, font);
-            addNewLineWithLeftAndRight(document, "Total Com Desconto", Ultilitario.formatPreco(String.valueOf(totalDesconto)), font, font);
+            addNewLineWithLeftAndRight(document, "Subtotal", Ultilitario.formatPreco(String.valueOf(totalVenda)), font, font);
+            addNewLineWithLeftAndRight(document, "Valor Base", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : valorBase - ((valorBase * percDesc) / 100))), font, font);
+            addNewLineWithLeftAndRight(document, "IVA", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorIva : valorIva - ((valorIva * percDesc) / 100))), font, font);
+            addNewLineWithLeftAndRight(document, "Desconto" + "(" + percDesc + "%)", Ultilitario.formatPreco(desconto.getText().toString()), font, font);
+            addNewLineWithLeftAndRight(document, "Total", Ultilitario.formatPreco(String.valueOf(totalDesconto)), font, font);
             addNewLineWithLeftAndRight(document, "Total Pago", Ultilitario.formatPreco(String.valueOf(valorPago)), font, font);
             addNewLineWithLeftAndRight(document, "Troco", Ultilitario.formatPreco(String.valueOf(troco)), font, font);
             addLineSeparator(document);

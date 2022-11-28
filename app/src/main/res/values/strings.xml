@@ -736,6 +736,8 @@
     <string name="atg_limit">Atingiu o limite de produtos que podem ser enviados para o Mbora.\n\nPague por um pacote que lhe permita enviar mais produtos ou edite o produto já enviado para o Mbora com os novos dados.</string>
     <string name="sm_perm_n_pod_imp_bd">Sem permissão não pode importar base de dados.</string>
     <string name="mc_cx_iv">Marca a caixa do iva para aplica - lo</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="base">Base</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
