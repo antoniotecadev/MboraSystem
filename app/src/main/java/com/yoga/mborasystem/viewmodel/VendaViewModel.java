@@ -256,7 +256,7 @@ public class VendaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     Ultilitario.setValueSharedPreferences(context, "hashvenda", hashVenda);
-                    Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), "", R.drawable.ic_toast_feito);
+                    getGuardarPdfLiveData().setValue(new Event<>(idvenda));
                 }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
     }
 
