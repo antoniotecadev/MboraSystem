@@ -7,13 +7,10 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndR
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
-import static com.yoga.mborasystem.util.Ultilitario.removerKZ;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -141,13 +138,8 @@ public class CriarFactura {
             Toast.makeText(context, activity.getString(R.string.factura_guardada), Toast.LENGTH_LONG).show();
             addFileContentProvider(activity.getApplicationContext(), "/Facturas/" + facturaPath);
             if (!isGuardar)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                    printPDF(activity, activity.getBaseContext(), facturaPath, "Facturas");
-                else
-                    Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
-        } catch (FileNotFoundException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-        } catch (DocumentException e) {
+                printPDF(activity, activity.getBaseContext(), facturaPath, "Facturas");
+        } catch (FileNotFoundException | DocumentException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
             MainActivity.dismissProgressBar();
