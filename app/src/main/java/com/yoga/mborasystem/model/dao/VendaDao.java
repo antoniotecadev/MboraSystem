@@ -357,6 +357,7 @@ public abstract class VendaDao {
             venda.setIdclicant(Integer.parseInt(vend[13]));
             venda.setData_elimina(vend[14]);
             venda.setEstado(Integer.parseInt(vend[15]));
+            venda.setPercentagemDesconto(Integer.parseInt(vend[16]));
             insert(venda);
         }
     }
