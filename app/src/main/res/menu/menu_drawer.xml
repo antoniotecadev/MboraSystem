@@ -55,6 +55,7 @@
             <item
                 android:id="@+id/vendaFragmentLx"
                 android:icon="@android:drawable/ic_menu_delete"
+                android:visible="false"
                 android:title="@string/venda" />
         </menu>
     </item>
