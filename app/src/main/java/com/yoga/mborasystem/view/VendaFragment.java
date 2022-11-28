@@ -28,7 +28,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -50,9 +49,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentVendaBinding;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
-import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Venda;
-import com.yoga.mborasystem.util.CriarFactura;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
@@ -397,14 +394,14 @@ public class VendaFragment extends Fragment {
                                         caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", getString(R.string.enc_div_vend), true, false, venda);
                                     return false;
                                 });
-                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
-                                    return false;
-                                });
-                                menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
-                                    return false;
-                                });
+//                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+//                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
+//                                    return false;
+//                                });
+//                                menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+//                                    caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
+//                                    return false;
+//                                });
                             }
                         } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
