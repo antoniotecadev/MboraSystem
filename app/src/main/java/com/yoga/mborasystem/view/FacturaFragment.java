@@ -318,7 +318,6 @@ public class FacturaFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        binding.btnLimpar.setOnClickListener(v -> Ultilitario.zerarPreco(binding.textDesconto));
         binding.textDesconto.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

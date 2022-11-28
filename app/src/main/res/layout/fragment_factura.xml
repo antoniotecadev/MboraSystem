@@ -359,9 +359,6 @@
                         android:layout_marginEnd="16dp"
                         app:boxBackgroundColor="@color/material_on_background_disabled"
                         app:boxStrokeColor="@color/white"
-                        app:endIconMode="clear_text"
-                        app:endIconTint="@color/cor_castanha"
-                        app:endIconTintMode="multiply"
                         app:hintTextColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -374,18 +371,9 @@
                             android:inputType="number"
                             android:maxLength="15"
                             android:text="@string/preco_zero"
+                            android:enabled="false"
                             android:textSize="24sp" />
                     </com.google.android.material.textfield.TextInputLayout>
-
-                    <Button
-                        android:id="@+id/btnLimpar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/margem_lateral_formulario"
-                        android:layout_weight="1"
-                        android:backgroundTint="@android:color/holo_orange_light"
-                        app:icon="@drawable/ic_baseline_cleaning_services_24"
-                        tools:targetApi="lollipop" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
