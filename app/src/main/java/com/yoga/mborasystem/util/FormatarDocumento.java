@@ -2,13 +2,10 @@ package com.yoga.mborasystem.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -49,7 +46,6 @@ public class FormatarDocumento {
         document.add(paragraph);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void printPDF(Activity activity, Context context, String factura, String pasta) {
         PrintManager printManager;
         printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
