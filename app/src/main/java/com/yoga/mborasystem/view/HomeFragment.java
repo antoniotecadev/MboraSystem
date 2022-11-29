@@ -112,6 +112,7 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
                     break;
                 case R.id.gerarQrCode:
+                    Ultilitario.setValueSharedPreferences(requireContext(), "hashvenda", "");
                     getQrCode();
                     break;
                 case R.id.sairApp:
@@ -394,13 +395,13 @@ public class HomeFragment extends Fragment {
     private void animationLixeira(Animation animation, Animation animationLixo, boolean isOpen) {
         binding.floatingActionButtonCategoria.startAnimation(animation);
         binding.floatingActionButtonProduto.startAnimation(animation);
-        binding.floatingActionButtonVendaLixo.startAnimation(animation);
+//        binding.floatingActionButtonVendaLixo.startAnimation(animation);
 
         binding.floatingActionButtonLixo.startAnimation(animationLixo);
 
         binding.floatingActionButtonCategoria.setClickable(isOpen);
         binding.floatingActionButtonProduto.setClickable(isOpen);
-        binding.floatingActionButtonVendaLixo.setClickable(isOpen);
+//        binding.floatingActionButtonVendaLixo.setClickable(isOpen);
         this.isOpen = isOpen;
     }
 
