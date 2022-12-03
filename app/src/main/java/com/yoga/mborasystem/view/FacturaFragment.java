@@ -824,7 +824,7 @@ public class FacturaFragment extends Fragment {
                             + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : valorBase - (valorBase * percDesc) / 100)) + "\n"
                             + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorIva : valorIva - (valorIva * percDesc) / 100)) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
-                            + getString(R.string.forma_pagamento) + " " + getFormaPamento(binding) + "\n"
+                            + getString(R.string.forma_pagamento) + "\n" + getFormaPamento(binding) + "\n"
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         MainActivity.getProgressBar();
@@ -861,14 +861,14 @@ public class FacturaFragment extends Fragment {
     }
 
     private String getFormaPamento(FragmentFacturaBinding binding) {
-        CharSequence dinheiro = binding.checkboxNumerario.isChecked() ? (binding.checkboxNumerario.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.dinheiroValorPago)) : "";
-        CharSequence cartaoMulticaixa = binding.checkboxCartaoMulticaixa.isChecked() ? (binding.checkboxCartaoMulticaixa.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.cartaoValorPago)) : "";
-        CharSequence depositoBancario = binding.checkboxDepositoBancario.isChecked() ? (binding.checkboxDepositoBancario.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.depValorPago)) : "";
-        CharSequence transferenciaBancario = binding.checkboxTransferenciaBancaria.isChecked() ? (binding.checkboxTransferenciaBancaria.getText() + " = " + Ultilitario.trocarVírgulaPorPonto(binding.transfValorPago)) : "";
+        CharSequence dinheiro = binding.checkboxNumerario.isChecked() ? (binding.checkboxNumerario.getText() + "  " + Ultilitario.trocarVírgulaPorPonto(binding.dinheiroValorPago)) : "";
+        CharSequence cartaoMulticaixa = binding.checkboxCartaoMulticaixa.isChecked() ? (binding.checkboxCartaoMulticaixa.getText() + "  " + Ultilitario.trocarVírgulaPorPonto(binding.cartaoValorPago)) : "";
+        CharSequence depositoBancario = binding.checkboxDepositoBancario.isChecked() ? (binding.checkboxDepositoBancario.getText() + "  " + Ultilitario.trocarVírgulaPorPonto(binding.depValorPago)) : "";
+        CharSequence transferenciaBancario = binding.checkboxTransferenciaBancaria.isChecked() ? (binding.checkboxTransferenciaBancaria.getText() + "  " + Ultilitario.trocarVírgulaPorPonto(binding.transfValorPago)) : "";
         if (binding.checkboxSemValorPago.isChecked())
             return getString(R.string.se_val_pag);
         else
-            return dinheiro + " " + cartaoMulticaixa + " " + depositoBancario + " " + transferenciaBancario;
+            return dinheiro + "\n" + cartaoMulticaixa + "\n" + depositoBancario + "\n" + transferenciaBancario;
     }
 
     private boolean isCheckedFormaPagamento() {

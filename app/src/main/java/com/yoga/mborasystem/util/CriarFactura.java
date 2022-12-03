@@ -3,10 +3,12 @@ package com.yoga.mborasystem.util;
 import static com.yoga.mborasystem.util.FormatarDocumento.addLineSeparator;
 import static com.yoga.mborasystem.util.FormatarDocumento.addLineSpace;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewItem;
+import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineHorizontal;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
+import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
 
 import android.Manifest;
 import android.app.Activity;
@@ -78,34 +80,38 @@ public class CriarFactura {
             String hash = Ultilitario.getValueSharedPreferences(context, "hashvenda", "");
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(path));
-            document.setMargins(10, 5, 0, 0);
+            document.setMargins(5, 5, 0, 0);
             document.open();
             document.addCreationDate();
             BarcodeQRCode my_qr_code = new BarcodeQRCode(referenciaFactura, 250, 250, null);
             Image qr_code_image = my_qr_code.getImage();
             qr_code_image.setAlignment(Element.ALIGN_CENTER);
 //          BaseFont fontName = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 36.0f, Font.BOLD, BaseColor.BLACK);
+            Font titleFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.BOLD, BaseColor.BLACK);
             addNewItem(document, cliente.getNomeEmpresa(), Element.ALIGN_CENTER, titleFont);
-            Font bairroRuaFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.NORMAL, BaseColor.BLACK);
+            Font bairroRuaFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, PreferenceManager.getDefaultSharedPreferences(context).getString("nomecomercial", "") + "\n" + cliente.getRua() + "\n" + cliente.getMunicipio() + " - " + cliente.getBairro() + "\n" + cliente.getProvincia(), Element.ALIGN_CENTER, bairroRuaFont);
             addLineSpace(document);
-            Font font = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.NORMAL, BaseColor.BLACK);
+            Font font = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, "NIF: " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, "TEL: " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
             addNewItem(document, "DATA: " + (dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) : getDataFormatMonth(dataEmissao)) + " " + TextUtils.split(Ultilitario.getDateCurrent(), "-")[3], Element.ALIGN_LEFT, font);
             addLineSpace(document);
-            Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.BOLD, BaseColor.BLACK);
+            Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
             addNewItem(document, "FACTURA/RECIBO" + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
             addNewItem(document, "CLIENTE: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
             addNewItem(document, "NIF: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : (TextUtils.split(txtNomeCliente.getText().toString(), "-")[2].equals("999999999") ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2])), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
-            addNewItem(document, "Descrição Preço Quantidade Total", Element.ALIGN_CENTER, font);
-            addLineSeparator(document);
+            addNewLineHorizontal(document, "Desc", "Taxa", "P.Unit", "Qt", "Total", facturaReciboFont);
             for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
+                addLineSpace(document);
                 String preco = String.valueOf(produto.getValue().getPreco());
                 String valor = String.valueOf(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())).intValue());
-                addNewItem(document, produto.getValue().getNome() + " (" + (produto.getValue().isIva() ? produto.getValue().getPercentagemIva() + "%" : produto.getValue().getCodigoMotivoIsencao()) + ") " + Ultilitario.formatPreco(preco).replaceAll("Kz", "") + " " + Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco() + ". " + Ultilitario.formatPreco(valor).replaceAll("Kz", ""), Element.ALIGN_LEFT, font);
+                addNewItem(document, produto.getValue().getNome(), Element.ALIGN_LEFT, font);
+                if (!produto.getValue().isIva()) {
+                    addNewItem(document, "* " + getRasaoISE(context, produto.getValue().getCodigoMotivoIsencao()), Element.ALIGN_LEFT, new Font(Font.FontFamily.HELVETICA, 20.0f, Font.NORMAL, BaseColor.BLACK));
+                }
+                addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), produto.getValue().getPercentagemIva() + "%", Ultilitario.formatPreco(preco).replaceAll("Kz", ""), "" + precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco(), Ultilitario.formatPreco(valor).replaceAll("Kz", ""), font);
             }
             addLineSeparator(document);
             addNewLineWithLeftAndRight(document, "Subtotal", Ultilitario.formatPreco(String.valueOf(totalVenda)), font, font);
@@ -116,7 +122,7 @@ public class CriarFactura {
             addNewLineWithLeftAndRight(document, "Total Pago", Ultilitario.formatPreco(String.valueOf(valorPago)), font, font);
             addNewLineWithLeftAndRight(document, "Troco", Ultilitario.formatPreco(String.valueOf(troco)), font, font);
             addLineSeparator(document);
-            addNewItem(document, "Pagamento: " + formaPagamento, Element.ALIGN_LEFT, font);
+            addNewItem(document, formaPagamento, Element.ALIGN_LEFT, font);
             addNewItem(document, "Operador: " + (idOperador > 0 ? " MSU" + idOperador : " MSA0"), Element.ALIGN_LEFT, font);
             if (!nib.isEmpty())
                 addNewItem(document, "NIB: " + nib, Element.ALIGN_LEFT, font);
@@ -130,7 +136,7 @@ public class CriarFactura {
                 addNewItem(document, textorodape, Element.ALIGN_CENTER, font);
                 addLineSeparator(document);
             }
-            addNewItem(document, hash.charAt(0) + "" + hash.charAt(10) + "" + hash.charAt(20) + "" + hash.charAt(30) + "-" + "Processado por programa não validado n.º 0000/AGT/0000", Element.ALIGN_CENTER, font);
+            addNewItem(document, hash.charAt(0) + "" + hash.charAt(10) + "" + hash.charAt(20) + "" + hash.charAt(30) + "-" + "Processado por programa não validado n.º 0000/AGT/0000 - MBORASYSTEM", Element.ALIGN_CENTER, font);
             if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_qr_code", false)) {
                 addLineSeparator(document);
                 document.add(qr_code_image);

@@ -3,6 +3,7 @@ package com.yoga.mborasystem.util;
 import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
+import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -325,16 +326,6 @@ public class SaftXMLDocument {
 
     private String isEmpty(String valor) {
         return valor.isEmpty() ? "Desconhecido" : valor;
-    }
-
-    private String getRasaoISE(Context context, String codigoRasaoISE) {
-        final String[] codigo = context.getResources().getStringArray(R.array.array_motivo_isecao_valor);
-        final String[] rasao = context.getResources().getStringArray(R.array.array_motivo_isecao);
-        for (int i = 0; i <= codigo.length; i++) {
-            if (codigoRasaoISE.equalsIgnoreCase(codigo[i]))
-                return rasao[i];
-        }
-        return "";
     }
 
     @Keep

@@ -78,7 +78,6 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
-import com.yoga.mborasystem.model.entidade.ContaBancaria;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1308,6 +1307,16 @@ public class Ultilitario {
             MainActivity.dismissProgressBar();
             Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.conec_wif_dad), context, R.drawable.ic_baseline_privacy_tip_24);
         }
+    }
+
+    public static String getRasaoISE(Context context, String codigoRasaoISE) {
+        final String[] codigo = context.getResources().getStringArray(R.array.array_motivo_isecao_valor);
+        final String[] rasao = context.getResources().getStringArray(R.array.array_motivo_isecao);
+        for (int i = 0; i <= codigo.length; i++) {
+            if (codigoRasaoISE.equalsIgnoreCase(codigo[i]))
+                return rasao[i];
+        }
+        return "";
     }
 
 
