@@ -694,6 +694,7 @@ public class FacturaFragment extends Fragment {
     private void restaurar() {
         eliminarCarrinho();
         binding.txtNomeCliente.setText("");
+        binding.spinnerDesconto.setSelection(0);
         estado.clear();
         produtos.clear();
         adapterFactura.clear();
