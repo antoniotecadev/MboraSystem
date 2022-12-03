@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -223,8 +224,8 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getDesconto() - venda.getValor_base();
-                        int grossTotal = taxPayable + venda.getValor_base();
+                        int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - ((venda.getValor_iva() * venda.getPercentagemDesconto()) / 100);
+                        int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : venda.getTotal_venda() - ((venda.getTotal_venda() * venda.getPercentagemDesconto()) / 100);
                         String hashVendaLast = Ultilitario.getValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", "");
                         String vd = getDataFormatMonth(venda.getData_cria()) + ";" + venda.getData_cria_hora() + ";" + venda.getCodigo_qr() + "/" + idvenda + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
                         try {
