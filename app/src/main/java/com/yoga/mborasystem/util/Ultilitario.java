@@ -846,6 +846,13 @@ public class Ultilitario {
     public static void setBooleanPreference(Context context, boolean value, String idvalue) {
         context.getSharedPreferences("VALUE_BOOLEAN", Context.MODE_PRIVATE).edit().putBoolean(idvalue, value).apply();
     }
+    public static void setIntPreference(Context context, int value, String idvalue) {
+        context.getSharedPreferences("VALUE_INT", Context.MODE_PRIVATE).edit().putInt(idvalue, value).apply();
+    }
+
+    public static int getIntPreference(Context context, String idvalue) {
+        return context.getSharedPreferences("VALUE_INT", Context.MODE_PRIVATE).getInt(idvalue, 0);
+    }
 
     public static String monthInglesFrances(String data) {
         Map<String, String> listMonth = new HashMap<>();

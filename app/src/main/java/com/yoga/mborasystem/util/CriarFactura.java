@@ -8,7 +8,9 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndR
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
+import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
+import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 
 import android.Manifest;
 import android.app.Activity;
@@ -48,18 +50,18 @@ import java.util.Objects;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
+    public static void getPemissionAcessStoregeExternal(boolean isSegundaVia, boolean isAnulado, String referencia, boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
+                        createPdfFile(isSegundaVia, isAnulado, referencia, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
+                        createPdfFile(isSegundaVia, isAnulado, referencia, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, referenciaFactura);
                     }
 
                     @Override
@@ -69,7 +71,7 @@ public class CriarFactura {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
+    private static void createPdfFile(boolean isSegundaVia, boolean isAnulado, String referencia, boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String referenciaFactura) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -87,18 +89,20 @@ public class CriarFactura {
             Image qr_code_image = my_qr_code.getImage();
             qr_code_image.setAlignment(Element.ALIGN_CENTER);
 //          BaseFont fontName = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
+            Font font = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             Font titleFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.BOLD, BaseColor.BLACK);
             addNewItem(document, cliente.getNomeEmpresa(), Element.ALIGN_CENTER, titleFont);
             Font bairroRuaFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, PreferenceManager.getDefaultSharedPreferences(context).getString("nomecomercial", "") + "\n" + cliente.getRua() + "\n" + cliente.getMunicipio() + " - " + cliente.getBairro() + "\n" + cliente.getProvincia(), Element.ALIGN_CENTER, bairroRuaFont);
+            addNewItem(document, isSegundaVia ? "Segunda Via Conforme Original" : isAnulado ? "Segunda Via cf. Original - ANULADO" : "Original", Element.ALIGN_CENTER, font);
+            addNewItem(document, isAnulado ? "Referente a: " + referencia : "", Element.ALIGN_CENTER, font);
             addLineSpace(document);
-            Font font = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, "NIF: " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, "TEL: " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
             addNewItem(document, "DATA: " + (dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) : getDataFormatMonth(dataEmissao)) + " " + TextUtils.split(Ultilitario.getDateCurrent(), "-")[3], Element.ALIGN_LEFT, font);
             addLineSpace(document);
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
-            addNewItem(document, "FACTURA/RECIBO" + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
+            addNewItem(document, (isAnulado ? "Nota de Crédito" : "FACTURA/RECIBO") + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
             addNewItem(document, "CLIENTE: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
             addNewItem(document, "NIF: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : (TextUtils.split(txtNomeCliente.getText().toString(), "-")[2].equals("999999999") ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2])), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
@@ -136,7 +140,7 @@ public class CriarFactura {
                 addNewItem(document, textorodape, Element.ALIGN_CENTER, font);
                 addLineSeparator(document);
             }
-            addNewItem(document, hash.charAt(0) + "" + hash.charAt(10) + "" + hash.charAt(20) + "" + hash.charAt(30) + "-" + "Processado por programa não validado n.º 0000/AGT/0000 - MBORASYSTEM", Element.ALIGN_CENTER, font);
+            addNewItem(document, hash.charAt(0) + "" + hash.charAt(10) + "" + hash.charAt(20) + "" + hash.charAt(30) + "-" + "Processado por programa não validado n.º 0000/AGT/0000 MBORASYSTEM", Element.ALIGN_CENTER, font);
             if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_qr_code", false)) {
                 addLineSeparator(document);
                 document.add(qr_code_image);
@@ -148,6 +152,7 @@ public class CriarFactura {
                 printPDF(activity, activity.getBaseContext(), facturaPath, "Facturas");
         } catch (FileNotFoundException | DocumentException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            setIntPreference(context, getIntPreference(context, "numeroserienc") - 1, "numeroserienc");
         } finally {
             MainActivity.dismissProgressBar();
         }

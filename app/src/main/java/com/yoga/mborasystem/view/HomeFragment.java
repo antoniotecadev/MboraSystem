@@ -150,6 +150,7 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
                     break;
                 case R.id.vendaFragmentH:
+                    bundle.putParcelable("cliente", cliente);
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
                     break;
                 case R.id.listaClienteFragmentH:
@@ -192,7 +193,10 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
         });
 
-        binding.btnVenda.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster()));
+        binding.btnVenda.setOnClickListener(v -> {
+            bundle.putParcelable("cliente", cliente);
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
+        });
 
         binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster()));
         binding.btnDashboard.setOnClickListener(v -> {

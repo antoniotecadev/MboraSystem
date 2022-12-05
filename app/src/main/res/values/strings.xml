@@ -738,6 +738,7 @@
     <string name="mc_cx_iv">Marca a caixa do iva para aplica - lo</string>
     <string name="subtotal">Subtotal</string>
     <string name="base">Base</string>
+    <string name="anular">Anular</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

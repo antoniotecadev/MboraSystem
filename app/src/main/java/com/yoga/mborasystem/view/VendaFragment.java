@@ -3,6 +3,8 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
+import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
+import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,6 +30,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -49,7 +52,11 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentVendaBinding;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
+import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.model.entidade.Produto;
+import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
+import com.yoga.mborasystem.util.CriarFactura;
 import com.yoga.mborasystem.util.EventObserver;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.VendaViewModel;
@@ -59,7 +66,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -72,6 +81,7 @@ public class VendaFragment extends Fragment {
     private String data = "";
     private int quantidade;
     private GroupAdapter adapter;
+    private Map<Long, Integer> pTtU;
     private StringBuilder dataBuilder;
     private long idcliente, idusuario;
     private VendaAdapter vendaAdapter;
@@ -349,7 +359,7 @@ public class VendaFragment extends Fragment {
                 if (venda.getDivida() > 0)
                     h.binding.textDivida.setBackgroundColor(Color.RED);
 
-                h.binding.textCliente.setText(venda.getNome_cliente());
+                h.binding.textCliente.setText(TextUtils.split(venda.getNome_cliente(), "-")[0]);
                 h.binding.textReferencia.setText(venda.getCodigo_qr());
                 h.binding.textQtProd.setText(String.valueOf(venda.getQuantidade()));
                 h.binding.textTotVend.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
@@ -385,6 +395,10 @@ public class VendaFragment extends Fragment {
                             printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
                             return false;
                         });
+                        menu.add(getString(R.string.anular)).setOnMenuItemClickListener(item -> {
+                            getProdutos(venda);
+                            return false;
+                        });
                         if (getArguments() != null) {
                             if (getArguments().getBoolean("master")) {
                                 menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
@@ -398,10 +412,10 @@ public class VendaFragment extends Fragment {
 //                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
 //                                    return false;
 //                                });
-//                                menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-//                                    caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
-//                                    return false;
-//                                });
+                                menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                                    caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
+                                    return false;
+                                });
                             }
                         } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
@@ -613,6 +627,46 @@ public class VendaFragment extends Fragment {
             }
             vendaViewModel.importarVenda(vendas);
         });
+    }
+
+    private void getProdutos(Venda vd) {
+        pTtU = new HashMap<>();
+        Produto pd = new Produto();
+        Map<Long, Produto> pds = new HashMap<>();
+        vendaViewModel.getProdutosVenda(vd.getId(), vd.getCodigo_qr(), null, false, false, null);
+        vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
+            if (produtos.isEmpty())
+                Toast.makeText(requireContext(), getString(R.string.produto_nao_encontrada), Toast.LENGTH_SHORT).show();
+            else {
+                for (ProdutoVenda pv : produtos) {
+                    pd.setId(pv.getId());
+                    pd.setNome(pv.getNome_produto());
+                    pd.setTipo(pv.getTipo());
+                    pd.setUnidade(pv.getUnidade());
+                    pd.setCodigoMotivoIsencao(pv.getCodigoMotivoIsencao());
+                    pd.setPreco(pv.getPreco_total() / pv.getQuantidade());
+                    pd.setQuantidade(pv.getQuantidade());
+                    pd.setCodigoBarra(pv.getCodigo_Barra());
+                    pd.setPrecofornecedor(pv.getPreco_fornecedor());
+                    pd.setIva(pv.isIva());
+                    pd.setPercentagemIva(pv.getPercentagemIva());
+                    pd.setData_cria(pv.getData_cria());
+                    pds.put(pd.getId(), pd);
+                    pTtU.put(pd.getId(), pv.getPreco_total());
+                }
+                Cliente cliente = getArguments().getParcelable("cliente");
+                String referenciaFactura = "NC " + (TextUtils.split(vd.getData_cria(), "-")[2].trim());
+                setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
+                int numeroSerie = getIntPreference(requireContext(), "numeroserienc");
+                String facturaPath = referenciaFactura + "_" + numeroSerie + ".pdf";
+                AppCompatAutoCompleteTextView txtNomeCliente = new AppCompatAutoCompleteTextView(requireContext());
+                txtNomeCliente.setText(vd.getNome_cliente());
+                TextInputEditText desconto = new TextInputEditText(requireContext());
+                desconto.setText(String.valueOf(vd.getDesconto()));
+                int troco = vd.getValor_pago() - (vd.getTotal_venda() - vd.getDesconto());
+                CriarFactura.getPemissionAcessStoregeExternal(false, true, vd.getCodigo_qr(),true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, "", referenciaFactura + "/" + numeroSerie);
+            }
+        }));
     }
 
     @Override
