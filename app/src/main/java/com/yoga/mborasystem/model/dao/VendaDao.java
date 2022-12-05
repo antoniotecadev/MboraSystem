@@ -15,7 +15,6 @@ import com.yoga.mborasystem.model.entidade.Venda;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Maybe;
 
@@ -203,14 +202,14 @@ public abstract class VendaDao {
         long idvenda = insert(venda);
         updateReferencia(venda.getCodigo_qr() + "/" + idvenda, idvenda);
         for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
-            int quantidade = Objects.requireNonNull(precoTotalUnit.get(produto.getKey())) / produto.getValue().getPreco();
+            int quantidade = precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco();
             produtoVenda.setId(produto.getValue().getId());
             produtoVenda.setNome_produto(produto.getValue().getNome());
             produtoVenda.setTipo(produto.getValue().getTipo());
             produtoVenda.setUnidade(produto.getValue().getUnidade());
             produtoVenda.setCodigoMotivoIsencao(produto.getValue().getCodigoMotivoIsencao());
             produtoVenda.setQuantidade(quantidade);
-            produtoVenda.setPreco_total(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())));
+            produtoVenda.setPreco_total(precoTotalUnit.get(produto.getKey()));
             produtoVenda.setCodigo_Barra(produto.getValue().getCodigoBarra());
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
             produtoVenda.setIva(produto.getValue().isIva());
