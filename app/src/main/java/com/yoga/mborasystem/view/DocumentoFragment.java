@@ -391,7 +391,7 @@ public class DocumentoFragment extends Fragment {
                             return false;
                         });
                         menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
-                            partilharDocumentoPDF(v, titulo);
+                            partilharDocumentoPDF(titulo);
                             return false;
                         });
                     } else if (pasta.equalsIgnoreCase("Facturas")) {
@@ -400,7 +400,7 @@ public class DocumentoFragment extends Fragment {
                             return false;
                         });
                         menu1.add(getString(R.string.partilhar)).setOnMenuItemClickListener(item -> {
-                            partilharDocumentoPDF(v, titulo);
+                            partilharDocumentoPDF(titulo);
                             return false;
                         });
                     }
@@ -484,7 +484,7 @@ public class DocumentoFragment extends Fragment {
             return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
         }
 
-        private void partilharDocumentoPDF(View v, String titulo) {
+        private void partilharDocumentoPDF(String titulo) {
             Ultilitario.partilharDocumento(documento.getCaminho(), context, "application/pdf", getString(R.string.part_doc) + " " + titulo);
         }
 
