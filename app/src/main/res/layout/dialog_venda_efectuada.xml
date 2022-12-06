@@ -69,7 +69,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textViewTotal" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/btnGuardar"
+                android:id="@+id/btnPartilhar"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginStart="16dp"
@@ -93,14 +93,14 @@
                         android:id="@+id/imageView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@android:drawable/ic_menu_save"
+                        app:srcCompat="@android:drawable/ic_menu_share"
                         tools:ignore="VectorDrawableCompat" />
 
                     <TextView
                         android:id="@+id/textView8"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/guardar_pdf"
+                        android:text="@string/partilhar"
                         android:textAlignment="center"
                         android:textColor="@color/textColor"
                         android:textSize="16sp" />
@@ -120,9 +120,9 @@
                 app:cardBackgroundColor="@color/cor_castanha"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="6dp"
-                app:layout_constraintEnd_toEndOf="@+id/btnGuardar"
-                app:layout_constraintStart_toStartOf="@+id/btnGuardar"
-                app:layout_constraintTop_toBottomOf="@+id/btnGuardar">
+                app:layout_constraintEnd_toEndOf="@+id/btnPartilhar"
+                app:layout_constraintStart_toStartOf="@+id/btnPartilhar"
+                app:layout_constraintTop_toBottomOf="@+id/btnPartilhar">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -141,7 +141,7 @@
                         android:id="@+id/textView9"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/guard_imprimi"
+                        android:text="@string/imprimir"
                         android:textAlignment="center"
                         android:textColor="@color/textColor"
                         android:textSize="16sp" />

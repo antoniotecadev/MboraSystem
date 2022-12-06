@@ -77,9 +77,9 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     MutableLiveData<Long> quantidade;
-    MutableLiveData<Event<Long>> guardarPdf, imprimir;
-    MutableLiveData<Event<Boolean>> exportLocal;
     MutableLiveData<Boolean> selectedData;
+    MutableLiveData<Event<Boolean>> exportLocal;
+    MutableLiveData<Event<Long>> guardarPdf, imprimir, partilhar;
     MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento, enviarWhatsApp;
 
     public MutableLiveData<Long> getQuantidadeVenda() {
@@ -98,6 +98,12 @@ public class VendaViewModel extends AndroidViewModel {
         if (guardarPdf == null)
             guardarPdf = new MutableLiveData<>();
         return guardarPdf;
+    }
+
+    public MutableLiveData<Event<Long>> partilharPdfLiveData() {
+        if (partilhar == null)
+            partilhar = new MutableLiveData<>();
+        return partilhar;
     }
 
     public MutableLiveData<Event<String>> getEnviarWhatsAppLiveData() {

@@ -5,7 +5,9 @@ import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
+import static com.yoga.mborasystem.util.Ultilitario.partilharDocumento;
 import static com.yoga.mborasystem.util.Ultilitario.restartActivity;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -31,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -87,6 +90,7 @@ import com.yoga.mborasystem.viewmodel.VendaViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -420,7 +424,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorPago.setHint(getString(R.string.se_val_pag));
                 } else {
                     buttonView.setChecked(false);
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.check_dvd), R.drawable.ic_toast_erro);
+                    showToast(getContext(), Color.parseColor("#795548"), getString(R.string.check_dvd), R.drawable.ic_toast_erro);
                 }
             } else {
                 binding.textValorPago.setEnabled(true);
@@ -434,7 +438,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorDivida.setEnabled(true);
                 else {
                     binding.switchEdit.setChecked(false);
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.check_dvd), R.drawable.ic_toast_erro);
+                    showToast(getContext(), Color.parseColor("#795548"), getString(R.string.check_dvd), R.drawable.ic_toast_erro);
                 }
             } else
                 binding.textValorDivida.setEnabled(false);
@@ -478,7 +482,7 @@ public class FacturaFragment extends Fragment {
                 if (date1 != null) {
                     if (date1.compareTo(date2) >= 0) {
                         dataEmissao = data;
-                        Ultilitario.showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.dat_ems) + ": " + data, R.drawable.ic_toast_feito);
+                        showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.dat_ems) + ": " + data, R.drawable.ic_toast_feito);
                     } else {
                         dataEmissao = "";
                         Ultilitario.alertDialog(getString(R.string.dat_nao_sel), getString(R.string.dat_ems_nao_dat_act), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
@@ -520,7 +524,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorPago.setError(getString(R.string.digite_valor_pago));
                 }
             } else
-                Ultilitario.showToast(getContext(), Color.rgb(250, 170, 5), getString(R.string.selecciona_forma_pagamento), R.drawable.ic_toast_erro);
+                showToast(getContext(), Color.rgb(250, 170, 5), getString(R.string.selecciona_forma_pagamento), R.drawable.ic_toast_erro);
         });
 
         vendaViewModel.getDataAdminMaster();
@@ -532,7 +536,7 @@ public class FacturaFragment extends Fragment {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
                     CriarFactura.getPemissionAcessStoregeExternal(false, false, "", true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
                 } else
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
+                    Toast.makeText(requireContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
             }
         }));
 
@@ -542,18 +546,30 @@ public class FacturaFragment extends Fragment {
                     facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
                     CriarFactura.getPemissionAcessStoregeExternal(false, false, "", false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, dataEmissao, referenciaFactura + "/" + idvenda);
                 } else
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
+                    showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
             }
         }));
 
         vendaViewModel.getEnviarWhatsAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(numero -> {
             if (!numero.isEmpty()) {
                 if (facturaPath.isEmpty())
-                    Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.enviar_w_primeiro), R.drawable.ic_toast_erro);
+                    Toast.makeText(requireContext(), getString(R.string.enviar_w_primeiro), Toast.LENGTH_SHORT).show();
                 else
                     Ultilitario.openWhatsApp(getActivity(), numero);
             }
         }));
+
+        vendaViewModel.partilharPdfLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> {
+            if (idvenda > 0) {
+                if (!referenciaFactura.isEmpty()) {
+                    facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
+                    File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
+                    partilharDocumento(dir.getPath() + "/MboraSystem/Facturas/" + facturaPath, requireContext(), "application/pdf", getString(R.string.part_doc) + " " + facturaPath);
+                } else
+                    Toast.makeText(requireContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
+            }
+        }));
+
         vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(alertDialog -> {
             if (alertDialog != null && !Ultilitario.getNaoMostrarNovamente(requireActivity())) {
                 if (facturaPath.isEmpty()) {

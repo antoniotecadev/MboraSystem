@@ -43,7 +43,7 @@ public class DialogVendaEfectuada extends DialogFragment {
         String referencia = DialogVendaEfectuadaArgs.fromBundle(getArguments()).getReferencia();
         binding.textViewTotal.setText(referencia + "/" + idvenda + "\n" + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(total)));
 
-        binding.btnGuardar.setOnClickListener(v -> vendaViewModel.getGuardarPdfLiveData().setValue(new Event<>(idvenda)));
+        binding.btnPartilhar.setOnClickListener(v -> vendaViewModel.partilharPdfLiveData().setValue(new Event<>(idvenda)));
 
         binding.btnImprimir.setOnClickListener(v -> vendaViewModel.getPrintLiveData().setValue(new Event<>(idvenda)));
 
