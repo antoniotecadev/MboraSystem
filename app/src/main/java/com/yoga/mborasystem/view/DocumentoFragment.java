@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.view.MenuProvider;
@@ -38,6 +39,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -405,38 +407,38 @@ public class DocumentoFragment extends Fragment {
                         });
                     }
                 }
-//                if (getArguments() != null) {
-//                    if (getArguments().getBoolean("master")) {
-//                        menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-//                            File file = new File(documento.getCaminho());
-//                            new AlertDialog.Builder(requireContext())
-//                                    .setIcon(R.drawable.ic_baseline_delete_40)
-//                                    .setTitle(titulo)
-//                                    .setMessage(R.string.tem_cert_elim_fich)
-//                                    .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
-//                                    .setPositiveButton(R.string.sim, (dialogInterface, i) -> {
-//                                        file.delete();
-//                                        if (file.exists()) {
-//                                            try {
-//                                                file.getCanonicalFile().delete();
-//                                            } catch (IOException e) {
-//                                                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-//                                            }
-//                                            if (file.exists())
-//                                                requireContext().deleteFile(file.getName());
-//                                            else {
-//                                                Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-//                                                getDocumentPDF(pasta, title, msg, false, null, "", false);
-//                                            }
-//                                        } else {
-//                                            Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
-//                                            getDocumentPDF(pasta, title, msg, false, null, "", false);
-//                                        }
-//                                    }).show();
-//                            return false;
-//                        });
-//                    }
-//                }
+                if (getArguments() != null) {
+                    if (getArguments().getBoolean("master")) {
+                        menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                            File file = new File(documento.getCaminho());
+                            new AlertDialog.Builder(requireContext())
+                                    .setIcon(R.drawable.ic_baseline_delete_40)
+                                    .setTitle(titulo)
+                                    .setMessage(R.string.tem_cert_elim_fich)
+                                    .setNegativeButton(R.string.nao, (dialogInterface, i) -> dialogInterface.dismiss())
+                                    .setPositiveButton(R.string.sim, (dialogInterface, i) -> {
+                                        file.delete();
+                                        if (file.exists()) {
+                                            try {
+                                                file.getCanonicalFile().delete();
+                                            } catch (IOException e) {
+                                                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                            }
+                                            if (file.exists())
+                                                requireContext().deleteFile(file.getName());
+                                            else {
+                                                Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                                getDocumentPDF(pasta, title, msg, false, null, "", false);
+                                            }
+                                        } else {
+                                            Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                            getDocumentPDF(pasta, title, msg, false, null, "", false);
+                                        }
+                                    }).show();
+                            return false;
+                        });
+                    }
+                }
                 menu1.add(getString(R.string.det)).setOnMenuItemClickListener(item -> {
                     detalhes(titulo);
                     return false;
