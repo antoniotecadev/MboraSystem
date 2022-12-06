@@ -15,7 +15,6 @@ import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -146,7 +145,6 @@ public class CriarFactura {
                 document.add(qr_code_image);
             }
             document.close();
-            Ultilitario.showToast(context, Color.rgb(102, 153, 0), activity.getString(R.string.factura_guardada), R.drawable.ic_toast_feito);
             addFileContentProvider(activity.getApplicationContext(), "/Facturas/" + facturaPath);
             if (!isGuardar)
                 printPDF(activity, activity.getBaseContext(), facturaPath, "Facturas");
