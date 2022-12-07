@@ -100,14 +100,14 @@ public class VendaRepository {
         vendaDao.liquidardivida(divida, idivida);
     }
 
-    public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
+    public void eliminarVendaNotaCredito(int estado, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
         if (eliminarTodasLixeira)
             vendaDao.deleteAllVendaLixeira(3);
         else {
             if (isLixeira)
                 vendaDao.deleteVendas(venda);
             else
-                vendaDao.deleteLixeira(estado, Ultilitario.monthInglesFrances(data), venda.getId());
+                vendaDao.notaCreditoVenda(estado, venda.getCodigo_qr(), venda.getData_cria(), venda.getData_cria_hora(), Ultilitario.monthInglesFrances(data), venda.getId());
         }
     }
 

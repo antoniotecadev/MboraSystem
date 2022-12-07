@@ -123,8 +123,8 @@ public abstract class VendaDao {
     @Delete
     abstract void deleteVenda(Venda venda);
 
-    @Query("UPDATE vendas SET estado = :est, data_elimina = :data WHERE id = :id")
-    public abstract void deleteLixeira(int est, String data, long id);
+    @Query("UPDATE vendas SET estado = :est, codigo_qr = :refNC , data_cria = :dataCria, data_cria_hora = :dataCriaHora, data_elimina = :data WHERE id = :id")
+    public abstract void notaCreditoVenda(int est, String refNC, String dataCria, String dataCriaHora, String data, long id);
 
     @Query("DELETE FROM vendas WHERE estado = :estado")
     public abstract void deleteAllVendaLixeira(int estado);

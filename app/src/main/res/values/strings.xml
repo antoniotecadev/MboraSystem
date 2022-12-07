@@ -739,6 +739,8 @@
     <string name="subtotal">Subtotal</string>
     <string name="base">Base</string>
     <string name="anular">Anular</string>
+    <string name="nt_ct">Nota de Crédito</string>
+    <string name="emt_nt_cd">Emitir nota de crédito referente a</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

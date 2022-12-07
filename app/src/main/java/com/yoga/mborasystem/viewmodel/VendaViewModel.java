@@ -78,6 +78,7 @@ public class VendaViewModel extends AndroidViewModel {
 
     MutableLiveData<Long> quantidade;
     MutableLiveData<Boolean> selectedData;
+    MutableLiveData<Event<Venda>> imprimirNC;
     MutableLiveData<Event<Boolean>> exportLocal;
     MutableLiveData<Event<Long>> guardarPdf, imprimir, partilhar;
     MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento, enviarWhatsApp;
@@ -92,6 +93,12 @@ public class VendaViewModel extends AndroidViewModel {
         if (imprimir == null)
             imprimir = new MutableLiveData<>();
         return imprimir;
+    }
+
+    public MutableLiveData<Event<Venda>> getPrintNCLiveData() {
+        if (imprimirNC == null)
+            imprimirNC = new MutableLiveData<>();
+        return imprimirNC;
     }
 
     public MutableLiveData<Event<Long>> getGuardarPdfLiveData() {
@@ -380,8 +387,12 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarVendaLixeira(int estado, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
-        Completable.fromAction(() -> vendaRepository.eliminarVendaLixeira(estado, data, venda, isLixeira, eliminarTodasLixeira))
+    public void eliminarVendaNotaCredito(int estado, String refNC, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
+        venda.setCodigo_qr(refNC);
+        venda.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+        String hora = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+        venda.setData_cria_hora(getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + "T" + hora);
+        Completable.fromAction(() -> vendaRepository.eliminarVendaNotaCredito(estado, data, venda, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
@@ -395,7 +406,7 @@ public class VendaViewModel extends AndroidViewModel {
                         if (isLixeira || eliminarTodasLixeira)
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
                         else
-                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_env_lx), R.drawable.ic_toast_feito);
+                            getPrintNCLiveData().setValue(new Event<>(venda));
                     }
 
                     @Override

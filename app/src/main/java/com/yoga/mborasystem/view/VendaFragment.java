@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
+import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
@@ -53,7 +54,6 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentVendaBinding;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
-import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
@@ -319,6 +319,9 @@ public class VendaFragment extends Fragment {
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
+
+        vendaViewModel.getPrintNCLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(venda -> imprimirFacturaNotaCredito(venda, false, true)));
+
         return binding.getRoot();
     }
 
@@ -391,11 +394,11 @@ public class VendaFragment extends Fragment {
                             return false;
                         });//groupId, itemId, order, title
                         menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
-                            imprimirFactura(venda, "FR", true, false);
+                            imprimirFacturaNotaCredito(venda, true, false);
                             return false;
                         });
                         menu.add(getString(R.string.anular)).setOnMenuItemClickListener(item -> {
-                            imprimirFactura(venda, "NC", false, true);
+                            caixaDialogo(getString(R.string.nt_ct), getString(R.string.emt_nt_cd) + ":\n" + venda.getCodigo_qr(), false, false, venda);
                             return false;
                         });
                         if (getArguments() != null) {
@@ -455,7 +458,7 @@ public class VendaFragment extends Fragment {
                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                         vendaViewModel.crud = true;
-                        vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false);
+                        vendaViewModel.eliminarVendaNotaCredito(3, "", Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false);
                     })
                     .show();
         }
@@ -493,7 +496,7 @@ public class VendaFragment extends Fragment {
             if (isliquidar)
                 alert.setView(layout);
             else
-                alert.setIcon(R.drawable.ic_baseline_delete_40);
+                alert.setIcon(R.drawable.ic_baseline_dry_24);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         if (isliquidar) {
                             if (editText.length() < 15) {
@@ -506,7 +509,9 @@ public class VendaFragment extends Fragment {
                                 Ultilitario.alertDialog(titulo, getString(R.string.vl_inv), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } else {
                             vendaViewModel.crud = true;
-                            vendaViewModel.eliminarVendaLixeira(Ultilitario.TRES, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
+                            setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
+                            String refNC = "NC " + TextUtils.split(getDateCurrent(), "-")[2].trim() + "/" + getIntPreference(requireContext(), "numeroserienc");
+                            vendaViewModel.eliminarVendaNotaCredito(3, refNC, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
                         }
                     }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
@@ -546,7 +551,7 @@ public class VendaFragment extends Fragment {
             if (isEliminar) {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                     vendaViewModel.crud = true;
-                    vendaViewModel.eliminarVendaLixeira(0, null, null, false, true);
+                    vendaViewModel.eliminarVendaNotaCredito(0, "", null, null, false, true);
                 });
             } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
@@ -628,7 +633,7 @@ public class VendaFragment extends Fragment {
         });
     }
 
-    private void imprimirFactura(Venda vd, String tipoDocumento, boolean isSegundaVia, boolean isAnulado) {
+    private void imprimirFacturaNotaCredito(Venda vd, boolean isSegundaVia, boolean isAnulado) {
         pTtU = new HashMap<>();
         Produto pd = new Produto();
         Map<Long, Produto> pds = new HashMap<>();
@@ -653,18 +658,13 @@ public class VendaFragment extends Fragment {
                     pds.put(pd.getId(), pd);
                     pTtU.put(pd.getId(), pv.getPreco_total());
                 }
-                Cliente cliente = getArguments().getParcelable("cliente");
-                String referenciaFactura = tipoDocumento + " " + (TextUtils.split(vd.getData_cria(), "-")[2].trim());
                 AppCompatAutoCompleteTextView txtNomeCliente = new AppCompatAutoCompleteTextView(requireContext());
                 txtNomeCliente.setText(vd.getNome_cliente());
                 TextInputEditText desconto = new TextInputEditText(requireContext());
                 desconto.setText(String.valueOf(vd.getDesconto()));
                 int troco = vd.getValor_pago() - (vd.getTotal_venda() - vd.getDesconto());
-                if (isAnulado)
-                    setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
-                int numeroSerie = isSegundaVia ? (int) vd.getId() : getIntPreference(requireContext(), "numeroserienc");
-                String facturaPath = referenciaFactura + "_" + numeroSerie + ".pdf";
-                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], referenciaFactura + "/" + numeroSerie);
+                String facturaPath = vd.getCodigo_qr().replace("/", "_") + ".pdf";
+                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, getArguments().getParcelable("cliente"), vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], vd.getCodigo_qr());
                 printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
             }
         }));
