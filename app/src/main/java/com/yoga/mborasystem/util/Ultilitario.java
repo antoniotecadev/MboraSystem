@@ -1223,7 +1223,6 @@ public class Ultilitario {
 
     public static void setValueUsuarioMaster(Bundle bundle, List<Cliente> cliente, Context context) {
         bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
-        bundle.putBoolean("master", cliente.get(0).isMaster());
         bundle.putParcelable("cliente", cliente.get(0));
         Ultilitario.setBooleanPreference(context, true, "master");
         Ultilitario.setValueSharedPreferences(context, "imei", cliente.get(0).getImei());

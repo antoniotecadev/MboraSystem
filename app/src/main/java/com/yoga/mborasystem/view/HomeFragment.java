@@ -77,10 +77,10 @@ public class HomeFragment extends Fragment {
     private Bundle bundle;
     String nomeOperador, languageCode = "";
     private Cliente cliente;
-    private boolean isOpen = false;
     private ExecutorService executor;
     private FragmentHomeBinding binding;
     private String idioma, codigoIdioma;
+    private boolean isOpen = false, isMaster;
     private ClienteViewModel clienteViewModel;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
@@ -92,9 +92,9 @@ public class HomeFragment extends Fragment {
         FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
         FabRClockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
         FabRanticlockwise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
-        if (getArguments() != null)
-            nomeOperador = getArguments().getString("nome");
+        nomeOperador = getArguments().getString("nome");
         cliente = getArguments().getParcelable("cliente");
+        isMaster = Ultilitario.getBooleanPreference(requireContext(), "master");
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
                     break;
                 case R.id.usuarioFragmentH:
-                    if (Ultilitario.getBooleanPreference(requireContext(), "master"))
+                    if (isMaster)
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
                     break;
                 case R.id.vendaFragmentH:
@@ -156,7 +156,7 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
                     break;
                 case R.id.dashboardFragmentH:
-                    if (Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                    if (isMaster) {
                         MainActivity.getProgressBar();
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
                     }
@@ -214,7 +214,7 @@ public class HomeFragment extends Fragment {
                 menuInflater.inflate(R.menu.menu_home_ferramenta, menu);
                 menu.findItem(R.id.dialogAlterarCliente).setTitle(getString(R.string.dad_emp));
                 if (getArguments() != null) {
-                    if (!getArguments().getBoolean("master")) {
+                    if (!isMaster) {
                         binding.btnUsuario.setEnabled(false);
                         binding.btnDashboard.setEnabled(false);
                         binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
@@ -375,7 +375,7 @@ public class HomeFragment extends Fragment {
 
     private void getQrCode() {
         if (getArguments() != null)
-            if (getArguments().getBoolean("master"))
+            if (isMaster)
                 Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei()), true, requestPermissionLauncherSaveQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
             else
                 Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), true, requestPermissionLauncherSaveQrCode, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
@@ -408,7 +408,7 @@ public class HomeFragment extends Fragment {
     private Bundle isUserMaster() {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
-            bundle.putBoolean("master", getArguments().getBoolean("master"));
+            bundle.putBoolean("master", isMaster);
         } else
             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         return bundle;
@@ -427,7 +427,7 @@ public class HomeFragment extends Fragment {
     private void entrarCategoriasLx() {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
-            HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
+            HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(isMaster);
             Navigation.findNavController(requireView()).navigate(direction);
         }
     }
@@ -435,7 +435,7 @@ public class HomeFragment extends Fragment {
     private void entrarProdutosLx() {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
-            HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
+            HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(isMaster);
             Navigation.findNavController(requireView()).navigate(direction);
         }
     }
@@ -443,7 +443,7 @@ public class HomeFragment extends Fragment {
     private void entrarVendas(boolean isNotaCredito) {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
-            HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(getArguments().getBoolean("master"));
+            HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(isMaster);
             Navigation.findNavController(requireView()).navigate(direction);
         }
     }
@@ -451,7 +451,7 @@ public class HomeFragment extends Fragment {
     private void entrarFacturacao() {
         MainActivity.getProgressBar();
         if (getArguments() != null)
-            bundle.putBoolean("master", getArguments().getBoolean("master"));
+            bundle.putBoolean("master", isMaster);
         bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
     }
@@ -531,7 +531,7 @@ public class HomeFragment extends Fragment {
                 if (result) {
                     if (getArguments() != null) {
                         bundle.putParcelable("cliente", cliente);
-                        bundle.putBoolean("master", getArguments().getBoolean("master"));
+                        bundle.putBoolean("master", isMaster);
                         Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
                     } else
                         Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
