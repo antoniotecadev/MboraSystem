@@ -192,9 +192,7 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
         });
 
-        binding.btnVenda.setOnClickListener(v -> {
-            entrarVendas(false);
-        });
+        binding.btnVenda.setOnClickListener(v -> entrarVendas(false));
 
         binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster()));
         binding.btnDashboard.setOnClickListener(v -> {
