@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
+import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
@@ -390,13 +391,11 @@ public class VendaFragment extends Fragment {
                             return false;
                         });//groupId, itemId, order, title
                         menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
-                            String referenciaFactura = "FR " + (TextUtils.split(venda.getData_cria(), "-")[2].trim());
-                            String facturaPath = referenciaFactura + "_" + venda.getId() + ".pdf";
-                            printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
+                            imprimirFactura(venda, "FR", true, false);
                             return false;
                         });
                         menu.add(getString(R.string.anular)).setOnMenuItemClickListener(item -> {
-                            getProdutos(venda);
+                            imprimirFactura(venda, "NC", false, true);
                             return false;
                         });
                         if (getArguments() != null) {
@@ -629,7 +628,7 @@ public class VendaFragment extends Fragment {
         });
     }
 
-    private void getProdutos(Venda vd) {
+    private void imprimirFactura(Venda vd, String tipoDocumento, boolean isSegundaVia, boolean isAnulado) {
         pTtU = new HashMap<>();
         Produto pd = new Produto();
         Map<Long, Produto> pds = new HashMap<>();
@@ -655,16 +654,18 @@ public class VendaFragment extends Fragment {
                     pTtU.put(pd.getId(), pv.getPreco_total());
                 }
                 Cliente cliente = getArguments().getParcelable("cliente");
-                String referenciaFactura = "NC " + (TextUtils.split(vd.getData_cria(), "-")[2].trim());
-                setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
-                int numeroSerie = getIntPreference(requireContext(), "numeroserienc");
-                String facturaPath = referenciaFactura + "_" + numeroSerie + ".pdf";
+                String referenciaFactura = tipoDocumento + " " + (TextUtils.split(vd.getData_cria(), "-")[2].trim());
                 AppCompatAutoCompleteTextView txtNomeCliente = new AppCompatAutoCompleteTextView(requireContext());
                 txtNomeCliente.setText(vd.getNome_cliente());
                 TextInputEditText desconto = new TextInputEditText(requireContext());
                 desconto.setText(String.valueOf(vd.getDesconto()));
                 int troco = vd.getValor_pago() - (vd.getTotal_venda() - vd.getDesconto());
-                CriarFactura.getPemissionAcessStoregeExternal(false, true, vd.getCodigo_qr(),true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, "", referenciaFactura + "/" + numeroSerie);
+                if (isAnulado)
+                    setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
+                int numeroSerie = isSegundaVia ? (int) vd.getId() : getIntPreference(requireContext(), "numeroserienc");
+                String facturaPath = referenciaFactura + "_" + numeroSerie + ".pdf";
+                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], referenciaFactura + "/" + numeroSerie);
+                printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
             }
         }));
     }

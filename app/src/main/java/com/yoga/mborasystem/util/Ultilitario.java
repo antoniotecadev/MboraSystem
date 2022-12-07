@@ -846,6 +846,7 @@ public class Ultilitario {
     public static void setBooleanPreference(Context context, boolean value, String idvalue) {
         context.getSharedPreferences("VALUE_BOOLEAN", Context.MODE_PRIVATE).edit().putBoolean(idvalue, value).apply();
     }
+
     public static void setIntPreference(Context context, int value, String idvalue) {
         context.getSharedPreferences("VALUE_INT", Context.MODE_PRIVATE).edit().putInt(idvalue, value).apply();
     }
@@ -1326,5 +1327,7 @@ public class Ultilitario {
         return "";
     }
 
-
+    public static String getDataEmissao(String dataEmissao) {
+        return (dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) : getDataFormatMonth(dataEmissao)) + " " + TextUtils.split(Ultilitario.getDateCurrent(), "-")[3];
+    }
 }

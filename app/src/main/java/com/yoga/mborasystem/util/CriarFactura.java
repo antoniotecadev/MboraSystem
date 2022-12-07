@@ -93,14 +93,14 @@ public class CriarFactura {
             addNewItem(document, cliente.getNomeEmpresa(), Element.ALIGN_CENTER, titleFont);
             Font bairroRuaFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, PreferenceManager.getDefaultSharedPreferences(context).getString("nomecomercial", "") + "\n" + cliente.getRua() + "\n" + cliente.getMunicipio() + " - " + cliente.getBairro() + "\n" + cliente.getProvincia(), Element.ALIGN_CENTER, bairroRuaFont);
-            addNewItem(document, isSegundaVia ? "Segunda Via Conforme Original" : isAnulado ? "Segunda Via cf. Original - ANULADO" : "Original", Element.ALIGN_CENTER, font);
-            addNewItem(document, isAnulado ? "Referente a: " + referencia : "", Element.ALIGN_CENTER, font);
             addLineSpace(document);
             addNewItem(document, "NIF: " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, "TEL: " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
-            addNewItem(document, "DATA: " + (dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) : getDataFormatMonth(dataEmissao)) + " " + TextUtils.split(Ultilitario.getDateCurrent(), "-")[3], Element.ALIGN_LEFT, font);
+            addNewItem(document, "DATA: " + dataEmissao, Element.ALIGN_LEFT, font);
             addLineSpace(document);
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
+            addNewItem(document, isSegundaVia ? "Segunda Via Conforme Original" : isAnulado ? "Segunda Via Conforme Original - ANULADO" : "Original", Element.ALIGN_CENTER, font);
+            addNewItem(document, isAnulado ? "Referente a: " + referencia : "", Element.ALIGN_CENTER, font);
             addNewItem(document, (isAnulado ? "Nota de Crédito" : "FACTURA/RECIBO") + "\n" + referenciaFactura + "\n", Element.ALIGN_CENTER, facturaReciboFont);
             addNewItem(document, "CLIENTE: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
             addNewItem(document, "NIF: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : (TextUtils.split(txtNomeCliente.getText().toString(), "-")[2].equals("999999999") ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2])), Element.ALIGN_LEFT, font);
@@ -150,7 +150,8 @@ public class CriarFactura {
                 printPDF(activity, activity.getBaseContext(), facturaPath, "Facturas");
         } catch (FileNotFoundException | DocumentException e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            setIntPreference(context, getIntPreference(context, "numeroserienc") - 1, "numeroserienc");
+            if (isAnulado)
+                setIntPreference(context, getIntPreference(context, "numeroserienc") - 1, "numeroserienc");
         } finally {
             MainActivity.dismissProgressBar();
         }
