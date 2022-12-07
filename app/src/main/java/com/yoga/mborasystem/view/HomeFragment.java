@@ -185,7 +185,7 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButtonVenda.setOnClickListener(v -> entrarFacturacao());
 
-        binding.btnUsuario.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster()));
+        binding.btnUsuario.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment));
 
         binding.btnProduto.setOnClickListener(v -> {
             HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsMaster(isMaster).setIdUsuario(requireArguments().getInt("idusuario", 0));
@@ -213,19 +213,17 @@ public class HomeFragment extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_home_ferramenta, menu);
                 menu.findItem(R.id.dialogAlterarCliente).setTitle(getString(R.string.dad_emp));
-                if (getArguments() != null) {
-                    if (!isMaster) {
-                        binding.btnUsuario.setEnabled(false);
-                        binding.btnDashboard.setEnabled(false);
-                        binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
-                        binding.btnDashboard.setCardBackgroundColor(Color.GRAY);
-                        menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
-                        menu.findItem(R.id.config).setEnabled(false);
-                        menu.findItem(R.id.baseDeDados).setEnabled(false);
-                    } else {
-                        menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
-                        menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
-                    }
+                if (!isMaster) {
+                    binding.btnUsuario.setEnabled(false);
+                    binding.btnDashboard.setEnabled(false);
+                    binding.btnUsuario.setCardBackgroundColor(Color.GRAY);
+                    binding.btnDashboard.setCardBackgroundColor(Color.GRAY);
+                    menu.findItem(R.id.dialogAlterarCliente).setEnabled(false);
+                    menu.findItem(R.id.config).setEnabled(false);
+                    menu.findItem(R.id.baseDeDados).setEnabled(false);
+                } else {
+                    menu.findItem(R.id.dialogAlterarCodigoPin).setVisible(false);
+                    menu.findItem(R.id.device).setTitle(reverse(getDeviceUniqueID(requireActivity())));
                 }
                 Locale primaryLocale;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -279,25 +277,21 @@ public class HomeFragment extends Fragment {
                         getDetailDevice(requireContext());
                         break;
                     case R.id.dialogAlterarCliente:
-                        if (getArguments() != null) {
-                            bundle.putParcelable("cliente", cliente);
-                            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
-                        }
+                        bundle.putParcelable("cliente", cliente);
+                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
                         break;
                     case R.id.estadoCliente:
-                        if (getArguments() != null) {
-                            MainActivity.getProgressBar();
-                            if (isNetworkConnected(requireContext())) {
-                                if (internetIsConnected())
-                                    estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
-                                else {
-                                    MainActivity.dismissProgressBar();
-                                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                                }
-                            } else {
+                        MainActivity.getProgressBar();
+                        if (isNetworkConnected(requireContext())) {
+                            if (internetIsConnected())
+                                estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
+                            else {
                                 MainActivity.dismissProgressBar();
-                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                             }
+                        } else {
+                            MainActivity.dismissProgressBar();
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                         break;
                     case R.id.gerarCodigoQr:
@@ -319,10 +313,8 @@ public class HomeFragment extends Fragment {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/politicaprivacidade")));
                         break;
                     case R.id.dialogAlterarCodigoPin:
-                        if (getArguments() != null) {
-                            bundle.putLong("idusuario", getArguments().getLong("idusuario"));
-                            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
-                        }
+                        bundle.putLong("idusuario", getArguments().getLong("idusuario"));
+                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
                         break;
                     case R.id.acercaMborasytem:
                         acercaMboraSystem(requireContext(), requireActivity());
@@ -374,11 +366,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void getQrCode() {
-        if (getArguments() != null)
-            if (isMaster)
-                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei()), true, requestPermissionLauncherSaveQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
-            else
-                Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), true, requestPermissionLauncherSaveQrCode, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
+        if (isMaster)
+            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei()), true, requestPermissionLauncherSaveQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
+        else
+            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), true, requestPermissionLauncherSaveQrCode, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
     }
 
     private Bitmap gerarCodigoQr(String imei) {
@@ -406,11 +397,8 @@ public class HomeFragment extends Fragment {
     }
 
     private Bundle isUserMaster() {
-        if (getArguments() != null) {
-            MainActivity.getProgressBar();
-            bundle.putBoolean("master", isMaster);
-        } else
-            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        MainActivity.getProgressBar();
+        bundle.putBoolean("master", isMaster);
         return bundle;
     }
 
@@ -425,33 +413,26 @@ public class HomeFragment extends Fragment {
     }
 
     private void entrarCategoriasLx() {
-        if (getArguments() != null) {
-            MainActivity.getProgressBar();
-            HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(isMaster);
-            Navigation.findNavController(requireView()).navigate(direction);
-        }
+        MainActivity.getProgressBar();
+        HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsLixeira(true).setIsMaster(isMaster);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
     private void entrarProdutosLx() {
-        if (getArguments() != null) {
-            MainActivity.getProgressBar();
-            HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(isMaster);
-            Navigation.findNavController(requireView()).navigate(direction);
-        }
+        MainActivity.getProgressBar();
+        HomeFragmentDirections.ActionHomeFragmentToListProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToListProdutoFragment().setIsLixeira(true).setIsMaster(isMaster);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
     private void entrarVendas(boolean isNotaCredito) {
-        if (getArguments() != null) {
-            MainActivity.getProgressBar();
-            HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(isMaster);
-            Navigation.findNavController(requireView()).navigate(direction);
-        }
+        MainActivity.getProgressBar();
+        HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(isMaster);
+        Navigation.findNavController(requireView()).navigate(direction);
     }
 
     private void entrarFacturacao() {
         MainActivity.getProgressBar();
-        if (getArguments() != null)
-            bundle.putBoolean("master", isMaster);
+        bundle.putBoolean("master", isMaster);
         bundle.putLong("idoperador", requireArguments().getLong("idusuario", 0));
         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
     }
@@ -529,12 +510,9 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
-                    if (getArguments() != null) {
-                        bundle.putParcelable("cliente", cliente);
-                        bundle.putBoolean("master", isMaster);
-                        Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
-                    } else
-                        Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    bundle.putParcelable("cliente", cliente);
+                    bundle.putBoolean("master", isMaster);
+                    Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
                 } else
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_prm_na_vis_doc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }

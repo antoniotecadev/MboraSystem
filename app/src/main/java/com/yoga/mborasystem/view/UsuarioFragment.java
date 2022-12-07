@@ -37,6 +37,7 @@ import com.yoga.mborasystem.viewmodel.UsuarioViewModel;
 public class UsuarioFragment extends Fragment {
 
     private Bundle bundle;
+    private boolean isMaster;
     private GroupAdapter adapter;
     private UsuarioAdapter usuarioAdapter;
     private UsuarioViewModel usuarioViewModel;
@@ -57,6 +58,8 @@ public class UsuarioFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = FragmentUsuarioListBinding.inflate(inflater, container, false);
+
+        isMaster = Ultilitario.getBooleanPreference(requireContext(), "master");
 
         binding.recyclerViewListaUsuario.setAdapter(usuarioAdapter);
         binding.recyclerViewListaUsuario.setHasFixedSize(true);
@@ -84,13 +87,10 @@ public class UsuarioFragment extends Fragment {
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                if (getArguments() != null) {
-                    if (getArguments().getBoolean("master"))
-                        menuInflater.inflate(R.menu.menu_criar_usuario, menu);
-                    else
-                        binding.criarUsuarioFragment.setVisibility(View.GONE);
-                } else
-                    binding.criarUsuarioFragment.setVisibility(View.INVISIBLE);
+                if (isMaster)
+                    menuInflater.inflate(R.menu.menu_criar_usuario, menu);
+                else
+                    binding.criarUsuarioFragment.setVisibility(View.GONE);
             }
 
             @Override
@@ -127,12 +127,7 @@ public class UsuarioFragment extends Fragment {
         public void onBindViewHolder(@NonNull UsuarioViewHolder h, int position) {
             Usuario us = getItem(position);
             if (us != null) {
-                if (getArguments() != null) {
-                    if (!getArguments().getBoolean("master")) {
-                        h.binding.btnEntrar.setEnabled(false);
-                        h.binding.btnEliminar.setVisibility(View.GONE);
-                    }
-                } else {
+                if (!isMaster) {
                     h.binding.btnEntrar.setEnabled(false);
                     h.binding.btnEliminar.setVisibility(View.GONE);
                 }
@@ -167,10 +162,8 @@ public class UsuarioFragment extends Fragment {
         }
 
         private void verDadosUsuario(Usuario usuario) {
-            if (getArguments() != null) {
-                MainActivity.getProgressBar();
-                bundle.putBoolean("master", getArguments().getBoolean("master"));
-            }
+            MainActivity.getProgressBar();
+            bundle.putBoolean("master", isMaster);
             bundle.putParcelable("usuario", usuario);
             Navigation.findNavController(requireView()).navigate(R.id.action_usuarioFragment_to_dialogCriarUsuario, bundle);
         }

@@ -104,16 +104,13 @@ public class CategoriaProdutoFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_pesquisar_criar_categoria, menu);
-                if (getArguments() != null) {
-                    if (isMaster)
-                        bundle.putBoolean("master", true);
-                    else {
-                        menu.findItem(R.id.dialogCriarCategoriaFragment).setVisible(false);
-                        menu.findItem(R.id.exinpCategoria).setVisible(false);
-                        binding.btncriarCategoriaDialog.setVisibility(View.GONE);
-                    }
-                } else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                if (isMaster)
+                    bundle.putBoolean("master", true);
+                else {
+                    menu.findItem(R.id.dialogCriarCategoriaFragment).setVisible(false);
+                    menu.findItem(R.id.exinpCategoria).setVisible(false);
+                    binding.btncriarCategoriaDialog.setVisibility(View.GONE);
+                }
 
                 if (isLixeira) {
                     menu.findItem(R.id.exinpCategoria).setVisible(false);
@@ -225,13 +222,10 @@ public class CategoriaProdutoFragment extends Fragment {
             else
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> categoriaProdutoViewModel.restaurarCategoria(Ultilitario.UM, 0, true));
 
-            if (getArguments() != null) {
-                if (isMaster)
-                    alert.show();
-                else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            } else
-                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            if (isMaster)
+                alert.show();
+            else
+                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
         }
     }
 
@@ -292,19 +286,16 @@ public class CategoriaProdutoFragment extends Fragment {
                             });
                         }
                     } else {
-                        if (getArguments() != null) {
-                            if (isMaster) {
-                                menu1.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                                    restaurarCategoria(ct.getCategoria(), ct.getId());
-                                    return false;
-                                });
-                                menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                                    dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria), ct.getCategoria(), ct);
-                                    return false;
-                                });
-                            }
-                        } else
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        if (isMaster) {
+                            menu1.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+                                restaurarCategoria(ct.getCategoria(), ct.getId());
+                                return false;
+                            });
+                            menu1.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+                                dialogEliminarCategoria(getString(R.string.tem_certeza_eliminar_categoria), ct.getCategoria(), ct);
+                                return false;
+                            });
+                        }
                     }
                 });
             }
@@ -328,10 +319,10 @@ public class CategoriaProdutoFragment extends Fragment {
             alert.setTitle(titulo);
             alert.setMessage(mensagem);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
-                        categoriaProdutoViewModel.crud = true;
-                        categoriaProdutoViewModel.eliminarCategoria(categoria, !permanente, false);
-                    }
-            ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                                categoriaProdutoViewModel.crud = true;
+                                categoriaProdutoViewModel.eliminarCategoria(categoria, !permanente, false);
+                            }
+                    ).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
         }
 

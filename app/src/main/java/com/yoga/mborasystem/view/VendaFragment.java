@@ -245,13 +245,10 @@ public class VendaFragment extends Fragment {
                     menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                     menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
                 }
-                if (getArguments() != null) {
-                    if (!isMaster) {
-                        menu.findItem(R.id.exportarvenda).setVisible(false);
-                        menu.findItem(R.id.importarvenda).setVisible(false);
-                    }
-                } else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                if (!isMaster) {
+                    menu.findItem(R.id.exportarvenda).setVisible(false);
+                    menu.findItem(R.id.importarvenda).setVisible(false);
+                }
 
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
@@ -404,32 +401,28 @@ public class VendaFragment extends Fragment {
                             caixaDialogo(getString(R.string.nt_ct), getString(R.string.emt_nt_cd) + ":\n" + venda.getCodigo_qr(), false, false, venda);
                             return false;
                         });
-                        if (getArguments() != null) {
-                            if (isMaster) {
-                                menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
-                                    if (venda.getDivida() == 0)
-                                        Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
-                                    else
-                                        caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", getString(R.string.enc_div_vend), true, false, venda);
-                                    return false;
-                                });
+                        if (isMaster) {
+                            menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
+                                if (venda.getDivida() == 0)
+                                    Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
+                                else
+                                    caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", getString(R.string.enc_div_vend), true, false, venda);
+                                return false;
+                            });
 //                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
 //                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
 //                                    return false;
 //                                });
-                                menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                    caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
-                                    return false;
-                                });
-                            }
-                        } else
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
+                                return false;
+                            });
+                        }
                     } else {
                         menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
                             imprimirFacturaNotaCredito(venda, false, true);
                             return false;
                         });
-//                        if (getArguments() != null) {
 //                            if (isMaster) {
 //                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
 //                                    restaurarVenda(venda.getCodigo_qr(), venda.getId());
@@ -441,8 +434,6 @@ public class VendaFragment extends Fragment {
 //                                });
 //                                menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
 //                            }
-//                        } else
-//                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 });
             }
@@ -566,13 +557,11 @@ public class VendaFragment extends Fragment {
                     vendaViewModel.restaurarVenda(Ultilitario.UM, 0, true);
                 });
             }
-            if (getArguments() != null) {
-                if (isMaster)
-                    alert.show();
-                else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            } else
-                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            if (isMaster)
+                alert.show();
+            else
+                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.nao_alt_ope), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+
         }
     }
 
