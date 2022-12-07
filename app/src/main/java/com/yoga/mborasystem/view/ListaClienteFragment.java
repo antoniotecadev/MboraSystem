@@ -59,6 +59,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("rawtypes")
 public class ListaClienteFragment extends Fragment {
 
+    private boolean isMaster;
     private StringBuilder data;
     private int tipo, quantidade;
     private GroupAdapter adapter;
@@ -83,6 +84,8 @@ public class ListaClienteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentListaClienteBinding.inflate(inflater, container, false);
+
+        isMaster = Ultilitario.getBooleanPreference(requireContext(), "master");
 
         binding.recyclerViewListaCliente.setAdapter(clienteAdapter);
         binding.recyclerViewListaCliente.setHasFixedSize(true);
@@ -129,11 +132,10 @@ public class ListaClienteFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_cliente, menu);
-                if (getArguments() != null)
-                    if (!getArguments().getBoolean("master")) {
-                        menu.findItem(R.id.exportarcliente).setVisible(false);
-                        menu.findItem(R.id.importarcliente).setVisible(false);
-                    }
+                if (!isMaster) {
+                    menu.findItem(R.id.exportarcliente).setVisible(false);
+                    menu.findItem(R.id.importarcliente).setVisible(false);
+                }
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
                 SearchView searchView = (SearchView) menuItem.getActionView();
@@ -244,26 +246,24 @@ public class ListaClienteFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(direction);
                         return false;
                     });//groupId, itemId, order, title
-                    if (getArguments() != null) {
-                        if (getArguments().getBoolean("master")) {
-                            menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
-                                ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(ct.getNome(), ct.getTelefone(), ct.getId(), ct.getEmail(), ct.getEndereco(), ct.getNif());
-                                Navigation.findNavController(requireView()).navigate(direction);
-                                return false;
-                            });
-                            menu1.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
-                                clienteCantina.setId(ct.getId());
-                                clienteCantina.setEstado(Ultilitario.TRES);
-                                new AlertDialog.Builder(requireContext())
-                                        .setIcon(R.drawable.ic_baseline_delete_40)
-                                        .setTitle(getString(R.string.eliminar) + " (" + ct.getNome() + ")")
-                                        .setMessage(getString(R.string.tem_cert_elim_cli))
-                                        .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                                        .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
-                                        .show();
-                                return false;
-                            });
-                        }
+                    if (isMaster) {
+                        menu1.add(getString(R.string.alterar_cliente)).setOnMenuItemClickListener(item -> {
+                            ListaClienteFragmentDirections.ActionListaClienteFragmentToDialogClienteCantina direction = ListaClienteFragmentDirections.actionListaClienteFragmentToDialogClienteCantina(ct.getNome(), ct.getTelefone(), ct.getId(), ct.getEmail(), ct.getEndereco(), ct.getNif());
+                            Navigation.findNavController(requireView()).navigate(direction);
+                            return false;
+                        });
+                        menu1.add(getString(R.string.eliminar_cliente)).setOnMenuItemClickListener(item -> {
+                            clienteCantina.setId(ct.getId());
+                            clienteCantina.setEstado(Ultilitario.TRES);
+                            new AlertDialog.Builder(requireContext())
+                                    .setIcon(R.drawable.ic_baseline_delete_40)
+                                    .setTitle(getString(R.string.eliminar) + " (" + ct.getNome() + ")")
+                                    .setMessage(getString(R.string.tem_cert_elim_cli))
+                                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+                                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
+                                    .show();
+                            return false;
+                        });
                     }
                 });
             }

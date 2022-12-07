@@ -194,7 +194,7 @@ public class HomeFragment extends Fragment {
 
         binding.btnVenda.setOnClickListener(v -> entrarVendas(false));
 
-        binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster()));
+        binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment));
         binding.btnDashboard.setOnClickListener(v -> {
             MainActivity.getProgressBar();
             Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
