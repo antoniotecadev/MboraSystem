@@ -207,6 +207,10 @@
                 android:name="isMaster"
                 android:defaultValue="false"
                 app:argType="boolean" />
+            <argument
+                android:name="idUsuario"
+                app:argType="integer"
+                android:defaultValue="0" />
         </fragment>
         <fragment
             android:id="@+id/listProdutoFragment"

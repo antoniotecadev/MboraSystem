@@ -41,8 +41,8 @@ public class CategoriaProdutoFragment extends Fragment {
 
     private boolean vazio;
     private Bundle bundle;
-    private int quantidade;
     private GroupAdapter adapter;
+    private int quantidade, idusuario;
     private boolean isLixeira, isMaster;
     private FragmentCategoriaProdutoBinding binding;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
@@ -65,6 +65,7 @@ public class CategoriaProdutoFragment extends Fragment {
 
         isLixeira = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsLixeira();
         isMaster = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIsMaster();
+        idusuario = CategoriaProdutoFragmentArgs.fromBundle(getArguments()).getIdUsuario();
 
         if (isLixeira) {
             requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.cat) + ")");
@@ -104,7 +105,7 @@ public class CategoriaProdutoFragment extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_pesquisar_criar_categoria, menu);
                 if (getArguments() != null) {
-                    if (Ultilitario.getBooleanPreference(requireContext(), "master"))
+                    if (isMaster)
                         bundle.putBoolean("master", true);
                     else {
                         menu.findItem(R.id.dialogCriarCategoriaFragment).setVisible(false);
@@ -117,7 +118,7 @@ public class CategoriaProdutoFragment extends Fragment {
                 if (isLixeira) {
                     menu.findItem(R.id.exinpCategoria).setVisible(false);
                     menu.findItem(R.id.dialogCriarCategoriaFragment).setVisible(false);
-                    if (!Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                    if (!isMaster) {
                         menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                         menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
                     }
@@ -275,7 +276,7 @@ public class CategoriaProdutoFragment extends Fragment {
                             listaProdutos(ct.getId(), ct.getCategoria());
                             return false;
                         });//groupId, itemId, order, title
-                        if (Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                        if (isMaster) {
                             menu1.add(getString(R.string.alterar_categoria)).setOnMenuItemClickListener(item -> {
                                 bundle.putParcelable("categoria", ct);
                                 Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_dialogCriarCategoria, bundle);
@@ -292,7 +293,7 @@ public class CategoriaProdutoFragment extends Fragment {
                         }
                     } else {
                         if (getArguments() != null) {
-                            if (getArguments().getBoolean("master") || isMaster) {
+                            if (isMaster) {
                                 menu1.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
                                     restaurarCategoria(ct.getCategoria(), ct.getId());
                                     return false;
@@ -337,7 +338,7 @@ public class CategoriaProdutoFragment extends Fragment {
         private void listaProdutos(long id, String categoria) {
             bundle.putLong("idcategoria", id);
             bundle.putString("categoria", categoria);
-            bundle.putLong("idoperador", requireArguments().getLong("idoperador", 0));
+            bundle.putLong("idoperador", idusuario);
             Navigation.findNavController(requireView()).navigate(R.id.action_categoriaProdutoFragment_to_listProdutoFragment, bundle);
         }
 

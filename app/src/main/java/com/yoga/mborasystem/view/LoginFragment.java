@@ -150,7 +150,7 @@ public class LoginFragment extends Fragment {
         });
         loginViewModel.getUsuarioMutableLiveData().observe(getViewLifecycleOwner(), usuario -> {
             bundle.putString("nome", usuario.getNome());
-            bundle.putLong("idusuario", usuario.getId());
+            bundle.putInt("idusuario", (int) usuario.getId());
             Ultilitario.setBooleanPreference(requireContext(), false, "master");
             Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
         });
