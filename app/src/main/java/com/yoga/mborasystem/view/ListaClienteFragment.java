@@ -224,7 +224,7 @@ public class ListaClienteFragment extends Fragment {
             if (ct != null) {
                 h.itemView.setOnClickListener(v -> {
                     MainActivity.getProgressBar();
-                    ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
+                    ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment(null).setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
                     Navigation.findNavController(requireView()).navigate(direction);
                 });
                 h.binding.txtNomeCliente.setText(ct.getNome());
@@ -240,7 +240,7 @@ public class ListaClienteFragment extends Fragment {
                     menu1.setHeaderIcon(R.drawable.ic_cliente_60);
                     menu1.setHeaderTitle(ct.getNome());
                     menu1.add(getString(R.string.vendas)).setOnMenuItemClickListener(item -> {
-                        ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment().setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
+                        ListaClienteFragmentDirections.ActionListaClienteFragmentToVendaFragment direction = ListaClienteFragmentDirections.actionListaClienteFragmentToVendaFragment(null).setIdcliente(ct.getId()).setNomeCliente(ct.getNome());
                         Navigation.findNavController(requireView()).navigate(direction);
                         return false;
                     });//groupId, itemId, order, title

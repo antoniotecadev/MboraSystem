@@ -34,6 +34,11 @@
         android:title="@string/doc" />
 
     <item
+        android:id="@+id/vendaFragmentNotaCredito"
+        android:icon="@drawable/ic_baseline_dry_24"
+        android:title="@string/nt_ct" />
+
+    <item
         android:id="@+id/mboraMenu"
         android:icon="@drawable/ic_baseline_home_work_24"
         android:visible="false"
@@ -52,11 +57,6 @@
                 android:id="@+id/produtoFragmentLx"
                 android:icon="@android:drawable/ic_menu_delete"
                 android:title="@string/prod" />
-            <item
-                android:id="@+id/vendaFragmentLx"
-                android:icon="@android:drawable/ic_menu_delete"
-                android:visible="false"
-                android:title="@string/venda" />
         </menu>
     </item>
 </menu>

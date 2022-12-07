@@ -48,14 +48,14 @@ public class DatePickerFragment extends DialogFragment
         boolean isDivida = DatePickerFragmentArgs.fromBundle(getArguments()).getIsDivida();
         long idusuario = DatePickerFragmentArgs.fromBundle(getArguments()).getIdusuario();
         boolean isPesquisa = DatePickerFragmentArgs.fromBundle(getArguments()).getIsPesquisa();
-        boolean isLixeira = DatePickerFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+        boolean isNotaCredito = DatePickerFragmentArgs.fromBundle(getArguments()).getIsNotaCredito();
 
         String data = (((dayOfMonth < 10 ? "0" : "") + dayOfMonth) + "-" + Ultilitario.getMonth(month + 1)) + "-" + year;
         if (isVenda) {
             Ultilitario.showToast(getContext(), Color.parseColor("#795548"), data, R.drawable.ic_toast_feito);
             vendaViewModel.crud = true;
-            vendaViewModel.consultarVendas(this, idcliente, isDivida, idusuario, isLixeira, true, null, true, data);
-            vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, isDivida, idusuario, true, data, this);
+            vendaViewModel.consultarVendas(this, idcliente, isDivida, idusuario, isNotaCredito, true, null, true, data);
+            vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, isDivida, idusuario, true, data, this);
         } else {
             if (isPesquisa)
                 vendaViewModel.getDocumentoDatatAppLiveData().setValue(new Event<>(data));

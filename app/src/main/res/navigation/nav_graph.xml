@@ -337,7 +337,7 @@
                 android:defaultValue="Vendas(Cli)"
                 app:argType="string" />
             <argument
-                android:name="isLixeira"
+                android:name="isNotaCredito"
                 android:defaultValue="false"
                 app:argType="boolean" />
             <argument
@@ -347,6 +347,15 @@
             <action
                 android:id="@+id/action_vendaFragment_to_calculadoraFragment"
                 app:destination="@id/calculadoraFragment" />
+            <argument
+                android:name="cliente"
+                app:argType="com.yoga.mborasystem.model.entidade.Cliente"
+                app:nullable="true" />
+            <action
+                android:id="@+id/action_vendaFragment_self"
+                app:destination="@id/vendaFragment"
+                app:popUpTo="@id/vendaFragment"
+                app:popUpToInclusive="true" />
         </fragment>
         <dialog
             android:id="@+id/datePickerFragment"
@@ -372,7 +381,7 @@
                 android:defaultValue="false"
                 app:argType="boolean" />
             <argument
-                android:name="isLixeira"
+                android:name="isNotaCredito"
                 android:defaultValue="false" />
         </dialog>
         <dialog

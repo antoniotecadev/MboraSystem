@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
+import static com.yoga.mborasystem.util.Ultilitario.getBooleanPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
@@ -54,6 +55,7 @@ import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentVendaBinding;
 import com.yoga.mborasystem.databinding.FragmentVendaListBinding;
+import com.yoga.mborasystem.model.entidade.Cliente;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.model.entidade.ProdutoVenda;
 import com.yoga.mborasystem.model.entidade.Venda;
@@ -81,6 +83,7 @@ public class VendaFragment extends Fragment {
     private boolean vazio;
     private String data = "";
     private int quantidade;
+    private Cliente cliente;
     private GroupAdapter adapter;
     private Map<Long, Integer> pTtU;
     private StringBuilder dataBuilder;
@@ -89,7 +92,7 @@ public class VendaFragment extends Fragment {
     private VendaViewModel vendaViewModel;
     private String nomeUsuario, nomeCliente;
     private FragmentVendaListBinding binding;
-    private boolean isLocal, isDivida, isLixeira, isMaster;
+    private boolean isLocal, isDivida, isNotaCredito, isMaster;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,7 +105,7 @@ public class VendaFragment extends Fragment {
         idusuario = VendaFragmentArgs.fromBundle(getArguments()).getIdusuario();
         nomeUsuario = VendaFragmentArgs.fromBundle(getArguments()).getNomeUsuario();
         nomeCliente = VendaFragmentArgs.fromBundle(getArguments()).getNomeCliente();
-
+        cliente = VendaFragmentArgs.fromBundle(getArguments()).getCliente();
         if (idcliente > 0)
             requireActivity().setTitle(nomeCliente);
         else if (idusuario > 0)
@@ -118,10 +121,10 @@ public class VendaFragment extends Fragment {
         binding = FragmentVendaListBinding.inflate(inflater, container, false);
 
         isMaster = VendaFragmentArgs.fromBundle(getArguments()).getIsMaster();
-        isLixeira = VendaFragmentArgs.fromBundle(getArguments()).getIsLixeira();
+        isNotaCredito = VendaFragmentArgs.fromBundle(getArguments()).getIsNotaCredito();
 
-        if (isLixeira) {
-            requireActivity().setTitle(getString(R.string.lix) + " (" + getString(R.string.venda) + ")");
+        if (isNotaCredito) {
+            requireActivity().setTitle(getString(R.string.nt_ct));
             binding.bottomNav.setVisibility(View.GONE);
         }
         binding.mySwipeRefreshLayout.setOnRefreshListener(() -> {
@@ -140,7 +143,7 @@ public class VendaFragment extends Fragment {
                     else
                         requireActivity().setTitle(getString(R.string.vds));
 
-                    vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, false, idusuario, false, null, getViewLifecycleOwner());
+                    vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, false, idusuario, false, null, getViewLifecycleOwner());
                     consultarVendas(false, false, false, null);
                     break;
                 case R.id.vdDvd:
@@ -152,7 +155,7 @@ public class VendaFragment extends Fragment {
                     else
                         requireActivity().setTitle(getString(R.string.dvd));
 
-                    vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, true, idusuario, false, null, getViewLifecycleOwner());
+                    vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, true, idusuario, false, null, getViewLifecycleOwner());
                     consultarVendas(false, true, false, null);
                     break;
                 default:
@@ -165,7 +168,7 @@ public class VendaFragment extends Fragment {
         binding.recyclerViewListaVenda.setHasFixedSize(true);
         binding.recyclerViewListaVenda.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        vendaViewModel.getQuantidadeVenda(isLixeira, idcliente, isDivida, idusuario, false, null, getViewLifecycleOwner());
+        vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, isDivida, idusuario, false, null, getViewLifecycleOwner());
         vendaViewModel.getQuantidadeVenda().observe(getViewLifecycleOwner(), quantidade -> {
             this.quantidade = quantidade.intValue();
             vazio = quantidade == 0;
@@ -186,7 +189,7 @@ public class VendaFragment extends Fragment {
             else
                 ocultarFloatButtonCimaBaixo(false, View.GONE);
         });
-        binding.switchOcultarFloatCimaBaixo.setChecked(Ultilitario.getBooleanPreference(requireContext(), "sale_list_scroll"));
+        binding.switchOcultarFloatCimaBaixo.setChecked(getBooleanPreference(requireContext(), "sale_list_scroll"));
 
         vendaViewModel.getSelectedDataMutableLiveData().setValue(false);
         vendaViewModel.getSelectedDataMutableLiveData().observe(getViewLifecycleOwner(), aBoolean -> {
@@ -231,10 +234,10 @@ public class VendaFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_venda, menu);
-                if (isLixeira) {
+                if (isNotaCredito) {
                     menu.findItem(R.id.exportarvenda).setVisible(false);
                     menu.findItem(R.id.importarvenda).setVisible(false);
-                    if (!Ultilitario.getBooleanPreference(requireContext(), "master")) {
+                    if (!isMaster) {
                         menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                         menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
                     }
@@ -243,7 +246,7 @@ public class VendaFragment extends Fragment {
                     menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
                 }
                 if (getArguments() != null) {
-                    if (!getArguments().getBoolean("master")) {
+                    if (!isMaster) {
                         menu.findItem(R.id.exportarvenda).setVisible(false);
                         menu.findItem(R.id.importarvenda).setVisible(false);
                     }
@@ -294,7 +297,7 @@ public class VendaFragment extends Fragment {
                         scanearCodigoQr();
                         break;
                     case R.id.btnData:
-                        VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario).setIsLixeira(isLixeira);
+                        VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario).setIsNotaCredito(isNotaCredito);
                         Navigation.findNavController(requireView()).navigate(direction);
                         break;
                     case R.id.exportarvenda:
@@ -333,7 +336,7 @@ public class VendaFragment extends Fragment {
 
     private void consultarVendas(boolean isCrud, boolean isDivida, boolean isPesquisa, String venda) {
         vendaViewModel.crud = isCrud;
-        vendaViewModel.consultarVendas(getViewLifecycleOwner(), idcliente, isDivida, idusuario, isLixeira, isPesquisa, venda, false, null);
+        vendaViewModel.consultarVendas(getViewLifecycleOwner(), idcliente, isDivida, idusuario, isNotaCredito, isPesquisa, venda, false, null);
     }
 
     private void scanearCodigoQr() {
@@ -387,7 +390,7 @@ public class VendaFragment extends Fragment {
                 });
                 h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
                     menu.setHeaderTitle(venda.getCodigo_qr());
-                    if (!isLixeira) {
+                    if (!isNotaCredito) {
                         menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
                             VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                             Navigation.findNavController(requireView()).navigate(directions);
@@ -402,7 +405,7 @@ public class VendaFragment extends Fragment {
                             return false;
                         });
                         if (getArguments() != null) {
-                            if (getArguments().getBoolean("master")) {
+                            if (isMaster) {
                                 menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
                                     if (venda.getDivida() == 0)
                                         Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
@@ -422,20 +425,24 @@ public class VendaFragment extends Fragment {
                         } else
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     } else {
-                        if (getArguments() != null) {
-                            if (getArguments().getBoolean("master") || isMaster) {
-                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-                                    restaurarVenda(venda.getCodigo_qr(), venda.getId());
-                                    return false;
-                                });
-                                menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
-                                    dialogEliminarVenda(getString(R.string.cert_elim_vend), venda);
-                                    return false;
-                                });
-                                menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
-                            }
-                        } else
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
+                            imprimirFacturaNotaCredito(venda, false, true);
+                            return false;
+                        });
+//                        if (getArguments() != null) {
+//                            if (isMaster) {
+//                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
+//                                    restaurarVenda(venda.getCodigo_qr(), venda.getId());
+//                                    return false;
+//                                });
+//                                menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
+//                                    dialogEliminarVenda(getString(R.string.cert_elim_vend), venda);
+//                                    return false;
+//                                });
+//                                menu.add("Add " + getString(R.string.lix) + ": " + venda.getData_elimina()).setEnabled(false).setOnMenuItemClickListener(item -> false);
+//                            }
+//                        } else
+//                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.arg_null), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 });
             }
@@ -450,30 +457,30 @@ public class VendaFragment extends Fragment {
             }
         }
 
-        private void dialogEliminarVenda(String msg, Venda venda) {
-            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setIcon(R.drawable.ic_baseline_delete_40)
-                    .setTitle(getString(R.string.elim_vend))
-                    .setMessage("(" + venda.getCodigo_qr() + ")\n" + msg)
-                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
-                        vendaViewModel.crud = true;
-                        vendaViewModel.eliminarVendaNotaCredito(3, "", Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false);
-                    })
-                    .show();
-        }
+//        private void dialogEliminarVenda(String msg, Venda venda) {
+//            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+//                    .setIcon(R.drawable.ic_baseline_delete_40)
+//                    .setTitle(getString(R.string.elim_vend))
+//                    .setMessage("(" + venda.getCodigo_qr() + ")\n" + msg)
+//                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+//                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+//                        vendaViewModel.crud = true;
+//                        vendaViewModel.eliminarVendaNotaCredito(3, "", Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, true, false);
+//                    })
+//                    .show();
+//        }
 
-        private void restaurarVenda(String codigoQr, long idvenda) {
-            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setIcon(android.R.drawable.ic_menu_revert)
-                    .setTitle(getString(R.string.rest) + " (" + codigoQr + ")")
-                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
-                        vendaViewModel.crud = true;
-                        vendaViewModel.restaurarVenda(Ultilitario.UM, idvenda, false);
-                    })
-                    .show();
-        }
+//        private void restaurarVenda(String codigoQr, long idvenda) {
+//            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+//                    .setIcon(android.R.drawable.ic_menu_revert)
+//                    .setTitle(getString(R.string.rest) + " (" + codigoQr + ")")
+//                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
+//                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
+//                        vendaViewModel.crud = true;
+//                        vendaViewModel.restaurarVenda(Ultilitario.UM, idvenda, false);
+//                    })
+//                    .show();
+//        }
 
         private void caixaDialogo(String titulo, String mensagem, boolean isliquidar, boolean permanente, Venda venda) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -664,8 +671,10 @@ public class VendaFragment extends Fragment {
                 desconto.setText(String.valueOf(vd.getDesconto()));
                 int troco = vd.getValor_pago() - (vd.getTotal_venda() - vd.getDesconto());
                 String facturaPath = vd.getCodigo_qr().replace("/", "_") + ".pdf";
-                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, getArguments().getParcelable("cliente"), vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], vd.getCodigo_qr());
+                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], vd.getCodigo_qr());
                 printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
+                VendaFragmentDirections.ActionVendaFragmentSelf dirSelf = VendaFragmentDirections.actionVendaFragmentSelf(cliente).setIsNotaCredito(true).setIsMaster(isMaster);
+                Navigation.findNavController(requireView()).navigate(dirSelf);
             }
         }));
     }

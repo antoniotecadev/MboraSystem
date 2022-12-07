@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButtonProduto.setOnClickListener(v -> entrarProdutosLx());
 
-        binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendasLx());
+        binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendas(true));
 
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
@@ -150,8 +150,7 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
                     break;
                 case R.id.vendaFragmentH:
-                    bundle.putParcelable("cliente", cliente);
-                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
+                    entrarVendas(false);
                     break;
                 case R.id.listaClienteFragmentH:
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
@@ -165,14 +164,14 @@ public class HomeFragment extends Fragment {
                 case R.id.facturaFragmentH:
                     entrarFacturacao();
                     break;
+                case R.id.vendaFragmentNotaCredito:
+                    entrarVendas(true);
+                    break;
                 case R.id.categoriaProdutoFragmentLx:
                     entrarCategoriasLx();
                     break;
                 case R.id.produtoFragmentLx:
                     entrarProdutosLx();
-                    break;
-                case R.id.vendaFragmentLx:
-                    entrarVendasLx();
                     break;
                 case R.id.documentoFragmentMenu:
                     requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -194,8 +193,7 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnVenda.setOnClickListener(v -> {
-            bundle.putParcelable("cliente", cliente);
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_vendaFragment, isUserMaster());
+            entrarVendas(false);
         });
 
         binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster()));
@@ -444,10 +442,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void entrarVendasLx() {
+    private void entrarVendas(boolean isNotaCredito) {
         if (getArguments() != null) {
             MainActivity.getProgressBar();
-            HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment().setIsLixeira(true).setIsMaster(getArguments().getBoolean("master"));
+            HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(getArguments().getBoolean("master"));
             Navigation.findNavController(requireView()).navigate(direction);
         }
     }

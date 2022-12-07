@@ -176,7 +176,7 @@ public class UsuarioFragment extends Fragment {
         }
 
         private void verVendas(Usuario us) {
-            UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment().setIdusuario(us.getId()).setNomeUsuario(us.getNome());
+            UsuarioFragmentDirections.ActionUsuarioFragmentToVendaFragment direction = UsuarioFragmentDirections.actionUsuarioFragmentToVendaFragment(null).setIdusuario(us.getId()).setNomeUsuario(us.getNome());
             Navigation.findNavController(requireView()).navigate(direction);
         }
 
