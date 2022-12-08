@@ -137,7 +137,7 @@ public class CriarFactura {
             if (isAnulado) {
                 addLineSpace(document);
                 addLineSpace(document);
-                addNewItem(document, "________________________________\n(Assinarura do Cliente)", Element.ALIGN_CENTER, font);
+                addNewItem(document, "________________________________\n(Assinatura do Cliente)", Element.ALIGN_CENTER, font);
                 addLineSpace(document);
                 addLineSpace(document);
             } else {
