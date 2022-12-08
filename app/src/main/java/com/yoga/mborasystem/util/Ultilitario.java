@@ -1326,7 +1326,7 @@ public class Ultilitario {
         return "";
     }
 
-    public static String getDataEmissao(String dataEmissao) {
-        return (dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) : getDataFormatMonth(dataEmissao)) + " " + TextUtils.split(Ultilitario.getDateCurrent(), "-")[3];
+    public static String getDataEmissao(Context context) {
+        return getValueSharedPreferences(context, "dataemissao", "");
     }
 }

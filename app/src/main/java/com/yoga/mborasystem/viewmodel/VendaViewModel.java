@@ -3,6 +3,8 @@ package com.yoga.mborasystem.viewmodel;
 import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -10,6 +12,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -238,7 +241,7 @@ public class VendaViewModel extends AndroidViewModel {
                     public void onComplete() {
                         int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - ((venda.getValor_iva() * venda.getPercentagemDesconto()) / 100);
                         int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : venda.getTotal_venda() - ((venda.getTotal_venda() * venda.getPercentagemDesconto()) / 100);
-                        String hashVendaLast = Ultilitario.getValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", "");
+                        String hashVendaLast = getValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", "");
                         String vd = getDataFormatMonth(venda.getData_cria()) + ";" + venda.getData_cria_hora() + ";" + venda.getReferenciaFactura() + "/" + idvenda + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
                         try {
                             String hashVenda = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(context, "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(context, "public_key.der").getAbsolutePath()));
@@ -247,6 +250,7 @@ public class VendaViewModel extends AndroidViewModel {
                             else {
                                 insertHashVenda(context, hashVenda.trim(), idvenda);
                             }
+                            setValueSharedPreferences(context, "dataemissao", getDataFormatMonth(venda.getData_cria()) + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
                         } catch (Exception e) {
                             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
                         }
@@ -268,7 +272,7 @@ public class VendaViewModel extends AndroidViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    Ultilitario.setValueSharedPreferences(context, "hashvenda", hashVenda);
+                    setValueSharedPreferences(context, "hashvenda", hashVenda);
                     getGuardarPdfLiveData().setValue(new Event<>(idvenda));
                 }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
     }
