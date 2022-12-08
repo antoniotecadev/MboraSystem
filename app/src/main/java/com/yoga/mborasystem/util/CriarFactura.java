@@ -134,9 +134,17 @@ public class CriarFactura {
             if (!iban.isEmpty())
                 addNewItem(document, "IBAN: " + iban, Element.ALIGN_LEFT, font);
             addLineSeparator(document);
-            addNewItem(document, "Os bens/serviços foram colocados a disposição do adquirente na data de " + getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + " e endereço de emissão do documento.", Element.ALIGN_LEFT, font);
-            addLineSpace(document);
-            addNewItem(document, "Obs: Para devolução consulte as normas internas.", Element.ALIGN_CENTER, font);
+            if (isAnulado) {
+                addLineSpace(document);
+                addLineSpace(document);
+                addNewItem(document, "________________________________\n(Assinarura do Cliente)", Element.ALIGN_CENTER, font);
+                addLineSpace(document);
+                addLineSpace(document);
+            } else {
+                addNewItem(document, "Os bens/serviços foram colocados a disposição do adquirente na data do documento.", Element.ALIGN_LEFT, font);
+                addLineSpace(document);
+                addNewItem(document, "Obs: Para devolução consulte as normas internas.", Element.ALIGN_CENTER, font);
+            }
             if (!textorodape.isEmpty()) {
                 addNewItem(document, textorodape, Element.ALIGN_CENTER, font);
                 addLineSeparator(document);
