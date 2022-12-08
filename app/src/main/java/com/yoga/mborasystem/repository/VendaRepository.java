@@ -32,18 +32,18 @@ public class VendaRepository {
         return vendaDao.insertVendaProduto(venda, produtos, precoTotalUnit);
     }
 
-    public PagingSource<Integer, Venda> getVendas(long idcliente, boolean isDivida, long idusuario, boolean isLixeira, boolean isPesquisa, String referencia, boolean isData, String data) {
+    public PagingSource<Integer, Venda> getVendas(long idcliente, boolean isDivida, long idusuario, boolean isNotaCredito, boolean isPesquisa, String referencia, boolean isData, String data) {
         if (isData) {
-            if (isLixeira)
-                return vendaDao.getVendasLixeira(data);
+            if (isNotaCredito)
+                return vendaDao.getVendasNotaCredito(data);
             else
                 return vendaDao.getVendas(data, idcliente, isDivida, idusuario);
         } else {
-            if (isLixeira) {
+            if (isNotaCredito) {
                 if (isPesquisa)
-                    return vendaDao.searchVendasLixeira(referencia);
+                    return vendaDao.searchVendasNotaCredito(referencia);
                 else
-                    return vendaDao.getVendasLixeira();
+                    return vendaDao.getVendasNotaCredito();
             } else {
                 if (isPesquisa)
                     return vendaDao.getSearchVendas(referencia, idcliente, isDivida, idusuario);
@@ -53,15 +53,15 @@ public class VendaRepository {
         }
     }
 
-    public LiveData<Long> getQuantidadeVenda(boolean isLixeira, long idcliente, boolean isDivida, long idusuario, boolean isData, String data) {
+    public LiveData<Long> getQuantidadeVenda(boolean isNotaCredito, long idcliente, boolean isDivida, long idusuario, boolean isData, String data) {
         if (isData) {
-            if (isLixeira)
-                return vendaDao.getVendasLixeiraCount(data);
+            if (isNotaCredito)
+                return vendaDao.getVendasNotaCreditoCount(data);
             else
                 return vendaDao.getVendasCount(data, idcliente, isDivida, idusuario);
         } else {
-            if (isLixeira)
-                return vendaDao.getVendasLixeiraCount();
+            if (isNotaCredito)
+                return vendaDao.getVendasNotaCreditoCount();
             else
                 return vendaDao.getVendasCount(idcliente, isDivida, idusuario);
         }

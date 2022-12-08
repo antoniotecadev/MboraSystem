@@ -109,16 +109,16 @@ public abstract class VendaDao {
     abstract void setDivida(int divida, long idvenda);
 
     @Query("SELECT * FROM vendas WHERE estado = 3 ORDER BY id DESC")
-    abstract PagingSource<Integer, Venda> getVendaLixeira();
+    abstract PagingSource<Integer, Venda> getVendaNotaCredito();
 
-    @Query("SELECT * FROM vendas WHERE estado = 3 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
-    public abstract PagingSource<Integer, Venda> getVendasLixeira(String data);
+    @Query("SELECT * FROM vendas WHERE estado = 3 AND data_cria_NC LIKE '%' || :data || '%' ORDER BY id DESC")
+    public abstract PagingSource<Integer, Venda> getVendasNotaCredito(String data);
 
-    @Query("SELECT COUNT(id) FROM vendas WHERE estado = 3 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
-    public abstract LiveData<Long> getVendasLixeiraCount(String data);
+    @Query("SELECT COUNT(id) FROM vendas WHERE estado = 3 AND data_cria_NC LIKE '%' || :data || '%' ORDER BY id DESC")
+    public abstract LiveData<Long> getVendasNotaCreditoCount(String data);
 
-    @Query("SELECT * FROM vendas WHERE estado = 3 AND referenciaFactura LIKE '%' || :referencia || '%'")
-    abstract PagingSource<Integer, Venda> searchVendaLixeira(String referencia);
+    @Query("SELECT * FROM vendas WHERE estado = 3 AND referenciaNC LIKE '%' || :refNC || '%'")
+    abstract PagingSource<Integer, Venda> searchVendaNotaCredito(String refNC);
 
     @Delete
     abstract void deleteVenda(Venda venda);
@@ -179,7 +179,7 @@ public abstract class VendaDao {
     public abstract void updateReferencia(String ref, long idvenda);
 
     @Query("SELECT COUNT(id) FROM vendas  WHERE estado = 3")
-    public abstract LiveData<Long> getVendasLixeiraCount();
+    public abstract LiveData<Long> getVendasNotaCreditoCount();
 
     @Query("SELECT * FROM vendas WHERE estado != 3 ORDER BY id DESC")
     public abstract Maybe<List<Venda>> getVendasDashboard();
@@ -318,12 +318,12 @@ public abstract class VendaDao {
         return getVendaVaziaCount();
     }
 
-    public PagingSource<Integer, Venda> getVendasLixeira() {
-        return getVendaLixeira();
+    public PagingSource<Integer, Venda> getVendasNotaCredito() {
+        return getVendaNotaCredito();
     }
 
-    public PagingSource<Integer, Venda> searchVendasLixeira(String referencia) {
-        return searchVendaLixeira(referencia);
+    public PagingSource<Integer, Venda> searchVendasNotaCredito(String refNC) {
+        return searchVendaNotaCredito(refNC);
     }
 
     public void deleteVendas(Venda venda) {

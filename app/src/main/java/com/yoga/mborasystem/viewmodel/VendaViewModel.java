@@ -295,8 +295,8 @@ public class VendaViewModel extends AndroidViewModel {
         });
     }
 
-    public void consultarVendas(LifecycleOwner lifecycleOwner, long idcliente, boolean isDivida, long idusuario, boolean isLixeira, boolean isPesquisa, String referencia, boolean isData, String data) {
-        Flowable<PagingData<Venda>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> vendaRepository.getVendas(idcliente, isDivida, idusuario, isLixeira, isPesquisa, referencia, isData, data)));
+    public void consultarVendas(LifecycleOwner lifecycleOwner, long idcliente, boolean isDivida, long idusuario, boolean isNotaCredito, boolean isPesquisa, String referencia, boolean isData, String data) {
+        Flowable<PagingData<Venda>> flowable = PagingRx.getFlowable(new Pager<>(new PagingConfig(20), () -> vendaRepository.getVendas(idcliente, isDivida, idusuario, isNotaCredito, isPesquisa, referencia, isData, data)));
         PagingRx.cachedIn(flowable, ViewModelKt.getViewModelScope(this));
         flowable.to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
                 .subscribe(vendas -> {
@@ -319,8 +319,8 @@ public class VendaViewModel extends AndroidViewModel {
                 }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
-    public LiveData<Long> getQuantidadeVenda(boolean isLixeira, long idcliente, boolean isDivida, long idusuario, boolean isData, String data, LifecycleOwner lifecycleOwner) {
-        vendaRepository.getQuantidadeVenda(isLixeira, idcliente, isDivida, idusuario, isData, data).observe(lifecycleOwner, quantidade -> getQuantidadeVenda().setValue(quantidade));
+    public LiveData<Long> getQuantidadeVenda(boolean isNotaCredito, long idcliente, boolean isDivida, long idusuario, boolean isData, String data, LifecycleOwner lifecycleOwner) {
+        vendaRepository.getQuantidadeVenda(isNotaCredito, idcliente, isDivida, idusuario, isData, data).observe(lifecycleOwner, quantidade -> getQuantidadeVenda().setValue(quantidade));
         return null;
     }
 
