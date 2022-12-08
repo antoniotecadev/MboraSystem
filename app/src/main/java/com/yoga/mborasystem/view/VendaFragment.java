@@ -631,7 +631,6 @@ public class VendaFragment extends Fragment {
 
     private void imprimirFacturaNotaCredito(Venda vd, boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia) {
         pTtU = new HashMap<>();
-        Produto pd = new Produto();
         Map<Long, Produto> pds = new HashMap<>();
         vendaViewModel.getProdutosVenda(vd.getId(), vd.getCodigo_qr(), null, false, false, null);
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
@@ -639,6 +638,7 @@ public class VendaFragment extends Fragment {
                 Toast.makeText(requireContext(), getString(R.string.produto_nao_encontrada), Toast.LENGTH_SHORT).show();
             else {
                 for (ProdutoVenda pv : produtos) {
+                    Produto pd = new Produto();
                     pd.setId(pv.getId());
                     pd.setNome(pv.getNome_produto());
                     pd.setTipo(pv.getTipo());
