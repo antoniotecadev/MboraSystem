@@ -226,6 +226,8 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
+        venda.setReferenciaNC("");
+        venda.setMotivoEmissaoNC("");
         String hora = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         venda.setData_cria_hora(dataEmissao.isEmpty() ? getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + "T" + hora : (getDataFormatMonth(dataEmissao) + "T" + hora).trim());
         Completable.fromAction(() -> idvenda = vendaRepository.insert(venda, produtos, precoTotalUnit))
@@ -391,7 +393,8 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void vendaNotaCredito(int estado, String refNC, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
+    public void vendaNotaCredito(int estado, String motivoEmissaoNC, String refNC, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
+        venda.setMotivoEmissaoNC(motivoEmissaoNC);
         venda.setReferenciaNC(refNC);
         venda.setData_cria_NC(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
         String hora = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());

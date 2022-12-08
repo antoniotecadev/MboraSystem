@@ -484,17 +484,21 @@ public class VendaFragment extends Fragment {
             final TextInputEditText editText = new TextInputEditText(requireContext());
             final Button limpar = new Button(requireContext());
             limpar.setText(getText(R.string.limpar));
-            editText.setHint(getString(R.string.valor_kwanza));
-            editText.setMaxLines(1);
-            Ultilitario.precoFormat(getContext(), editText);
-            editText.setText(String.valueOf(venda.getDivida()));
+            if (isliquidar) {
+                editText.setMaxLines(1);
+                editText.setHint(getString(R.string.valor_kwanza));
+                Ultilitario.precoFormat(getContext(), editText);
+                editText.setText(String.valueOf(venda.getDivida()));
+                limpar.setOnClickListener(view -> Ultilitario.zerarPreco(editText));
+            } else {
+                editText.setMaxLines(3);
+                editText.setHint(getString(R.string.mt_nt_ct));
+                limpar.setOnClickListener(view -> editText.setText(""));
+                alert.setIcon(R.drawable.ic_baseline_dry_24);
+            }
             layout.addView(editText);
             layout.addView(limpar);
-            limpar.setOnClickListener(view -> Ultilitario.zerarPreco(editText));
-            if (isliquidar)
-                alert.setView(layout);
-            else
-                alert.setIcon(R.drawable.ic_baseline_dry_24);
+            alert.setView(layout);
             alert.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         if (isliquidar) {
                             if (editText.length() < 15) {
@@ -506,10 +510,15 @@ public class VendaFragment extends Fragment {
                             } else
                                 Ultilitario.alertDialog(titulo, getString(R.string.vl_inv), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } else {
-                            vendaViewModel.crud = true;
-                            setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
-                            String refNC = "NC " + TextUtils.split(getDateCurrent(), "-")[2].trim() + "/" + getIntPreference(requireContext(), "numeroserienc");
-                            vendaViewModel.vendaNotaCredito(3, refNC, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
+                            if (editText.getText().toString().trim().isEmpty()) {
+                                caixaDialogo(getString(R.string.nt_ct), getString(R.string.emt_nt_cd) + ":\n" + venda.getReferenciaFactura(), false, false, venda);
+                                Toast.makeText(requireContext(), getString(R.string.mt_nt_ct), Toast.LENGTH_SHORT).show();
+                            } else {
+                                vendaViewModel.crud = true;
+                                setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
+                                String refNC = "NC " + TextUtils.split(getDateCurrent(), "-")[2].trim() + "/" + getIntPreference(requireContext(), "numeroserienc");
+                                vendaViewModel.vendaNotaCredito(3, editText.getText().toString(), refNC, Ultilitario.monthInglesFrances(getDateCurrent()), venda, permanente, false);
+                            }
                         }
                     }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
@@ -527,6 +536,7 @@ public class VendaFragment extends Fragment {
         public boolean areContentsTheSame(@NonNull Venda oldItem, @NonNull Venda newItem) {
             return oldItem.getId() == newItem.getId();
         }
+
     }
 
     private void exportarVenda() {
@@ -549,7 +559,7 @@ public class VendaFragment extends Fragment {
             if (isEliminar) {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                     vendaViewModel.crud = true;
-                    vendaViewModel.vendaNotaCredito(0, "", null, null, false, true);
+                    vendaViewModel.vendaNotaCredito(0, "", "", null, null, false, true);
                 });
             } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
@@ -663,7 +673,7 @@ public class VendaFragment extends Fragment {
                 String facturaPath = ref.replace("/", "_") + ".pdf";
                 String dataCria = isAnulado ? vd.getData_cria_NC() : vd.getData_cria();
                 String dataCriaHora = isAnulado ? vd.getData_cria_hora_NC() : vd.getData_cria_hora();
-                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, isAnuladoSegundaVia, vd.getReferenciaFactura(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(dataCria) + " " + TextUtils.split(dataCriaHora, "T")[1], ref);
+                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, isAnuladoSegundaVia, vd.getMotivoEmissaoNC(), vd.getReferenciaFactura(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(dataCria) + " " + TextUtils.split(dataCriaHora, "T")[1], ref);
                 printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
                 VendaFragmentDirections.ActionVendaFragmentSelf dirSelf = VendaFragmentDirections.actionVendaFragmentSelf(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(isMaster);
                 Navigation.findNavController(requireView()).navigate(dirSelf);
