@@ -32,6 +32,9 @@ public class Venda implements Parcelable {
     private long idoperador;
     private String data_cria_hora;
     private String hashFR;
+    private String referenciaNC;
+    private String motivoEmissaoNC;
+    private String hashNC;
 
     public Venda(Parcel in) {
         id = in.readLong();
@@ -228,6 +231,30 @@ public class Venda implements Parcelable {
 
     public void setHashFR(String hashFR) {
         this.hashFR = hashFR;
+    }
+
+    public String getReferenciaNC() {
+        return referenciaNC;
+    }
+
+    public void setReferenciaNC(String referenciaNC) {
+        this.referenciaNC = referenciaNC;
+    }
+
+    public String getMotivoEmissaoNC() {
+        return motivoEmissaoNC;
+    }
+
+    public void setMotivoEmissaoNC(String motivoEmissaoNC) {
+        this.motivoEmissaoNC = motivoEmissaoNC;
+    }
+
+    public String getHashNC() {
+        return hashNC;
+    }
+
+    public void setHashNC(String hashNC) {
+        this.hashNC = hashNC;
     }
 
     @Override
