@@ -71,7 +71,6 @@ import java.util.concurrent.Executors;
 public class CadastrarClienteFragment extends Fragment {
 
     private String imei;
-    private Query query;
     private ExecutorService executor;
     private DatabaseReference mDatabase;
     private String errorClienteUser = "";
@@ -84,7 +83,6 @@ public class CadastrarClienteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
-//        query = FirebaseDatabase.getInstance().getReference("parceiros").limitToLast(1);
         cancellationTokenSource = new CancellationTokenSource();
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
@@ -92,40 +90,6 @@ public class CadastrarClienteFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-//        query.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                if (snapshot.exists()) {
-//                    Cliente cliente = snapshot.getValue(Cliente.class);
-//                    Log.i("cliente", cliente.getImei() + "");
-//                    Toast.makeText(requireActivity(), cliente.getImei(), Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(requireActivity(), "Vazio", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(requireActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-
         return criarCliente(inflater, container);
     }
 
