@@ -107,7 +107,7 @@ public class VendaRepository {
             if (isLixeira)
                 vendaDao.deleteVendas(venda);
             else
-                vendaDao.notaCreditoVenda(estado, venda.getCodigo_qr(), venda.getData_cria(), venda.getData_cria_hora(), Ultilitario.monthInglesFrances(data), venda.getId());
+                vendaDao.notaCreditoVenda(estado, venda.getReferenciaFactura(), venda.getData_cria(), venda.getData_cria_hora(), Ultilitario.monthInglesFrances(data), venda.getId());
         }
     }
 

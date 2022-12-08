@@ -8,7 +8,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 @Keep
-@Entity(tableName = "vendas", indices = {@Index(value = {"codigo_qr", "data_cria", "idclicant", "idoperador"})})
+@Entity(tableName = "vendas", indices = {@Index(value = {"referenciaFactura", "data_cria", "idclicant", "idoperador"})})
 public class Venda implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
@@ -18,7 +18,7 @@ public class Venda implements Parcelable {
     private int percentagemDesconto;
     private int quantidade;
     private int valor_base;
-    private String codigo_qr;
+    private String referenciaFactura;
     private int valor_iva;
     private String pagamento;
     private int total_desconto;
@@ -34,13 +34,14 @@ public class Venda implements Parcelable {
     private String hash;
 
 
+
     public Venda(Parcel in) {
         id = in.readLong();
         nome_cliente = in.readString();
         desconto = in.readInt();
         quantidade = in.readInt();
         valor_base = in.readInt();
-        codigo_qr = in.readString();
+        referenciaFactura = in.readString();
         valor_iva = in.readInt();
         pagamento = in.readString();
         total_desconto = in.readInt();
@@ -135,12 +136,12 @@ public class Venda implements Parcelable {
         this.valor_base = valor_base;
     }
 
-    public String getCodigo_qr() {
-        return codigo_qr;
+    public String getReferenciaFactura() {
+        return referenciaFactura;
     }
 
-    public void setCodigo_qr(String codigo_qr) {
-        this.codigo_qr = codigo_qr;
+    public void setReferenciaFactura(String referenciaFactura) {
+        this.referenciaFactura = referenciaFactura;
     }
 
     public int getValor_iva() {
@@ -243,7 +244,7 @@ public class Venda implements Parcelable {
         dest.writeInt(desconto);
         dest.writeInt(quantidade);
         dest.writeInt(valor_base);
-        dest.writeString(codigo_qr);
+        dest.writeString(referenciaFactura);
         dest.writeInt(valor_iva);
         dest.writeString(pagamento);
         dest.writeInt(total_desconto);

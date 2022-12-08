@@ -220,7 +220,7 @@ public class VendaFragment extends Fragment {
                 Ultilitario.showToast(getContext(), Color.parseColor("#795548"), getString(R.string.nao_tem_venda), R.drawable.ic_toast_erro);
             else {
                 for (Venda venda : vendas)
-                    dt.append(venda.getNome_cliente()).append(",").append(venda.getCodigo_qr()).append(",").append(venda.getQuantidade()).append(",").append(venda.getTotal_venda()).append(",").append(venda.getDesconto()).append(",").append(venda.getTotal_desconto()).append(",").append(venda.getValor_pago()).append(",").append(venda.getDivida()).append(",").append(venda.getValor_base()).append(",").append(venda.getValor_iva()).append(",").append(venda.getPagamento()).append(",").append(venda.getData_cria_hora()).append(",").append(venda.getIdoperador()).append(",").append(venda.getIdclicant()).append(",").append(venda.getData_elimina()).append(",").append(venda.getEstado()).append(",").append(venda.getPercentagemDesconto()).append("\n");
+                    dt.append(venda.getNome_cliente()).append(",").append(venda.getReferenciaFactura()).append(",").append(venda.getQuantidade()).append(",").append(venda.getTotal_venda()).append(",").append(venda.getDesconto()).append(",").append(venda.getTotal_desconto()).append(",").append(venda.getValor_pago()).append(",").append(venda.getDivida()).append(",").append(venda.getValor_base()).append(",").append(venda.getValor_iva()).append(",").append(venda.getPagamento()).append(",").append(venda.getData_cria_hora()).append(",").append(venda.getIdoperador()).append(",").append(venda.getIdclicant()).append(",").append(venda.getData_elimina()).append(",").append(venda.getEstado()).append(",").append(venda.getPercentagemDesconto()).append("\n");
 
                 dataBuilder = dt;
                 if (isLocal) {
@@ -364,7 +364,7 @@ public class VendaFragment extends Fragment {
                     h.binding.textDivida.setBackgroundColor(Color.RED);
 
                 h.binding.textCliente.setText(TextUtils.split(venda.getNome_cliente(), "-")[0]);
-                h.binding.textReferencia.setText(venda.getCodigo_qr());
+                h.binding.textReferencia.setText(venda.getReferenciaFactura());
                 h.binding.textQtProd.setText(String.valueOf(venda.getQuantidade()));
                 h.binding.textTotVend.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
                 h.binding.textView27.setText(getString(R.string.desconto) + "(" + venda.getPercentagemDesconto() + "%)");
@@ -382,14 +382,14 @@ public class VendaFragment extends Fragment {
                 }
                 h.binding.textOper.setText((venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA0"));
                 h.binding.btnEntrar.setOnClickListener(v -> {
-                    VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                    VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getReferenciaFactura()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                     Navigation.findNavController(requireView()).navigate(directions);
                 });
                 h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                    menu.setHeaderTitle(venda.getCodigo_qr());
+                    menu.setHeaderTitle(venda.getReferenciaFactura());
                     if (!isNotaCredito) {
                         menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
-                            VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getCodigo_qr()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
+                            VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getReferenciaFactura()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
                             Navigation.findNavController(requireView()).navigate(directions);
                             return false;
                         });//groupId, itemId, order, title
@@ -399,22 +399,22 @@ public class VendaFragment extends Fragment {
                                 return false;
                             });
                             menu.add(getString(R.string.anular)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(getString(R.string.nt_ct), getString(R.string.emt_nt_cd) + ":\n" + venda.getCodigo_qr(), false, false, venda);
+                                caixaDialogo(getString(R.string.nt_ct), getString(R.string.emt_nt_cd) + ":\n" + venda.getReferenciaFactura(), false, false, venda);
                                 return false;
                             });
                             menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
                                 if (venda.getDivida() == 0)
                                     Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
                                 else
-                                    caixaDialogo(getString(R.string.liq_div) + " (" + venda.getCodigo_qr() + ")", getString(R.string.enc_div_vend), true, false, venda);
+                                    caixaDialogo(getString(R.string.liq_div) + " (" + venda.getReferenciaFactura() + ")", getString(R.string.enc_div_vend), true, false, venda);
                                 return false;
                             });
 //                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-//                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
+//                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
 //                                    return false;
 //                                });
                             menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getCodigo_qr() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
+                                caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
                                 return false;
                             });
                         }
@@ -425,7 +425,7 @@ public class VendaFragment extends Fragment {
                         });
 //                            if (isMaster) {
 //                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
-//                                    restaurarVenda(venda.getCodigo_qr(), venda.getId());
+//                                    restaurarVenda(venda.getReferenciaFactura(), venda.getId());
 //                                    return false;
 //                                });
 //                                menu.add(getString(R.string.eliminar)).setOnMenuItemClickListener(item -> {
@@ -452,7 +452,7 @@ public class VendaFragment extends Fragment {
 //            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
 //                    .setIcon(R.drawable.ic_baseline_delete_40)
 //                    .setTitle(getString(R.string.elim_vend))
-//                    .setMessage("(" + venda.getCodigo_qr() + ")\n" + msg)
+//                    .setMessage("(" + venda.getReferenciaFactura() + ")\n" + msg)
 //                    .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
 //                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
 //                        vendaViewModel.crud = true;
@@ -632,7 +632,7 @@ public class VendaFragment extends Fragment {
     private void imprimirFacturaNotaCredito(Venda vd, boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia) {
         pTtU = new HashMap<>();
         Map<Long, Produto> pds = new HashMap<>();
-        vendaViewModel.getProdutosVenda(vd.getId(), vd.getCodigo_qr(), null, false, false, null);
+        vendaViewModel.getProdutosVenda(vd.getId(), vd.getReferenciaFactura(), null, false, false, null);
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
             if (produtos.isEmpty())
                 Toast.makeText(requireContext(), getString(R.string.produto_nao_encontrada), Toast.LENGTH_SHORT).show();
@@ -659,8 +659,8 @@ public class VendaFragment extends Fragment {
                 TextInputEditText desconto = new TextInputEditText(requireContext());
                 desconto.setText(String.valueOf(vd.getDesconto()));
                 int troco = vd.getValor_pago() - (vd.getTotal_venda() - vd.getDesconto());
-                String facturaPath = vd.getCodigo_qr().replace("/", "_") + ".pdf";
-                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, isAnuladoSegundaVia, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], vd.getCodigo_qr());
+                String facturaPath = vd.getReferenciaFactura().replace("/", "_") + ".pdf";
+                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, isAnuladoSegundaVia, vd.getReferenciaFactura(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], vd.getReferenciaFactura());
                 printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
                 VendaFragmentDirections.ActionVendaFragmentSelf dirSelf = VendaFragmentDirections.actionVendaFragmentSelf(cliente).setIsNotaCredito(isAnulado).setIsMaster(isMaster);
                 Navigation.findNavController(requireView()).navigate(dirSelf);

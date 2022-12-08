@@ -171,7 +171,7 @@ public class SaftXMLDocument {
         for (Venda vd : vendas) {
             Element invoice = doc.createElement("Invoice");
             salesInvoices.appendChild(invoice);
-            criarElemento(doc, "InvoiceNo", invoice, vd.getCodigo_qr());
+            criarElemento(doc, "InvoiceNo", invoice, vd.getReferenciaFactura());
 
             Element documentStatus = doc.createElement("DocumentStatus");
             invoice.appendChild(documentStatus);

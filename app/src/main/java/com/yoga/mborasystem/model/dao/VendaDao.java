@@ -45,16 +45,16 @@ public abstract class VendaDao {
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idclicant = :idcliente AND divida > 0  ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaCliDiv(long idcliente);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :referencia || '%'")
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND referenciaFactura LIKE '%' || :referencia || '%'")
     abstract PagingSource<Integer, Venda> searchVenda(String referencia);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%'")
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND referenciaFactura LIKE '%' || :referencia || '%'")
     abstract PagingSource<Integer, Venda> searchVendaDiv(String referencia);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND codigo_qr LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND referenciaFactura LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
     abstract PagingSource<Integer, Venda> searchVenda(String referencia, long idcliente);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND divida > 0 AND referenciaFactura LIKE '%' || :referencia || '%' AND idclicant = :idcliente")
     abstract PagingSource<Integer, Venda> searchVendaCliDiv(String referencia, long idcliente);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND data_cria LIKE '%' || :data || '%'")
@@ -117,13 +117,13 @@ public abstract class VendaDao {
     @Query("SELECT COUNT(id) FROM vendas WHERE estado = 3 AND data_cria LIKE '%' || :data || '%' ORDER BY id DESC")
     public abstract LiveData<Long> getVendasLixeiraCount(String data);
 
-    @Query("SELECT * FROM vendas WHERE estado = 3 AND codigo_qr LIKE '%' || :referencia || '%'")
+    @Query("SELECT * FROM vendas WHERE estado = 3 AND referenciaFactura LIKE '%' || :referencia || '%'")
     abstract PagingSource<Integer, Venda> searchVendaLixeira(String referencia);
 
     @Delete
     abstract void deleteVenda(Venda venda);
 
-    @Query("UPDATE vendas SET estado = :est, codigo_qr = :refNC , data_cria = :dataCria, data_cria_hora = :dataCriaHora, data_elimina = :data WHERE id = :id")
+    @Query("UPDATE vendas SET estado = :est, referenciaFactura = :refNC , data_cria = :dataCria, data_cria_hora = :dataCriaHora, data_elimina = :data WHERE id = :id")
     public abstract void notaCreditoVenda(int est, String refNC, String dataCria, String dataCriaHora, String data, long id);
 
     @Query("DELETE FROM vendas WHERE estado = :estado")
@@ -141,7 +141,7 @@ public abstract class VendaDao {
     @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idoperador = :idusuario")
     abstract LiveData<Long> getVendaUsuarioCount(long idusuario);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND referenciaFactura LIKE '%' || :referencia || '%' ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaUsuario(String referencia, long idusuario);
 
     @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0  ORDER BY id DESC")
@@ -156,7 +156,7 @@ public abstract class VendaDao {
     @Query("SELECT COUNT(id) FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0")
     abstract LiveData<Long> getVendaDivUsuarioCount(long idusuario);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND codigo_qr LIKE '%' || :referencia || '%' ORDER BY id DESC")
+    @Query("SELECT * FROM vendas WHERE estado != 3 AND idoperador = :idusuario AND divida > 0 AND referenciaFactura LIKE '%' || :referencia || '%' ORDER BY id DESC")
     abstract PagingSource<Integer, Venda> getVendaDivUsuario(String referencia, long idusuario);
 
     @Query("UPDATE vendas SET estado = :est WHERE id = :id")
@@ -175,7 +175,7 @@ public abstract class VendaDao {
             ", preco_fornecedor, iva, idvenda, nome_produto, data_cria, sum(quantidade) AS quantidade FROM produtosvendas WHERE data_cria = :data GROUP BY nome_produto ORDER BY sum(quantidade) ASC LIMIT 3")
     public abstract LiveData<List<ProdutoVenda>> getProdutoMenosVendido(String data);
 
-    @Query("UPDATE vendas SET codigo_qr = :ref WHERE id = :idvenda")
+    @Query("UPDATE vendas SET referenciaFactura = :ref WHERE id = :idvenda")
     public abstract void updateReferencia(String ref, long idvenda);
 
     @Query("SELECT COUNT(id) FROM vendas  WHERE estado = 3")
@@ -200,7 +200,7 @@ public abstract class VendaDao {
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {
         ProdutoVenda produtoVenda = new ProdutoVenda();
         long idvenda = insert(venda);
-        updateReferencia(venda.getCodigo_qr() + "/" + idvenda, idvenda);
+        updateReferencia(venda.getReferenciaFactura() + "/" + idvenda, idvenda);
         for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
             int quantidade = precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco();
             produtoVenda.setId(produto.getValue().getId());
@@ -341,7 +341,7 @@ public abstract class VendaDao {
             String[] vend = vd.split(",");
             venda.setId(0);
             venda.setNome_cliente(vend[0]);
-            venda.setCodigo_qr(vend[1]);
+            venda.setReferenciaFactura(vend[1]);
             venda.setQuantidade(Integer.parseInt(vend[2]));
             venda.setTotal_venda(Integer.parseInt(vend[3]));
             venda.setDesconto(Integer.parseInt(vend[4]));

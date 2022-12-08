@@ -212,7 +212,7 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setPercentagemDesconto(percentagemDesconto);
         venda.setQuantidade(quantidade);
         venda.setValor_base(valorBase);
-        venda.setCodigo_qr(referenciaFactura);
+        venda.setReferenciaFactura(referenciaFactura);
         venda.setValor_iva(valorIva);
         venda.setPagamento(formaPagamento);
         venda.setTotal_desconto(totalDesconto);
@@ -239,7 +239,7 @@ public class VendaViewModel extends AndroidViewModel {
                         int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - ((venda.getValor_iva() * venda.getPercentagemDesconto()) / 100);
                         int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : venda.getTotal_venda() - ((venda.getTotal_venda() * venda.getPercentagemDesconto()) / 100);
                         String hashVendaLast = Ultilitario.getValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", "");
-                        String vd = getDataFormatMonth(venda.getData_cria()) + ";" + venda.getData_cria_hora() + ";" + venda.getCodigo_qr() + "/" + idvenda + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
+                        String vd = getDataFormatMonth(venda.getData_cria()) + ";" + venda.getData_cria_hora() + ";" + venda.getReferenciaFactura() + "/" + idvenda + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
                         try {
                             String hashVenda = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(context, "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(context, "public_key.der").getAbsolutePath()));
                             if (hashVenda == null)
@@ -388,7 +388,7 @@ public class VendaViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void eliminarVendaNotaCredito(int estado, String refNC, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
-        venda.setCodigo_qr(refNC);
+        venda.setReferenciaFactura(refNC);
         venda.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
         String hora = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         venda.setData_cria_hora(getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + "T" + hora);
