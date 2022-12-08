@@ -320,7 +320,7 @@ public class VendaFragment extends Fragment {
             }
         }, getViewLifecycleOwner());
 
-        vendaViewModel.getPrintNCLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(venda -> imprimirFacturaNotaCredito(venda, false, true)));
+        vendaViewModel.getPrintNCLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(venda -> imprimirFacturaNotaCredito(venda, false, true, false)));
 
         return binding.getRoot();
     }
@@ -395,7 +395,7 @@ public class VendaFragment extends Fragment {
                         });//groupId, itemId, order, title
                         if (isMaster) {
                             menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
-                                imprimirFacturaNotaCredito(venda, true, false);
+                                imprimirFacturaNotaCredito(venda, true, false, false);
                                 return false;
                             });
                             menu.add(getString(R.string.anular)).setOnMenuItemClickListener(item -> {
@@ -420,7 +420,7 @@ public class VendaFragment extends Fragment {
                         }
                     } else {
                         menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
-                            imprimirFacturaNotaCredito(venda, false, true);
+                            imprimirFacturaNotaCredito(venda, false, true, true);
                             return false;
                         });
 //                            if (isMaster) {
@@ -629,7 +629,7 @@ public class VendaFragment extends Fragment {
         });
     }
 
-    private void imprimirFacturaNotaCredito(Venda vd, boolean isSegundaVia, boolean isAnulado) {
+    private void imprimirFacturaNotaCredito(Venda vd, boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia) {
         pTtU = new HashMap<>();
         Produto pd = new Produto();
         Map<Long, Produto> pds = new HashMap<>();
@@ -660,7 +660,7 @@ public class VendaFragment extends Fragment {
                 desconto.setText(String.valueOf(vd.getDesconto()));
                 int troco = vd.getValor_pago() - (vd.getTotal_venda() - vd.getDesconto());
                 String facturaPath = vd.getCodigo_qr().replace("/", "_") + ".pdf";
-                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], vd.getCodigo_qr());
+                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, isAnuladoSegundaVia, vd.getCodigo_qr(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(vd.getData_cria()) + " " + TextUtils.split(vd.getData_cria_hora(), "T")[1], vd.getCodigo_qr());
                 printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
                 VendaFragmentDirections.ActionVendaFragmentSelf dirSelf = VendaFragmentDirections.actionVendaFragmentSelf(cliente).setIsNotaCredito(isAnulado).setIsMaster(isMaster);
                 Navigation.findNavController(requireView()).navigate(dirSelf);
