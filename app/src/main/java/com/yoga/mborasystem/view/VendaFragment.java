@@ -509,7 +509,7 @@ public class VendaFragment extends Fragment {
                             vendaViewModel.crud = true;
                             setIntPreference(requireContext(), getIntPreference(requireContext(), "numeroserienc") + 1, "numeroserienc");
                             String refNC = "NC " + TextUtils.split(getDateCurrent(), "-")[2].trim() + "/" + getIntPreference(requireContext(), "numeroserienc");
-                            vendaViewModel.eliminarVendaNotaCredito(3, refNC, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
+                            vendaViewModel.vendaNotaCredito(3, refNC, Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()), venda, permanente, false);
                         }
                     }).setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
                     .show();
@@ -549,7 +549,7 @@ public class VendaFragment extends Fragment {
             if (isEliminar) {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                     vendaViewModel.crud = true;
-                    vendaViewModel.eliminarVendaNotaCredito(0, "", null, null, false, true);
+                    vendaViewModel.vendaNotaCredito(0, "", null, null, false, true);
                 });
             } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {

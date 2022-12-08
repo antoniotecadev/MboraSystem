@@ -387,12 +387,12 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void eliminarVendaNotaCredito(int estado, String refNC, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
-        venda.setReferenciaFactura(refNC);
-        venda.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+    public void vendaNotaCredito(int estado, String refNC, String data, Venda venda, boolean isLixeira, boolean eliminarTodasLixeira) {
+        venda.setReferenciaNC(refNC);
+        venda.setData_cria_NC(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
         String hora = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        venda.setData_cria_hora(getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + "T" + hora);
-        Completable.fromAction(() -> vendaRepository.eliminarVendaNotaCredito(estado, data, venda, isLixeira, eliminarTodasLixeira))
+        venda.setData_cria_hora_NC(getDataFormatMonth(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent())) + "T" + hora);
+        Completable.fromAction(() -> vendaRepository.vendaNotaCredito(estado, data, venda, isLixeira, eliminarTodasLixeira))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
