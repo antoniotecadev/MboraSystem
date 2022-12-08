@@ -393,15 +393,15 @@ public class VendaFragment extends Fragment {
                             Navigation.findNavController(requireView()).navigate(directions);
                             return false;
                         });//groupId, itemId, order, title
-                        menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
-                            imprimirFacturaNotaCredito(venda, true, false);
-                            return false;
-                        });
-                        menu.add(getString(R.string.anular)).setOnMenuItemClickListener(item -> {
-                            caixaDialogo(getString(R.string.nt_ct), getString(R.string.emt_nt_cd) + ":\n" + venda.getCodigo_qr(), false, false, venda);
-                            return false;
-                        });
                         if (isMaster) {
+                            menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
+                                imprimirFacturaNotaCredito(venda, true, false);
+                                return false;
+                            });
+                            menu.add(getString(R.string.anular)).setOnMenuItemClickListener(item -> {
+                                caixaDialogo(getString(R.string.nt_ct), getString(R.string.emt_nt_cd) + ":\n" + venda.getCodigo_qr(), false, false, venda);
+                                return false;
+                            });
                             menu.add(getString(R.string.liq_div)).setOnMenuItemClickListener(item -> {
                                 if (venda.getDivida() == 0)
                                     Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
