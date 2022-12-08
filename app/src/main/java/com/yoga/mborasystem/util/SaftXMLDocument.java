@@ -180,7 +180,7 @@ public class SaftXMLDocument {
             criarElemento(doc, "SourceID", documentStatus, String.valueOf(vd.getId()));
             criarElemento(doc, "SourceBilling", documentStatus, "P");
 
-            criarElemento(doc, "Hash", invoice, vd.getHash());
+            criarElemento(doc, "Hash", invoice, vd.getHashFR());
             criarElemento(doc, "HashControl", invoice, "1");
             criarElemento(doc, "Period", invoice, TextUtils.split(getDataFormatMonth(vd.getData_cria()), "-")[1].trim());
             criarElemento(doc, "InvoiceDate", invoice, getDataFormatMonth(vd.getData_cria()));

@@ -31,9 +31,7 @@ public class Venda implements Parcelable {
     private long idclicant;
     private long idoperador;
     private String data_cria_hora;
-    private String hash;
-
-
+    private String hashFR;
 
     public Venda(Parcel in) {
         id = in.readLong();
@@ -224,12 +222,12 @@ public class Venda implements Parcelable {
         this.data_cria_hora = data_cria_hora;
     }
 
-    public String getHash() {
-        return hash;
+    public String getHashFR() {
+        return hashFR;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setHashFR(String hashFR) {
+        this.hashFR = hashFR;
     }
 
     @Override
