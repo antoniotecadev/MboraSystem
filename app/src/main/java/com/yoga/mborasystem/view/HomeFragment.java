@@ -12,6 +12,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
+import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
@@ -112,7 +113,9 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
                     break;
                 case R.id.gerarQrCode:
-                    Ultilitario.setValueSharedPreferences(requireContext(), "hashvenda", "");
+//                    setIntPreference(requireContext(), 0, "numeroserienc");
+//                    setValueSharedPreferences(requireContext(), "hashvenda", "");
+//                    setValueSharedPreferences(requireContext(), "hashvendanc", "");
                     getQrCode();
                     break;
                 case R.id.sairApp:

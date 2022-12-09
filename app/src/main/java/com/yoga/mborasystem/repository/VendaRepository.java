@@ -126,7 +126,10 @@ public class VendaRepository {
         return vendaDao.getProdutoMenosVendido(data);
     }
 
-    public void insertHashVenda(String hashVenda, long idvenda) {
-        vendaDao.updateHashVenda(hashVenda, idvenda);
+    public void insertHashVenda(String hashVenda, long idvenda, boolean isHashNC) {
+        if (isHashNC)
+            vendaDao.updateHashVendaNC(hashVenda, idvenda);
+        else
+            vendaDao.updateHashVenda(hashVenda, idvenda);
     }
 }

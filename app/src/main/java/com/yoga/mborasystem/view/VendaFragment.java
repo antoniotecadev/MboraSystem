@@ -559,7 +559,8 @@ public class VendaFragment extends Fragment {
             if (isEliminar) {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {
                     vendaViewModel.crud = true;
-                    vendaViewModel.vendaNotaCredito(0, "", "", null, null, false, true);
+                    Venda venda = new Venda();
+                    vendaViewModel.vendaNotaCredito(0, "", "", null, venda, false, true);
                 });
             } else {
                 alert.setPositiveButton(getString(R.string.ok), (dialog1, which) -> {

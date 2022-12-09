@@ -131,9 +131,13 @@
                                                                 <xs:element ref="UnitOfMeasure" />
                                                                 <xs:element ref="UnitPrice" />
                                                                 <xs:element ref="TaxPointDate" />
+                                                                <xs:element minOccurs="0" maxOccurs="unbounded" name="References" type="References" />
                                                                 <xs:element ref="Description" />
                                                                 <xs:element name="ProductSerialNumber" type="ProductSerialNumber" minOccurs="0" />
-                                                                <xs:element ref="CreditAmount" />
+                                                                <xs:choice>
+                                                                    <xs:element ref="DebitAmount" />
+                                                                    <xs:element ref="CreditAmount" />
+                                                                </xs:choice>
                                                                 <xs:element name="Tax" type="Tax" />
                                                                 <xs:group ref="TaxExemptions" minOccurs="0" />
                                                                 <xs:element ref="SettlementAmount" />
@@ -569,8 +573,18 @@
         </xs:annotation>
     </xs:element>
     <xs:element name="TaxPointDate" type="SAFdateType" />
+    <xs:element name="Reference" type="SAFAOtextTypeMandatoryMax60Car" />
+    <xs:element name="Reason" type="SAFAOtextTypeMandatoryMax50Car" />
     <xs:element name="Description" type="SAFAOtextTypeMandatoryMax200Car" />
     <xs:element name="SerialNumber" type="SAFAOtextTypeMandatoryMax100Car" />
+    <xs:element name="DebitAmount" type="SAFmonetaryType">
+        <xs:annotation>
+            <xs:documentation>
+                Valor da linha, sem impostos, dos documentos a débito.
+                Este valor é deduzido dos descontos de linha e cabeçalho.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
     <xs:element name="CreditAmount" type="SAFmonetaryType">
         <xs:annotation>
             <xs:documentation>
@@ -916,6 +930,27 @@
                 </xs:annotation>
             </xs:element>
             <xs:element minOccurs="0" ref="OrderDate" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- Estrutura de referencias a outros documentos em documentos retificativos de faturas-->
+    <xs:complexType name="References">
+        <xs:annotation>
+            <xs:documentation>
+                Referências a facturas nos documentos rectificativos destas.
+                Existindo a necessidade de efectuar mais do que uma referência, esta estrutura poderá ser gerada tantas vezes quantas as necessárias.
+                O preenchimento é obrigatório, quando o campo 4.1.4.8. for preenchido com “NC” – Nota de crédito
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" ref="Reference">
+                <xs:annotation>
+                    <xs:documentation>
+                        Referência à factura, através de identificação única da mesma, nos sistemas em que exista.
+                        Deve ser utilizada a estrutura de numeração do campo de origem.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" ref="Reason" />
         </xs:sequence>
     </xs:complexType>
     <!-- TIPOS DE DADOS BASE SAFT OCDE-->

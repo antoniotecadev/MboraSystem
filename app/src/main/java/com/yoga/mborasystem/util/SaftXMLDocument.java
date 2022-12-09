@@ -157,34 +157,37 @@ public class SaftXMLDocument {
 
         Element sourceDocuments = doc.createElement("SourceDocuments");
         rootElement.appendChild(sourceDocuments);
-        int totalCredit = 0;
+        int totalCredit = 0, totalDebit = 0;
 
         for (Venda vd : vendas)
-            totalCredit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
+            if (vd.getEstado() == 3)
+                totalDebit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
+            else
+                totalCredit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
 
         Element salesInvoices = doc.createElement("SalesInvoices");
         sourceDocuments.appendChild(salesInvoices);
         criarElemento(doc, "NumberOfEntries", salesInvoices, String.valueOf(vendas.size()));
-        criarElemento(doc, "TotalDebit", salesInvoices, "0.00");
+        criarElemento(doc, "TotalDebit", salesInvoices, formatarValor(totalDebit));
         criarElemento(doc, "TotalCredit", salesInvoices, formatarValor(totalCredit));
 
         for (Venda vd : vendas) {
             Element invoice = doc.createElement("Invoice");
             salesInvoices.appendChild(invoice);
-            criarElemento(doc, "InvoiceNo", invoice, vd.getReferenciaFactura());
+            criarElemento(doc, "InvoiceNo", invoice, vd.getEstado() == 3 ? vd.getReferenciaNC() : vd.getReferenciaFactura());
 
             Element documentStatus = doc.createElement("DocumentStatus");
             invoice.appendChild(documentStatus);
             criarElemento(doc, "InvoiceStatus", documentStatus, "N");
-            criarElemento(doc, "InvoiceStatusDate", documentStatus, vd.getData_cria_hora());
+            criarElemento(doc, "InvoiceStatusDate", documentStatus, vd.getEstado() == 3 ? vd.getData_cria_hora_NC() : vd.getData_cria_hora());
             criarElemento(doc, "SourceID", documentStatus, String.valueOf(vd.getId()));
             criarElemento(doc, "SourceBilling", documentStatus, "P");
 
-            criarElemento(doc, "Hash", invoice, vd.getHashFR());
+            criarElemento(doc, "Hash", invoice, vd.getEstado() == 3 ? vd.getHashNC() : vd.getHashFR());
             criarElemento(doc, "HashControl", invoice, "1");
-            criarElemento(doc, "Period", invoice, TextUtils.split(getDataFormatMonth(vd.getData_cria()), "-")[1].trim());
-            criarElemento(doc, "InvoiceDate", invoice, getDataFormatMonth(vd.getData_cria()));
-            criarElemento(doc, "InvoiceType", invoice, "FR");
+            criarElemento(doc, "Period", invoice, TextUtils.split(getDataFormatMonth(vd.getEstado() == 3 ? vd.getData_cria_NC() : vd.getData_cria()), "-")[1].trim());
+            criarElemento(doc, "InvoiceDate", invoice, getDataFormatMonth(vd.getEstado() == 3 ? vd.getData_cria_NC() : vd.getData_cria()));
+            criarElemento(doc, "InvoiceType", invoice, vd.getEstado() == 3 ? "NC" : "FR");
 
             Element specialRegimes = doc.createElement("SpecialRegimes");
             invoice.appendChild(specialRegimes);
@@ -193,7 +196,7 @@ public class SaftXMLDocument {
             criarElemento(doc, "ThirdPartiesBillingIndicator", specialRegimes, "0");
 
             criarElemento(doc, "SourceID", invoice, String.valueOf(vd.getId()));
-            criarElemento(doc, "SystemEntryDate", invoice, vd.getData_cria_hora());
+            criarElemento(doc, "SystemEntryDate", invoice, vd.getEstado() == 3 ? vd.getData_cria_hora_NC() : vd.getData_cria_hora());
             criarElemento(doc, "CustomerID", invoice, String.valueOf(vd.getIdclicant() == 0 ? 1 : vd.getIdclicant()));
 
             Element shipTo = doc.createElement("ShipTo");
@@ -229,13 +232,21 @@ public class SaftXMLDocument {
                     criarElemento(doc, "Quantity", line, String.valueOf(pv.getQuantidade()));
                     criarElemento(doc, "UnitOfMeasure", line, pv.getUnidade());
                     criarElemento(doc, "UnitPrice", line, vd.getDesconto() > 0 ? formatarValor(precoUnitarioSemIVA - ((precoUnitarioSemIVA * vd.getPercentagemDesconto()) / 100)) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
-                    criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getData_cria()));
+                    criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getEstado() == 3 ? vd.getData_cria_NC() : vd.getData_cria()));
+                    if (vd.getEstado() == 3) {
+                        Element references = doc.createElement("References");
+                        line.appendChild(references);
+                        criarElemento(doc, "Reference", references, vd.getReferenciaFactura());
+                        criarElemento(doc, "Reason", references, vd.getMotivoEmissaoNC());
+                    }
                     criarElemento(doc, "Description", line, pv.getNome_produto().trim());
-
-                    int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
-
-                    criarElemento(doc, "CreditAmount", line, formatarValor(vd.getDesconto() > 0 ? creditAmount - ((creditAmount * vd.getPercentagemDesconto()) / 100) : creditAmount));
-
+                    if (vd.getEstado() == 3) {
+                        int debitAmount = precoUnitarioSemIVA * pv.getQuantidade();
+                        criarElemento(doc, "DebitAmount", line, formatarValor(vd.getDesconto() > 0 ? debitAmount - ((debitAmount * vd.getPercentagemDesconto()) / 100) : debitAmount));
+                    } else {
+                        int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
+                        criarElemento(doc, "CreditAmount", line, formatarValor(vd.getDesconto() > 0 ? creditAmount - ((creditAmount * vd.getPercentagemDesconto()) / 100) : creditAmount));
+                    }
                     Element tax = doc.createElement("Tax");
                     line.appendChild(tax);
                     criarElemento(doc, "TaxType", tax, pv.isIva() ? "IVA" : "NS");

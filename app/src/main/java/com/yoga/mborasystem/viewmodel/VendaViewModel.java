@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -250,7 +251,7 @@ public class VendaViewModel extends AndroidViewModel {
                             if (hashVenda == null)
                                 Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
                             else {
-                                insertHashVenda(context, hashVenda.trim(), idvenda);
+                                insertHashVenda(context, hashVenda.trim(), idvenda, false, null);
                             }
                             setValueSharedPreferences(context, "dataemissao", getDataFormatMonth(venda.getData_cria()) + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
                         } catch (Exception e) {
@@ -269,13 +270,18 @@ public class VendaViewModel extends AndroidViewModel {
                 });
     }
 
-    private void insertHashVenda(Context context, String hashVenda, long idvenda) {
-        compositeDisposable.add(Completable.fromAction(() -> vendaRepository.insertHashVenda(hashVenda, idvenda))
+    private void insertHashVenda(Context context, String hashVenda, long idvenda, boolean isHashNC, Venda vd) {
+        compositeDisposable.add(Completable.fromAction(() -> vendaRepository.insertHashVenda(hashVenda, idvenda, isHashNC))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    setValueSharedPreferences(context, "hashvenda", hashVenda);
-                    getGuardarPdfLiveData().setValue(new Event<>(idvenda));
+                    if (isHashNC) {
+                        setValueSharedPreferences(context, "hashvendanc", hashVenda);
+                        getPrintNCLiveData().setValue(new Event<>(vd));
+                    } else {
+                        setValueSharedPreferences(context, "hashvenda", hashVenda);
+                        getGuardarPdfLiveData().setValue(new Event<>(idvenda));
+                    }
                 }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
     }
 
@@ -412,8 +418,22 @@ public class VendaViewModel extends AndroidViewModel {
                     public void onComplete() {
                         if (isLixeira || eliminarTodasLixeira)
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
-                        else
-                            getPrintNCLiveData().setValue(new Event<>(venda));
+                        else {
+                            int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - ((venda.getValor_iva() * venda.getPercentagemDesconto()) / 100);
+                            int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : venda.getTotal_venda() - ((venda.getTotal_venda() * venda.getPercentagemDesconto()) / 100);
+                            String hashVendaLast = getValueSharedPreferences(getApplication().getApplicationContext(), "hashvendanc", "");
+                            String vd = getDataFormatMonth(venda.getData_cria_NC()) + ";" + venda.getData_cria_hora_NC() + ";" + venda.getReferenciaNC() + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
+                            try {
+                                String hashVendaNC = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(getApplication(), "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(getApplication(), "public_key.der").getAbsolutePath()));
+                                if (hashVendaNC == null)
+                                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
+                                else {
+                                    insertHashVenda(getApplication(), hashVendaNC.trim(), venda.getId(), true, venda);
+                                }
+                            } catch (Exception e) {
+                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
+                            }
+                        }
                     }
 
                     @Override

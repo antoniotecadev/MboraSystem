@@ -190,11 +190,14 @@ public abstract class VendaDao {
     @Query("UPDATE produtos SET quantidade = :quantidade WHERE id = :idproduto")
     public abstract void actualizarQuantidadeProduto(int quantidade, long idproduto);
 
-    @Query("SELECT * FROM vendas WHERE estado != 3 AND (data_cria BETWEEN :dataInicio AND :dataFim) ORDER BY id ASC")
+    @Query("SELECT * FROM vendas WHERE (data_cria BETWEEN :dataInicio AND :dataFim) ORDER BY id ASC")
     public abstract Maybe<List<Venda>> getVendaSaft(String dataInicio, String dataFim);
 
     @Query("UPDATE vendas SET hashFR = :hashVenda WHERE id = :idvenda")
     public abstract void updateHashVenda(String hashVenda, long idvenda);
+
+    @Query("UPDATE vendas SET hashNC = :hashVendaNC WHERE id = :idvenda")
+    public abstract void updateHashVendaNC(String hashVendaNC, long idvenda);
 
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {

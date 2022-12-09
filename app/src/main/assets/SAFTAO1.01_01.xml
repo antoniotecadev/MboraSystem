@@ -131,6 +131,10 @@
                     <UnitOfMeasure>UN</UnitOfMeasure>
                     <UnitPrice>123.45</UnitPrice>
                     <TaxPointDate>2012-12-13</TaxPointDate>
+                    <References>
+                        <Reference>FR 2022/1</Reference>
+                        <Reason>2022-11-28</Reason>
+                    </References>
                     <Description>str1234</Description>
                     <ProductSerialNumber>
                         <SerialNumber>str1234</SerialNumber>
