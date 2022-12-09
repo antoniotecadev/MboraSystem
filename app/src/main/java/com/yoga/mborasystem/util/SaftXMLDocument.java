@@ -25,6 +25,8 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +75,8 @@ public class SaftXMLDocument {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String[] dataHora = TextUtils.split(sdf.format(new Date()), " ");
+
+        List<Venda> notaCredito = new ArrayList<>();
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -157,37 +161,39 @@ public class SaftXMLDocument {
 
         Element sourceDocuments = doc.createElement("SourceDocuments");
         rootElement.appendChild(sourceDocuments);
-        int totalCredit = 0, totalDebit = 0;
+        int totalCredit = 0, totalDebit = 0, numNC = 0;
 
-        for (Venda vd : vendas)
-            if (vd.getEstado() == 3)
+        for (Venda vd : vendas) {
+            if (vd.getEstado() == 3) {
+                numNC += 1;
                 totalDebit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
-            else
-                totalCredit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
-
+            }
+            totalCredit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
+        }
         Element salesInvoices = doc.createElement("SalesInvoices");
         sourceDocuments.appendChild(salesInvoices);
-        criarElemento(doc, "NumberOfEntries", salesInvoices, String.valueOf(vendas.size()));
+        criarElemento(doc, "NumberOfEntries", salesInvoices, String.valueOf(vendas.size() + numNC));
         criarElemento(doc, "TotalDebit", salesInvoices, formatarValor(totalDebit));
         criarElemento(doc, "TotalCredit", salesInvoices, formatarValor(totalCredit));
 
         for (Venda vd : vendas) {
+            // FACTURA RECIBO
             Element invoice = doc.createElement("Invoice");
             salesInvoices.appendChild(invoice);
-            criarElemento(doc, "InvoiceNo", invoice, vd.getEstado() == 3 ? vd.getReferenciaNC() : vd.getReferenciaFactura());
+            criarElemento(doc, "InvoiceNo", invoice, vd.getReferenciaFactura());
 
             Element documentStatus = doc.createElement("DocumentStatus");
             invoice.appendChild(documentStatus);
             criarElemento(doc, "InvoiceStatus", documentStatus, "N");
-            criarElemento(doc, "InvoiceStatusDate", documentStatus, vd.getEstado() == 3 ? vd.getData_cria_hora_NC() : vd.getData_cria_hora());
+            criarElemento(doc, "InvoiceStatusDate", documentStatus, vd.getData_cria_hora());
             criarElemento(doc, "SourceID", documentStatus, String.valueOf(vd.getId()));
             criarElemento(doc, "SourceBilling", documentStatus, "P");
 
-            criarElemento(doc, "Hash", invoice, vd.getEstado() == 3 ? vd.getHashNC() : vd.getHashFR());
+            criarElemento(doc, "Hash", invoice, vd.getHashFR());
             criarElemento(doc, "HashControl", invoice, "1");
-            criarElemento(doc, "Period", invoice, TextUtils.split(getDataFormatMonth(vd.getEstado() == 3 ? vd.getData_cria_NC() : vd.getData_cria()), "-")[1].trim());
-            criarElemento(doc, "InvoiceDate", invoice, getDataFormatMonth(vd.getEstado() == 3 ? vd.getData_cria_NC() : vd.getData_cria()));
-            criarElemento(doc, "InvoiceType", invoice, vd.getEstado() == 3 ? "NC" : "FR");
+            criarElemento(doc, "Period", invoice, TextUtils.split(getDataFormatMonth(vd.getData_cria()), "-")[1].trim());
+            criarElemento(doc, "InvoiceDate", invoice, getDataFormatMonth(vd.getData_cria()));
+            criarElemento(doc, "InvoiceType", invoice, "FR");
 
             Element specialRegimes = doc.createElement("SpecialRegimes");
             invoice.appendChild(specialRegimes);
@@ -196,7 +202,7 @@ public class SaftXMLDocument {
             criarElemento(doc, "ThirdPartiesBillingIndicator", specialRegimes, "0");
 
             criarElemento(doc, "SourceID", invoice, String.valueOf(vd.getId()));
-            criarElemento(doc, "SystemEntryDate", invoice, vd.getEstado() == 3 ? vd.getData_cria_hora_NC() : vd.getData_cria_hora());
+            criarElemento(doc, "SystemEntryDate", invoice, vd.getData_cria_hora());
             criarElemento(doc, "CustomerID", invoice, String.valueOf(vd.getIdclicant() == 0 ? 1 : vd.getIdclicant()));
 
             Element shipTo = doc.createElement("ShipTo");
@@ -232,21 +238,12 @@ public class SaftXMLDocument {
                     criarElemento(doc, "Quantity", line, String.valueOf(pv.getQuantidade()));
                     criarElemento(doc, "UnitOfMeasure", line, pv.getUnidade());
                     criarElemento(doc, "UnitPrice", line, vd.getDesconto() > 0 ? formatarValor(precoUnitarioSemIVA - ((precoUnitarioSemIVA * vd.getPercentagemDesconto()) / 100)) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
-                    criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getEstado() == 3 ? vd.getData_cria_NC() : vd.getData_cria()));
-                    if (vd.getEstado() == 3) {
-                        Element references = doc.createElement("References");
-                        line.appendChild(references);
-                        criarElemento(doc, "Reference", references, vd.getReferenciaFactura());
-                        criarElemento(doc, "Reason", references, vd.getMotivoEmissaoNC());
-                    }
+                    criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getData_cria()));
+
                     criarElemento(doc, "Description", line, pv.getNome_produto().trim());
-                    if (vd.getEstado() == 3) {
-                        int debitAmount = precoUnitarioSemIVA * pv.getQuantidade();
-                        criarElemento(doc, "DebitAmount", line, formatarValor(vd.getDesconto() > 0 ? debitAmount - ((debitAmount * vd.getPercentagemDesconto()) / 100) : debitAmount));
-                    } else {
-                        int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
-                        criarElemento(doc, "CreditAmount", line, formatarValor(vd.getDesconto() > 0 ? creditAmount - ((creditAmount * vd.getPercentagemDesconto()) / 100) : creditAmount));
-                    }
+                    int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
+                    criarElemento(doc, "CreditAmount", line, formatarValor(vd.getDesconto() > 0 ? creditAmount - ((creditAmount * vd.getPercentagemDesconto()) / 100) : creditAmount));
+
                     Element tax = doc.createElement("Tax");
                     line.appendChild(tax);
                     criarElemento(doc, "TaxType", tax, pv.isIva() ? "IVA" : "NS");
@@ -285,6 +282,129 @@ public class SaftXMLDocument {
             Element withholdingTax = doc.createElement("WithholdingTax");
             invoice.appendChild(withholdingTax);
             criarElemento(doc, "WithholdingTaxAmount", withholdingTax, formatarValor(taxPayable)); // Valor do imposto retido na fonte
+
+            if (vd.getEstado() == 3 && !vd.getReferenciaNC().isEmpty()) {
+                notaCredito.add(vd);
+            }
+        }
+        //NOTA DE CRÉDITO
+        Collections.sort(notaCredito, (v1, v2) -> { // ORDER NOTA DE CRÉDITO
+            int n1 = Integer.parseInt(TextUtils.split(v1.getReferenciaNC(), "/")[1]);
+            int n2 = Integer.parseInt(TextUtils.split(v2.getReferenciaNC(), "/")[1]);
+            return n1 - n2;
+        });
+        for (Venda vd : notaCredito) {
+            Element invoiceNC = doc.createElement("Invoice");
+            salesInvoices.appendChild(invoiceNC);
+            criarElemento(doc, "InvoiceNo", invoiceNC, vd.getReferenciaNC());
+
+            Element documentStatusNC = doc.createElement("DocumentStatus");
+            invoiceNC.appendChild(documentStatusNC);
+            criarElemento(doc, "InvoiceStatus", documentStatusNC, "N");
+            criarElemento(doc, "InvoiceStatusDate", documentStatusNC, vd.getData_cria_hora_NC());
+            criarElemento(doc, "SourceID", documentStatusNC, String.valueOf(vd.getId()));
+            criarElemento(doc, "SourceBilling", documentStatusNC, "P");
+
+            criarElemento(doc, "Hash", invoiceNC, vd.getHashNC());
+            criarElemento(doc, "HashControl", invoiceNC, "1");
+            criarElemento(doc, "Period", invoiceNC, TextUtils.split(getDataFormatMonth(vd.getData_cria_NC()), "-")[1].trim());
+            criarElemento(doc, "InvoiceDate", invoiceNC, getDataFormatMonth(vd.getData_cria_NC()));
+            criarElemento(doc, "InvoiceType", invoiceNC, "NC");
+
+            Element specialRegimesNC = doc.createElement("SpecialRegimes");
+            invoiceNC.appendChild(specialRegimesNC);
+            criarElemento(doc, "SelfBillingIndicator", specialRegimesNC, "0");
+            criarElemento(doc, "CashVATSchemeIndicator", specialRegimesNC, "0");
+            criarElemento(doc, "ThirdPartiesBillingIndicator", specialRegimesNC, "0");
+
+            criarElemento(doc, "SourceID", invoiceNC, String.valueOf(vd.getId()));
+            criarElemento(doc, "SystemEntryDate", invoiceNC, vd.getData_cria_hora_NC());
+            criarElemento(doc, "CustomerID", invoiceNC, String.valueOf(vd.getIdclicant() == 0 ? 1 : vd.getIdclicant()));
+
+            Element shipToNC = doc.createElement("ShipTo");
+            invoiceNC.appendChild(shipToNC);
+
+            Element addressNC = doc.createElement("Address");
+            shipToNC.appendChild(addressNC);
+            boolean vNC = false;
+            if (clienteCantina.isEmpty()) {
+                vNC = true;
+                addressCustomer(doc, addressNC, "Desconhecido", "Desconhecido", "Desconhecido");
+            } else for (ClienteCantina cc : clienteCantina) {
+                if (cc.getId() == vd.getIdclicant()) {
+                    vNC = true;
+                    addressCustomer(doc, addressNC, isEmpty(cc.getEndereco()), cliente.getProvincia(), cliente.getProvincia());
+                    break;
+                }
+            }
+            if (!vNC)
+                addressCustomer(doc, addressNC, "Desconhecido", "Desconhecido", "Desconhecido");
+            int iNC = 0;
+            for (ProdutoVenda pv : produtoVendas) {
+                if (pv.getIdvenda() == vd.getId()) {
+
+                    int precoUnitario = (pv.getPreco_total() / pv.getQuantidade());
+                    int precoUnitarioSemIVA = (int) (precoUnitario / Float.parseFloat(pv.getPercentagemIva() == 14 ? "1." + pv.getPercentagemIva() : "1.0" + pv.getPercentagemIva()));
+
+                    Element lineNC = doc.createElement("Line");
+                    invoiceNC.appendChild(lineNC);
+                    criarElemento(doc, "LineNumber", lineNC, String.valueOf(++iNC));
+
+                    criarElemento(doc, "ProductCode", lineNC, String.valueOf(pv.getId()));
+                    criarElemento(doc, "ProductDescription", lineNC, pv.getNome_produto().trim());
+                    criarElemento(doc, "Quantity", lineNC, String.valueOf(pv.getQuantidade()));
+                    criarElemento(doc, "UnitOfMeasure", lineNC, pv.getUnidade());
+                    criarElemento(doc, "UnitPrice", lineNC, vd.getDesconto() > 0 ? formatarValor(precoUnitarioSemIVA - ((precoUnitarioSemIVA * vd.getPercentagemDesconto()) / 100)) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
+                    criarElemento(doc, "TaxPointDate", lineNC, getDataFormatMonth(vd.getData_cria_NC()));
+
+                    Element referencesNC = doc.createElement("References");
+                    lineNC.appendChild(referencesNC);
+                    criarElemento(doc, "Reference", referencesNC, vd.getReferenciaFactura());
+                    criarElemento(doc, "Reason", referencesNC, vd.getMotivoEmissaoNC());
+
+                    criarElemento(doc, "Description", lineNC, pv.getNome_produto().trim());
+
+                    int debitAmount = precoUnitarioSemIVA * pv.getQuantidade();
+                    criarElemento(doc, "DebitAmount", lineNC, formatarValor(vd.getDesconto() > 0 ? debitAmount - ((debitAmount * vd.getPercentagemDesconto()) / 100) : debitAmount));
+
+                    Element taxNC = doc.createElement("Tax");
+                    lineNC.appendChild(taxNC);
+                    criarElemento(doc, "TaxType", taxNC, pv.isIva() ? "IVA" : "NS");
+                    criarElemento(doc, "TaxCountryRegion", taxNC, "AO");
+                    criarElemento(doc, "TaxCode", taxNC, pv.isIva() ? (pv.getPercentagemIva() == 14 ? "NOR" : "OUT") : "NS");
+                    criarElemento(doc, "TaxPercentage", taxNC, String.valueOf(pv.getPercentagemIva()));
+                    if (pv.getPercentagemIva() == 0) {
+                        criarElemento(doc, "TaxExemptionReason", lineNC, getRasaoISE(context, pv.getCodigoMotivoIsencao()));
+                        criarElemento(doc, "TaxExemptionCode", lineNC, pv.getCodigoMotivoIsencao());
+                    }
+                    criarElemento(doc, "SettlementAmount", lineNC, "0.00");
+                }
+            }
+            Element documentTotalsNC = doc.createElement("DocumentTotals");
+            invoiceNC.appendChild(documentTotalsNC);
+
+            int taxPayableNC = vd.getDesconto() == 0 ? vd.getValor_iva() : vd.getValor_iva() - ((vd.getValor_iva() * vd.getPercentagemDesconto()) / 100);
+            int netTotalNC = vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
+            int grossTotalNC = vd.getDesconto() == 0 ? taxPayableNC + vd.getValor_base() : vd.getTotal_venda() - ((vd.getTotal_venda() * vd.getPercentagemDesconto()) / 100);
+
+            criarElemento(doc, "TaxPayable", documentTotalsNC, formatarValor(taxPayableNC));
+            criarElemento(doc, "NetTotal", documentTotalsNC, formatarValor(netTotalNC));
+            criarElemento(doc, "GrossTotal", documentTotalsNC, formatarValor(grossTotalNC));
+
+            Element currencyNC = doc.createElement("Currency");
+            documentTotalsNC.appendChild(currencyNC);
+            criarElemento(doc, "CurrencyCode", currencyNC, "AOA");
+            criarElemento(doc, "CurrencyAmount", currencyNC, formatarValor(grossTotalNC));
+            criarElemento(doc, "ExchangeRate", currencyNC, "0");
+
+            Element paymentNC = doc.createElement("Payment");
+            documentTotalsNC.appendChild(paymentNC);
+            criarElemento(doc, "PaymentAmount", paymentNC, formatarValor(vd.getValor_pago())); // Valor do pagamento
+            criarElemento(doc, "PaymentDate", paymentNC, getDataFormatMonth(vd.getData_cria()));
+
+            Element withholdingTaxNC = doc.createElement("WithholdingTax");
+            invoiceNC.appendChild(withholdingTaxNC);
+            criarElemento(doc, "WithholdingTaxAmount", withholdingTaxNC, formatarValor(taxPayableNC)); // Valor do imposto retido na fonte
         }
 
         String FILE_PATH_SAFT_AO = Common.getAppPath("SAFT-AO") + dataHora[0] + "T" + dataHora[1] + "SAFT.xml";
@@ -294,9 +414,15 @@ public class SaftXMLDocument {
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         StreamResult result = new StreamResult(FILE_PATH_SAFT_AO);
-        transformer.transform(new DOMSource(doc), result);
+        transformer.transform(new
 
-        if (validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").getAbsolutePath(), FILE_PATH_SAFT_AO)) {
+                DOMSource(doc), result);
+
+        if (
+
+                validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").
+
+                        getAbsolutePath(), FILE_PATH_SAFT_AO)) {
             new AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_baseline_done_24)
                     .setTitle(context.getString(R.string.doc_saft_expo))
