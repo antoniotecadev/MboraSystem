@@ -532,25 +532,9 @@ public class FacturaFragment extends Fragment {
         vendaViewModel.getDataAdminMaster();
         vendaViewModel.getAdminMasterLiveData().observe(getViewLifecycleOwner(), cliente -> this.cliente = cliente.get(0));
 
-        vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> {
-            if (idvenda > 0) {
-                if (!referenciaFactura.isEmpty()) {
-                    facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(false, false, false, "", "", true, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, getDataEmissao(requireContext()), referenciaFactura + "/" + idvenda, getValueSharedPreferences(requireContext(), "hashvenda", ""));
-                } else
-                    Toast.makeText(requireContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
-            }
-        }));
-
-        vendaViewModel.getPrintLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> {
-            if (idvenda > 0) {
-                if (!referenciaFactura.isEmpty()) {
-                    facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
-                    CriarFactura.getPemissionAcessStoregeExternal(false, false, false, "", "", false, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, getDataEmissao(requireContext()), referenciaFactura + "/" + idvenda, getValueSharedPreferences(requireContext(), "hashvenda", ""));
-                } else
-                    showToast(getContext(), Color.parseColor("#795548"), getString(R.string.venda_vazia), R.drawable.ic_toast_erro);
-            }
-        }));
+        vendaViewModel.getGuardarPdfLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> imprimirGuardarPartilhar(idvenda, true, false)));
+        vendaViewModel.partilharPdfLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> imprimirGuardarPartilhar(idvenda, false, true)));
+        vendaViewModel.getPrintLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> imprimirGuardarPartilhar(idvenda, false, false)));
 
         vendaViewModel.getEnviarWhatsAppLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(numero -> {
             if (!numero.isEmpty()) {
@@ -561,16 +545,6 @@ public class FacturaFragment extends Fragment {
             }
         }));
 
-        vendaViewModel.partilharPdfLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(idvenda -> {
-            if (idvenda > 0) {
-                if (!referenciaFactura.isEmpty()) {
-                    facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
-                    File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
-                    partilharDocumento(dir.getPath() + "/MboraSystem/Facturas/" + facturaPath, requireContext(), "application/pdf", getString(R.string.part_doc) + " " + facturaPath);
-                } else
-                    Toast.makeText(requireContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
-            }
-        }));
 
         vendaViewModel.getAlertDialogLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(alertDialog -> {
             if (alertDialog != null && !Ultilitario.getNaoMostrarNovamente(requireActivity())) {
@@ -671,6 +645,20 @@ public class FacturaFragment extends Fragment {
         consultarCarrinho();
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
+    }
+
+    private void imprimirGuardarPartilhar(long idvenda, boolean isGuardar, boolean isPartilha) {
+        if (idvenda > 0) {
+            if (!referenciaFactura.isEmpty()) {
+                facturaPath = referenciaFactura + "_" + idvenda + ".pdf";
+                if (isPartilha) {
+                    File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
+                    partilharDocumento(dir.getPath() + "/MboraSystem/Facturas/" + facturaPath, requireContext(), "application/pdf", getString(R.string.part_doc) + " " + facturaPath);
+                } else
+                    CriarFactura.getPemissionAcessStoregeExternal(false, false, false, "", "", isGuardar, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, getDataEmissao(requireContext()), referenciaFactura + "/" + idvenda, getValueSharedPreferences(requireContext(), "hashvenda", ""));
+            } else
+                Toast.makeText(requireContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showHiddenComponent(int view, boolean isDesconto, boolean isDivida, boolean isFormaPagamento) {
