@@ -276,6 +276,7 @@ public class VendaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     if (isHashNC) {
+                        vd.setHashNC(hashVenda);
                         setValueSharedPreferences(context, "hashvendanc", hashVenda);
                         getPrintNCLiveData().setValue(new Event<>(vd));
                     } else {

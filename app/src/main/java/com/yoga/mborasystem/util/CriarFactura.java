@@ -7,7 +7,6 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineHorizontal;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
-import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
@@ -49,18 +48,18 @@ import java.util.Objects;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC) {
+    public static void getPemissionAcessStoregeExternal(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC);
+                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC);
+                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
                     }
 
                     @Override
@@ -70,7 +69,7 @@ public class CriarFactura {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC) {
+    private static void createPdfFile(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -78,7 +77,6 @@ public class CriarFactura {
             String nib = PreferenceManager.getDefaultSharedPreferences(context).getString("nib", "");
             String iban = PreferenceManager.getDefaultSharedPreferences(context).getString("iban", "");
             String textorodape = PreferenceManager.getDefaultSharedPreferences(context).getString("textorodape", "");
-            String hash = Ultilitario.getValueSharedPreferences(context, "hashvenda", "");
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(path));
             document.setMargins(5, 5, 0, 0);

@@ -674,7 +674,8 @@ public class VendaFragment extends Fragment {
                 String facturaPath = ref.replace("/", "_") + ".pdf";
                 String dataCria = isAnulado ? vd.getData_cria_NC() : vd.getData_cria();
                 String dataCriaHora = isAnulado ? vd.getData_cria_hora_NC() : vd.getData_cria_hora();
-                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, isAnuladoSegundaVia, vd.getMotivoEmissaoNC(), vd.getReferenciaFactura(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(dataCria) + " " + TextUtils.split(dataCriaHora, "T")[1], ref);
+                String hash = isAnulado ? vd.getHashNC() : vd.getHashFR();
+                CriarFactura.getPemissionAcessStoregeExternal(isSegundaVia, isAnulado, isAnuladoSegundaVia, vd.getMotivoEmissaoNC(), vd.getReferenciaFactura(), true, getActivity(), getContext(), facturaPath, cliente, vd.getIdoperador(), txtNomeCliente, desconto, vd.getPercentagemDesconto(), vd.getValor_base(), vd.getValor_iva(), vd.getPagamento(), vd.getTotal_desconto(), vd.getValor_pago(), troco, vd.getTotal_venda(), pds, pTtU, getDataFormatMonth(dataCria) + " " + TextUtils.split(dataCriaHora, "T")[1], ref, hash);
                 printPDF(requireActivity(), requireContext(), facturaPath, "Facturas");
                 VendaFragmentDirections.ActionVendaFragmentSelf dirSelf = VendaFragmentDirections.actionVendaFragmentSelf(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(isMaster);
                 Navigation.findNavController(requireView()).navigate(dirSelf);
