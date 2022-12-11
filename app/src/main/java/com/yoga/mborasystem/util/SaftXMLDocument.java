@@ -4,10 +4,12 @@ import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
+import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.Keep;
 
@@ -23,7 +25,11 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -166,9 +172,9 @@ public class SaftXMLDocument {
         for (Venda vd : vendas) {
             if (vd.getEstado() == 3) {
                 numNC += 1;
-                totalDebit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
+                totalDebit += vd.getDesconto() == 0 ? vd.getValor_base() : getValueWithDesconto(vd.getValor_base(), vd.getPercentagemDesconto());
             }
-            totalCredit += vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
+            totalCredit += vd.getDesconto() == 0 ? vd.getValor_base() : getValueWithDesconto(vd.getValor_base(), vd.getPercentagemDesconto());
         }
         Element salesInvoices = doc.createElement("SalesInvoices");
         sourceDocuments.appendChild(salesInvoices);
@@ -176,8 +182,7 @@ public class SaftXMLDocument {
         criarElemento(doc, "TotalDebit", salesInvoices, formatarValor(totalDebit));
         criarElemento(doc, "TotalCredit", salesInvoices, formatarValor(totalCredit));
 
-        for (Venda vd : vendas) {
-            // FACTURA RECIBO
+        for (Venda vd : vendas) {// FACTURA RECIBO
             Element invoice = doc.createElement("Invoice");
             salesInvoices.appendChild(invoice);
             criarElemento(doc, "InvoiceNo", invoice, vd.getReferenciaFactura());
@@ -237,12 +242,12 @@ public class SaftXMLDocument {
                     criarElemento(doc, "ProductDescription", line, pv.getNome_produto().trim());
                     criarElemento(doc, "Quantity", line, String.valueOf(pv.getQuantidade()));
                     criarElemento(doc, "UnitOfMeasure", line, pv.getUnidade());
-                    criarElemento(doc, "UnitPrice", line, vd.getDesconto() > 0 ? formatarValor(precoUnitarioSemIVA - ((precoUnitarioSemIVA * vd.getPercentagemDesconto()) / 100)) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
+                    criarElemento(doc, "UnitPrice", line, vd.getDesconto() > 0 ? formatarValor(getValueWithDesconto(precoUnitarioSemIVA, vd.getPercentagemDesconto())) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
                     criarElemento(doc, "TaxPointDate", line, getDataFormatMonth(vd.getData_cria()));
 
                     criarElemento(doc, "Description", line, pv.getNome_produto().trim());
                     int creditAmount = precoUnitarioSemIVA * pv.getQuantidade();
-                    criarElemento(doc, "CreditAmount", line, formatarValor(vd.getDesconto() > 0 ? creditAmount - ((creditAmount * vd.getPercentagemDesconto()) / 100) : creditAmount));
+                    criarElemento(doc, "CreditAmount", line, formatarValor(vd.getDesconto() > 0 ? getValueWithDesconto(creditAmount, vd.getPercentagemDesconto()) : creditAmount));
 
                     Element tax = doc.createElement("Tax");
                     line.appendChild(tax);
@@ -254,15 +259,16 @@ public class SaftXMLDocument {
                         criarElemento(doc, "TaxExemptionReason", line, getRasaoISE(context, pv.getCodigoMotivoIsencao()));
                         criarElemento(doc, "TaxExemptionCode", line, pv.getCodigoMotivoIsencao());
                     }
-                    criarElemento(doc, "SettlementAmount", line, "0.00");
+                    int settlementAmount = vd.getDesconto() == 0 ? 0 : (creditAmount * vd.getPercentagemDesconto()) / 100;
+                    criarElemento(doc, "SettlementAmount", line, formatarValor(settlementAmount));
                 }
             }
             Element documentTotals = doc.createElement("DocumentTotals");
             invoice.appendChild(documentTotals);
 
-            int taxPayable = vd.getDesconto() == 0 ? vd.getValor_iva() : vd.getValor_iva() - ((vd.getValor_iva() * vd.getPercentagemDesconto()) / 100);
-            int netTotal = vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
-            int grossTotal = vd.getDesconto() == 0 ? taxPayable + vd.getValor_base() : vd.getTotal_venda() - ((vd.getTotal_venda() * vd.getPercentagemDesconto()) / 100);
+            int taxPayable = vd.getDesconto() == 0 ? vd.getValor_iva() : getValueWithDesconto(vd.getValor_iva(), vd.getPercentagemDesconto());
+            int netTotal = vd.getDesconto() == 0 ? vd.getValor_base() : getValueWithDesconto(vd.getValor_base(), vd.getPercentagemDesconto());
+            int grossTotal = vd.getDesconto() == 0 ? taxPayable + vd.getValor_base() : getValueWithDesconto(vd.getTotal_venda(), vd.getPercentagemDesconto());
 
             criarElemento(doc, "TaxPayable", documentTotals, formatarValor(taxPayable));
             criarElemento(doc, "NetTotal", documentTotals, formatarValor(netTotal));
@@ -293,7 +299,7 @@ public class SaftXMLDocument {
             int n2 = Integer.parseInt(TextUtils.split(v2.getReferenciaNC(), "/")[1]);
             return n1 - n2;
         });
-        for (Venda vd : notaCredito) {
+        for (Venda vd : notaCredito) { //NOTA DE CRÉDITO
             Element invoiceNC = doc.createElement("Invoice");
             salesInvoices.appendChild(invoiceNC);
             criarElemento(doc, "InvoiceNo", invoiceNC, vd.getReferenciaNC());
@@ -354,7 +360,7 @@ public class SaftXMLDocument {
                     criarElemento(doc, "ProductDescription", lineNC, pv.getNome_produto().trim());
                     criarElemento(doc, "Quantity", lineNC, String.valueOf(pv.getQuantidade()));
                     criarElemento(doc, "UnitOfMeasure", lineNC, pv.getUnidade());
-                    criarElemento(doc, "UnitPrice", lineNC, vd.getDesconto() > 0 ? formatarValor(precoUnitarioSemIVA - ((precoUnitarioSemIVA * vd.getPercentagemDesconto()) / 100)) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
+                    criarElemento(doc, "UnitPrice", lineNC, vd.getDesconto() > 0 ? formatarValor(getValueWithDesconto(precoUnitarioSemIVA, vd.getPercentagemDesconto())) : (pv.isIva() ? formatarValor(precoUnitarioSemIVA) : formatarValor(precoUnitario)));
                     criarElemento(doc, "TaxPointDate", lineNC, getDataFormatMonth(vd.getData_cria_NC()));
 
                     Element referencesNC = doc.createElement("References");
@@ -365,7 +371,7 @@ public class SaftXMLDocument {
                     criarElemento(doc, "Description", lineNC, pv.getNome_produto().trim());
 
                     int debitAmount = precoUnitarioSemIVA * pv.getQuantidade();
-                    criarElemento(doc, "DebitAmount", lineNC, formatarValor(vd.getDesconto() > 0 ? debitAmount - ((debitAmount * vd.getPercentagemDesconto()) / 100) : debitAmount));
+                    criarElemento(doc, "DebitAmount", lineNC, formatarValor(vd.getDesconto() > 0 ? getValueWithDesconto(debitAmount, vd.getPercentagemDesconto()) : debitAmount));
 
                     Element taxNC = doc.createElement("Tax");
                     lineNC.appendChild(taxNC);
@@ -377,15 +383,19 @@ public class SaftXMLDocument {
                         criarElemento(doc, "TaxExemptionReason", lineNC, getRasaoISE(context, pv.getCodigoMotivoIsencao()));
                         criarElemento(doc, "TaxExemptionCode", lineNC, pv.getCodigoMotivoIsencao());
                     }
-                    criarElemento(doc, "SettlementAmount", lineNC, "0.00");
+                    int settlementAmount = vd.getDesconto() == 0 ? 0 : (debitAmount * vd.getPercentagemDesconto()) / 100;
+                    criarElemento(doc, "SettlementAmount", lineNC, formatarValor(settlementAmount));
+                    Log.i("DESCONTO", vd.getDesconto() > 0 ? formatarValor(debitAmount) + "" : "");
+                    Log.i("DESCONTO", vd.getDesconto() > 0 ? vd.getPercentagemDesconto() + "" : "");
+                    Log.i("DESCONTO", vd.getDesconto() > 0 ? formatarValor(settlementAmount) + "" : "");
                 }
             }
             Element documentTotalsNC = doc.createElement("DocumentTotals");
             invoiceNC.appendChild(documentTotalsNC);
 
-            int taxPayableNC = vd.getDesconto() == 0 ? vd.getValor_iva() : vd.getValor_iva() - ((vd.getValor_iva() * vd.getPercentagemDesconto()) / 100);
-            int netTotalNC = vd.getDesconto() == 0 ? vd.getValor_base() : vd.getValor_base() - ((vd.getValor_base() * vd.getPercentagemDesconto()) / 100);
-            int grossTotalNC = vd.getDesconto() == 0 ? taxPayableNC + vd.getValor_base() : vd.getTotal_venda() - ((vd.getTotal_venda() * vd.getPercentagemDesconto()) / 100);
+            int taxPayableNC = vd.getDesconto() == 0 ? vd.getValor_iva() : getValueWithDesconto(vd.getValor_iva(), vd.getPercentagemDesconto());
+            int netTotalNC = vd.getDesconto() == 0 ? vd.getValor_base() : getValueWithDesconto(vd.getValor_base(), vd.getPercentagemDesconto());
+            int grossTotalNC = vd.getDesconto() == 0 ? taxPayableNC + vd.getValor_base() : getValueWithDesconto(vd.getTotal_venda(), vd.getPercentagemDesconto());
 
             criarElemento(doc, "TaxPayable", documentTotalsNC, formatarValor(taxPayableNC));
             criarElemento(doc, "NetTotal", documentTotalsNC, formatarValor(netTotalNC));
@@ -413,16 +423,13 @@ public class SaftXMLDocument {
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        StreamResult result = new StreamResult(FILE_PATH_SAFT_AO);
-        transformer.transform(new
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,"yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        OutputStream outputStream = new FileOutputStream(FILE_PATH_SAFT_AO);
+        StreamResult result = new StreamResult(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+        transformer.transform(new DOMSource(doc), result);
 
-                DOMSource(doc), result);
-
-        if (
-
-                validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").
-
-                        getAbsolutePath(), FILE_PATH_SAFT_AO)) {
+        if (validateXMLSchema(getFilePathCache(context, "SAFTAO1.01_01.xsd").getAbsolutePath(), FILE_PATH_SAFT_AO)) {
             new AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_baseline_done_24)
                     .setTitle(context.getString(R.string.doc_saft_expo))
