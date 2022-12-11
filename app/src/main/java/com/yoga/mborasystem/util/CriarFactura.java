@@ -9,6 +9,7 @@ import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
+import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 
 import android.Manifest;
@@ -109,7 +110,7 @@ public class CriarFactura {
             for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
                 addLineSpace(document);
                 String preco = String.valueOf(produto.getValue().getPreco());
-                String valor = String.valueOf(Objects.requireNonNull(precoTotalUnit.get(produto.getKey())).intValue());
+                String valor = String.valueOf(precoTotalUnit.get(produto.getKey()).intValue());
                 addNewItem(document, produto.getValue().getNome(), Element.ALIGN_LEFT, font);
                 if (!produto.getValue().isIva()) {
                     addNewItem(document, "* " + getRasaoISE(context, produto.getValue().getCodigoMotivoIsencao()), Element.ALIGN_LEFT, font1);
@@ -118,8 +119,8 @@ public class CriarFactura {
             }
             addLineSeparator(document);
             addNewLineWithLeftAndRight(document, "Subtotal", Ultilitario.formatPreco(String.valueOf(totalVenda)), font, font);
-            addNewLineWithLeftAndRight(document, "Valor Base", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : valorBase - ((valorBase * percDesc) / 100))), font, font);
-            addNewLineWithLeftAndRight(document, "IVA", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorIva : valorIva - ((valorIva * percDesc) / 100))), font, font);
+            addNewLineWithLeftAndRight(document, "Valor Base", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))), font, font);
+            addNewLineWithLeftAndRight(document, "IVA", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorIva : getValueWithDesconto(valorIva, percDesc))), font, font);
             addNewLineWithLeftAndRight(document, "Desconto" + "(" + percDesc + "%)", Ultilitario.formatPreco(desconto.getText().toString()), font, font);
             addNewLineWithLeftAndRight(document, "Total", Ultilitario.formatPreco(String.valueOf(totalDesconto)), font, font);
             addNewLineWithLeftAndRight(document, "Total Pago", Ultilitario.formatPreco(String.valueOf(valorPago)), font, font);

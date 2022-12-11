@@ -1329,4 +1329,8 @@ public class Ultilitario {
     public static String getDataEmissao(Context context) {
         return getValueSharedPreferences(context, "dataemissao", "");
     }
+
+    public static int getValueWithDesconto(int valor, int descPerc) {
+        return valor - ((valor * descPerc) / 100);
+    }
 }

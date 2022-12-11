@@ -4,6 +4,7 @@ import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 
 import android.annotation.SuppressLint;
@@ -241,8 +242,8 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - ((venda.getValor_iva() * venda.getPercentagemDesconto()) / 100);
-                        int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : venda.getTotal_venda() - ((venda.getTotal_venda() * venda.getPercentagemDesconto()) / 100);
+                        int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : getValueWithDesconto(venda.getValor_iva(), venda.getPercentagemDesconto());
+                        int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : getValueWithDesconto(venda.getTotal_venda(), venda.getPercentagemDesconto());
                         String hashVendaLast = getValueSharedPreferences(getApplication().getApplicationContext(), "hashvenda", "");
                         String vd = getDataFormatMonth(venda.getData_cria()) + ";" + venda.getData_cria_hora() + ";" + venda.getReferenciaFactura() + "/" + idvenda + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
                         try {
@@ -419,8 +420,8 @@ public class VendaViewModel extends AndroidViewModel {
                         if (isLixeira || eliminarTodasLixeira)
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
                         else {
-                            int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - ((venda.getValor_iva() * venda.getPercentagemDesconto()) / 100);
-                            int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : venda.getTotal_venda() - ((venda.getTotal_venda() * venda.getPercentagemDesconto()) / 100);
+                            int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : getValueWithDesconto(venda.getValor_iva(), venda.getPercentagemDesconto());
+                            int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : getValueWithDesconto(venda.getTotal_venda(), venda.getPercentagemDesconto());
                             String hashVendaLast = getValueSharedPreferences(getApplication().getApplicationContext(), "hashvendanc", "");
                             String vd = getDataFormatMonth(venda.getData_cria_NC()) + ";" + venda.getData_cria_hora_NC() + ";" + venda.getReferenciaNC() + ";" + formatarValor(grossTotal) + ";" + hashVendaLast;
                             try {

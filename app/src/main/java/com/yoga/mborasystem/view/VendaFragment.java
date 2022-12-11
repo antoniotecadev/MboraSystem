@@ -7,6 +7,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
+import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 
 import android.annotation.SuppressLint;
@@ -372,8 +373,8 @@ public class VendaFragment extends Fragment {
                 h.binding.textTotDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_desconto())));
                 h.binding.textPago.setText(Ultilitario.formatPreco(String.valueOf(venda.getValor_pago())));
                 h.binding.textDivida.setText(Ultilitario.formatPreco(String.valueOf(venda.getDivida())));
-                h.binding.textValBas.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_base() : venda.getValor_base() - (venda.getValor_base() * venda.getPercentagemDesconto() / 100))));
-                h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_iva() : venda.getValor_iva() - (venda.getValor_iva() * venda.getPercentagemDesconto() / 100))));
+                h.binding.textValBas.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_base() : getValueWithDesconto(venda.getValor_base(), venda.getPercentagemDesconto()))));
+                h.binding.textVaIva.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_iva() : getValueWithDesconto(venda.getValor_iva(), venda.getPercentagemDesconto()))));
                 h.binding.editTextForPag.setText(venda.getPagamento());
                 try {
                     h.binding.textDatVen.setText(venda.getData_cria() + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
