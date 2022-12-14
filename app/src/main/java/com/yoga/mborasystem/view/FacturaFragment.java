@@ -520,8 +520,14 @@ public class FacturaFragment extends Fragment {
                             binding.textValorDivida.requestFocus();
                             binding.textValorDivida.setError(getString(R.string.dt_vl_dv));
                         }
-                    } else
-                        dialogVerificarVenda(nomeIDNIFcliente);
+                    } else {
+                        if (nomeIDNIFcliente.length == 3 || binding.txtNomeCliente.getText().toString().trim().isEmpty())
+                            dialogVerificarVenda(nomeIDNIFcliente);
+                        else {
+                            binding.txtNomeCliente.requestFocus();
+                            binding.txtNomeCliente.setError(getString(R.string.cliente_nao_encontrado));
+                        }
+                    }
                 } else {
                     binding.textValorPago.requestFocus();
                     binding.textValorPago.setError(getString(R.string.digite_valor_pago));
