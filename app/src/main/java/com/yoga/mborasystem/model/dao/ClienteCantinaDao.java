@@ -12,6 +12,7 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 
 @Dao
 public interface ClienteCantinaDao {
@@ -42,5 +43,8 @@ public interface ClienteCantinaDao {
 
     @Query("SELECT COUNT(id) FROM clientecantina  WHERE estado != 3")
     LiveData<Long> getQuantidadeCliente();
+
+    @Query("SELECT * FROM clientecantina WHERE nif = :nif")
+    Single<List<ClienteCantina>> nifBiExiste(String nif);
 
 }

@@ -144,7 +144,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 clienteCantina.setId(0);
                 clienteCantina.setEstado(Ultilitario.UM);
                 clienteCantina.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                criarClienteCantina(clienteCantina, dialog);
+                nifBiExiste(clienteCantina, dialog, true);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
                 clienteCantina.setId(idcliente);
                 clienteCantina.setEstado(Ultilitario.DOIS);
@@ -235,7 +235,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 });
     }
 
-    public void verificarCompraCliente(ClienteCantina clienteCantina, AlertDialog dg, boolean isElimina, String nifbi) {
+    public void verificarCompraCliente(ClienteCantina ct, AlertDialog dg, boolean isElimina, String nifbi) {
         vendaRepository.verificarCompras(clienteCantina.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -249,9 +249,9 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<Venda> vendas) {
                         if (vendas.isEmpty()) {
                             if (isElimina)
-                                eliminarCliente(clienteCantina, dg);
+                                eliminarCliente(ct, dg);
                             else
-                                actualizarCliente(clienteCantina, dg);
+                                nifBiExiste(ct, dg, false);
                         } else {
                             if (isElimina)
                                 getBooleanMutableLiveData().setValue(new Event<>(isElimina));
@@ -263,7 +263,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                                 if (contain)
                                     getBooleanMutableLiveData().setValue(new Event<>(isElimina));
                                 else
-                                    actualizarCliente(clienteCantina, dg);
+                                    nifBiExiste(ct, dg, false);
                             }
                         }
                     }
@@ -303,6 +303,26 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     }
                 });
 
+    }
+
+    private void nifBiExiste(ClienteCantina ct, AlertDialog dialog, boolean isCriar) {
+        compositeDisposable.add(clienteCantinaRepository.nifBiExiste(ct.getNif())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(cliente -> {
+                    if (cliente.isEmpty())
+                        if (isCriar)
+                            criarClienteCantina(ct, dialog);
+                        else
+                            actualizarCliente(ct, dialog);
+                    else {
+                        MainActivity.dismissProgressBar();
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cli_ja_exi), R.drawable.ic_toast_erro);
+                    }
+                }, throwable -> {
+                    MainActivity.dismissProgressBar();
+                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), throwable.getMessage(), R.drawable.ic_toast_erro);
+                }));
     }
 
     public void exportarClientes() throws Exception {

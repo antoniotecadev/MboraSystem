@@ -18,6 +18,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 
 public class ClienteCantinaRepository {
 
@@ -63,6 +64,11 @@ public class ClienteCantinaRepository {
     public List<ClienteCantina> getClientesExport() throws Exception {
         return clienteCantinaDao.getClientesExport();
     }
+
+    public Single<List<ClienteCantina>> nifBiExiste(String nif) {
+        return clienteCantinaDao.nifBiExiste(nif);
+    }
+
 
     public void importarClientes(List<String> clientes, Application context, Handler handler) {
         ClienteCantina clienteCantina = new ClienteCantina();

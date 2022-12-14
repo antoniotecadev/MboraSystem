@@ -744,6 +744,7 @@
     <string name="mt_nt_ct">Motivo para emissão ?</string>
     <string name="cli_pss_doc_emt_elm">Este cliente já possui documentos emitidos e não pode ser eliminado.</string>
     <string name="cli_pss_doc_emt_alt_nif">"O NIF/Nome do cliente não pode ser alterado, este cliente já possui documentos emitidos."</string>
+    <string name="cli_ja_exi">Cliente já existe</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
