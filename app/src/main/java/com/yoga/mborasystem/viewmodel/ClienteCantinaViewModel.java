@@ -216,7 +216,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
                     @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                    public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
                     }
 
@@ -228,7 +228,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     }
 
                     @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.alteracao_nao_feita) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
@@ -241,12 +241,12 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<Venda>>() {
                     @Override
-                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+                    public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
                     }
 
                     @Override
-                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<Venda> vendas) {
+                    public void onSuccess(@NonNull List<Venda> vendas) {
                         if (vendas.isEmpty()) {
                             if (isElimina)
                                 eliminarCliente(ct, dg);
@@ -254,14 +254,14 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                                 nifBiExiste(ct, dg, false);
                         } else {
                             if (isElimina)
-                                getBooleanMutableLiveData().setValue(new Event<>(isElimina));
+                                getBooleanMutableLiveData().setValue(new Event<>(true));
                             else {
                                 boolean contain = false;
                                 for (Venda venda : vendas)
                                     if (TextUtils.split(venda.getNome_cliente(), "-")[2].equals(nifbi))
                                         contain = true;
                                 if (contain)
-                                    getBooleanMutableLiveData().setValue(new Event<>(isElimina));
+                                    getBooleanMutableLiveData().setValue(new Event<>(false));
                                 else
                                     nifBiExiste(ct, dg, false);
                             }
@@ -269,7 +269,8 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     }
 
                     @Override
-                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                    public void onError(@NonNull Throwable e) {
+                        MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
@@ -283,7 +284,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
                     @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                    public void onSubscribe(@NonNull Disposable d) {
                         disposable = d;
                     }
 
@@ -297,7 +298,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     }
 
                     @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.cli_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
