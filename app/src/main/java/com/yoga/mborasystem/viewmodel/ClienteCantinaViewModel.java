@@ -2,7 +2,6 @@ package com.yoga.mborasystem.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,7 +24,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.ClienteCantina;
+import com.yoga.mborasystem.model.entidade.Venda;
 import com.yoga.mborasystem.repository.ClienteCantinaRepository;
+import com.yoga.mborasystem.repository.VendaRepository;
 import com.yoga.mborasystem.util.Event;
 import com.yoga.mborasystem.util.Ultilitario;
 
@@ -39,6 +40,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -48,6 +50,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     public boolean crud;
     private Disposable disposable;
     private final ClienteCantina clienteCantina;
+    private final VendaRepository vendaRepository;
     private final CompositeDisposable compositeDisposable;
     private final ClienteCantinaRepository clienteCantinaRepository;
 
@@ -56,6 +59,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         clienteCantina = new ClienteCantina();
         disposable = new CompositeDisposable();
         compositeDisposable = new CompositeDisposable();
+        vendaRepository = new VendaRepository(getApplication());
         clienteCantinaRepository = new ClienteCantinaRepository(getApplication());
     }
 
@@ -74,11 +78,19 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     public static Pattern letraNumero = Pattern.compile("[^a-zA-Z0-9]");
 
     public void criarCliente(TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        validarCliente(0, Ultilitario.Operacao.CRIAR, nif, nomeCliente, telefone, email, endereco, dialog);
+        validarCliente(0, "", "", Ultilitario.Operacao.CRIAR, nif, nomeCliente, telefone, email, endereco, dialog);
     }
 
-    public void actualizarCliente(long idcliente, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        validarCliente(idcliente, Ultilitario.Operacao.ACTUALIZAR, nif, nomeCliente, telefone, email, endereco, dialog);
+    public void actualizarCliente(long idcliente, String nifbi, String nome, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
+        validarCliente(idcliente, nifbi, nome, Ultilitario.Operacao.ACTUALIZAR, nif, nomeCliente, telefone, email, endereco, dialog);
+    }
+
+    private MutableLiveData<Event<Boolean>> isElimina;
+
+    public MutableLiveData<Event<Boolean>> getBooleanMutableLiveData() {
+        if (isElimina == null)
+            isElimina = new MutableLiveData<>();
+        return isElimina;
     }
 
     private MutableLiveData<PagingData<ClienteCantina>> listaClientesCantina;
@@ -105,7 +117,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return listaClienteExport;
     }
 
-    private void validarCliente(long idcliente, Ultilitario.Operacao operacao, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
+    private void validarCliente(long idcliente, String nifbi, String nome, Ultilitario.Operacao operacao, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
         if (!isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) && ((letraNumero.matcher(Objects.requireNonNull(nif.getText()).toString()).find()) || Objects.requireNonNull(nif.getText()).toString().length() > 14 || Objects.requireNonNull(nif.getText()).toString().length() < 10)) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_invalido));
@@ -137,7 +149,10 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 clienteCantina.setId(idcliente);
                 clienteCantina.setEstado(Ultilitario.DOIS);
                 clienteCantina.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                actualizarCliente(clienteCantina, dialog);
+                if ((clienteCantina.getNif().equals(nifbi) || nifbi.isEmpty() || nifbi.equals("999999999")) && clienteCantina.getNome().equals(nome))
+                    actualizarCliente(clienteCantina, dialog);
+                else
+                    verificarCompraCliente(clienteCantina, dialog, false, nifbi);
             }
         }
     }
@@ -220,8 +235,48 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 });
     }
 
+    public void verificarCompraCliente(ClienteCantina clienteCantina, AlertDialog dg, boolean isElimina, String nifbi) {
+        vendaRepository.verificarCompras(clienteCantina.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Venda>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<Venda> vendas) {
+                        if (vendas.isEmpty()) {
+                            if (isElimina)
+                                eliminarCliente(clienteCantina, dg);
+                            else
+                                actualizarCliente(clienteCantina, dg);
+                        } else {
+                            if (isElimina)
+                                getBooleanMutableLiveData().setValue(new Event<>(isElimina));
+                            else {
+                                boolean contain = false;
+                                for (Venda venda : vendas)
+                                    if (TextUtils.split(venda.getNome_cliente(), "-")[2].equals(nifbi))
+                                        contain = true;
+                                if (contain)
+                                    getBooleanMutableLiveData().setValue(new Event<>(isElimina));
+                                else
+                                    actualizarCliente(clienteCantina, dg);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
+                    }
+                });
+    }
+
     @SuppressLint("CheckResult")
-    public void eliminarCliente(ClienteCantina clienteCantina, Dialog dg) {
+    public void eliminarCliente(ClienteCantina clienteCantina, AlertDialog dg) {
         MainActivity.getProgressBar();
         Completable.fromAction(() -> clienteCantinaRepository.delete(clienteCantina))
                 .subscribeOn(Schedulers.io())

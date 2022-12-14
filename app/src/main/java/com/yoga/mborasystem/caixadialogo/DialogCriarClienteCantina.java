@@ -118,9 +118,9 @@ public class DialogCriarClienteCantina extends DialogFragment {
 
         binding.buttonGuardar.setOnClickListener(v -> {
             clienteCantinaViewModel.crud = true;
-            clienteCantinaViewModel.actualizarCliente(idcliente, binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog);
+            clienteCantinaViewModel.actualizarCliente(idcliente, nif, nome, binding.txtNIF, binding.editTextNome, binding.editTextNumeroTelefone, binding.editTextEmail, binding.editTextEndereco, dialog);
         });
-        binding.buttonEliminarCliente.setOnClickListener(v -> deleteClient(idcliente, Objects.requireNonNull(binding.editTextNome.getText()).toString()));
+        binding.buttonEliminarCliente.setOnClickListener(v -> deleteClient(idcliente, binding.editTextNome.getText().toString()));
 
         binding.buttonCancelar.setOnClickListener(v -> dialog.dismiss());
 
@@ -134,12 +134,12 @@ public class DialogCriarClienteCantina extends DialogFragment {
     private void deleteClient(long idcliente, String nome) {
         clienteCantinaViewModel.crud = true;
         clienteCantina.setId(idcliente);
-        clienteCantina.setEstado(Ultilitario.TRES);
+        clienteCantina.setEstado(3);
         new AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.eliminar) + " (" + nome + ")")
                 .setMessage(getString(R.string.tem_cert_elim_cli))
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, dialog))
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.verificarCompraCliente(clienteCantina, dialog, true, ""))
                 .show();
     }
 

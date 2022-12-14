@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 
 @Dao
 public abstract class VendaDao {
@@ -198,6 +199,9 @@ public abstract class VendaDao {
 
     @Query("UPDATE vendas SET hashNC = :hashVendaNC WHERE id = :idvenda")
     public abstract void updateHashVendaNC(String hashVendaNC, long idvenda);
+
+    @Query("SELECT * FROM vendas WHERE idclicant = :idcliente")
+    public abstract Single<List<Venda>> verificarCompras(long idcliente);
 
     @Transaction
     public long insertVendaProduto(Venda venda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit) {

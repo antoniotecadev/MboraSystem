@@ -113,9 +113,9 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
                     break;
                 case R.id.gerarQrCode:
-//                    setIntPreference(requireContext(), 0, "numeroserienc");
-//                    setValueSharedPreferences(requireContext(), "hashvenda", "");
-//                    setValueSharedPreferences(requireContext(), "hashvendanc", "");
+                    setIntPreference(requireContext(), 0, "numeroserienc");
+                    setValueSharedPreferences(requireContext(), "hashvenda", "");
+                    setValueSharedPreferences(requireContext(), "hashvendanc", "");
                     getQrCode();
                     break;
                 case R.id.sairApp:

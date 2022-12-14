@@ -397,9 +397,7 @@ public class ClienteViewModel extends AndroidViewModel {
                         MainActivity.dismissProgressBar();
                         handler.post(() -> senhaLayout.setError(getApplication().getString(R.string.senha_incorreta)));
                     }
-                } catch (NoSuchAlgorithmException e) {
-                    handler.post(() -> senhaLayout.setError(e.getMessage()));
-                } catch (InvalidKeySpecException e) {
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     handler.post(() -> senhaLayout.setError(e.getMessage()));
                 } finally {
                     MainActivity.dismissProgressBar();

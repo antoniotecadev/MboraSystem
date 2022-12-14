@@ -128,6 +128,14 @@ public class ListaClienteFragment extends Fragment {
             consultarClientes(false, false, null);
             clienteAdapter.notifyDataSetChanged();
         });
+
+        clienteCantinaViewModel.getBooleanMutableLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(isElimina -> {
+            if (isElimina)
+                Ultilitario.alertDialog(getString(R.string.eliminar_cliente), getString(R.string.cli_pss_doc_emt_elm), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            else
+                Ultilitario.alertDialog(getString(R.string.alterar_cliente), getString(R.string.cli_pss_doc_emt_alt_nif), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        }));
+
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -260,7 +268,7 @@ public class ListaClienteFragment extends Fragment {
                                     .setTitle(getString(R.string.eliminar) + " (" + ct.getNome() + ")")
                                     .setMessage(getString(R.string.tem_cert_elim_cli))
                                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.eliminarCliente(clienteCantina, null))
+                                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.verificarCompraCliente(clienteCantina, null, true, ""))
                                     .show();
                             return false;
                         });

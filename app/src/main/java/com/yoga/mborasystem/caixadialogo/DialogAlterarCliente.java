@@ -81,9 +81,7 @@ public class DialogAlterarCliente extends DialogFragment {
         binding.buttonAlterarSenha.setOnClickListener(v -> {
             try {
                 clienteViewModel.alterarSenha(binding.editTextSenha, binding.editTextSenhaNovamente);
-            } catch (NoSuchAlgorithmException e) {
-                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            } catch (InvalidKeySpecException e) {
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -91,9 +89,7 @@ public class DialogAlterarCliente extends DialogFragment {
         binding.buttonCriarConta.setOnClickListener(view -> {
             try {
                 clienteViewModel.validarCliente(Ultilitario.Operacao.ACTUALIZAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, "0", requireActivity());
-            } catch (InvalidKeySpecException e) {
-                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            } catch (NoSuchAlgorithmException e) {
+            } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 
 public class VendaRepository {
 
@@ -131,5 +132,8 @@ public class VendaRepository {
             vendaDao.updateHashVendaNC(hashVenda, idvenda);
         else
             vendaDao.updateHashVenda(hashVenda, idvenda);
+    }
+    public Single<List<Venda>> verificarCompras(long idcliente){
+        return vendaDao.verificarCompras(idcliente);
     }
 }
