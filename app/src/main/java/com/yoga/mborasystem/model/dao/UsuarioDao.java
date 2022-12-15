@@ -26,8 +26,8 @@ public interface UsuarioDao {
     @Query("UPDATE usuarios SET nome = :nome, telefone = :tel, endereco = :end, estado = :est, data_modifica = :data WHERE id = :id")
     void update(String nome, String tel, String end, int est, String data, long id);
 
-    @Query("UPDATE usuarios SET codigo_pin = :cp WHERE id = :id")
-    void update(String cp, long id);
+    @Query("UPDATE usuarios SET codigo_pin = :cp, data_cria = :dataCria WHERE id = :id")
+    void update(String cp, String dataCria, long id);
 
     @Delete
     void delete(Usuario usuario);

@@ -12,7 +12,6 @@ import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
-import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
@@ -316,7 +315,9 @@ public class HomeFragment extends Fragment {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/politicaprivacidade")));
                         break;
                     case R.id.dialogAlterarCodigoPin:
-                        bundle.putLong("idusuario", getArguments().getLong("idusuario"));
+                        bundle.putString("nome", getArguments().getString("nome"));
+                        bundle.putLong("idusuario", getArguments().getInt("idusuario"));
+                        bundle.putString("datacria", getArguments().getString("datacria"));
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
                         break;
                     case R.id.acercaMborasytem:

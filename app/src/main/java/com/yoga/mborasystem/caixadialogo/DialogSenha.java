@@ -53,7 +53,7 @@ public class DialogSenha extends DialogFragment {
         builder.setIcon(R.drawable.ic_baseline_store_24);
         if (getArguments() != null) {
             us.setId(getArguments().getLong("idusuario"));
-            builder.setTitle(getString(R.string.alterar_codigo_pin));
+            builder.setTitle(getArguments().getString("nome"));
             binding.layoutPin.setVisibility(View.VISIBLE);
             binding.layoutPinRepete.setVisibility(View.VISIBLE);
             binding.textInputSenha.setVisibility(View.GONE);
@@ -99,6 +99,7 @@ public class DialogSenha extends DialogFragment {
             binding.pinRepete.requestFocus();
             binding.layoutPinRepete.setError(getString(R.string.pin_diferente));
         } else {
+            us.setData_cria(getArguments().getString("datacria"));
             us.setCodigoPin(Ultilitario.gerarHash(binding.pin.getText().toString()));
             usuarioViewModel.actualizarUsuario(us, true, ad);
         }

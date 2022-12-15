@@ -119,11 +119,11 @@ public class UsuarioViewModel extends AndroidViewModel {
             usuario.setNome(nome.getText().toString());
             usuario.setTelefone(telefone.getText().toString());
             usuario.setEndereco(endereco.getText().toString());
-            usuario.setEstado(estado.isChecked() ? Ultilitario.DOIS : Ultilitario.UM);
+            usuario.setEstado(estado.isChecked() ? 2 : 1);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 usuario.setId(0);
                 usuario.setCodigoPin(Ultilitario.gerarHash(codigoPin.getText().toString()));
-                usuario.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                usuario.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) + "/T");
                 verificarCodigoPin(usuario, dialog);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
                 usuario.setId(id);

@@ -36,7 +36,7 @@ public class UsuarioRepository {
 
     public void update(Usuario us, boolean isCodigoPin) {
         if (isCodigoPin)
-            usuarioDao.update(us.getCodigoPin(), us.getId());
+            usuarioDao.update(us.getCodigoPin(), us.getData_cria(), us.getId());
         else
             usuarioDao.update(us.getNome(), us.getTelefone(), us.getEndereco(), us.getEstado(), us.getData_modifica(), us.getId());
     }

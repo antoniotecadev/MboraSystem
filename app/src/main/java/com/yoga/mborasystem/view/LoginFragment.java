@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,10 +150,18 @@ public class LoginFragment extends Fragment {
             }
         });
         loginViewModel.getUsuarioMutableLiveData().observe(getViewLifecycleOwner(), usuario -> {
+            String[] dataCria = TextUtils.split(usuario.getData_cria(), "/");
             bundle.putString("nome", usuario.getNome());
-            bundle.putInt("idusuario", (int) usuario.getId());
-            Ultilitario.setBooleanPreference(requireContext(), false, "master");
-            Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
+            bundle.putString("datacria", dataCria[0] + "/ ");
+            if (dataCria[1].trim().isEmpty()) {
+                bundle.putInt("idusuario", (int) usuario.getId());
+                Ultilitario.setBooleanPreference(requireContext(), false, "master");
+                Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
+            } else {
+                limparCodigoPin();
+                bundle.putLong("idusuario", usuario.getId());
+                Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_dialogCodigoPin, bundle);
+            }
         });
 
         binding.btnAuthBiometric.setOnClickListener(v -> biometricPrompt.authenticate(promptInfo));

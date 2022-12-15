@@ -87,7 +87,7 @@ public class LoginViewModel extends AndroidViewModel {
                         contarIntroducaoPin();
                     }
                 } else {
-                    if (usuario.get(0).getEstado() == Ultilitario.DOIS)
+                    if (usuario.get(0).getEstado() == 2)
                         infoPin.postValue(getApplication().getString(R.string.usuario_bloqueado) + "\n" + getApplication().getString(R.string.info_usuario_bloqueado));
                     else
                         getUsuarioMutableLiveData().postValue(usuario.get(0));

@@ -105,7 +105,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="@dimen/margem_lateral_formulario"
         android:layout_marginRight="@dimen/margem_lateral_formulario"
-        android:text="@string/ok"
+        android:text="@string/alterar_codigo_pin"
         android:visibility="gone" />
 
     <Button
