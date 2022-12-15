@@ -2,12 +2,16 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,9 +23,11 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.Objects;
+import java.util.concurrent.Executors;
 
 public class ConfiguracaoFragment extends PreferenceFragmentCompat {
 
@@ -77,6 +83,22 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
                 return sb.toString();
             });
             pin.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD));
+            pin.setOnPreferenceChangeListener((preference, codigoPin) -> {
+                UsuarioRepository usuarioRepository = new UsuarioRepository(requireContext());
+                Handler handler = new Handler(Looper.getMainLooper());
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    try {
+                        if (codigoPin.toString().length() != 6 || !usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(codigoPin.toString())).isEmpty())
+                            handler.post(() -> {
+                                pin.setText("");
+                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), requireContext().getString(R.string.codigopin_invalido), R.drawable.ic_toast_erro);
+                            });
+                    } catch (Exception e) {
+                        handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
+                    }
+                });
+                return true;
+            });
         }
 
         if (taxaIva != null) {

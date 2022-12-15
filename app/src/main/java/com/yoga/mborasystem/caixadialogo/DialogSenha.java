@@ -100,8 +100,8 @@ public class DialogSenha extends DialogFragment {
             binding.layoutPinRepete.setError(getString(R.string.pin_diferente));
         } else {
             us.setData_cria(getArguments().getString("datacria"));
-            us.setCodigoPin(Ultilitario.gerarHash(binding.pin.getText().toString()));
-            usuarioViewModel.actualizarUsuario(us, true, ad);
+            us.setCodigoPin(binding.pin.getText().toString());
+            usuarioViewModel.verificarCodigoPin(us, ad, false);
         }
     }
 

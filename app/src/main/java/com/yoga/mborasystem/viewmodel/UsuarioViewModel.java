@@ -22,6 +22,7 @@ import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.MainActivity;
@@ -30,7 +31,6 @@ import com.yoga.mborasystem.model.entidade.Usuario;
 import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,11 +70,11 @@ public class UsuarioViewModel extends AndroidViewModel {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
-    public void criarUsuario(EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void criarUsuario(EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) {
         validarUsuario(Ultilitario.Operacao.CRIAR, 0, nome, telefone, endereco, estado, codigoPin, codigoPinNovamente, dialog);
     }
 
-    public void actualizarUsuario(long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void actualizarUsuario(long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) {
         validarUsuario(Ultilitario.Operacao.ACTUALIZAR, id, nome, telefone, endereco, estado, codigoPin, codigoPinNovamente, dialog);
     }
 
@@ -86,7 +86,7 @@ public class UsuarioViewModel extends AndroidViewModel {
         return listaUsuarios;
     }
 
-    public void validarUsuario(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) throws NoSuchAlgorithmException {
+    public void validarUsuario(Ultilitario.Operacao operacao, long id, EditText nome, TextInputEditText telefone, TextInputEditText endereco, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, EditText codigoPin, EditText codigoPinNovamente, AlertDialog dialog) {
         if (isCampoVazio(nome.getText().toString()) || Ultilitario.letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -122,9 +122,9 @@ public class UsuarioViewModel extends AndroidViewModel {
             usuario.setEstado(estado.isChecked() ? 2 : 1);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 usuario.setId(0);
-                usuario.setCodigoPin(Ultilitario.gerarHash(codigoPin.getText().toString()));
+                usuario.setCodigoPin(codigoPin.getText().toString());
                 usuario.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) + "/T");
-                verificarCodigoPin(usuario, dialog);
+                verificarCodigoPin(usuario, dialog, true);
             } else if (operacao.equals(Ultilitario.Operacao.ACTUALIZAR)) {
                 usuario.setId(id);
                 usuario.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
@@ -186,14 +186,19 @@ public class UsuarioViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void verificarCodigoPin(Usuario us, AlertDialog dg) {
+    public void verificarCodigoPin(Usuario us, AlertDialog dg, boolean isCriar) {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
             try {
-                if (usuarioRepository.confirmarCodigoPin(us.getCodigoPin()).isEmpty())
-                    criarUsuario(us, dg);
-                else {
+                String pin = Ultilitario.gerarHash(us.getCodigoPin());
+                if (usuarioRepository.confirmarCodigoPin(pin).isEmpty() && !PreferenceManager.getDefaultSharedPreferences(getApplication()).getString("pinadmin", "0").equals(us.getCodigoPin())) {
+                    us.setCodigoPin(pin);
+                    if (isCriar)
+                        criarUsuario(us, dg);
+                    else
+                        actualizarUsuario(us, true, dg);
+                } else {
                     handler.post(() -> {
                         MainActivity.dismissProgressBar();
                         Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.codigopin_invalido), R.drawable.ic_toast_erro);
@@ -202,7 +207,7 @@ public class UsuarioViewModel extends AndroidViewModel {
             } catch (Exception e) {
                 handler.post(() -> {
                     MainActivity.dismissProgressBar();
-                    Toast.makeText(getApplication().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
         });
