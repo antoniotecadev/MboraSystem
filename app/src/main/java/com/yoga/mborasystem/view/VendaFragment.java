@@ -424,6 +424,10 @@ public class VendaFragment extends Fragment {
                             imprimirFacturaNotaCredito(venda, false, true, true);
                             return false;
                         });
+                        menu.add(getString(R.string.mt_nt_ct)).setOnMenuItemClickListener(item -> {
+                            Ultilitario.alertDialog(getString(R.string.mt_nt_ct), venda.getMotivoEmissaoNC(),requireContext(), R.drawable.ic_baseline_dry_24);
+                            return false;
+                        });
 //                            if (isMaster) {
 //                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
 //                                    restaurarVenda(venda.getReferenciaFactura(), venda.getId());
