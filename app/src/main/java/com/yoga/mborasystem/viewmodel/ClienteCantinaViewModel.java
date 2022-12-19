@@ -149,7 +149,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 clienteCantina.setId(idcliente);
                 clienteCantina.setEstado(Ultilitario.DOIS);
                 clienteCantina.setData_modifica(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                if ((clienteCantina.getNif().equals(nifbi) || nifbi.isEmpty() || nifbi.equals("999999999")) && clienteCantina.getNome().equals(nome))
+                if ((clienteCantina.getNif().equals(nifbi) || nifbi.equals("999999999")) && clienteCantina.getNome().equals(nome))
                     actualizarCliente(clienteCantina, dialog);
                 else
                     verificarCompraCliente(clienteCantina, dialog, false, nifbi);
@@ -236,7 +236,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     }
 
     public void verificarCompraCliente(ClienteCantina ct, AlertDialog dg, boolean isElimina, String nifbi) {
-        vendaRepository.verificarCompras(clienteCantina.getId())
+        vendaRepository.verificarCompras(ct.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<Venda>>() {
@@ -248,9 +248,10 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                     @Override
                     public void onSuccess(@NonNull List<Venda> vendas) {
                         if (vendas.isEmpty()) {
-                            if (isElimina)
+                            if (isElimina) {
+                                crud = true;
                                 eliminarCliente(ct, dg);
-                            else
+                            } else
                                 nifBiExiste(ct, dg, false);
                         } else {
                             if (isElimina)
@@ -311,7 +312,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(cliente -> {
-                    if (cliente.isEmpty())
+                    if (cliente.isEmpty() || ct.getNif().trim().isEmpty())
                         if (isCriar)
                             criarClienteCantina(ct, dialog);
                         else
