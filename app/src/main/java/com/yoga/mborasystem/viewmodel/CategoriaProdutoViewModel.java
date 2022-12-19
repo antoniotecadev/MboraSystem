@@ -85,9 +85,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         if (isCampoVazio(nome.getText().toString())) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
-        } else if (isCampoVazio(descricao.getText().toString())) {
-            descricao.requestFocus();
-            descricao.setError(getApplication().getString(R.string.descricao_invalida));
         } else {
             categoria.setCategoria(nome.getText().toString());
             categoria.setDescricao(descricao.getText().toString());

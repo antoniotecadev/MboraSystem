@@ -110,7 +110,7 @@
     <string name="categorias_carregar">Categories loaded</string>
     <string name="alinhar_codigo_barra">Align barcode to scan</string>
     <string name="continuar_criar_produto">Continue creating product</string>
-    <string name="descricao">Description *</string>
+    <string name="descricao">Description</string>
     <string name="descricao_invalida">Description is not valid</string>
     <string name="bazar">Bazaar</string>
     <string name="bebidas">Drinks</string>

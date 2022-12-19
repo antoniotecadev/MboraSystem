@@ -37,6 +37,7 @@ public class DialogCriarCategoria extends DialogFragment {
         if (getArguments() != null) {
             categoria = getArguments().getParcelable("categoria");
             if (categoria != null) {
+                builder.setTitle(categoria.getCategoria());
                 binding.btnCriarCategoria.setText(getString(R.string.salvar));
                 binding.nomeCategoria.setText(categoria.getCategoria());
                 binding.descricao.setText(categoria.getDescricao());

@@ -110,7 +110,7 @@
     <string name="categorias_carregar">Catégories chargées</string>
     <string name="alinhar_codigo_barra">Aligner le code-barres à scanner</string>
     <string name="continuar_criar_produto">Continuer la création du produit</string>
-    <string name="descricao">La description *</string>
+    <string name="descricao">La description</string>
     <string name="descricao_invalida">La description n\'est pas valide</string>
     <string name="bazar">Bazar</string>
     <string name="bebidas">Boissons</string>
