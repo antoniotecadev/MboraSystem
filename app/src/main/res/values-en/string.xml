@@ -603,7 +603,7 @@
     <string name="dds_cmc">Commercial Data (Invoice)</string>
     <string name="nm_cmc">Commercial name</string>
     <string name="nib">NIB (Bank Account)</string>
-    <string name="ocult_qrcode">Hide Qr Code on Invoice</string>
+    <string name="qrcode_fact">Qr Code on Invoice</string>
     <string name="view">Visualization</string>
     <string name="text_rdp_fact">Footer Text (Invoice)</string>
     <string name="fctrc">Invoicing (FR)</string>

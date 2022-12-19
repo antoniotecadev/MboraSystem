@@ -629,7 +629,7 @@
     <string name="nm_cmc">Nome Comercial</string>
     <string name="nib">NIB (Conta Bancária)</string>
     <string name="iban" translatable="false">IBAN</string>
-    <string name="ocult_qrcode">Ocultar Código Qr na Factura</string>
+    <string name="qrcode_fact">Código Qr na Factura</string>
     <string name="view">Visualização</string>
     <string name="text_rdp_fact">Texto Rodapé  (Factura)</string>
     <string name="fctrc">Facturação (FR)</string>

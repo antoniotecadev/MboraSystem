@@ -603,7 +603,7 @@
     <string name="dds_cmc">Données commerciales (facture)</string>
     <string name="nm_cmc">Nom commercial</string>
     <string name="nib">NIB (compte bancaire)</string>
-    <string name="ocult_qrcode">Masquer le code QR sur la facture</string>
+    <string name="qrcode_fact">Code QR sur la facture</string>
     <string name="view">Visualisation</string>
     <string name="text_rdp_fact">Texte de pied de page (facture)</string>
     <string name="fctrc">Facturation (FR)</string>
