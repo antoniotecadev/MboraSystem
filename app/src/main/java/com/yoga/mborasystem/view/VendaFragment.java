@@ -410,6 +410,7 @@ public class VendaFragment extends Fragment {
                                     caixaDialogo(getString(R.string.liq_div) + " (" + venda.getReferenciaFactura() + ")", getString(R.string.enc_div_vend), true, false, venda);
                                 return false;
                             });
+                            menu.add(TextUtils.split(venda.getNome_cliente(), "-")[2]).setEnabled(false);
 //                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
 //                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
 //                                    return false;
@@ -425,7 +426,7 @@ public class VendaFragment extends Fragment {
                             return false;
                         });
                         menu.add(getString(R.string.mt_nt_ct)).setOnMenuItemClickListener(item -> {
-                            Ultilitario.alertDialog(getString(R.string.mt_nt_ct), venda.getMotivoEmissaoNC(),requireContext(), R.drawable.ic_baseline_dry_24);
+                            Ultilitario.alertDialog(getString(R.string.mt_nt_ct), venda.getMotivoEmissaoNC(), requireContext(), R.drawable.ic_baseline_dry_24);
                             return false;
                         });
 //                            if (isMaster) {
