@@ -414,10 +414,10 @@ public class VendaFragment extends Fragment {
 //                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
 //                                    return false;
 //                                });
-                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-                                caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
-                                return false;
-                            });
+//                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+//                                caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
+//                                return false;
+//                            });
                         }
                     } else {
                         menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
