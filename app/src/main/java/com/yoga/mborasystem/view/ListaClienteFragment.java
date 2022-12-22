@@ -268,7 +268,7 @@ public class ListaClienteFragment extends Fragment {
                                     .setTitle(getString(R.string.eliminar) + " (" + ct.getNome() + ")")
                                     .setMessage(getString(R.string.tem_cert_elim_cli))
                                     .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.verificarCompraCliente(clienteCantina, null, true, ""))
+                                    .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.verificarCompraCliente(clienteCantina, null, true, "", false))
                                     .show();
                             return false;
                         });

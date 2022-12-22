@@ -139,7 +139,7 @@ public class DialogCriarClienteCantina extends DialogFragment {
                 .setTitle(getString(R.string.eliminar) + " (" + nome + ")")
                 .setMessage(getString(R.string.tem_cert_elim_cli))
                 .setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.verificarCompraCliente(clienteCantina, dialog, true, ""))
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> clienteCantinaViewModel.verificarCompraCliente(clienteCantina, dialog, true, "", false))
                 .show();
     }
 
