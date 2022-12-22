@@ -365,7 +365,7 @@ public class VendaFragment extends Fragment {
                     h.binding.textDivida.setBackgroundColor(Color.RED);
 
                 h.binding.textCliente.setText(TextUtils.split(venda.getNome_cliente(), "-")[0]);
-                h.binding.textReferencia.setText(isNotaCredito ? venda.getReferenciaNC() : venda.getReferenciaFactura());
+                h.binding.textReferencia.setText(isNotaCredito ? venda.getReferenciaNC() + " -> " + venda.getReferenciaFactura() : venda.getReferenciaFactura());
                 h.binding.textQtProd.setText(String.valueOf(venda.getQuantidade()));
                 h.binding.textTotVend.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
                 h.binding.textView27.setText(getString(R.string.desconto) + "(" + venda.getPercentagemDesconto() + "%)");
@@ -387,7 +387,7 @@ public class VendaFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(directions);
                 });
                 h.binding.btnEntrar.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-                    menu.setHeaderTitle(venda.getReferenciaFactura());
+                    menu.setHeaderTitle(isNotaCredito ? venda.getReferenciaNC() : venda.getReferenciaFactura());
                     if (!isNotaCredito) {
                         menu.add(getString(R.string.ver_prod)).setOnMenuItemClickListener(item -> {
                             VendaFragmentDirections.ActionVendaFragmentToListaProdutoVendaFragment directions = VendaFragmentDirections.actionVendaFragmentToListaProdutoVendaFragment(venda.getQuantidade(), venda.getReferenciaFactura()).setIdvenda(venda.getId()).setVendaTotal(venda.getTotal_venda());
