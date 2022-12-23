@@ -338,6 +338,7 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     public void importarVenda(List<String> vendas) {
+        crud = true;
         Completable.fromAction(() -> vendaRepository.importarVendas(vendas))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
