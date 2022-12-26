@@ -246,10 +246,10 @@ public class VendaFragment extends Fragment {
                     menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                     menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
                 }
-                if (!isMaster) {
+//                if (!isMaster) {
 //                    menu.findItem(R.id.exportarvenda).setVisible(false);
 //                    menu.findItem(R.id.importarvenda).setVisible(false);
-                }
+//                }
 
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
