@@ -236,8 +236,8 @@ public class VendaFragment extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_venda, menu);
                 if (isNotaCredito) {
-                    menu.findItem(R.id.exportarvenda).setVisible(false);
-                    menu.findItem(R.id.importarvenda).setVisible(false);
+//                    menu.findItem(R.id.exportarvenda).setVisible(false);
+//                    menu.findItem(R.id.importarvenda).setVisible(false);
                     if (!isMaster) {
                         menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
                         menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
@@ -247,8 +247,8 @@ public class VendaFragment extends Fragment {
                     menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
                 }
                 if (!isMaster) {
-                    menu.findItem(R.id.exportarvenda).setVisible(false);
-                    menu.findItem(R.id.importarvenda).setVisible(false);
+//                    menu.findItem(R.id.exportarvenda).setVisible(false);
+//                    menu.findItem(R.id.importarvenda).setVisible(false);
                 }
 
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -298,13 +298,13 @@ public class VendaFragment extends Fragment {
                         VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario).setIsNotaCredito(isNotaCredito);
                         Navigation.findNavController(requireView()).navigate(direction);
                         break;
-                    case R.id.exportarvenda:
-                        exportarVenda();
-                        break;
-                    case R.id.importarvenda:
-                        //Importa as vendas
-                        Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null, false);
-                        break;
+//                    case R.id.exportarvenda:
+//                        exportarVenda();
+//                        break;
+//                    case R.id.importarvenda:
+//                        //Importa as vendas
+//                        Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null, false);
+//                        break;
                     case R.id.btnEliminarTodosLixo:
                         dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
                         break;
