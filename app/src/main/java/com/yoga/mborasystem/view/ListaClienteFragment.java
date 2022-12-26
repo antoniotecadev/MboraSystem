@@ -117,7 +117,7 @@ public class ListaClienteFragment extends Fragment {
                 Ultilitario.showToast(getContext(), Color.rgb(254, 207, 65), getString(R.string.cliente_nao_encontrado), R.drawable.ic_toast_erro);
             else {
                 for (ClienteCantina clienteCantina : cliente)
-                    dt.append(clienteCantina.getNome().isEmpty() ? " " : clienteCantina.getNome()).append(",").append(clienteCantina.getTelefone().isEmpty() ? " " : clienteCantina.getTelefone()).append(",").append(clienteCantina.getEmail().isEmpty() ? " " : clienteCantina.getEmail()).append(",").append(clienteCantina.getEndereco().isEmpty() ? " " : clienteCantina.getEndereco()).append(",").append(clienteCantina.getNif().isEmpty() ? " " : clienteCantina.getNif()).append("\n");
+                    dt.append(clienteCantina.getId()).append(",").append(clienteCantina.getNome().isEmpty() ? " " : clienteCantina.getNome()).append(",").append(clienteCantina.getTelefone().isEmpty() ? " " : clienteCantina.getTelefone()).append(",").append(clienteCantina.getEmail().isEmpty() ? " " : clienteCantina.getEmail()).append(",").append(clienteCantina.getEndereco().isEmpty() ? " " : clienteCantina.getEndereco()).append(",").append(clienteCantina.getNif().isEmpty() ? " " : clienteCantina.getNif()).append("\n");
 
                 data = dt;
                 exportarClientes(getString(R.string.clientes), tipo == 0 && Ultilitario.isLocal);
