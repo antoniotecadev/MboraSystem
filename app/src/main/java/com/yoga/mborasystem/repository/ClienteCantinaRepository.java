@@ -15,7 +15,10 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
@@ -71,19 +74,24 @@ public class ClienteCantinaRepository {
 
 
     public void importarClientes(List<String> clientes, Application context, Handler handler) {
-        ClienteCantina clienteCantina = new ClienteCantina();
+        ClienteCantina cc = new ClienteCantina();
         try {
+            Map<Long, String> clientList = new HashMap<>();
+            for (ClienteCantina clienteCantina : clienteCantinaDao.getClientesExport())
+                clientList.put(clienteCantina.getId(), clienteCantina.getNif());
             for (String cl : clientes) {
                 String[] cli = cl.split(",");
-                clienteCantina.setId(0);
-                clienteCantina.setNome(cli[0]);
-                clienteCantina.setTelefone(cli[1]);
-                clienteCantina.setEmail(cli[2]);
-                clienteCantina.setEndereco(cli[3]);
-                clienteCantina.setNif(cli[4]);
-                clienteCantina.setEstado(Ultilitario.UM);
-                clienteCantina.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                clienteCantinaDao.insert(clienteCantina);
+                if (!clientList.containsKey(Long.parseLong(cli[0])) && !clientList.containsValue(cli[5])) {
+                    cc.setId(0);
+                    cc.setNome(cli[1]);
+                    cc.setTelefone(cli[2]);
+                    cc.setEmail(cli[3]);
+                    cc.setEndereco(cli[4]);
+                    cc.setNif(cli[5]);
+                    cc.setEstado(Ultilitario.UM);
+                    cc.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                    clienteCantinaDao.insert(cc);
+                }
             }
             handler.post(() -> Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.cli_import), R.drawable.ic_toast_feito));
         } catch (Exception e) {
