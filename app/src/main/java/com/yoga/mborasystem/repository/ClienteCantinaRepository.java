@@ -15,7 +15,6 @@ import com.yoga.mborasystem.model.entidade.ClienteCantina;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +70,6 @@ public class ClienteCantinaRepository {
     public Single<List<ClienteCantina>> nifBiExiste(String nif) {
         return clienteCantinaDao.nifBiExiste(nif);
     }
-
 
     public void importarClientes(List<String> clientes, Application context, Handler handler) {
         ClienteCantina cc = new ClienteCantina();
