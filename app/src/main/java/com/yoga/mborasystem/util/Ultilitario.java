@@ -690,6 +690,9 @@ public class Ultilitario {
                         produto.put("codigoBarra", detalhes.get(2));
                         produto.put("categoria", detalhes.get(3));
                         produto.put("urlImage", url.toString());
+                        produto.put("endereco", detalhes.get(4));
+                        produto.put("empresa", detalhes.get(5));
+                        produto.put("imei", detalhes.get(6));
                         mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
                             MainActivity.dismissProgressBar();
                             alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);

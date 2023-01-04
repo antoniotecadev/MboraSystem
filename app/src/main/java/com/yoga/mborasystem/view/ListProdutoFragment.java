@@ -689,9 +689,12 @@ public class ListProdutoFragment extends Fragment {
                                 if (task.getResult().exists()) {
                                     try {
                                         Cliente cliente = task.getResult().getValue(Cliente.class);
-                                        if (cliente != null)
+                                        if (cliente != null) {
+                                            detalhes.add(cliente.getMunicipio() + ", " + cliente.getBairro() + ", " + cliente.getRua());
+                                            detalhes.add(cliente.getNomeEmpresa());
+                                            detalhes.add(cliente.getImei());
                                             alertDialogSelectImage(cliente, requireContext(), imageActivityResultLauncher);
-                                        else
+                                        } else
                                             showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
                                     } catch (Exception e) {
                                         alertDialog(getString(R.string.erro), e.getMessage(), requireActivity(), R.drawable.ic_baseline_privacy_tip_24);
