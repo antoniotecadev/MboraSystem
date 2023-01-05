@@ -33,7 +33,6 @@ import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -57,7 +56,6 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -72,7 +70,6 @@ import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
-import com.yoga.mborasystem.databinding.DialogSenhaBinding;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
@@ -598,129 +595,129 @@ public class Ultilitario {
         return date[2] + "-" + listData.get(date[1]) + "-" + date[0];
     }
 
-    public static FirebaseUser verifyAuthenticationInFirebase() {
-        // Check if user is signed in (non-null) and update UI accordingly.
-        return FirebaseAuth.getInstance().getCurrentUser();
-    }
+//    public static FirebaseUser verifyAuthenticationInFirebase() {
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        return FirebaseAuth.getInstance().getCurrentUser();
+//    }
 
-    public static void authenticationInFirebase(Activity activity, DialogSenhaBinding binding, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
-        binding.textInputSenha.setVisibility(View.GONE);
-        binding.layoutPin.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
-        binding.buttonFechar.setText(activity.getString(R.string.cancelar));
+//    public static void authenticationInFirebase(Activity activity, DialogSenhaBinding binding, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+//        binding.textInputSenha.setVisibility(View.GONE);
+//        binding.layoutPin.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
+//        binding.buttonFechar.setText(activity.getString(R.string.cancelar));
+//
+//        editTextLayout(binding.layoutPin, binding.pin, R.string.Email, InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS, activity);
+//        editTextLayout(binding.layoutPinRepete, binding.pinRepete, R.string.senha, InputType.TYPE_TEXT_VARIATION_PASSWORD, activity);
+//
+//        AlertDialog alertDialog = new AlertDialog.Builder(activity)
+//                .setIcon(R.drawable.ic_baseline_store_24)
+//                .setTitle(activity.getString(R.string.aut) + activity.getString(R.string.nvm))
+//                .setView(binding.getRoot())
+//                .show();
+//
+//        binding.btnEntrar.setOnClickListener(view -> {
+//            if (isEmailValido(Objects.requireNonNull(binding.pin.getText()).toString())) {
+//                binding.pin.requestFocus();
+//                binding.layoutPin.setError(activity.getString(R.string.email_invalido));
+//            } else if ((isCampoVazio(Objects.requireNonNull(binding.pinRepete.getText()).toString()) || letraNumero.matcher(binding.pinRepete.getText().toString()).find())) {
+//                binding.pinRepete.requestFocus();
+//                binding.layoutPinRepete.setError(activity.getString(R.string.senha_invalida));
+//            } else
+//                signInFirebase(activity, binding.pin.getText().toString(), binding.pinRepete.getText().toString(), alertDialog, imageActivityResultLauncher);
+//        });
+//        binding.buttonFechar.setOnClickListener(view -> alertDialog.dismiss());
+//    }
 
-        editTextLayout(binding.layoutPin, binding.pin, R.string.Email, InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS, activity);
-        editTextLayout(binding.layoutPinRepete, binding.pinRepete, R.string.senha, InputType.TYPE_TEXT_VARIATION_PASSWORD, activity);
+//    private static void editTextLayout(TextInputLayout textInputLayout, TextInputEditText textInputEditText, int hint, int inputType, Context context) {
+//        textInputLayout.setVisibility(View.VISIBLE);
+//        textInputLayout.setHint(context.getString(hint));
+//        textInputEditText.setInputType(inputType);
+//    }
 
-        AlertDialog alertDialog = new AlertDialog.Builder(activity)
-                .setIcon(R.drawable.ic_baseline_store_24)
-                .setTitle(activity.getString(R.string.aut) + activity.getString(R.string.nvm))
-                .setView(binding.getRoot())
-                .show();
+//    private static void signInFirebase(Activity activity, String email, String password, AlertDialog alertDialog, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+//        MainActivity.getProgressBar();
+//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
+//        mAuth.signInWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(activity, task -> {
+//                    if (task.isSuccessful()) {
+//                        alertDialog.dismiss();
+//                        reference.child(getValueSharedPreferences(activity.getBaseContext(), "imei", "0000000000")).get().addOnCompleteListener(task1 -> {
+//                            if (task1.isSuccessful()) {
+//                                MainActivity.dismissProgressBar();
+//                                if (task1.getResult().exists()) {
+//                                    Cliente cliente = task1.getResult().getValue(Cliente.class);
+//                                    showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
+//                                    if (cliente != null)
+//                                        alertDialogSelectImage(cliente, activity, imageActivityResultLauncher);
+//                                    else
+//                                        showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+//                                } else
+//                                    showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
+//                            } else {
+//                                mAuth.signOut();
+//                                MainActivity.dismissProgressBar();
+//                                alertDialog(activity.getString(R.string.erro), task1.getException().getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
+//                            }
+//                        });
+//                    } else {
+//                        MainActivity.dismissProgressBar();
+//                        alertDialog(activity.getString(R.string.erro), task.getException().getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
+//                    }
+//                });
+//    }
 
-        binding.btnEntrar.setOnClickListener(view -> {
-            if (isEmailValido(Objects.requireNonNull(binding.pin.getText()).toString())) {
-                binding.pin.requestFocus();
-                binding.layoutPin.setError(activity.getString(R.string.email_invalido));
-            } else if ((isCampoVazio(Objects.requireNonNull(binding.pinRepete.getText()).toString()) || letraNumero.matcher(binding.pinRepete.getText().toString()).find())) {
-                binding.pinRepete.requestFocus();
-                binding.layoutPinRepete.setError(activity.getString(R.string.senha_invalida));
-            } else
-                signInFirebase(activity, binding.pin.getText().toString(), binding.pinRepete.getText().toString(), alertDialog, imageActivityResultLauncher);
-        });
-        binding.buttonFechar.setOnClickListener(view -> alertDialog.dismiss());
-    }
-
-    private static void editTextLayout(TextInputLayout textInputLayout, TextInputEditText textInputEditText, int hint, int inputType, Context context) {
-        textInputLayout.setVisibility(View.VISIBLE);
-        textInputLayout.setHint(context.getString(hint));
-        textInputEditText.setInputType(inputType);
-    }
-
-    private static void signInFirebase(Activity activity, String email, String password, AlertDialog alertDialog, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
-        MainActivity.getProgressBar();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, task -> {
-                    if (task.isSuccessful()) {
-                        alertDialog.dismiss();
-                        reference.child(getValueSharedPreferences(activity.getBaseContext(), "imei", "0000000000")).get().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                MainActivity.dismissProgressBar();
-                                if (task1.getResult().exists()) {
-                                    Cliente cliente = task1.getResult().getValue(Cliente.class);
-                                    showToast(activity, Color.rgb(102, 153, 0), activity.getString(R.string.autent), R.drawable.ic_toast_feito);
-                                    if (cliente != null)
-                                        alertDialogSelectImage(cliente, activity, imageActivityResultLauncher);
-                                    else
-                                        showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
-                                } else
-                                    showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
-                            } else {
-                                mAuth.signOut();
-                                MainActivity.dismissProgressBar();
-                                alertDialog(activity.getString(R.string.erro), task1.getException().getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
-                            }
-                        });
-                    } else {
-                        MainActivity.dismissProgressBar();
-                        alertDialog(activity.getString(R.string.erro), task.getException().getMessage(), activity, R.drawable.ic_baseline_privacy_tip_24);
-                    }
-                });
-    }
-
-    public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
-        MainActivity.getProgressBar();
-        String filename = UUID.randomUUID().toString();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + imei);
-        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
-
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] data = baos.toByteArray();
-        mDatabase.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                long countProduct = task.getResult().getChildrenCount();
-                long quantidadeProduto = Long.parseLong(getValueSharedPreferences(context, "pac_qtd_pro", "0"));
-//                if (countProduct <= quantidadeProduto) {
-                if (true) {
-                    UploadTask uploadTask = storeRef.putBytes(data);
-                    uploadTask.addOnFailureListener(e -> {
-                        MainActivity.dismissProgressBar();
-                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-                    }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
-                        Map<String, String> produto = new HashMap<>();
-                        String key = mDatabase.push().getKey();
-                        produto.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                        produto.put("nome", detalhes.get(0));
-                        produto.put("preco", detalhes.get(1));
-                        produto.put("codigoBarra", detalhes.get(2));
-                        produto.put("categoria", detalhes.get(3));
-                        produto.put("urlImage", url.toString());
-                        produto.put("endereco", detalhes.get(4));
-                        produto.put("empresa", detalhes.get(5));
-                        produto.put("imei", detalhes.get(6));
-                        mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
-                            MainActivity.dismissProgressBar();
-                            alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);
-                        }).addOnFailureListener(e -> {
-                            FirebaseStorage.getInstance().getReferenceFromUrl(url.toString()).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
-                            MainActivity.dismissProgressBar();
-                            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-                        });
-                    }).addOnFailureListener(e -> {
-                        MainActivity.dismissProgressBar();
-                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-                    }));
-                } else
-                    alertDialog(context.getString(R.string.erro), context.getString(R.string.atg_limit) + countProduct, context, R.drawable.ic_baseline_privacy_tip_24);
-            } else
-                alertDialog(context.getString(R.string.erro), task.getException().getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-        });
-    }
+//    public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
+//        MainActivity.getProgressBar();
+//        String filename = UUID.randomUUID().toString();
+//        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + imei);
+//        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
+//
+//        imageView.setDrawingCacheEnabled(true);
+//        imageView.buildDrawingCache();
+//        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+//        byte[] data = baos.toByteArray();
+//        mDatabase.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                long countProduct = task.getResult().getChildrenCount();
+//                long quantidadeProduto = Long.parseLong(getValueSharedPreferences(context, "pac_qtd_pro", "0"));
+////                if (countProduct <= quantidadeProduto) {
+//                if (true) {
+//                    UploadTask uploadTask = storeRef.putBytes(data);
+//                    uploadTask.addOnFailureListener(e -> {
+//                        MainActivity.dismissProgressBar();
+//                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+//                    }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
+//                        Map<String, String> produto = new HashMap<>();
+//                        String key = mDatabase.push().getKey();
+//                        produto.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                        produto.put("nome", detalhes.get(0));
+//                        produto.put("preco", detalhes.get(1));
+//                        produto.put("codigoBarra", detalhes.get(2));
+//                        produto.put("categoria", detalhes.get(3));
+//                        produto.put("urlImage", url.toString());
+//                        produto.put("endereco", detalhes.get(4));
+//                        produto.put("empresa", detalhes.get(5));
+//                        produto.put("imei", detalhes.get(6));
+//                        mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
+//                            MainActivity.dismissProgressBar();
+//                            alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);
+//                        }).addOnFailureListener(e -> {
+//                            FirebaseStorage.getInstance().getReferenceFromUrl(url.toString()).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
+//                            MainActivity.dismissProgressBar();
+//                            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+//                        });
+//                    }).addOnFailureListener(e -> {
+//                        MainActivity.dismissProgressBar();
+//                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+//                    }));
+//                } else
+//                    alertDialog(context.getString(R.string.erro), context.getString(R.string.atg_limit) + countProduct, context, R.drawable.ic_baseline_privacy_tip_24);
+//            } else
+//                alertDialog(context.getString(R.string.erro), task.getException().getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+//        });
+//    }
 
     public static boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
