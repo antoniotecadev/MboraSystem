@@ -14,7 +14,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -56,13 +55,6 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.xwray.groupie.GroupAdapter;
@@ -73,7 +65,6 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -101,7 +92,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.crypto.SecretKeyFactory;
