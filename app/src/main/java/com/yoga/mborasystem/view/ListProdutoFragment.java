@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -489,8 +491,10 @@ public class ListProdutoFragment extends Fragment {
                                     MainActivity.getProgressBar();
                                     requestPermissionLauncher.launch(Manifest.permission.CAMERA);
                                     detalhes = new ArrayList<>();
+                                    detalhes.add(getValueSharedPreferences(requireContext(), "imei", "0000000000"));
                                     detalhes.add(produto.getNome());
                                     detalhes.add(String.valueOf(produto.getPreco()));
+                                    detalhes.add(String.valueOf(produto.getQuantidade()));
                                     detalhes.add(produto.getCodigoBarra());
                                     detalhes.add(categoria.toLowerCase(Locale.ROOT));
                                     return false;
@@ -675,17 +679,12 @@ public class ListProdutoFragment extends Fragment {
                                             categorias.add("");
                                             for (int i = 0; i < jsonElements.size(); i++) {
                                                 JsonObject categoria = jsonElements.get(i).getAsJsonObject();
-                                                categorias.add(categoria.get("nome").getAsString());
+                                                categorias.add(categoria.get("id").getAsInt() + "-" + categoria.get("nome").getAsString());
                                             }
                                             if (categorias.getItem(1).isEmpty())
                                                 Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.ct_na_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                                             else {
-                                                new AlertDialog.Builder(requireContext())
-                                                        .setIcon(R.drawable.ic_baseline_cloud_upload_24)
-                                                        .setView(view)
-                                                        .setTitle(getString(R.string.env, getString(R.string.mbora)))
-                                                        .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                                        .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss()).show();
+                                                infoProduto(view, categoriasSpinner);
                                                 Snackbar.make(requireView(), getString(R.string.ct_car), Snackbar.LENGTH_LONG).show();
                                             }
                                         } catch (Exception ex) {
@@ -700,6 +699,21 @@ public class ListProdutoFragment extends Fragment {
                     }
                 }
             });
+
+    private void infoProduto(View view, AppCompatSpinner caSpinner) {
+        new AlertDialog.Builder(requireContext())
+                .setIcon(R.drawable.ic_baseline_cloud_upload_24)
+                .setView(view)
+                .setTitle(getString(R.string.env, getString(R.string.mbora)))
+                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                    if (caSpinner.getSelectedItem().toString().isEmpty())
+                        Snackbar.make(requireView(), getString(R.string.sl_ct_pd), Snackbar.LENGTH_LONG).show();
+                    else {
+                        detalhes.add(TextUtils.split(caSpinner.getSelectedItem().toString(), "-")[0]);
+                    }
+                }).show();
+    }
 
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
