@@ -118,12 +118,9 @@ public class Ultilitario {
     public static void showToast(Context context, int color, String s, int imagem) {
         Toast toast = new Toast(context);
         @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
+        goneViews(view);
         TextView text = view.findViewById(R.id.detalhe_text);
         ImageView img = view.findViewById(R.id.image);
-        TextView textCategoria = view.findViewById(R.id.textCategoria);
-        AppCompatSpinner appCompatSpinner = view.findViewById(R.id.categoriaSpinner);
-        textCategoria.setVisibility(View.GONE);
-        appCompatSpinner.setVisibility(View.GONE);
         text.setText(s);
         img.setImageResource(imagem);
         view.setBackgroundColor(color);
@@ -133,9 +130,17 @@ public class Ultilitario {
         toast.show();
     }
 
+    public static void goneViews(View view) {
+        TextView textCategoria = view.findViewById(R.id.textCategoria);
+        AppCompatSpinner appCompatSpinner = view.findViewById(R.id.categoriaSpinner);
+        textCategoria.setVisibility(View.GONE);
+        appCompatSpinner.setVisibility(View.GONE);
+    }
+
     @SuppressLint({"WrongConstant", "UseCompatLoadingForDrawables"})
     public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser, ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode, String nome, String estabalecimento, String imei) {
         View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
+        goneViews(view);
         ImageView img = view.findViewById(R.id.image);
         img.setImageBitmap(qrCode);
 
