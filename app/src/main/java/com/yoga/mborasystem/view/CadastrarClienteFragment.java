@@ -92,8 +92,8 @@ public class CadastrarClienteFragment extends Fragment {
         return criarCliente(inflater, container);
     }
 
-    private void spinnerBairros(String município) {
-        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/" + município.trim().replaceAll("\\s+", "%20") + "/bairros";
+    private void spinnerBairros(String municipio) {
+        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/" + municipio.trim().replaceAll("\\s+", "%20") + "/bairros";
         ArrayAdapter<String> bairros = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
         Ion.with(requireActivity())
                 .load(URL)
