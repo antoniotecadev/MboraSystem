@@ -669,36 +669,49 @@ public class ListProdutoFragment extends Fragment {
                             img.requestLayout();
                             img.setScaleType(ImageView.ScaleType.FIT_START);
                             img.setImageBitmap(selectedImage);
-
-                            String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/categorias/mbora";
-                            Ion.with(requireActivity())
-                                    .load(URL)
-                                    .asJsonArray()
-                                    .setCallback((e, jsonElements) -> {
-                                        try {
-                                            categorias.add("");
-                                            for (int i = 0; i < jsonElements.size(); i++) {
-                                                JsonObject categoria = jsonElements.get(i).getAsJsonObject();
-                                                categorias.add(categoria.get("id").getAsInt() + "-" + categoria.get("nome").getAsString());
-                                            }
-                                            if (categorias.getItem(1).isEmpty())
-                                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.ct_na_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                                            else {
-                                                infoProduto(view, categoriasSpinner);
-                                                Snackbar.make(requireView(), getString(R.string.ct_car), Snackbar.LENGTH_LONG).show();
-                                            }
-                                        } catch (Exception ex) {
-                                            Ultilitario.alertDialog(getString(R.string.erro), ex.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                                        } finally {
-                                            MainActivity.dismissProgressBar();
-                                        }
-                                    });
+                            getCategorias(categorias, view, categoriasSpinner);
                         } catch (Exception e) {
                             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
                     }
                 }
             });
+
+    private void getCategorias(ArrayAdapter<String> categorias, View view, AppCompatSpinner categoriasSpinner) {
+        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/categorias/mbora";
+        Ion.with(requireActivity())
+                .load(URL)
+                .asJsonArray()
+                .setCallback((e, jsonElements) -> {
+                    try {
+                        categorias.add("");
+                        for (int i = 0; i < jsonElements.size(); i++) {
+                            JsonObject categoria = jsonElements.get(i).getAsJsonObject();
+                            categorias.add(categoria.get("id").getAsInt() + "-" + categoria.get("nome").getAsString());
+                        }
+                        if (categorias.getItem(1).isEmpty())
+                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.ct_na_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        else {
+                            infoProduto(view, categoriasSpinner);
+                            Snackbar.make(requireView(), getString(R.string.ct_car), Snackbar.LENGTH_LONG).show();
+                        }
+                    } catch (Exception ex) {
+                        new android.app.AlertDialog.Builder(requireContext())
+                                .setIcon(R.drawable.ic_baseline_privacy_tip_24)
+                                .setTitle(getString(R.string.erro))
+                                .setMessage(ex.getMessage())
+                                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    MainActivity.getProgressBar();
+                                    getCategorias(categorias, view, categoriasSpinner);
+                                })
+                                .show();
+                    } finally {
+                        MainActivity.dismissProgressBar();
+                    }
+                });
+    }
 
     private void infoProduto(View view, AppCompatSpinner caSpinner) {
         new AlertDialog.Builder(requireContext())
