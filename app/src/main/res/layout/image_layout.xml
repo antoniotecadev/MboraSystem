@@ -4,9 +4,14 @@
     android:id="@+id/toast_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="8dp"
+    android:orientation="vertical"
     tools:viewBindingIgnore="true">
+
+  <androidx.appcompat.widget.LinearLayoutCompat
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      android:padding="8dp">
 
   <androidx.appcompat.widget.AppCompatImageView
       android:id="@+id/image"
@@ -21,5 +26,21 @@
       android:layout_marginLeft="2dp"
       android:textColor="@color/white"
       android:textSize="16sp" />
+  </androidx.appcompat.widget.LinearLayoutCompat>
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margem_lateral_formulario"
+      android:text="@string/categorias"/>
+
+  <androidx.appcompat.widget.AppCompatSpinner
+      android:id="@+id/categoriaSpinner"
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:layout_marginLeft="@dimen/margem_lateral_formulario"
+      android:layout_marginRight="@dimen/margem_lateral_formulario"
+      android:background="@android:color/darker_gray"
+      android:spinnerMode="dialog" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

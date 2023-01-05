@@ -497,6 +497,16 @@ public class Ultilitario {
         imageActivityResultLauncher.launch(imagePickerIntent);
     }
 
+    public static void alertDialogSelectImage(Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+        new AlertDialog.Builder(context)
+                .setIcon(R.drawable.ic_baseline_store_24)
+                .setTitle(context.getString(R.string.selec_image))
+                .setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                .setNegativeButton(context.getString(R.string.camera), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, true))
+                .setPositiveButton(context.getString(R.string.galeria), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, false))
+                .show();
+    }
+
     public static void alertDialogSelectImage(Cliente cliente, Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
         new AlertDialog.Builder(context)
                 .setIcon(R.drawable.ic_baseline_store_24)

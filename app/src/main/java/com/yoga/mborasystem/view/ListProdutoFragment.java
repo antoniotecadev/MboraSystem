@@ -32,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -56,9 +58,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.koushikdutta.ion.Ion;
 import com.xwray.groupie.GroupAdapter;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -653,10 +657,16 @@ public class ListProdutoFragment extends Fragment {
                                 InputStream imageStream = requireActivity().getContentResolver().openInputStream(uriImage);
                                 selectedImage = BitmapFactory.decodeStream(imageStream);
                             }
-
+                            MainActivity.getProgressBar();
                             @SuppressLint("InflateParams") View view = LayoutInflater.from(requireContext()).inflate(R.layout.image_layout, null);
                             ImageView img = view.findViewById(R.id.image);
                             TextView detalhe = view.findViewById(R.id.detalhe_text);
+                            AppCompatSpinner categoriasSpinner = view.findViewById(R.id.categoriaSpinner);
+
+                            ArrayAdapter<String> categorias = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
+                            categorias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            categoriasSpinner.setAdapter(categorias);
+
                             detalhe.setTextColor(Color.BLACK);
                             detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)) + "\n" + getString(R.string.cat) + ": " + detalhes.get(3));
                             img.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
@@ -665,12 +675,34 @@ public class ListProdutoFragment extends Fragment {
                             img.setScaleType(ImageView.ScaleType.FIT_START);
                             img.setImageBitmap(selectedImage);
 
-                            new AlertDialog.Builder(requireContext())
-                                    .setIcon(R.drawable.ic_baseline_cloud_upload_24)
-                                    .setView(view)
-                                    .setTitle(getString(R.string.env, getString(R.string.mbora)))
-                                    .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                    .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> storageImageProductInFirebase(getValueSharedPreferences(requireContext(), "imei", "0000000000"), img, detalhes, requireContext())).show();
+                            String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/categorias/mbora";
+                            Ion.with(requireActivity())
+                                    .load(URL)
+                                    .asJsonArray()
+                                    .setCallback((e, jsonElements) -> {
+                                        try {
+                                            categorias.add("");
+                                            for (int i = 0; i < jsonElements.size(); i++) {
+                                                JsonObject categoria = jsonElements.get(i).getAsJsonObject();
+                                                categorias.add(categoria.get("nome").getAsString());
+                                            }
+                                            if (categorias.getItem(1).isEmpty())
+                                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.ct_na_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                            else {
+                                                new AlertDialog.Builder(requireContext())
+                                                        .setIcon(R.drawable.ic_baseline_cloud_upload_24)
+                                                        .setView(view)
+                                                        .setTitle(getString(R.string.env, getString(R.string.mbora)))
+                                                        .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                                        .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> storageImageProductInFirebase(getValueSharedPreferences(requireContext(), "imei", "0000000000"), img, detalhes, requireContext())).show();
+                                                Snackbar.make(requireView(), getString(R.string.ct_car), Snackbar.LENGTH_LONG).show();
+                                            }
+                                        } catch (Exception ex) {
+                                            Ultilitario.alertDialog(getString(R.string.erro), ex.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                                        } finally {
+                                            MainActivity.dismissProgressBar();
+                                        }
+                                    });
                         } catch (Exception e) {
                             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
@@ -679,6 +711,15 @@ public class ListProdutoFragment extends Fragment {
             });
 
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                MainActivity.dismissProgressBar();
+                if (result)
+                    alertDialogSelectImage(requireContext(), imageActivityResultLauncher);
+                else
+                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_cam_gal), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            });
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherFirebase = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
                     if (verifyAuthenticationInFirebase() != null) {
