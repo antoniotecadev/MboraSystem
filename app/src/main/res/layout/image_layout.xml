@@ -29,6 +29,7 @@
   </androidx.appcompat.widget.LinearLayoutCompat>
 
   <TextView
+      android:id="@+id/textCategoria"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginLeft="@dimen/margem_lateral_formulario"

@@ -120,6 +120,10 @@ public class Ultilitario {
         @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
         TextView text = view.findViewById(R.id.detalhe_text);
         ImageView img = view.findViewById(R.id.image);
+        TextView textCategoria = view.findViewById(R.id.textCategoria);
+        AppCompatSpinner appCompatSpinner = view.findViewById(R.id.categoriaSpinner);
+        textCategoria.setVisibility(View.GONE);
+        appCompatSpinner.setVisibility(View.GONE);
         text.setText(s);
         img.setImageResource(imagem);
         view.setBackgroundColor(color);
@@ -143,20 +147,13 @@ public class Ultilitario {
             toast.show();
         } else {
             img.setBackground(context.getResources().getDrawable(R.drawable.border_image));
-            new androidx.appcompat.app.AlertDialog.Builder(context)
-                    .setIcon(R.drawable.ic_baseline_store_24)
-                    .setTitle(R.string.cod_qr)
-                    .setMessage(context.getString(R.string.nm) + ": " + nome + "\n" + context.getString(R.string.emps) + ": " + estabalecimento + "\n" + context.getString(R.string.imei) + ": " + imei)
-                    .setView(view)
-                    .setNeutralButton(context.getString(R.string.guardar), (dialogInterface, i) -> requestPermissionLauncherSaveQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                    .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> {
-                        try {
-                            partilharImagem(context, qrCode, estabalecimento.replace(".", "").replace(",", "").trim());
-                        } catch (IOException e) {
-                            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-                        }
-                    })
-                    .setPositiveButton(R.string.fechar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
+            new androidx.appcompat.app.AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(R.string.cod_qr).setMessage(context.getString(R.string.nm) + ": " + nome + "\n" + context.getString(R.string.emps) + ": " + estabalecimento + "\n" + context.getString(R.string.imei) + ": " + imei).setView(view).setNeutralButton(context.getString(R.string.guardar), (dialogInterface, i) -> requestPermissionLauncherSaveQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)).setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> {
+                try {
+                    partilharImagem(context, qrCode, estabalecimento.replace(".", "").replace(",", "").trim());
+                } catch (IOException e) {
+                    alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+                }
+            }).setPositiveButton(R.string.fechar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
         }
     }
 
@@ -184,14 +181,11 @@ public class Ultilitario {
     }
 
     public enum Operacao {
-        CRIAR,
-        ACTUALIZAR,
-        NENHUMA
+        CRIAR, ACTUALIZAR, NENHUMA
     }
 
     public enum Existe {
-        SIM,
-        NAO
+        SIM, NAO
     }
 
     public static String formatPreco(String preco) {
@@ -199,10 +193,8 @@ public class Ultilitario {
         float parsed;
         String formatted;
         String cleanSting = preco.replaceAll("[^\\d.]", "");
-        if (cleanSting.isEmpty())
-            parsed = Float.parseFloat("0");
-        else
-            parsed = Float.parseFloat(cleanSting);
+        if (cleanSting.isEmpty()) parsed = Float.parseFloat("0");
+        else parsed = Float.parseFloat(cleanSting);
         formatted = NumberFormat.getCurrencyInstance(pt_AO).format((parsed / 100));
         return formatted;
     }
@@ -229,10 +221,8 @@ public class Ultilitario {
                     preco.removeTextChangedListener(this);
                     String cleanSting = s.toString().replaceAll("[^\\d.]", "");
                     try {
-                        if (cleanSting.isEmpty())
-                            parsed = Float.parseFloat("0");
-                        else
-                            parsed = Float.parseFloat(cleanSting);
+                        if (cleanSting.isEmpty()) parsed = Float.parseFloat("0");
+                        else parsed = Float.parseFloat(cleanSting);
 
                         formatted = NumberFormat.getCurrencyInstance(pt_AO).format((parsed / 100));
                         current = formatted;
@@ -286,10 +276,8 @@ public class Ultilitario {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
-        if (paddingLength > 0)
-            return String.format("%0" + paddingLength + "d", 0) + hex;
-        else
-            return hex;
+        if (paddingLength > 0) return String.format("%0" + paddingLength + "d", 0) + hex;
+        else return hex;
     }
 
     public static boolean validateSenhaPin(String sp, String storedSP) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -325,8 +313,7 @@ public class Ultilitario {
         StringBuilder sb = new StringBuilder();
         for (byte b : digest) {
             String hex = Integer.toHexString(0xFF & b);
-            if (hex.length() == 1)
-                sb.append(0);
+            if (hex.length() == 1) sb.append(0);
             sb.append(hex);
         }
         return sb.toString();
@@ -341,8 +328,7 @@ public class Ultilitario {
                 if (backPressedTime + 2000 > System.currentTimeMillis()) {
                     activity.finish();
                     return;
-                } else
-                    Toast.makeText(context, (R.string.pressior_sair), Toast.LENGTH_SHORT).show();
+                } else Toast.makeText(context, (R.string.pressior_sair), Toast.LENGTH_SHORT).show();
 
                 backPressedTime = System.currentTimeMillis();
             }
@@ -408,8 +394,7 @@ public class Ultilitario {
             intent.putExtra(Intent.EXTRA_TITLE, nomeFicheiro + new Random().nextInt((1000 - 1) + 1) + 1 + " " + data + ".csv");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "");
-            else
-                Toast.makeText(activity, "API >= 26", Toast.LENGTH_LONG).show();
+            else Toast.makeText(activity, "API >= 26", Toast.LENGTH_LONG).show();
 
             exportActivityResultLauncher.launch(intent);
         } catch (Exception e) {
@@ -427,8 +412,7 @@ public class Ultilitario {
             Toast.makeText(activity.getBaseContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         FileOutputStream fileOutputStream = null;
-        if (csv != null)
-            fileOutputStream = new FileOutputStream(csv.getFileDescriptor());
+        if (csv != null) fileOutputStream = new FileOutputStream(csv.getFileDescriptor());
         else
             showToast(activity.getBaseContext(), Color.rgb(204, 0, 0), activity.getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
 
@@ -463,14 +447,11 @@ public class Ultilitario {
         intent.setType("*/*");
         if (isDB)
             mimetypes = new String[]{"application/x-sqlite3", "application/vnd.sqlite3", "application/octet-stream"};
-        else
-            mimetypes = new String[]{"text/csv", "text/comma-separated-values", "application/csv"};
+        else mimetypes = new String[]{"text/csv", "text/comma-separated-values", "application/csv"};
 
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
-        if (importActivityResultLauncher == null)
-            activity.startActivityForResult(intent, QUATRO);
-        else
-            importActivityResultLauncher.launch(intent);
+        if (importActivityResultLauncher == null) activity.startActivityForResult(intent, QUATRO);
+        else importActivityResultLauncher.launch(intent);
     }
 
     private static void getImageCameraOrGallery(ActivityResultLauncher<Intent> imageActivityResultLauncher, boolean isCamera) {
@@ -485,29 +466,15 @@ public class Ultilitario {
     }
 
     public static void alertDialogSelectImage(Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
-        new AlertDialog.Builder(context)
-                .setIcon(R.drawable.ic_baseline_store_24)
-                .setTitle(context.getString(R.string.selec_image))
-                .setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                .setNegativeButton(context.getString(R.string.camera), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, true))
-                .setPositiveButton(context.getString(R.string.galeria), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, false))
-                .show();
+        new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(context.getString(R.string.selec_image)).setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss()).setNegativeButton(context.getString(R.string.camera), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, true)).setPositiveButton(context.getString(R.string.galeria), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, false)).show();
     }
 
     public static void alertDialogSelectImage(Cliente cliente, Context context, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
-        new AlertDialog.Builder(context)
-                .setIcon(R.drawable.ic_baseline_store_24)
-                .setTitle(context.getString(R.string.selec_image))
-                .setMessage(cliente.getImei() + "\n" + cliente.getNome() + "" + cliente.getSobrenome() + "\n" + cliente.getNomeEmpresa() + "\n" + cliente.getTelefone() + "\n" + cliente.getEmail() + "\n" + cliente.getCodigoPlus() + "\n" + cliente.getMunicipio() + ", " + cliente.getBairro() + ", " + cliente.getRua())
-                .setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                .setNegativeButton(context.getString(R.string.camera), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, true))
-                .setPositiveButton(context.getString(R.string.galeria), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, false))
-                .show();
+        new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(context.getString(R.string.selec_image)).setMessage(cliente.getImei() + "\n" + cliente.getNome() + "" + cliente.getSobrenome() + "\n" + cliente.getNomeEmpresa() + "\n" + cliente.getTelefone() + "\n" + cliente.getEmail() + "\n" + cliente.getCodigoPlus() + "\n" + cliente.getMunicipio() + ", " + cliente.getBairro() + ", " + cliente.getRua()).setNeutralButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss()).setNegativeButton(context.getString(R.string.camera), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, true)).setPositiveButton(context.getString(R.string.galeria), (dialogInterface, i) -> getImageCameraOrGallery(imageActivityResultLauncher, false)).show();
     }
 
     public static void swipeRefreshLayout(SwipeRefreshLayout mySwipeRefreshLayout) {
-        if (mySwipeRefreshLayout != null)
-            mySwipeRefreshLayout.setRefreshing(false);
+        if (mySwipeRefreshLayout != null) mySwipeRefreshLayout.setRefreshing(false);
     }
 
     public static void zerarPreco(TextInputEditText preco) {
@@ -526,8 +493,7 @@ public class Ultilitario {
         } else {
             Uri uri = Uri.parse("market://details?id=com.whatsapp");
             Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-            Toast.makeText(activity.getApplicationContext(), "WhatsApp not Installed",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
             activity.startActivity(goToMarket);
         }
     }
@@ -656,6 +622,40 @@ public class Ultilitario {
 //                });
 //    }
 
+//    public static void storageImageProduct(String imei, ImageView imageView, List<String> detalhes, Context context) {
+//        MainActivity.getProgressBar();
+//        String filename = UUID.randomUUID().toString();
+//        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
+//
+//        imageView.setDrawingCacheEnabled(true);
+//        imageView.buildDrawingCache();
+//        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+//        byte[] data = baos.toByteArray();
+//
+////        long quantidadeProduto = Long.parseLong(getValueSharedPreferences(context, "pac_qtd_pro", "0"));
+////        if (countProduct <= quantidadeProduto) {
+//        UploadTask uploadTask = storeRef.putBytes(data);
+//        uploadTask.addOnFailureListener(e -> {
+//            MainActivity.dismissProgressBar();
+//            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+//        }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
+//            Map<String, String> produto = new HashMap<>();
+//            produto.put("nome", detalhes.get(0));
+//            produto.put("preco", detalhes.get(1));
+//            produto.put("codigoBarra", detalhes.get(2));
+//            produto.put("categoria", detalhes.get(3));
+//            produto.put("urlImage", url.toString());
+//            produto.put("endereco", detalhes.get(4));
+//            produto.put("empresa", detalhes.get(5));
+//            produto.put("imei", detalhes.get(6));
+//        }).addOnFailureListener(e -> {
+//            MainActivity.dismissProgressBar();
+//            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+//        }));
+//    }
+
 //    public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
 //        MainActivity.getProgressBar();
 //        String filename = UUID.randomUUID().toString();
@@ -768,9 +768,7 @@ public class Ultilitario {
             NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
             Network nw = cm.getActiveNetwork();
             if (nw == null) return false;
-            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
         } else return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
@@ -785,12 +783,7 @@ public class Ultilitario {
 
     public static void alertDialog(String titulo, String mensagem, Context context, int icon) {
         MainActivity.dismissProgressBar();
-        new AlertDialog.Builder(context)
-                .setIcon(icon)
-                .setTitle(titulo)
-                .setMessage(mensagem)
-                .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss())
-                .show();
+        new AlertDialog.Builder(context).setIcon(icon).setTitle(titulo).setMessage(mensagem).setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss()).show();
     }
 
     public static void setValueSharedPreferences(Context context, String idValue, String value) {
@@ -875,10 +868,8 @@ public class Ultilitario {
 
         String[] date = TextUtils.split(data.trim(), "-");
 
-        if (listMonth.get(date[1]) == null)
-            return date[0] + "-" + date[1] + "-" + date[2];
-        else
-            return date[0] + "-" + listMonth.get(date[1]) + "-" + date[2];
+        if (listMonth.get(date[1]) == null) return date[0] + "-" + date[1] + "-" + date[2];
+        else return date[0] + "-" + listMonth.get(date[1]) + "-" + date[2];
     }
 
     public static String getDataSplitDispositivo(String dataSplit) {
@@ -914,12 +905,9 @@ public class Ultilitario {
     }
 
     public static int getIdIdioma(Context context) {
-        if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Francês"))
-            return 0;
-        else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Inglês"))
-            return 1;
-        else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Português"))
-            return 2;
+        if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Francês")) return 0;
+        else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Inglês")) return 1;
+        else if (getSharedPreferencesIdioma(context).equalsIgnoreCase("Português")) return 2;
         return 2;
     }
 
@@ -929,32 +917,21 @@ public class Ultilitario {
         String selection;
         String[] selectionArgs;
         List<Documento> pdfList = new ArrayList<>();
-        final String[] projection = new String[]{
-                MediaStore.Files.FileColumns.TITLE,
-                MediaStore.Files.FileColumns.DATA,
-                MediaStore.Files.FileColumns.MIME_TYPE,
-                MediaStore.Files.FileColumns.SIZE,
-                MediaStore.Files.FileColumns.DATE_ADDED,
-                MediaStore.Files.FileColumns.DATE_MODIFIED,
-        };
+        final String[] projection = new String[]{MediaStore.Files.FileColumns.TITLE, MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.MIME_TYPE, MediaStore.Files.FileColumns.SIZE, MediaStore.Files.FileColumns.DATE_ADDED, MediaStore.Files.FileColumns.DATE_MODIFIED,};
 
         File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
         final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
         final String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
         if (isPesquisa) {
-            selection = MediaStore.Files.FileColumns.DATA + " like ?"
-                    + " AND " + MediaStore.Files.FileColumns.TITLE + " like ?"
-                    + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
+            selection = MediaStore.Files.FileColumns.DATA + " like ?" + " AND " + MediaStore.Files.FileColumns.TITLE + " like ?" + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
             selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", "%" + ficheiro + "%", mimeType};
         } else {
-            selection = MediaStore.Files.FileColumns.DATA + " like ?"
-                    + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
+            selection = MediaStore.Files.FileColumns.DATA + " like ?" + " AND " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?";
             selectionArgs = new String[]{"%" + dir.getPath() + "/MboraSystem/" + pasta + "%", mimeType};
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
-        else
-            collection = MediaStore.Files.getContentUri("external");
+        else collection = MediaStore.Files.getContentUri("external");
 
         try (Cursor cursor = context.getContentResolver().query(collection, projection, selection, selectionArgs, sortOrder)) {
             assert cursor != null;
@@ -986,9 +963,8 @@ public class Ultilitario {
         File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
         final String pdf = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
         final String[] selectionArgs = new String[]{dir.getPath() + "/MboraSystem/" + filePath};
-        MediaScannerConnection.scanFile(context, selectionArgs, new String[]{pdf},
-                (path, uri) -> {
-                });
+        MediaScannerConnection.scanFile(context, selectionArgs, new String[]{pdf}, (path, uri) -> {
+        });
     }
 
     public static class Documento {
@@ -1046,6 +1022,7 @@ public class Ultilitario {
         public void setTipo(String tipo) {
             this.tipo = tipo;
         }
+
     }
 
     public static String converterData(long data, boolean comHora) {
@@ -1053,8 +1030,7 @@ public class Ultilitario {
         Date d = new Date(data * 1000);
         if (comHora)
             dateFormat = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss", Locale.getDefault());
-        else
-            dateFormat = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
+        else dateFormat = new SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault());
         return dateFormat.format(d);  // formatted date in string
     }
 
@@ -1111,8 +1087,7 @@ public class Ultilitario {
             File file = new File(filePath);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 fileURI = FileProvider.getUriForFile(context, "com.yoga.mborasystem", file);
-            else
-                fileURI = Uri.fromFile(file);
+            else fileURI = Uri.fromFile(file);
 
             Intent share = new Intent();
             share.setAction(Intent.ACTION_SEND);
@@ -1155,13 +1130,7 @@ public class Ultilitario {
                 dst.transferFrom(src, 0, src.size());
                 src.close();
                 dst.close();
-                handler.post(() -> new AlertDialog.Builder(context)
-                        .setIcon(R.drawable.ic_baseline_done_24)
-                        .setTitle(context.getString(R.string.bd_expo))
-                        .setMessage(context.getString(R.string.dds_exp) + "\n\n" + backupDB)
-                        .setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss())
-                        .setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> partilharDocumento(Common.getAppPath("DATABASE-BACKUP") + nameDB, context, "application/db", context.getString(R.string.partilhar)))
-                        .show());
+                handler.post(() -> new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_done_24).setTitle(context.getString(R.string.bd_expo)).setMessage(context.getString(R.string.dds_exp) + "\n\n" + backupDB).setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss()).setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> partilharDocumento(Common.getAppPath("DATABASE-BACKUP") + nameDB, context, "application/db", context.getString(R.string.partilhar))).show());
             }
         } catch (Exception e) {
             handler.post(() -> alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24));
@@ -1191,13 +1160,7 @@ public class Ultilitario {
                 dst.transferFrom(src, 0, src.size());
                 src.close();
                 dst.close();
-                handler.post(() -> new AlertDialog.Builder(context)
-                        .setCancelable(false)
-                        .setIcon(R.drawable.ic_baseline_done_24)
-                        .setTitle(context.getString(R.string.bd_impo))
-                        .setMessage(context.getString(R.string.app_fis))
-                        .setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> System.exit(0))
-                        .show());
+                handler.post(() -> new AlertDialog.Builder(context).setCancelable(false).setIcon(R.drawable.ic_baseline_done_24).setTitle(context.getString(R.string.bd_impo)).setMessage(context.getString(R.string.app_fis)).setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> System.exit(0)).show());
             }
         } catch (Exception e) {
             handler.post(() -> alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24));
@@ -1249,23 +1212,12 @@ public class Ultilitario {
     }
 
     public static void getDetailDevice(Context context) {
-        String data = "FABRICANTE: " + Build.MANUFACTURER + "\n" +
-                "MARCA: " + Build.BRAND + "\n" +
-                "PRODUTO: " + Build.PRODUCT + "\n" +
-                "MODELO: " + Build.MODEL + "\n" +
-                "VERSÃO: " + Build.VERSION.RELEASE + "\n" +
-                "API: " + Build.VERSION.SDK_INT;
+        String data = "FABRICANTE: " + Build.MANUFACTURER + "\n" + "MARCA: " + Build.BRAND + "\n" + "PRODUTO: " + Build.PRODUCT + "\n" + "MODELO: " + Build.MODEL + "\n" + "VERSÃO: " + Build.VERSION.RELEASE + "\n" + "API: " + Build.VERSION.SDK_INT;
         alertDialog(context.getString(R.string.sob_tel), data, context, R.drawable.ic_baseline_store_24);
     }
 
     public static String getDetailDeviceString(Activity activity) {
-        String data = Build.MANUFACTURER +
-                Build.BRAND +
-                Build.PRODUCT +
-                Build.MODEL +
-                Build.VERSION.RELEASE +
-                Build.VERSION.SDK_INT +
-                getDeviceUniqueID(activity);
+        String data = Build.MANUFACTURER + Build.BRAND + Build.PRODUCT + Build.MODEL + Build.VERSION.RELEASE + Build.VERSION.SDK_INT + getDeviceUniqueID(activity);
         return data.trim();
     }
 
@@ -1274,29 +1226,20 @@ public class Ultilitario {
         if (isNetworkConnected(context)) {
             if (internetIsConnected()) {
                 String URL = Ultilitario.getAPN(context) + "/mborasystem-admin/public/api/contacts/contactos";
-                Ion.with(activity)
-                        .load(URL)
-                        .asJsonArray()
-                        .setCallback((e, jsonElements) -> {
-                            try {
-                                JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
-                                String contactos = parceiro.get("contactos").getAsString();
-                                alertDialog(context.getString(R.string.nome_sistema), context.getString(R.string.acerca) + "\n" + contactos, context, R.drawable.ic_baseline_store_24);
-                            } catch (Exception ex) {
-                                MainActivity.dismissProgressBar();
-                                new AlertDialog.Builder(context)
-                                        .setIcon(R.drawable.ic_baseline_store_24)
-                                        .setTitle(context.getString(R.string.erro))
-                                        .setMessage(ex.getMessage())
-                                        .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
-                                        .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
-                                            dialog.dismiss();
-                                            MainActivity.getProgressBar();
-                                            acercaMboraSystem(context, activity);
-                                        })
-                                        .show();
-                            }
-                        });
+                Ion.with(activity).load(URL).asJsonArray().setCallback((e, jsonElements) -> {
+                    try {
+                        JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
+                        String contactos = parceiro.get("contactos").getAsString();
+                        alertDialog(context.getString(R.string.nome_sistema), context.getString(R.string.acerca) + "\n" + contactos, context, R.drawable.ic_baseline_store_24);
+                    } catch (Exception ex) {
+                        MainActivity.dismissProgressBar();
+                        new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(context.getString(R.string.erro)).setMessage(ex.getMessage()).setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss()).setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                            dialog.dismiss();
+                            MainActivity.getProgressBar();
+                            acercaMboraSystem(context, activity);
+                        }).show();
+                    }
+                });
             } else {
                 MainActivity.dismissProgressBar();
                 Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_int), context, R.drawable.ic_baseline_privacy_tip_24);
@@ -1311,8 +1254,7 @@ public class Ultilitario {
         final String[] codigo = context.getResources().getStringArray(R.array.array_motivo_isecao_valor);
         final String[] rasao = context.getResources().getStringArray(R.array.array_motivo_isecao);
         for (int i = 0; i <= codigo.length; i++) {
-            if (codigoRasaoISE.equalsIgnoreCase(codigo[i]))
-                return rasao[i];
+            if (codigoRasaoISE.equalsIgnoreCase(codigo[i])) return rasao[i];
         }
         return "";
     }
