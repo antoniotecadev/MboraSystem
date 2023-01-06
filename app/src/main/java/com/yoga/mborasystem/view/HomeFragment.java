@@ -473,7 +473,8 @@ public class HomeFragment extends Fragment {
                                             (estadoConta == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
                                     getString(R.string.tipo) + " " + mapTipoPagamento.get(parceiro.get("tipo_pagamento").getAsString()) + "\n" +
-                                    getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto_pacote").getAsString() + "\n" +
+                                    getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto_pacote").getAsString() + "\n\n" +
+                                    getString(R.string.prod_regi) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto").getAsString() + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
                                     getString(R.string.nome).replace("*", ": ") + parceiro.get("first_name").getAsString() + "\n" +
