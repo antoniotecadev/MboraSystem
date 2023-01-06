@@ -643,14 +643,6 @@ public class Ultilitario {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
         byte[] data = baos.toByteArray();
-
-        int quantidadeProdutoRegistado = 12;
-        int quantidadeProdutoPacote = 6;
-        if (quantidadeProdutoRegistado < quantidadeProdutoPacote) {
-
-        } else {
-
-        }
         storageImageAndProduct(imei, imageView, detalhes, context);
 
 //        UploadTask uploadTask = storeRef.putBytes(data);
@@ -684,6 +676,13 @@ public class Ultilitario {
                         JsonObject quantidade = jsonElements.get(0).getAsJsonObject();
                         int quantidadeProdutoPacote = quantidade.get("quantidade_produto_pacote").getAsInt();
                         int quantidadeProdutoRegistado = quantidade.get("quantidade_produto").getAsInt();
+                        if (quantidadeProdutoRegistado < quantidadeProdutoPacote) {
+
+                        } else {
+                            String msg = context.getString(R.string.prod) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoPacote + "\n" +
+                                    context.getString(R.string.prod_regi) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoRegistado;
+                            alertDialog(context.getString(R.string.erro), msg + "\n\n" + context.getString(R.string.atg_limit), context, R.drawable.ic_baseline_privacy_tip_24);
+                        }
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
                         new AlertDialog.Builder(context)
