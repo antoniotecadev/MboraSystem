@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -55,6 +56,8 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.xwray.groupie.GroupAdapter;
@@ -65,6 +68,7 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -92,6 +96,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.crypto.SecretKeyFactory;
@@ -627,20 +632,27 @@ public class Ultilitario {
 //                });
 //    }
 
-//    public static void storageImageProduct(String imei, ImageView imageView, List<String> detalhes, Context context) {
-//        MainActivity.getProgressBar();
-//        String filename = UUID.randomUUID().toString();
-//        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
-//
-//        imageView.setDrawingCacheEnabled(true);
-//        imageView.buildDrawingCache();
-//        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-//        byte[] data = baos.toByteArray();
-//
-////        long quantidadeProduto = Long.parseLong(getValueSharedPreferences(context, "pac_qtd_pro", "0"));
-////        if (countProduct <= quantidadeProduto) {
+    public static void storage(String imei, ImageView imageView, List<String> detalhes, Context context) {
+        MainActivity.getProgressBar();
+        String filename = UUID.randomUUID().toString();
+        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
+
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] data = baos.toByteArray();
+
+        int quantidadeProdutoRegistado = 12;
+        int quantidadeProdutoPacote = 6;
+        if (quantidadeProdutoRegistado < quantidadeProdutoPacote) {
+
+        } else {
+
+        }
+        storageImageAndProduct(imei, imageView, detalhes, context);
+
 //        UploadTask uploadTask = storeRef.putBytes(data);
 //        uploadTask.addOnFailureListener(e -> {
 //            MainActivity.dismissProgressBar();
@@ -659,7 +671,35 @@ public class Ultilitario {
 //            MainActivity.dismissProgressBar();
 //            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
 //        }));
-//    }
+    }
+
+    private static void storageImageAndProduct(String imei, ImageView imageView, List<String> detalhes, Context context) {
+        String URL = getAPN(context) + "/mborasystem-admin/public/api/produtos/mbora/" + imei;
+        Ion.with(context)
+                .load(URL)
+                .asJsonArray()
+                .setCallback((e, jsonElements) -> {
+                    MainActivity.dismissProgressBar();
+                    try {
+                        JsonObject quantidade = jsonElements.get(0).getAsJsonObject();
+                        int quantidadeProdutoPacote = quantidade.get("quantidade_produto_pacote").getAsInt();
+                        int quantidadeProdutoRegistado = quantidade.get("quantidade_produto").getAsInt();
+                    } catch (Exception ex) {
+                        MainActivity.dismissProgressBar();
+                        new AlertDialog.Builder(context)
+                                .setIcon(R.drawable.ic_baseline_store_24)
+                                .setTitle(context.getString(R.string.erro))
+                                .setMessage(ex.getMessage())
+                                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                                    dialog.dismiss();
+                                    MainActivity.getProgressBar();
+                                    storageImageAndProduct(imei, imageView, detalhes, context);
+                                })
+                                .show();
+                    }
+                });
+    }
 
 //    public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
 //        MainActivity.getProgressBar();
