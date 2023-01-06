@@ -466,14 +466,14 @@ public class HomeFragment extends Fragment {
                             terminoPrazo = parceiro.get("termina").getAsByte();
                             String contactos = parceiro.get("contactos").getAsString();
                             String dispositivo = parceiro.get("device").getAsString();
-                            quantidadeTipo = parceiro.get("quantidade_produto").getAsString();
+                            quantidadeTipo = parceiro.get("quantidade_produto_pacote").getAsString();
                             boolean equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
                             estado = (!equalsDevice ? getString(R.string.inco_desp) + "\n\n" : "") +
                                     (terminoPrazo == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
                                             (estadoConta == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
                                     getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
                                     getString(R.string.tipo) + " " + mapTipoPagamento.get(parceiro.get("tipo_pagamento").getAsString()) + "\n" +
-                                    getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto").getAsString() + "\n" +
+                                    getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto_pacote").getAsString() + "\n" +
                                     getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
                                     getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
                                     getString(R.string.nome).replace("*", ": ") + parceiro.get("first_name").getAsString() + "\n" +
