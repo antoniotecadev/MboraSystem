@@ -748,6 +748,7 @@
     <string name="ct_na_enc">Categorias não encontradas</string>
     <string name="ct_car">Categorias carregadas</string>
     <string name="sl_ct_pd">Selecciona a categoria do produto</string>
+    <string name="prod_regi">Produto registado</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
