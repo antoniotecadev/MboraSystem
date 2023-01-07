@@ -673,7 +673,7 @@ public class ListProdutoFragment extends Fragment {
                             img.setScaleType(ImageView.ScaleType.FIT_START);
                             img.setImageBitmap(selectedImage);
                             if (isNetworkConnected(requireContext()))
-                                if (internetIsConnected())
+                                if (internetIsConnected() || true)
                                     getCategorias(categorias, view, categoriasSpinner);
                                 else
                                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
