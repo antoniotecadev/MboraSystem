@@ -349,7 +349,8 @@ public class ClienteViewModel extends AndroidViewModel {
                             getValido().postValue(Ultilitario.Operacao.CRIAR);
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
                         } else if (retorno.equals("erro")) {
-                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.parc_n_sv), R.drawable.ic_toast_erro);
+                            String throwable = jsonObject.get("throwable").getAsString();
+                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.parc_n_sv) + ", " + throwable, R.drawable.ic_toast_erro);
                             getValido().postValue(Ultilitario.Operacao.NENHUMA);
                             eliminarParceiro(cliente);
                         }
