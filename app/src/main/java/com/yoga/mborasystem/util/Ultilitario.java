@@ -14,7 +14,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -68,7 +67,6 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -599,7 +597,7 @@ public class Ultilitario {
 //        textInputEditText.setInputType(inputType);
 //    }
 
-//    private static void signInFirebase(Activity activity, String email, String password, AlertDialog alertDialog, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
+    //    private static void signInFirebase(Activity activity, String email, String password, AlertDialog alertDialog, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
 //        MainActivity.getProgressBar();
 //        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 //        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
@@ -631,73 +629,83 @@ public class Ultilitario {
 //                    }
 //                });
 //    }
-
-    public static void storage(String imei, ImageView imageView, List<String> detalhes, Context context) {
-        MainActivity.getProgressBar();
+    public static void storageImageAndProduct(String imei, ImageView imageView, Map<String, String> detalhes, Context context) {
         String filename = UUID.randomUUID().toString();
         StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
-
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] data = baos.toByteArray();
-        storageImageAndProduct(imei, imageView, detalhes, context);
-
-//        UploadTask uploadTask = storeRef.putBytes(data);
-//        uploadTask.addOnFailureListener(e -> {
-//            MainActivity.dismissProgressBar();
-//            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-//        }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
-//            Map<String, String> produto = new HashMap<>();
-//            produto.put("nome", detalhes.get(0));
-//            produto.put("preco", detalhes.get(1));
-//            produto.put("codigoBarra", detalhes.get(2));
-//            produto.put("categoria", detalhes.get(3));
-//            produto.put("urlImage", url.toString());
-//            produto.put("endereco", detalhes.get(4));
-//            produto.put("empresa", detalhes.get(5));
-//            produto.put("imei", detalhes.get(6));
-//        }).addOnFailureListener(e -> {
-//            MainActivity.dismissProgressBar();
-//            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-//        }));
-    }
-
-    private static void storageImageAndProduct(String imei, ImageView imageView, List<String> detalhes, Context context) {
         String URL = getAPN(context) + "/mborasystem-admin/public/api/produtos/mbora/" + imei;
         Ion.with(context)
                 .load(URL)
                 .asJsonArray()
                 .setCallback((e, jsonElements) -> {
-                    MainActivity.dismissProgressBar();
                     try {
                         JsonObject quantidade = jsonElements.get(0).getAsJsonObject();
                         int quantidadeProdutoPacote = quantidade.get("quantidade_produto_pacote").getAsInt();
                         int quantidadeProdutoRegistado = quantidade.get("quantidade_produto").getAsInt();
                         if (quantidadeProdutoRegistado < quantidadeProdutoPacote) {
+                            Ion.with(context)
+                                    .load("POST", getAPN(context) + "/mborasystem-admin/public/api/produtos/mbora/store")
+                                    .setBodyParameter("imei", imei)
+                                    .setBodyParameter("idcategoria", detalhes.get("idcategoria"))
+                                    .setBodyParameter("nome", detalhes.get("nome"))
+                                    .setBodyParameter("preco", detalhes.get("preco"))
+                                    .setBodyParameter("quantidade", detalhes.get("quantidade"))
+                                    .setBodyParameter("urlImage", "mbora.png")
+                                    .setBodyParameter("codigo_barra", detalhes.get("codigo_barra"))
+                                    .setBodyParameter("tag", detalhes.get("tag"))
+                                    .asJsonObject()
+                                    .setCallback((exception, jsonObject) -> {
+                                        try {
+                                            String retorno = jsonObject.get("insert").getAsString();
+                                            if (retorno.equals("ok"))
+                                                alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get("nome") + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get("preco")) + "\n" + (detalhes.get("codigo_barra").isEmpty() ? "" : "CB: " + detalhes.get("codigo_barra")), context, R.drawable.ic_baseline_done_24);
+                                            else if (retorno.equals("erro")) {
+                                                String throwable = jsonObject.get("throwable").getAsString();
+                                                tentarNovamente(imei, imageView, detalhes, context, throwable);
+                                                //Eliminar imagem
+                                            }
+                                        } catch (Exception ex) {
+                                            tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
+                                            //Eliminar imagem
+                                        } finally {
+                                            MainActivity.dismissProgressBar();
+                                        }
+                                    });
 
+//                            imageView.setDrawingCacheEnabled(true);
+//                            imageView.buildDrawingCache();
+//                            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+//                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+//                            byte[] data = baos.toByteArray();
+//
+//                            UploadTask uploadTask = storeRef.putBytes(data);
+//                            uploadTask.addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24)).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
+//                            }).addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24)));
                         } else {
                             String msg = context.getString(R.string.prod) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoPacote + "\n" +
                                     context.getString(R.string.prod_regi) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoRegistado;
                             alertDialog(context.getString(R.string.erro), msg + "\n\n" + context.getString(R.string.atg_limit), context, R.drawable.ic_baseline_privacy_tip_24);
                         }
                     } catch (Exception ex) {
+                        tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
+                    } finally {
                         MainActivity.dismissProgressBar();
-                        new AlertDialog.Builder(context)
-                                .setIcon(R.drawable.ic_baseline_store_24)
-                                .setTitle(context.getString(R.string.erro))
-                                .setMessage(ex.getMessage())
-                                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
-                                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
-                                    dialog.dismiss();
-                                    MainActivity.getProgressBar();
-                                    storageImageAndProduct(imei, imageView, detalhes, context);
-                                })
-                                .show();
                     }
                 });
+    }
+
+    private static void tentarNovamente(String imei, ImageView imageView, Map<String, String> detalhes, Context context, String exception) {
+        new AlertDialog.Builder(context)
+                .setIcon(R.drawable.ic_baseline_privacy_tip_24)
+                .setTitle(context.getString(R.string.erro))
+                .setMessage(exception)
+                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                    dialog.dismiss();
+                    MainActivity.getProgressBar();
+                    storageImageAndProduct(imei, imageView, detalhes, context);
+                })
+                .show();
     }
 
 //    public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {

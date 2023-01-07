@@ -3,7 +3,10 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
+import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
+import static com.yoga.mborasystem.util.Ultilitario.storageImageAndProduct;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -73,8 +76,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -90,7 +95,7 @@ public class ListProdutoFragment extends Fragment {
     private StringBuilder data;
     private boolean isLixeira, isMaster;
     private GroupAdapter adapter;
-    private List<String> detalhes;
+    private Map<String, String> detalhes;
     private List<Long> idprodutoCarrinho;
     private ProdutoViewModel produtoViewModel;
     private FragmentProdutoListBinding binding;
@@ -488,15 +493,13 @@ public class ListProdutoFragment extends Fragment {
                                     return false;
                                 });
                                 menu.add(getString(R.string.env, getString(R.string.mbora))).setOnMenuItemClickListener(item -> {
-                                    MainActivity.getProgressBar();
                                     requestPermissionLauncher.launch(Manifest.permission.CAMERA);
-                                    detalhes = new ArrayList<>();
-                                    detalhes.add(getValueSharedPreferences(requireContext(), "imei", "0000000000"));
-                                    detalhes.add(produto.getNome());
-                                    detalhes.add(String.valueOf(produto.getPreco()));
-                                    detalhes.add(String.valueOf(produto.getQuantidade()));
-                                    detalhes.add(produto.getCodigoBarra());
-                                    detalhes.add(categoria.toLowerCase(Locale.ROOT));
+                                    detalhes = new HashMap<>();
+                                    detalhes.put("nome", produto.getNome());
+                                    detalhes.put("preco", String.valueOf(produto.getPreco()));
+                                    detalhes.put("quantidade", String.valueOf(produto.getQuantidade()));
+                                    detalhes.put("codigo_barra", produto.getCodigoBarra());
+                                    detalhes.put("tag", categoria.toLowerCase(Locale.ROOT));
                                     return false;
                                 });
                             }
@@ -643,6 +646,7 @@ public class ListProdutoFragment extends Fragment {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     if (data != null) {
+                        MainActivity.getProgressBar();
                         try {
                             Uri uriImage = data.getData();
                             Bitmap selectedImage;
@@ -652,7 +656,6 @@ public class ListProdutoFragment extends Fragment {
                                 InputStream imageStream = requireActivity().getContentResolver().openInputStream(uriImage);
                                 selectedImage = BitmapFactory.decodeStream(imageStream);
                             }
-                            MainActivity.getProgressBar();
                             @SuppressLint("InflateParams") View view = LayoutInflater.from(requireContext()).inflate(R.layout.image_layout, null);
                             ImageView img = view.findViewById(R.id.image);
                             TextView detalhe = view.findViewById(R.id.detalhe_text);
@@ -663,15 +666,23 @@ public class ListProdutoFragment extends Fragment {
                             categoriasSpinner.setAdapter(categorias);
 
                             detalhe.setTextColor(Color.BLACK);
-                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)) + "\n" + getString(R.string.cat) + ": " + detalhes.get(3));
+                            detalhe.setText(getString(R.string.prod) + ": " + detalhes.get("nome") + "\n" + getString(R.string.preco) + ": " + Ultilitario.formatPreco(detalhes.get("preco")) + "\n" + (detalhes.get("codigo_barra").isEmpty() ? "" : "CB: " + detalhes.get("codigo_barra")) + "\n" + "Tag: " + detalhes.get("tag"));
                             img.getLayoutParams().width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
                             img.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
                             img.requestLayout();
                             img.setScaleType(ImageView.ScaleType.FIT_START);
                             img.setImageBitmap(selectedImage);
-                            getCategorias(categorias, view, categoriasSpinner);
+                            if (isNetworkConnected(requireContext()))
+                                if (internetIsConnected())
+                                    getCategorias(categorias, view, categoriasSpinner);
+                                else
+                                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                            else
+                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } catch (Exception e) {
                             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        } finally {
+                            MainActivity.dismissProgressBar();
                         }
                     }
                 }
@@ -707,8 +718,6 @@ public class ListProdutoFragment extends Fragment {
                                     getCategorias(categorias, view, categoriasSpinner);
                                 })
                                 .show();
-                    } finally {
-                        MainActivity.dismissProgressBar();
                     }
                 });
     }
@@ -723,14 +732,15 @@ public class ListProdutoFragment extends Fragment {
                     if (caSpinner.getSelectedItem().toString().isEmpty())
                         Snackbar.make(requireView(), getString(R.string.sl_ct_pd), Snackbar.LENGTH_LONG).show();
                     else {
-                        detalhes.add(TextUtils.split(caSpinner.getSelectedItem().toString(), "-")[0]);
+                        MainActivity.getProgressBar();
+                        detalhes.put("idcategoria", TextUtils.split(caSpinner.getSelectedItem().toString(), "-")[0]);
+                        storageImageAndProduct(getValueSharedPreferences(requireContext(), "imei", "0000000000"), view.findViewById(R.id.image), detalhes, requireContext());
                     }
                 }).show();
     }
 
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
-                MainActivity.dismissProgressBar();
                 if (result)
                     alertDialogSelectImage(requireContext(), imageActivityResultLauncher);
                 else
