@@ -485,7 +485,7 @@
         Activa já a sua conta para voltar a utiliza - lo.\n\n
         Para mais informações entra em contacto com os nossos serviços de apoio técnico.
     </string>
-    <string name="sm_int">Sem internet</string>
+    <string name="sm_int">Sem dados de internet.</string>
     <string name="conec_wif_dad">Conecta - se a uma rede: Dados móveis ou Wi-Fi</string>
     <string name="cont_des">Conta desactiva</string>
     <string name="jan">janeiro</string>
