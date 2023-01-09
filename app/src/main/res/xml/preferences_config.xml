@@ -112,7 +112,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/ipt_pre_def"
+        android:title="@string/prod"
         tools:ignore="TouchTargetSizeCheck">
         <ListPreference
             android:defaultValue="AOA"
