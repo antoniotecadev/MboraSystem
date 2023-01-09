@@ -41,6 +41,7 @@ public class Cliente implements Parcelable {
     @Ignore private String fotoPerfilUrl;
     @Ignore private String fotoCapaUrl;
     @Ignore private String codigoPlus;
+    @Ignore private String regimeIva;
 
     protected Cliente(Parcel in) {
         idcliente = in.readLong();
@@ -262,6 +263,14 @@ public class Cliente implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getRegimeIva() {
+        return regimeIva;
+    }
+
+    public void setRegimeIva(String regimeIva) {
+        this.regimeIva = regimeIva;
     }
 
     @Override

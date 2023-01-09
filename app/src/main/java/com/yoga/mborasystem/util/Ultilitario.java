@@ -384,10 +384,10 @@ public class Ultilitario {
         spinner.setAdapter(itemAdapter);
     }
 
-    public static void setItemselectedSpinner(Context context, int array_values, String value, AppCompatSpinner list) {
-        final String[] values = context.getResources().getStringArray(array_values);
-        for (int i = 0; i <= values.length; i++) {
-            if (value.equalsIgnoreCase(values[i])) {
+    public static void setItemselectedSpinner(Context context, int array_position, String value, AppCompatSpinner list) {
+        final String[] position = context.getResources().getStringArray(array_position);
+        for (int i = 0; i <= position.length; i++) {
+            if (value.equalsIgnoreCase(position[i])) {
                 list.setSelection(i);
                 break;
             }

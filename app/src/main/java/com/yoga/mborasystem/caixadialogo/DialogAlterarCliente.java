@@ -1,5 +1,8 @@
 package com.yoga.mborasystem.caixadialogo;
 
+import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +44,7 @@ public class DialogAlterarCliente extends DialogFragment {
 
         Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
         Ultilitario.spinnerMunicipios(requireContext(), binding.spinnerMunicipios);
+        Ultilitario.setItemselectedSpinner(requireContext(), R.array.array_regime_iva_posicao, getValueSharedPreferences(requireContext(), "regime_iva", "0"), binding.spinnerRegimeIva);
 
         binding.buttonTermoCondicao.setVisibility(View.GONE);
         binding.checkTermoCondicao.setVisibility(View.GONE);
@@ -88,13 +92,17 @@ public class DialogAlterarCliente extends DialogFragment {
         //Actualizar(reutilizando o Button)
         binding.buttonCriarConta.setOnClickListener(view -> {
             try {
-                clienteViewModel.validarCliente(Ultilitario.Operacao.ACTUALIZAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, "0", requireActivity());
+                clienteViewModel.validarCliente(Ultilitario.Operacao.ACTUALIZAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, "0", getRegimeIva(), requireActivity());
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
         return dialog;
+    }
+
+    private String getRegimeIva() {
+        return getPositionSpinner(requireContext(), binding.spinnerRegimeIva, R.array.array_regime_iva_valor, R.array.array_regime_iva_posicao, "0");
     }
 
     @Override

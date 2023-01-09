@@ -10,6 +10,7 @@ import static com.yoga.mborasystem.util.Ultilitario.isCampoVazio;
 import static com.yoga.mborasystem.util.Ultilitario.isEmailValido;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNumeroValido;
+import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -93,7 +94,7 @@ public class ClienteViewModel extends AndroidViewModel {
     private final Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û,-/ ]");
     private final Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9 ]");
 
-    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa, String imei, Activity activity) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void validarCliente(Ultilitario.Operacao operacao, TextInputEditText nome, TextInputEditText sobreNome, TextInputEditText nif, TextInputEditText telefone, TextInputEditText telefoneAlternativo, TextInputEditText email, TextInputEditText nomeEmpresa, AppCompatSpinner provincia, AppCompatSpinner municipio, TextInputEditText bairro, TextInputEditText rua, TextInputEditText senha, TextInputEditText senhaNovamente, TextInputEditText codigoEquipa, String imei, String regimeIva, Activity activity) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (isCampoVazio(Objects.requireNonNull(nome.getText()).toString()) || letras.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido));
@@ -169,6 +170,7 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setMunicipio(municipio.getSelectedItem().toString());
             cliente.setBairro(bairro.getText().toString());
             cliente.setRua(rua.getText().toString());
+            cliente.setRegimeIva(regimeIva);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
                 cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
                 cliente.setImei(imei);
@@ -193,6 +195,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         MainActivity.dismissProgressBar();
+                        setValueSharedPreferences(getApplication(), "regime_iva", cliente.getRegimeIva());
                         Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.dad_actu), R.drawable.ic_toast_feito);
                         valido.setValue(Ultilitario.Operacao.ACTUALIZAR);
                     }
@@ -346,6 +349,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     try {
                         String retorno = jsonObject.get("insert").getAsString();
                         if (retorno.equals("ok")) {
+                            setValueSharedPreferences(getApplication(), "regime_iva", cliente.getRegimeIva());
                             getValido().postValue(Ultilitario.Operacao.CRIAR);
                             Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
                         } else if (retorno.equals("erro")) {
@@ -458,6 +462,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
+                        setValueSharedPreferences(getApplication(), "regime_iva", "0");
                         Toast.makeText(getApplication(), getApplication().getString(R.string.dds_elim), Toast.LENGTH_SHORT).show();
                     }
 
