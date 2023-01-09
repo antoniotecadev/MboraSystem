@@ -355,19 +355,7 @@ public class CadastrarClienteFragment extends Fragment {
                                 .setTitle(getString(R.string.impoBd))
                                 .setMessage(uri.getPath() + "\n\n" + getString(R.string.imp_elim_bd))
                                 .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
-                                    try {
-                                        String stringHash = TextUtils.split(uriPath, "-")[2];
-                                        byte[] bytesHash = getHash(reverse(getDeviceUniqueID(requireActivity())));
-                                        if (bytesToHex(getHash(binding.editTextNome.getText().toString())).equalsIgnoreCase(Ultilitario.MBORASYSTEM)) {
-//                                        if (bytesToHex(bytesHash).equals(stringHash)) {
-                                            requestPermissionLauncherImportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                                        } else
-                                            alertDialog(getString(R.string.erro), getString(R.string.inc_bd), requireContext(), R.drawable.ic_baseline_close_24);
-                                    } catch (Exception e) {
-                                        alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                                    }
-                                })
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> requestPermissionLauncherImportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                                 .show();
                     }
                 }
