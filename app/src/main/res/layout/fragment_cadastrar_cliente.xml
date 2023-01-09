@@ -221,24 +221,6 @@
                 android:text="@string/verif_email"
                 app:backgroundTint="@android:color/holo_green_light" />
 
-            <!--            <com.google.android.material.textfield.TextInputLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                app:boxBackgroundColor="@color/material_on_background_disabled"-->
-            <!--                app:boxStrokeColor="@color/white"-->
-            <!--                app:hintTextColor="@color/white">-->
-            <!--                <com.google.android.material.textfield.TextInputEditText-->
-            <!--                    android:id="@+id/editTextWebsite"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_marginLeft="@dimen/margem_lateral_formulario"-->
-            <!--                    android:layout_marginTop="10dp"-->
-            <!--                    android:layout_marginRight="@dimen/margem_lateral_formulario"-->
-            <!--                    android:ems="10"-->
-            <!--                    android:hint="@string/website"-->
-            <!--                    android:inputType="textWebEditText|textUri" />-->
-            <!--            </com.google.android.material.textfield.TextInputLayout>-->
-
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
