@@ -1,5 +1,7 @@
 package com.yoga.mborasystem.caixadialogo;
 
+import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -250,23 +252,11 @@ public class DialogCriarProduto extends DialogFragment {
     }
 
     private String getCodigoMotivoIsecao() {
-        final String[] motivo = getResources().getStringArray(R.array.array_motivo_isecao);
-        final String[] codigo = getResources().getStringArray(R.array.array_motivo_isecao_valor);
-        for (int i = 0; i <= motivo.length; i++) {
-            if (binding.spinnerMotivoIsecao.getSelectedItem().toString().equalsIgnoreCase(motivo[i]))
-                return codigo[i];
-        }
-        return "";
+        return getPositionSpinner(requireContext(), binding.spinnerMotivoIsecao, R.array.array_motivo_isecao, R.array.array_motivo_isecao_valor, "M00");
     }
 
     private String getValorTipoProduto() {
-        final String[] tipo = getResources().getStringArray(R.array.array_tipo);
-        final String[] valor = getResources().getStringArray(R.array.array_tipo_valor);
-        for (int i = 0; i <= tipo.length; i++) {
-            if (binding.spinnerTipo.getSelectedItem().toString().equalsIgnoreCase(tipo[i]))
-                return valor[i];
-        }
-        return "P";
+        return getPositionSpinner(requireContext(), binding.spinnerTipo, R.array.array_tipo, R.array.array_tipo_valor, "P");
     }
 
     private void scanearCodigoBar(int camera) {

@@ -1318,4 +1318,14 @@ public class Ultilitario {
     public static int getValueWithDesconto(int valor, int descPerc) {
         return valor - ((valor * descPerc) / 100);
     }
+
+    public static String getPositionSpinner(Context context, AppCompatSpinner spinner, int valor, int posicao, String defaultValue) {
+        final String[] v = context.getResources().getStringArray(valor);
+        final String[] p = context.getResources().getStringArray(posicao);
+        for (int i = 0; i <= v.length; i++) {
+            if (spinner.getSelectedItem().toString().equalsIgnoreCase(v[i]))
+                return p[i];
+        }
+        return defaultValue;
+    }
 }
