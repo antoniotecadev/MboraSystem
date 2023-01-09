@@ -8,10 +8,13 @@ import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
+import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
+import static com.yoga.mborasystem.util.Ultilitario.setItemselectedSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
@@ -364,7 +367,9 @@ public class HomeFragment extends Fragment {
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }
         }, getViewLifecycleOwner());
-        binding.textNomeUsuario.setText("✔ " + requireArguments().getString("nome", ""));
+        int posicaoRegime = Integer.parseInt(getValueSharedPreferences(requireContext(), "regime_iva", "0"));
+        binding.textNomeUsuario.setText(requireArguments().getString("nome", ""));
+        binding.textRegimeIva.setText(getResources().getStringArray(R.array.array_regime_iva_valor)[posicaoRegime]);
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
