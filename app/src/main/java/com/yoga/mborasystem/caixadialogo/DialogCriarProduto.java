@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.caixadialogo;
 
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -56,6 +57,14 @@ public class DialogCriarProduto extends DialogFragment {
         intentIntegrator = new IntentIntegrator(getActivity());
         binding = DialogCriarProdutoBinding.inflate(getLayoutInflater());
         produtoViewModel = new ViewModelProvider(requireActivity()).get(ProdutoViewModel.class);
+        if(!getValueSharedPreferences(requireContext(), "regime_iva", "0").equals("0")){
+            binding.dividerView.setVisibility(View.INVISIBLE);
+            binding.textImposto.setVisibility(View.INVISIBLE);
+            binding.spinnerTaxaImposto.setVisibility(View.INVISIBLE);
+            binding.textMotivoIsencao.setVisibility(View.INVISIBLE);
+            binding.spinnerMotivoIsecao.setVisibility(View.INVISIBLE);
+            binding.linearLayoutValorIva.setVisibility(View.INVISIBLE);
+        }
         binding.spinnerIva.setEnabled(false);
         Ultilitario.addItemOnSpinner(binding.spinnerQuantidade, 255, getContext(), 1);
         Ultilitario.addItemOnSpinner(binding.spinnerIva, 20, getContext(), 0);

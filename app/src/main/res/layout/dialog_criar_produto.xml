@@ -101,12 +101,14 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <View
+                android:id="@+id/dividerView"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="@dimen/margem_lateral_formulario"
                 android:background="?android:attr/listDivider" />
 
             <TextView
+                android:id="@+id/textImposto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
@@ -122,6 +124,7 @@
                 android:spinnerMode="dropdown" />
 
             <TextView
+                android:id="@+id/textMotivoIsencao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margem_lateral_formulario"
@@ -233,6 +236,7 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linearLayoutValorIva"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margem_lateral_formulario"
