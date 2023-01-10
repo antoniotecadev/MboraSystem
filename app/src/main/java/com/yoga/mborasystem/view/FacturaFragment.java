@@ -1061,13 +1061,14 @@ public class FacturaFragment extends Fragment {
             valorTotalIva = ivaGer; // Total IVA sem desconto
 //            binding.textTotal.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
             binding.textTotalILiquido.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(valorGer)));
-            binding.txtTotILiq.setText(Ultilitario.formatPreco(String.valueOf(valorGer)));
+            binding.txtTotILiq.setText(Ultilitario.formatPreco(String.valueOf(valorGer)).replaceAll("Kz",""));
+            binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(totalGer)).replaceAll("Kz",""));
             int percentagem = Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString());
             int desc = (totalGer * percentagem) / 100;
             binding.textDesconto.setText(Ultilitario.formatPreco(String.valueOf(desc)));
             binding.totalDesconto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer - desc)));
-            binding.textTotLiq.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? valorGer : getValueWithDesconto(valorGer, percentagem))));
-            binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? ivaGer : getValueWithDesconto(ivaGer, percentagem))));
+            binding.textTotLiq.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? valorGer : getValueWithDesconto(valorGer, percentagem))).replaceAll("Kz",""));
+            binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? ivaGer : getValueWithDesconto(ivaGer, percentagem))).replaceAll("Kz",""));
         }
 
         private void addProdutoCarrinho(Long idproduto) {
