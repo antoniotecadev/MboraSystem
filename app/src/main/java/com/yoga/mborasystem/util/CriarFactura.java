@@ -48,18 +48,18 @@ import java.util.Map;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
+    public static void getPemissionAcessStoregeExternal(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorTotalIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
+                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorTotalIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
+                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorTotalIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
                     }
 
                     @Override
@@ -69,7 +69,7 @@ public class CriarFactura {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
+    private static void createPdfFile(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorTotalIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -108,18 +108,28 @@ public class CriarFactura {
             addNewLineHorizontal(document, "Desc", "Taxa", "P.Unit", "Qt", "Total", facturaReciboFont);
             for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
                 addLineSpace(document);
-                String preco = String.valueOf(produto.getValue().getPreco());
-                String valor = String.valueOf(precoTotalUnit.get(produto.getKey()).intValue());
+                int precoUnit;
+                int precoTotal;
+                int percentagemIva = produto.getValue().getPercentagemIva();
+                int precoUnitTotal = precoTotalUnit.get(produto.getKey()).intValue();
+                if (produto.getValue().isIva()) {
+                    float eliminaIva = percentagemIva == 5 ? 1.05f : (percentagemIva == 7 ? 1.07f : 1.14f);
+                    precoUnit = Math.round((produto.getValue().getPreco() / eliminaIva));
+                    precoTotal = Math.round((precoUnitTotal / eliminaIva));
+                } else {
+                    precoUnit = produto.getValue().getPreco();
+                    precoTotal = precoUnitTotal;
+                }
                 addNewItem(document, produto.getValue().getNome(), Element.ALIGN_LEFT, font);
                 if (!produto.getValue().isIva()) {
                     addNewItem(document, getRasaoISE(context, produto.getValue().getCodigoMotivoIsencao()), Element.ALIGN_LEFT, font1);
                 }
-                addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), produto.getValue().getPercentagemIva() + "%", Ultilitario.formatPreco(preco).replaceAll("Kz", ""), "" + precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco(), Ultilitario.formatPreco(valor).replaceAll("Kz", ""), font);
+                addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), produto.getValue().getPercentagemIva() + "%", Ultilitario.formatPreco(String.valueOf(precoUnit)).replaceAll("Kz", ""), "" + precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco(), Ultilitario.formatPreco(String.valueOf(precoTotal)).replaceAll("Kz", ""), font);
             }
             addLineSeparator(document);
             addNewLineWithLeftAndRight(document, "Total Ilíquido", Ultilitario.formatPreco(String.valueOf(valorBase)), font, font);
 //            addNewLineWithLeftAndRight(document, "Total Líquido", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))), font, font);
-            addNewLineWithLeftAndRight(document, "IVA", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorIva : getValueWithDesconto(valorIva, percDesc))), font, font);
+            addNewLineWithLeftAndRight(document, "IVA", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorTotalIva : getValueWithDesconto(valorTotalIva, percDesc))), font, font);
             addNewLineWithLeftAndRight(document, "Desconto" + "(" + percDesc + "%)", Ultilitario.formatPreco(desconto.getText().toString()), font, font);
             addNewLineWithLeftAndRight(document, "Total", Ultilitario.formatPreco(String.valueOf(totalDesconto)), font, font);
             addNewLineWithLeftAndRight(document, "Total Pago", Ultilitario.formatPreco(String.valueOf(valorPago)), font, font);
