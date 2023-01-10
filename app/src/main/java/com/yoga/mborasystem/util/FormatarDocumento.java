@@ -28,12 +28,12 @@ public class FormatarDocumento {
         document.add(p);
     }
 
-    public static void addNewLineHorizontal(Document document, String text1, String text2, String text3, String text4, String text5, Font textFont) throws DocumentException {
+    public static void addNewLineHorizontal(Document document, String text1, String text2, String text3, String text4, String text5, Font textFont, boolean isFiveColumn) throws DocumentException {
         Chunk chunkText1 = new Chunk(text1, textFont);
         Chunk chunkText2 = new Chunk(text2, textFont);
         Chunk chunkText3 = new Chunk(text3, textFont);
         Chunk chunkText4 = new Chunk(text4, textFont);
-        Chunk chunkText5 = new Chunk(text5, textFont);
+
         Paragraph p = new Paragraph(chunkText1);
         p.add(new Chunk(new VerticalPositionMark()));
         p.add(chunkText2);
@@ -42,7 +42,10 @@ public class FormatarDocumento {
         p.add(new Chunk(new VerticalPositionMark()));
         p.add(chunkText4);
         p.add(new Chunk(new VerticalPositionMark()));
-        p.add(chunkText5);
+        if (isFiveColumn) {
+            Chunk chunkText5 = new Chunk(text5, textFont);
+            p.add(chunkText5);
+        }
         document.add(p);
     }
 

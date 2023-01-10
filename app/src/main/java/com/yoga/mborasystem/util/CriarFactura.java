@@ -7,6 +7,7 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineHorizontal;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
+import static com.yoga.mborasystem.util.Ultilitario.formatPreco;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
@@ -105,11 +106,10 @@ public class CriarFactura {
             addNewItem(document, "CLIENTE: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
             addNewItem(document, "NIF: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : (TextUtils.split(txtNomeCliente.getText().toString(), "-")[2].equals("999999999") ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2])), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
-            addNewLineHorizontal(document, "Desc", "Qt", "P.Unit", "Taxa %", "Total", facturaReciboFont);
+            addNewLineHorizontal(document, "Desc", "Qt", "P.Unit", "Taxa %", "Total", facturaReciboFont, true);
             for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
                 addLineSpace(document);
-                int precoUnit;
-                int precoTotal;
+                int precoUnit, precoTotal;
                 int percentagemIva = produto.getValue().getPercentagemIva();
                 int precoUnitTotal = precoTotalUnit.get(produto.getKey()).intValue();
                 if (produto.getValue().isIva()) {
@@ -124,16 +124,28 @@ public class CriarFactura {
                 if (!produto.getValue().isIva()) {
                     addNewItem(document, getRasaoISE(context, produto.getValue().getCodigoMotivoIsencao()), Element.ALIGN_LEFT, font1);
                 }
-                addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), String.valueOf(precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco()), Ultilitario.formatPreco(String.valueOf(precoUnit)).replaceAll("Kz", ""), String.valueOf(produto.getValue().getPercentagemIva()), Ultilitario.formatPreco(String.valueOf(precoTotal)).replaceAll("Kz", ""), font);
+                addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), String.valueOf(precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco()), formatPreco(String.valueOf(precoUnit)).replaceAll("Kz", ""), String.valueOf(produto.getValue().getPercentagemIva()), formatPreco(String.valueOf(precoTotal)).replaceAll("Kz", ""), font, true);
             }
             addLineSeparator(document);
-            addNewLineWithLeftAndRight(document, "Total Ilíquido", Ultilitario.formatPreco(String.valueOf(valorBase)), font, font);
+            addNewLineWithLeftAndRight(document, "Total Ilíquido", formatPreco(String.valueOf(valorBase)), font, font);
 //            addNewLineWithLeftAndRight(document, "Total Líquido", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))), font, font);
-            addNewLineWithLeftAndRight(document, "IVA", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorTotalIva : getValueWithDesconto(valorTotalIva, percDesc))), font, font);
-            addNewLineWithLeftAndRight(document, "Desconto" + "(" + percDesc + "%)", Ultilitario.formatPreco(desconto.getText().toString()), font, font);
-            addNewLineWithLeftAndRight(document, "Total", Ultilitario.formatPreco(String.valueOf(totalDesconto)), font, font);
-            addNewLineWithLeftAndRight(document, "Total Pago", Ultilitario.formatPreco(String.valueOf(valorPago)), font, font);
-            addNewLineWithLeftAndRight(document, "Troco", Ultilitario.formatPreco(String.valueOf(troco)), font, font);
+            addNewLineWithLeftAndRight(document, "Total Imposto", formatPreco(String.valueOf(percDesc == 0 ? valorTotalIva : getValueWithDesconto(valorTotalIva, percDesc))), font, font);
+            addNewLineWithLeftAndRight(document, "Desconto" + "(" + percDesc + "%)", formatPreco(desconto.getText().toString()), font, font);
+            addNewLineWithLeftAndRight(document, "Total a Pagar", formatPreco(String.valueOf(totalDesconto)), font, font);
+            addNewLineWithLeftAndRight(document, "Total Pago", formatPreco(String.valueOf(valorPago)), font, font);
+            addNewLineWithLeftAndRight(document, "Troco", formatPreco(String.valueOf(troco)), font, font);
+            addLineSeparator(document);
+            int incidenciaIsento = 0, incidenciaIva = 0;
+            for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
+                int precoUnitTotal = precoTotalUnit.get(produto.getKey()).intValue();
+                if (produto.getValue().isIva())
+                    incidenciaIva += precoUnitTotal;
+                else
+                    incidenciaIsento += precoUnitTotal;
+            }
+            addNewLineHorizontal(document, "Desc", "Taxa %", "Incidência", "V.Imposto", "", facturaReciboFont, false);
+            addNewLineHorizontal(document, "Isento", "0", formatPreco(String.valueOf(incidenciaIsento)).replaceAll("Kz", ""), formatPreco("0").replaceAll("Kz", ""), "", font, false);
+            addNewLineHorizontal(document, "IVA   ", "14", formatPreco(String.valueOf(incidenciaIva - valorTotalIva)).replaceAll("Kz", ""), formatPreco(String.valueOf(valorTotalIva)).replaceAll("Kz", ""), "", font, false);
             addLineSeparator(document);
             addNewItem(document, formaPagamento, Element.ALIGN_LEFT, font);
             addNewItem(document, "Operador: " + (idOperador > 0 ? " MSU" + idOperador : " MSA0"), Element.ALIGN_LEFT, font);
