@@ -832,13 +832,13 @@ public class FacturaFragment extends Fragment {
                     .setTitle(R.string.confirmar_venda)
                     .setMessage(getString(R.string.cliente) + ": " + nomeIDNIFcliente[0] + "\n" +
                             getString(R.string.quantidade) + ": " + quantidadeProduto + "\n"
+                            + getString(R.string.base) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))) + "\n"
                             + getString(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(valorBase)) + "\n"
-                            + getString(R.string.desconto) + "(" + percDesc + "%): " + Ultilitario.formatPreco(Objects.requireNonNull(binding.textDesconto.getText()).toString()) + "\n"
+                            + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorTotalIva : getValueWithDesconto(valorTotalIva, percDesc))) + "\n"
                             + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
+                            + getString(R.string.desconto) + "(" + percDesc + "%): " + Ultilitario.formatPreco(Objects.requireNonNull(binding.textDesconto.getText()).toString()) + "\n"
                             + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
                             + getString(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)) + "\n"
-                            + getString(R.string.tot_liq) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))) + "\n"
-                            + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorTotalIva : getValueWithDesconto(valorTotalIva, percDesc))) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                             + getString(R.string.forma_pagamento) + "\n" + getFormaPamento(binding) + "\n"
                     )

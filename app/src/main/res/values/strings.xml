@@ -750,6 +750,7 @@
     <string name="rgm">Regime do IVA*</string>
     <string name="tot_iliq">Total Ilíquido</string>
     <string name="tot_liq">Total Líquido</string>
+    <string name="base">Base</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
