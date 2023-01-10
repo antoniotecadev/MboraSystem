@@ -248,6 +248,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="70dp"
                         android:text="@string/tot_liq"
+                        android:visibility="gone"
                         android:textColor="@color/textColor" />
 
                     <TextView
@@ -289,7 +290,8 @@
                         android:id="@+id/textTotLiq"
                         android:layout_width="95dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/textColorM" />
+                        android:textColor="@color/textColorM"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/textIva"
