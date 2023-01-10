@@ -112,7 +112,7 @@ public class CriarFactura {
                 String valor = String.valueOf(precoTotalUnit.get(produto.getKey()).intValue());
                 addNewItem(document, produto.getValue().getNome(), Element.ALIGN_LEFT, font);
                 if (!produto.getValue().isIva()) {
-                    addNewItem(document, "* " + getRasaoISE(context, produto.getValue().getCodigoMotivoIsencao()), Element.ALIGN_LEFT, font1);
+                    addNewItem(document, getRasaoISE(context, produto.getValue().getCodigoMotivoIsencao()), Element.ALIGN_LEFT, font1);
                 }
                 addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), produto.getValue().getPercentagemIva() + "%", Ultilitario.formatPreco(preco).replaceAll("Kz", ""), "" + precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco(), Ultilitario.formatPreco(valor).replaceAll("Kz", ""), font);
             }
