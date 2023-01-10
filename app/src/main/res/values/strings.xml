@@ -297,7 +297,6 @@
 
     <string name="confirmar_venda">Confirmar venda</string>
     <string name="vender">vender</string>
-    <string name="valor_base">Valor base</string>
     <string name="venda_efectuada">Venda Efectuada</string>
     <string name="imprimir">Imprimir</string>
     <string name="valor_pago">Valor Pago</string>
@@ -737,7 +736,6 @@
     <string name="sm_perm_n_pod_imp_bd">Sem permissão não pode importar base de dados.</string>
     <string name="mc_cx_iv">Marca a caixa do iva para aplica - lo</string>
 <!--    <string name="subtotal">Subtotal</string>-->
-    <string name="base">Base</string>
     <string name="anular">Anular</string>
     <string name="nt_ct">Nota de Crédito</string>
     <string name="emt_nt_cd">Emitir nota de crédito referente a</string>
@@ -751,6 +749,7 @@
     <string name="prod_regi">Produto registado</string>
     <string name="rgm">Regime do IVA*</string>
     <string name="tot_iliq">Total Ilíquido</string>
+    <string name="tot_liq">Total Líquido</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

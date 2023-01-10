@@ -279,7 +279,6 @@
 
     <string name="confirmar_venda">Confirm sale</string>
     <string name="vender">Sell</string>
-    <string name="valor_base">Base value</string>
     <string name="venda_efectuada">Sale made</string>
     <string name="imprimir">To print</string>
     <string name="valor_pago">Payment Value</string>
@@ -709,7 +708,6 @@
     <string name="sm_perm_n_pod_imp_bd">Without permission, you cannot import database.</string>
     <string name="mc_cx_iv">Check the VAT box to apply it</string>
 <!--    <string name="subtotal">Subtotal</string>-->
-    <string name="base">Basis</string>
     <string name="anular">Annuler</string>
     <string name="nt_ct">Credit Note</string>
     <string name="emt_nt_cd">Issue a credit note for</string>

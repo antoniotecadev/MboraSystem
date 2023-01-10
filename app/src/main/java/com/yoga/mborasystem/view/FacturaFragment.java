@@ -318,7 +318,7 @@ public class FacturaFragment extends Fragment {
                 String desconto = String.valueOf((total * percentagem) / 100);
                 binding.textDesconto.setText(Ultilitario.formatPreco(desconto));
                 binding.textViewDesconto.setText(getText(R.string.desconto) + "(" + percentagem + "%)");
-                binding.textValor.setText(Ultilitario.formatPreco(String.valueOf(percentagem == 0 ? valorBase : getValueWithDesconto(valorBase, percentagem))));
+                binding.textTotLiq.setText(Ultilitario.formatPreco(String.valueOf(percentagem == 0 ? valorBase : getValueWithDesconto(valorBase, percentagem))));
                 binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(percentagem == 0 ? valorIva : getValueWithDesconto(valorIva, percentagem))));
             }
 
@@ -726,7 +726,7 @@ public class FacturaFragment extends Fragment {
         troco = 0;
         valorPago = 0;
         binding.textTotalILiquido.setText(Ultilitario.formatPreco("0"));
-        binding.textValor.setText(Ultilitario.formatPreco("0"));
+        binding.textTotLiq.setText(Ultilitario.formatPreco("0"));
         binding.textIva.setText(Ultilitario.formatPreco("0"));
         binding.txtTotILiq.setText(Ultilitario.formatPreco("0"));
         binding.totalDesconto.setText(Ultilitario.formatPreco("0"));
@@ -837,7 +837,7 @@ public class FacturaFragment extends Fragment {
                             + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
                             + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
                             + getString(R.string.troco) + ": " + Ultilitario.formatPreco(String.valueOf(troco)) + "\n"
-                            + getString(R.string.valor_base) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))) + "\n"
+                            + getString(R.string.tot_liq) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))) + "\n"
                             + getString(R.string.montante_iva) + ": " + Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorIva : getValueWithDesconto(valorIva, percDesc))) + "\n"
                             + getString(R.string.dvd) + ": " + Ultilitario.formatPreco(String.valueOf(valorDivida)) + "\n"
                             + getString(R.string.forma_pagamento) + "\n" + getFormaPamento(binding) + "\n"
@@ -1066,7 +1066,7 @@ public class FacturaFragment extends Fragment {
             int desc = (totalGer * percentagem) / 100;
             binding.textDesconto.setText(Ultilitario.formatPreco(String.valueOf(desc)));
             binding.totalDesconto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer - desc)));
-            binding.textValor.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? valorGer : getValueWithDesconto(valorGer, percentagem))));
+            binding.textTotLiq.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? valorGer : getValueWithDesconto(valorGer, percentagem))));
             binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? ivaGer : getValueWithDesconto(ivaGer, percentagem))));
         }
 

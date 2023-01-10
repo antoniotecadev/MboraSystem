@@ -279,7 +279,6 @@
 
     <string name="confirmar_venda">Confirmer la vente</string>
     <string name="vender">Vendre</string>
-    <string name="valor_base">Valeur de base</string>
     <string name="venda_efectuada">Vente faite</string>
     <string name="imprimir">Imprimer</string>
     <string name="valor_pago">Valeur du paiement</string>
@@ -709,7 +708,6 @@
     <string name="sm_perm_n_pod_imp_bd">Sans autorisation, vous ne pouvez pas importer de base de données.</string>
     <string name="mc_cx_iv">Cochez la case TVA pour l\'appliquer</string>
 <!--    <string name="subtotal">Sous-total</string>-->
-    <string name="base">Base</string>
     <string name="anular">Cancel</string>
     <string name="nt_ct">Note de Crédit</string>
     <string name="emt_nt_cd">Émettre une note de crédit pour</string>
