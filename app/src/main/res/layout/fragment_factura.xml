@@ -260,7 +260,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tot_liq"
+                        android:text="@string/tot_iliq"
                         android:textColor="@color/textColor" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
