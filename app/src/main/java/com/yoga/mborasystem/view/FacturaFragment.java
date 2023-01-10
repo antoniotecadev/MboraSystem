@@ -832,7 +832,7 @@ public class FacturaFragment extends Fragment {
                     .setTitle(R.string.confirmar_venda)
                     .setMessage(getString(R.string.cliente) + ": " + nomeIDNIFcliente[0] + "\n" +
                             getString(R.string.quantidade) + ": " + quantidadeProduto + "\n"
-                            + getString(R.string.subtotal) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
+                            + getString(R.string.tot_liq) + ": " + Ultilitario.formatPreco(String.valueOf(total)) + "\n"
                             + getString(R.string.desconto) + "(" + percDesc + "%): " + Ultilitario.formatPreco(Objects.requireNonNull(binding.textDesconto.getText()).toString()) + "\n"
                             + getString(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totaldesconto)) + "\n"
                             + getString(R.string.valor_pago) + ": " + Ultilitario.formatPreco(String.valueOf(valorPago)) + "\n"
@@ -1059,7 +1059,7 @@ public class FacturaFragment extends Fragment {
             total = totalGer;
             valorBase = valorGer;
             valorIva = ivaGer;
-            binding.textTotal.setText(getText(R.string.subtotal) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
+            binding.textTotal.setText(getText(R.string.tot_liq) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
             binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(totalGer)));
             int percentagem = Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString());
             int desc = (totalGer * percentagem) / 100;
