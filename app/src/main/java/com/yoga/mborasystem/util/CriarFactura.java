@@ -105,7 +105,7 @@ public class CriarFactura {
             addNewItem(document, "CLIENTE: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[0]), Element.ALIGN_LEFT, font);
             addNewItem(document, "NIF: " + (txtNomeCliente.getText().toString().isEmpty() ? context.getString(R.string.csm_fnl) : (TextUtils.split(txtNomeCliente.getText().toString(), "-")[2].equals("999999999") ? context.getString(R.string.csm_fnl) : TextUtils.split(txtNomeCliente.getText().toString(), "-")[2])), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
-            addNewLineHorizontal(document, "Desc", "Taxa", "P.Unit", "Qt", "Total", facturaReciboFont);
+            addNewLineHorizontal(document, "Desc", "Qt", "P.Unit", "Taxa %", "Total", facturaReciboFont);
             for (Map.Entry<Long, Produto> produto : produtos.entrySet()) {
                 addLineSpace(document);
                 int precoUnit;
@@ -124,7 +124,7 @@ public class CriarFactura {
                 if (!produto.getValue().isIva()) {
                     addNewItem(document, getRasaoISE(context, produto.getValue().getCodigoMotivoIsencao()), Element.ALIGN_LEFT, font1);
                 }
-                addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), produto.getValue().getPercentagemIva() + "%", Ultilitario.formatPreco(String.valueOf(precoUnit)).replaceAll("Kz", ""), "" + precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco(), Ultilitario.formatPreco(String.valueOf(precoTotal)).replaceAll("Kz", ""), font);
+                addNewLineHorizontal(document, "MSP" + produto.getValue().getId(), String.valueOf(precoTotalUnit.get(produto.getKey()) / produto.getValue().getPreco()), Ultilitario.formatPreco(String.valueOf(precoUnit)).replaceAll("Kz", ""), String.valueOf(produto.getValue().getPercentagemIva()), Ultilitario.formatPreco(String.valueOf(precoTotal)).replaceAll("Kz", ""), font);
             }
             addLineSeparator(document);
             addNewLineWithLeftAndRight(document, "Total Ilíquido", Ultilitario.formatPreco(String.valueOf(valorBase)), font, font);
