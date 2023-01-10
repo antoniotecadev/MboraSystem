@@ -99,7 +99,7 @@ public class CriarFactura {
             addNewItem(document, "DATA: " + dataEmissao, Element.ALIGN_LEFT, font);
             addLineSpace(document);
             Font facturaReciboFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
-            addNewItem(document, isSegundaVia ? "Segunda Via Conforme Original" : (isAnulado ? (isAnuladoSegundaVia ? "Segunda Via Conforme Original - ANULADO" : "Original - ANULADO") : "Original"), Element.ALIGN_CENTER, font);
+            addNewItem(document, isSegundaVia ? "Segunda Via Conforme Original" : (isAnulado ? (isAnuladoSegundaVia ? "Segunda Via Conforme Original - ANULAÇÃO" : "Original - ANULAÇÃO") : "Original"), Element.ALIGN_CENTER, font);
             addNewItem(document, isAnulado ? "Referente a: " + refFR : "", Element.ALIGN_CENTER, font);
             addNewItem(document, (isAnulado ? "Nota de Crédito" : "FACTURA/RECIBO") + "\n" + refFRNC + "\n", Element.ALIGN_CENTER, facturaReciboFont);
             addNewItem(document, "Pg. 1/1", Element.ALIGN_RIGHT, font1);
