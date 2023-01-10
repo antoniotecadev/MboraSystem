@@ -212,7 +212,7 @@
                     tools:listitem="@layout/fragment_lista_factura" />
 
                 <TextView
-                    android:id="@+id/textTotal"
+                    android:id="@+id/textTotalILiquido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margem_lateral_formulario"
@@ -298,7 +298,7 @@
                         android:textColor="@color/textColorM" />
 
                     <TextView
-                        android:id="@+id/txtTot"
+                        android:id="@+id/txtTotILiq"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/textColorM" />

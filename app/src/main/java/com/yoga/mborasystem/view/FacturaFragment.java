@@ -725,10 +725,10 @@ public class FacturaFragment extends Fragment {
         desconto = 0;
         troco = 0;
         valorPago = 0;
-        binding.textTotal.setText(Ultilitario.formatPreco("0"));
+        binding.textTotalILiquido.setText(Ultilitario.formatPreco("0"));
         binding.textValor.setText(Ultilitario.formatPreco("0"));
         binding.textIva.setText(Ultilitario.formatPreco("0"));
-        binding.txtTot.setText(Ultilitario.formatPreco("0"));
+        binding.txtTotILiq.setText(Ultilitario.formatPreco("0"));
         binding.totalDesconto.setText(Ultilitario.formatPreco("0"));
         binding.troco.setText(Ultilitario.formatPreco("0"));
         binding.txtNomeCliente.setEnabled(true);
@@ -1060,8 +1060,8 @@ public class FacturaFragment extends Fragment {
             valorBase = valorGer; // Total sem IVA e sem desconto
             valorIva = ivaGer; // Total IVA sem desconto
 //            binding.textTotal.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
-            binding.textTotal.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(valorGer)));
-            binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(valorGer)));
+            binding.textTotalILiquido.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(valorGer)));
+            binding.txtTotILiq.setText(Ultilitario.formatPreco(String.valueOf(valorGer)));
             int percentagem = Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString());
             int desc = (totalGer * percentagem) / 100;
             binding.textDesconto.setText(Ultilitario.formatPreco(String.valueOf(desc)));
