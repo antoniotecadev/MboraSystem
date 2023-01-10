@@ -777,14 +777,14 @@
     </string-array>
     <string-array name="array_taxa_iva">
         <item>IVA - Isento (0%)</item>
-        <item>IVA - Taxa (5%)</item>
-        <item>IVA - Taxa (7%)</item>
+<!--        <item>IVA - Taxa (5%)</item>-->
+<!--        <item>IVA - Taxa (7%)</item>-->
         <item>IVA - Taxa (14%)</item>
     </string-array>
     <string-array name="array_taxa_iva_valor">
         <item>0</item>
-        <item>5</item>
-        <item>7</item>
+<!--        <item>5</item>-->
+<!--        <item>7</item>-->
         <item>14</item>
     </string-array>
     <string-array name="array_motivo_isecao">
