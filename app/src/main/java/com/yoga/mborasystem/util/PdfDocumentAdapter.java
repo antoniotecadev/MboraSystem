@@ -1,7 +1,6 @@
 package com.yoga.mborasystem.util;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.ParcelFileDescriptor;
@@ -19,9 +18,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
-import androidx.annotation.RequiresApi;
-
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class PdfDocumentAdapter extends PrintDocumentAdapter {
 
     private final Context context;
