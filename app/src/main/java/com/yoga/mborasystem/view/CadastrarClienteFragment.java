@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -45,13 +44,10 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationTokenSource;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.JsonObject;
-import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
@@ -90,33 +86,6 @@ public class CadastrarClienteFragment extends Fragment {
         return criarCliente(inflater, container);
     }
 
-    private void spinnerBairros(String municipio) {
-        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/" + municipio.trim().replaceAll("\\s+", "%20") + "/bairros";
-        ArrayAdapter<String> bairros = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
-        Ion.with(requireActivity())
-                .load(URL)
-                .asJsonArray()
-                .setCallback((e, jsonElements) -> {
-                    try {
-                        bairros.add("");
-                        for (int i = 0; i < jsonElements.size(); i++) {
-                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
-                            bairros.add(parceiro.get("br").getAsString());
-                        }
-                        if (bairros.getItem(1).isEmpty())
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.br_na_enc_mun), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        else
-                            Snackbar.make(requireView(), getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
-                    } catch (Exception ex) {
-                        Ultilitario.alertDialog(getString(R.string.erro), ex.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    } finally {
-                        MainActivity.dismissProgressBar();
-                    }
-                });
-        bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerBairros.setAdapter(bairros);
-    }
-
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
@@ -145,9 +114,9 @@ public class CadastrarClienteFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (conexaoInternet(requireContext()))
-                    if (!parent.getItemAtPosition(position).toString().isEmpty())
-                        spinnerBairros(parent.getItemAtPosition(position).toString());
-                    else
+                    if (!parent.getItemAtPosition(position).toString().isEmpty()) {
+                        binding.spinnerBairros.setAdapter(clienteViewModel.consultarBairros(requireContext(), parent.getItemAtPosition(position).toString(), requireView()));
+                    } else
                         MainActivity.dismissProgressBar();
             }
 

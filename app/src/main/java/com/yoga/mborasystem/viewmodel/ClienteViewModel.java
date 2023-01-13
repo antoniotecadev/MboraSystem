@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
@@ -471,6 +473,33 @@ public class ClienteViewModel extends AndroidViewModel {
                         Toast.makeText(getApplication(), getApplication().getString(R.string.dds_n_elim), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public ArrayAdapter<String> consultarBairros(Context c, String municipio, View v) {
+        String URL = Ultilitario.getAPN(c) + "/mborasystem-admin/public/api/" + municipio.trim().replaceAll("\\s+", "%20") + "/bairros";
+        ArrayAdapter<String> bairros = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item);
+        Ion.with(c)
+                .load(URL)
+                .asJsonArray()
+                .setCallback((e, jsonElements) -> {
+                    try {
+                        bairros.add("");
+                        for (int i = 0; i < jsonElements.size(); i++) {
+                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
+                            bairros.add(parceiro.get("br").getAsString());
+                        }
+                        if (bairros.getItem(1).isEmpty())
+                            Ultilitario.alertDialog(c.getString(R.string.erro), c.getString(R.string.br_na_enc_mun), c, R.drawable.ic_baseline_privacy_tip_24);
+                        else
+                            Snackbar.make(v, c.getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
+                    } catch (Exception ex) {
+                        Ultilitario.alertDialog(c.getString(R.string.erro), ex.getMessage(), c, R.drawable.ic_baseline_privacy_tip_24);
+                    } finally {
+                        MainActivity.dismissProgressBar();
+                    }
+                });
+        bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return bairros;
     }
 
     @Override
