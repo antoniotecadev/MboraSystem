@@ -2,10 +2,8 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
-import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
-import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
@@ -333,7 +331,7 @@ public class CadastrarClienteFragment extends Fragment {
     }
 
     private String uriPath;
-    private ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
+    private final ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
                     MainActivity.getProgressBar();
