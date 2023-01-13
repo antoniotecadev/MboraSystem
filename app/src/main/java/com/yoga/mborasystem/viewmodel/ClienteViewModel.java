@@ -2,6 +2,7 @@ package com.yoga.mborasystem.viewmodel;
 
 import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
 import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
+import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
@@ -34,6 +35,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -61,6 +63,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     private byte estado;
     private String codigo;
+    private boolean isNewUser;
     private final Bundle bundle;
     private final Cliente cliente;
     private Disposable disposable;
@@ -133,7 +136,9 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
             email.requestFocus();
             email.setError(getApplication().getString(R.string.email_invalido));
-        } else if (nomeEmpresa.length() < 4) {
+        } else if (!verificarEmail(activity, email.getText().toString(), true))
+            email.requestFocus();
+        else if (nomeEmpresa.length() < 4) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_curto));
         } else if (isCampoVazio(Objects.requireNonNull(municipio.getSelectedItem().toString()))) {
@@ -489,17 +494,38 @@ public class ClienteViewModel extends AndroidViewModel {
                             bairros.add(parceiro.get("br").getAsString());
                         }
                         if (bairros.getItem(1).isEmpty())
-                            Ultilitario.alertDialog(c.getString(R.string.erro), c.getString(R.string.br_na_enc_mun), c, R.drawable.ic_baseline_privacy_tip_24);
+                            alertDialog(c.getString(R.string.erro), c.getString(R.string.br_na_enc_mun), c, R.drawable.ic_baseline_privacy_tip_24);
                         else
                             Snackbar.make(v, c.getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
                     } catch (Exception ex) {
-                        Ultilitario.alertDialog(c.getString(R.string.erro), ex.getMessage(), c, R.drawable.ic_baseline_privacy_tip_24);
+                        alertDialog(c.getString(R.string.erro), ex.getMessage(), c, R.drawable.ic_baseline_privacy_tip_24);
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
                 });
         bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return bairros;
+    }
+
+    public boolean verificarEmail(Activity a, String email, boolean isCadastroActualizar) {
+        if (email.isEmpty())
+            Toast.makeText(a, a.getString(R.string.dig_eml), Toast.LENGTH_LONG).show();
+        else {
+            MainActivity.getProgressBar();
+            FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(a, task -> {
+                if (task.isSuccessful()) {
+                    isNewUser = task.getResult().getSignInMethods().isEmpty();
+                    if (isNewUser) {
+                        if (!isCadastroActualizar)
+                            alertDialog(a.getString(R.string.email_valido), a.getString(R.string.email_valido_msg), a, R.drawable.ic_baseline_done_24);
+                    } else
+                        alertDialog(a.getString(R.string.email_invalido), a.getString(R.string.email_invalido_msg), a, R.drawable.ic_baseline_close_24);
+                } else
+                    alertDialog(a.getString(R.string.erro), task.getException().getMessage(), a, R.drawable.ic_baseline_privacy_tip_24);
+                MainActivity.dismissProgressBar();
+            });
+        }
+        return isNewUser;
     }
 
     @Override

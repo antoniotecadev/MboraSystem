@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -91,24 +90,7 @@ public class CadastrarClienteFragment extends Fragment {
         Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
         Ultilitario.spinnerMunicipios(requireContext(), binding.spinnerMunicipios);
 
-        binding.buttonVerificarEmail.setOnClickListener(view -> {
-            if (binding.editTextEmail.getText().toString().trim().isEmpty())
-                Toast.makeText(requireContext(), getString(R.string.dig_eml), Toast.LENGTH_LONG).show();
-            else {
-                MainActivity.getProgressBar();
-                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(binding.editTextEmail.getText().toString()).addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
-                        if (isNewUser)
-                            Ultilitario.alertDialog(getString(R.string.email_valido), getString(R.string.email_valido_msg), requireContext(), R.drawable.ic_baseline_done_24);
-                        else
-                            Ultilitario.alertDialog(getString(R.string.email_invalido), getString(R.string.email_invalido_msg), requireContext(), R.drawable.ic_baseline_close_24);
-                    } else
-                        Ultilitario.alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    MainActivity.dismissProgressBar();
-                });
-            }
-        });
+        binding.buttonVerificarEmail.setOnClickListener(view -> clienteViewModel.verificarEmail(requireActivity(), binding.editTextEmail.getText().toString(), false));
 
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
