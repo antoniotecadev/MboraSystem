@@ -2,11 +2,10 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
+import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
@@ -145,21 +144,11 @@ public class CadastrarClienteFragment extends Fragment {
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                MainActivity.getProgressBar();
-                if (isNetworkConnected(requireContext())) {
-                    if (internetIsConnected()) {
-                        if (!parent.getItemAtPosition(position).toString().isEmpty())
-                            spinnerBairros(parent.getItemAtPosition(position).toString());
-                        else
-                            MainActivity.dismissProgressBar();
-                    } else {
+                if (conexaoInternet(requireContext()))
+                    if (!parent.getItemAtPosition(position).toString().isEmpty())
+                        spinnerBairros(parent.getItemAtPosition(position).toString());
+                    else
                         MainActivity.dismissProgressBar();
-                        Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    }
-                } else {
-                    MainActivity.dismissProgressBar();
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                }
             }
 
             @Override

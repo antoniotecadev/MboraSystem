@@ -1328,4 +1328,20 @@ public class Ultilitario {
         }
         return defaultValue;
     }
+
+    public static boolean conexaoInternet(Context context) {
+        MainActivity.getProgressBar();
+        if (isNetworkConnected(context)) {
+            if (internetIsConnected())
+                return true;
+            else {
+                MainActivity.dismissProgressBar();
+                Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_int), context, R.drawable.ic_baseline_privacy_tip_24);
+            }
+        } else {
+            MainActivity.dismissProgressBar();
+            Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.conec_wif_dad), context, R.drawable.ic_baseline_privacy_tip_24);
+        }
+        return false;
+    }
 }
