@@ -81,8 +81,8 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private boolean isOpen = false, isMaster;
     private ClienteViewModel clienteViewModel;
-    private String idioma, codigoIdioma, nomeOperador, languageCode = "";
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
+    private String idioma, codigoIdioma, nomeOperador, uriPath, languageCode = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -531,7 +531,6 @@ public class HomeFragment extends Fragment {
             }
     );
 
-    private String uriPath;
     private ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
