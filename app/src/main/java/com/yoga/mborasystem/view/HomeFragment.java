@@ -8,13 +8,11 @@ import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
-import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
-import static com.yoga.mborasystem.util.Ultilitario.setItemselectedSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
@@ -78,13 +76,13 @@ import java.util.concurrent.Executors;
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
-    String nomeOperador, languageCode = "";
     private Cliente cliente;
     private ExecutorService executor;
     private FragmentHomeBinding binding;
     private String idioma, codigoIdioma;
     private boolean isOpen = false, isMaster;
     private ClienteViewModel clienteViewModel;
+    private String nomeOperador, languageCode = "";
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
     @Override
