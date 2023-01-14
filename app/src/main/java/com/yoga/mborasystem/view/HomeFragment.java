@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
+import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
@@ -10,10 +11,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
-import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
@@ -280,18 +278,8 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
                         break;
                     case R.id.estadoCliente:
-                        MainActivity.getProgressBar();
-                        if (isNetworkConnected(requireContext())) {
-                            if (internetIsConnected())
-                                estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
-                            else {
-                                MainActivity.dismissProgressBar();
-                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                            }
-                        } else {
-                            MainActivity.dismissProgressBar();
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
+                        if (conexaoInternet(requireContext()))
+                            estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
                         break;
                     case R.id.gerarCodigoQr:
                         getQrCode();
@@ -440,11 +428,11 @@ public class HomeFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
     }
 
-    private String estado, quantidadeTipo;
-    private byte estadoConta, terminoPrazo;
+    private boolean isFinish;
 
     private void estadoConta(String imei) {
 
+        StringBuilder sb = new StringBuilder();
         String[] pacote = {getString(R.string.brz), getString(R.string.alm), getString(R.string.oro), ""};
         String[] tipo = getResources().getStringArray(R.array.tipo_pagamento);
         Map<String, String> mapTipoPagamento = new HashMap<>();
@@ -460,40 +448,37 @@ public class HomeFragment extends Fragment {
                 .setCallback((e, jsonElements) -> {
                     try {
                         for (int i = 0; i < jsonElements.size(); i++) {
+
                             JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
-                            estadoConta = Byte.parseByte(parceiro.get("estado").getAsString());
-                            terminoPrazo = parceiro.get("termina").getAsByte();
+                            byte estadoConta = Byte.parseByte(parceiro.get("estado").getAsString());
+                            byte terminoPrazo = parceiro.get("termina").getAsByte();
                             String contactos = parceiro.get("contactos").getAsString();
                             String dispositivo = parceiro.get("device").getAsString();
-                            quantidadeTipo = parceiro.get("quantidade_produto_pacote").getAsString();
                             boolean equalsDevice = dispositivo.trim().equalsIgnoreCase(getDetailDeviceString(requireActivity()));
-                            estado = (!equalsDevice ? getString(R.string.inco_desp) + "\n\n" : "") +
-                                    (terminoPrazo == Ultilitario.UM ? getString(R.string.prazterm) + "\n" :
-                                            (estadoConta == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")) + "\n" +
-                                    getString(R.string.pac) + ": " + pacote[Byte.parseByte(parceiro.get("pacote").getAsString())] + "\n" +
-                                    getString(R.string.tipo) + " " + mapTipoPagamento.get(parceiro.get("tipo_pagamento").getAsString()) + "\n" +
-                                    getString(R.string.prod) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto_pacote").getAsString() + "\n" +
-                                    getString(R.string.prod_regi) + "(" + getString(R.string.mbora) + "): " + parceiro.get("quantidade_produto").getAsString() + "\n\n" +
-                                    getString(R.string.ini) + ": " + parceiro.get("inicio").getAsString() + "\n" +
-                                    getString(R.string.term) + ": " + parceiro.get("fim").getAsString() + "\n\n" +
-                                    getString(R.string.nome).replace("*", ": ") + parceiro.get("first_name").getAsString() + "\n" +
-                                    getString(R.string.Sobre_Nome).replace("*", ": ") + parceiro.get("last_name").getAsString() + "\n" +
-                                    getString(R.string.nifbi).replace("*", ": ") + parceiro.get("nif_bi").getAsString() + "\n" +
-                                    getString(R.string.Numero_Telefone).replace("*", ": ") + parceiro.get("phone").getAsString() + "\n" +
-                                    getString(R.string.Numero_Telefone_Alternativo).replace("*", ": ") + parceiro.get("alternative_phone").getAsString() + "\n" +
-                                    getString(R.string.Email).replace("*", ": ") + parceiro.get("email").getAsString() + "\n" +
-                                    getString(R.string.empresa).replace("*", ": ") + parceiro.get("empresa").getAsString() + "\n" +
-                                    getString(R.string.municipio).replace("*", ": ") + parceiro.get("municipality").getAsString() + "\n" +
-                                    getString(R.string.bairro).replace("*", ": ") + parceiro.get("district").getAsString() + "\n" +
-                                    getString(R.string.rua).replace("*", ": ") + parceiro.get("street").getAsString() + "\n" +
-                                    getString(R.string.imei) + ": " + parceiro.get("imei").getAsString() + "\n\nYOGA:" + contactos;
+
+                            sb.append(!equalsDevice ? getString(R.string.inco_desp) + "\n\n" : "");
+                            sb.append(terminoPrazo == Ultilitario.UM ? getString(R.string.prazterm) + "\n" : (estadoConta == Ultilitario.ZERO ? getString(R.string.ms_inf) + "\n" : "")).append("\n");
+                            sb.append(getString(R.string.pac)).append(": ").append(pacote[Byte.parseByte(parceiro.get("pacote").getAsString())]).append("\n");
+                            sb.append(getString(R.string.tipo)).append(" ").append(mapTipoPagamento.get(parceiro.get("tipo_pagamento").getAsString())).append("\n");
+                            sb.append(getString(R.string.prod)).append("(").append(getString(R.string.mbora)).append(")").append(": ").append(parceiro.get("quantidade_produto_pacote").getAsString()).append("\n");
+                            sb.append(getString(R.string.prod_regi)).append("(").append(getString(R.string.mbora)).append(")").append(": ").append(parceiro.get("quantidade_produto").getAsString()).append("\n\n");
+                            sb.append(getString(R.string.ini)).append(": ").append(parceiro.get("inicio").getAsString()).append("\n");
+                            sb.append(getString(R.string.term)).append(": ").append(parceiro.get("fim").getAsString()).append("\n\n");
+                            sb.append(getString(R.string.nome).replace("*", ": ")).append(parceiro.get("first_name").getAsString()).append("\n");
+                            sb.append(getString(R.string.Sobre_Nome).replace("*", ": ")).append(parceiro.get("last_name").getAsString()).append("\n");
+                            sb.append(getString(R.string.nifbi).replace("*", ": ")).append(parceiro.get("nif_bi").getAsString()).append("\n");
+                            sb.append(getString(R.string.Numero_Telefone).replace("*", ": ")).append(parceiro.get("phone").getAsString()).append("\n");
+                            sb.append(getString(R.string.Numero_Telefone_Alternativo).replace("*", ": ")).append(parceiro.get("alternative_phone").getAsString()).append("\n");
+                            sb.append(getString(R.string.Email).replace("*", ": ")).append(parceiro.get("email").getAsString()).append("\n");
+                            sb.append(getString(R.string.empresa).replace("*", ": ")).append(parceiro.get("empresa").getAsString()).append("\n");
+                            sb.append(getString(R.string.municipio).replace("*", ": ")).append(parceiro.get("municipality").getAsString()).append("\n");
+                            sb.append(getString(R.string.bairro).replace("*", ": ")).append(parceiro.get("district").getAsString()).append("\n");
+                            sb.append(getString(R.string.rua).replace("*", ": ")).append(parceiro.get("street").getAsString()).append("\n");
+                            sb.append(getString(R.string.imei)).append(": ").append(parceiro.get("imei").getAsString()).append("\n\n");
+                            sb.append("YOGA: ").append(contactos);
+                            isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
                         }
-                        boolean isFinish = estadoConta == Ultilitario.ZERO || terminoPrazo == Ultilitario.UM;
-                        if (isFinish)
-                            setValueSharedPreferences(requireContext(), "pac_qtd_pro", "0");
-                        else
-                            setValueSharedPreferences(requireContext(), "pac_qtd_pro", quantidadeTipo);
-                        alertDialog(isFinish ? getString(R.string.des) : getString(R.string.act), estado, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
+                        alertDialog(isFinish ? getString(R.string.des) : getString(R.string.act), sb.toString(), requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
                     } catch (Exception ex) {
                         MainActivity.dismissProgressBar();
                         new AlertDialog.Builder(requireContext())
