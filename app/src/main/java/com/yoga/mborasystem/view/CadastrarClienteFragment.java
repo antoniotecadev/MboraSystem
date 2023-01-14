@@ -66,7 +66,7 @@ public class CadastrarClienteFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
-    private String errorClienteUser = "", imei, uriPath;
+    private String errorClienteUser = "", imei, uriPath; 
     private CancellationTokenSource cancellationTokenSource;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
