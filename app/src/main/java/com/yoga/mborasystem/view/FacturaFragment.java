@@ -1,12 +1,11 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getDataEmissao;
 import static com.yoga.mborasystem.util.Ultilitario.getDataSplitDispositivo;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
 import static com.yoga.mborasystem.util.Ultilitario.partilharDocumento;
 import static com.yoga.mborasystem.util.Ultilitario.restartActivity;
@@ -843,22 +842,13 @@ public class FacturaFragment extends Fragment {
                             + getString(R.string.forma_pagamento) + "\n" + getFormaPamento(binding) + "\n"
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
-                        MainActivity.getProgressBar();
                         if (getDataSplitDispositivo(getValueSharedPreferences(requireContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent())))
-                                && Ultilitario.getBooleanPreference(requireContext(), "estado_conta") || true)
+                                && Ultilitario.getBooleanPreference(requireContext(), "estado_conta") || true) {
+                            MainActivity.getProgressBar();
                             vendaViewModel.cadastrarVenda(requireContext(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, binding.textDesconto, percDesc, finalQuantidadeProduto, valorBase, referenciaFactura, valorTotalIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
-                        else {
-                            if (isNetworkConnected(requireContext())) {
-                                if (internetIsConnected())
-                                    estadoConta(cliente.getImei(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, finalQuantidadeProduto);
-                                else {
-                                    MainActivity.dismissProgressBar();
-                                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                                }
-                            } else {
-                                MainActivity.dismissProgressBar();
-                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                            }
+                        } else {
+                            if (conexaoInternet(requireContext()))
+                                estadoConta(cliente.getImei(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, finalQuantidadeProduto);
                         }
                     })
                     .setNegativeButton(R.string.cancelar, (dialog, which) -> {
@@ -1061,14 +1051,14 @@ public class FacturaFragment extends Fragment {
             valorTotalIva = ivaGer; // Total IVA sem desconto
 //            binding.textTotal.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
             binding.textTotalILiquido.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(valorGer)));
-            binding.txtTotILiq.setText(Ultilitario.formatPreco(String.valueOf(valorGer)).replaceAll("Kz",""));
-            binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(totalGer)).replaceAll("Kz",""));
+            binding.txtTotILiq.setText(Ultilitario.formatPreco(String.valueOf(valorGer)).replaceAll("Kz", ""));
+            binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(totalGer)).replaceAll("Kz", ""));
             int percentagem = Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString());
             int desc = (totalGer * percentagem) / 100;
             binding.textDesconto.setText(Ultilitario.formatPreco(String.valueOf(desc)));
             binding.totalDesconto.setText(getText(R.string.total) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer - desc)));
-            binding.textTotLiq.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? valorGer : getValueWithDesconto(valorGer, percentagem))).replaceAll("Kz",""));
-            binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? ivaGer : getValueWithDesconto(ivaGer, percentagem))).replaceAll("Kz",""));
+            binding.textTotLiq.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? valorGer : getValueWithDesconto(valorGer, percentagem))).replaceAll("Kz", ""));
+            binding.textIva.setText(Ultilitario.formatPreco(String.valueOf(desc == 0 ? ivaGer : getValueWithDesconto(ivaGer, percentagem))).replaceAll("Kz", ""));
         }
 
         private void addProdutoCarrinho(Long idproduto) {
