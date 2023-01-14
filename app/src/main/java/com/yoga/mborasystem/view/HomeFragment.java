@@ -79,10 +79,9 @@ public class HomeFragment extends Fragment {
     private Cliente cliente;
     private ExecutorService executor;
     private FragmentHomeBinding binding;
-    private String idioma, codigoIdioma;
     private boolean isOpen = false, isMaster;
     private ClienteViewModel clienteViewModel;
-    private String nomeOperador, languageCode = "";
+    private String idioma, codigoIdioma, nomeOperador, languageCode = "";
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
 
     @Override
