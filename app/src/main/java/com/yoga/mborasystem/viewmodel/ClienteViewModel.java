@@ -4,12 +4,11 @@ import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
 import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
+import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getHash;
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isCampoVazio;
 import static com.yoga.mborasystem.util.Ultilitario.isEmailValido;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.isNumeroValido;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 
@@ -424,36 +423,28 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     public void verificarCodigoEquipa(String codigoEquipa, Cliente cliente, Activity activity) {
-        if (isNetworkConnected(getApplication().getApplicationContext())) {
-            if (internetIsConnected()) {
-                String URL = Ultilitario.getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
-                Ion.with(getApplication().getApplicationContext())
-                        .load(URL)
-                        .asJsonArray()
-                        .setCallback((e, jsonElements) -> {
-                            try {
-                                for (int i = 0; i < jsonElements.size(); i++) {
-                                    JsonObject equipa = jsonElements.get(i).getAsJsonObject();
-                                    codigo = equipa.get("codigo").getAsString();
-                                    estado = Byte.parseByte(equipa.get("estado").getAsString());
-                                }
-                                if (codigo.isEmpty() || estado == Ultilitario.ZERO) {
-                                    MainActivity.dismissProgressBar();
-                                    Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
-                                } else
-                                    clienteExiste(true, cliente, null, null, activity);
-                            } catch (Exception ex) {
-                                MainActivity.dismissProgressBar();
-                                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
+        if (conexaoInternet(getApplication().getApplicationContext())) {
+            String URL = Ultilitario.getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
+            Ion.with(getApplication().getApplicationContext())
+                    .load(URL)
+                    .asJsonArray()
+                    .setCallback((e, jsonElements) -> {
+                        try {
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                JsonObject equipa = jsonElements.get(i).getAsJsonObject();
+                                codigo = equipa.get("codigo").getAsString();
+                                estado = Byte.parseByte(equipa.get("estado").getAsString());
                             }
-                        });
-            } else {
-                MainActivity.dismissProgressBar();
-                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.sm_int), R.drawable.ic_toast_erro);
-            }
-        } else {
-            MainActivity.dismissProgressBar();
-            Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conec_wif_dad), R.drawable.ic_toast_erro);
+                            if (codigo.isEmpty() || estado == Ultilitario.ZERO) {
+                                MainActivity.dismissProgressBar();
+                                Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
+                            } else
+                                clienteExiste(true, cliente, null, null, activity);
+                        } catch (Exception ex) {
+                            MainActivity.dismissProgressBar();
+                            Ultilitario.showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
+                        }
+                    });
         }
     }
 
