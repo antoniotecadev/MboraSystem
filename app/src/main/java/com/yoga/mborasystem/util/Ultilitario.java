@@ -1274,31 +1274,22 @@ public class Ultilitario {
     }
 
     public static void acercaMboraSystem(Context context, Activity activity) {
-        MainActivity.getProgressBar();
-        if (isNetworkConnected(context)) {
-            if (internetIsConnected()) {
-                String URL = Ultilitario.getAPN(context) + "/mborasystem-admin/public/api/contacts/contactos";
-                Ion.with(activity).load(URL).asJsonArray().setCallback((e, jsonElements) -> {
-                    try {
-                        JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
-                        String contactos = parceiro.get("contactos").getAsString();
-                        alertDialog(context.getString(R.string.nome_sistema), context.getString(R.string.acerca) + "\n" + contactos, context, R.drawable.ic_baseline_store_24);
-                    } catch (Exception ex) {
-                        MainActivity.dismissProgressBar();
-                        new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(context.getString(R.string.erro)).setMessage(ex.getMessage()).setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss()).setPositiveButton(R.string.tent_nov, (dialog, which) -> {
-                            dialog.dismiss();
-                            MainActivity.getProgressBar();
-                            acercaMboraSystem(context, activity);
-                        }).show();
-                    }
-                });
-            } else {
-                MainActivity.dismissProgressBar();
-                Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_int), context, R.drawable.ic_baseline_privacy_tip_24);
-            }
-        } else {
-            MainActivity.dismissProgressBar();
-            Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.conec_wif_dad), context, R.drawable.ic_baseline_privacy_tip_24);
+        if (conexaoInternet(context)) {
+            String URL = Ultilitario.getAPN(context) + "/mborasystem-admin/public/api/contacts/contactos";
+            Ion.with(activity).load(URL).asJsonArray().setCallback((e, jsonElements) -> {
+                try {
+                    JsonObject parceiro = jsonElements.get(0).getAsJsonObject();
+                    String contactos = parceiro.get("contactos").getAsString();
+                    alertDialog(context.getString(R.string.nome_sistema), context.getString(R.string.acerca) + "\n" + contactos, context, R.drawable.ic_baseline_store_24);
+                } catch (Exception ex) {
+                    MainActivity.dismissProgressBar();
+                    new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(context.getString(R.string.erro)).setMessage(ex.getMessage()).setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss()).setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                        dialog.dismiss();
+                        MainActivity.getProgressBar();
+                        acercaMboraSystem(context, activity);
+                    }).show();
+                }
+            });
         }
     }
 
