@@ -62,12 +62,11 @@ import java.util.concurrent.Executors;
 
 public class CadastrarClienteFragment extends Fragment {
 
-    private String imei;
     private ExecutorService executor;
     private DatabaseReference mDatabase;
-    private String errorClienteUser = "";
     private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
+    private String errorClienteUser = "", imei, uriPath;
     private CancellationTokenSource cancellationTokenSource;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -270,7 +269,6 @@ public class CadastrarClienteFragment extends Fragment {
                 });
     }
 
-    private String uriPath;
     private final ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {
