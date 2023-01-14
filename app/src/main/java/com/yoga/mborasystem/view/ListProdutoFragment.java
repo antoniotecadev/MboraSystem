@@ -1,10 +1,9 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
+import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
-import static com.yoga.mborasystem.util.Ultilitario.internetIsConnected;
-import static com.yoga.mborasystem.util.Ultilitario.isNetworkConnected;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 import static com.yoga.mborasystem.util.Ultilitario.storageImageAndProduct;
 
@@ -672,13 +671,8 @@ public class ListProdutoFragment extends Fragment {
                             img.requestLayout();
                             img.setScaleType(ImageView.ScaleType.FIT_START);
                             img.setImageBitmap(selectedImage);
-                            if (isNetworkConnected(requireContext()))
-                                if (internetIsConnected())
-                                    getCategorias(categorias, view, categoriasSpinner);
-                                else
-                                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_int), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                            else
-                                Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.conec_wif_dad), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                            if (conexaoInternet(requireContext()))
+                                getCategorias(categorias, view, categoriasSpinner);
                         } catch (Exception e) {
                             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } finally {
