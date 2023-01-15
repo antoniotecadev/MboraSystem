@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -36,14 +37,11 @@ import com.yoga.mborasystem.model.entidade.Venda;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RelatorioDiariaVenda {
-
-    private static long totalVendas = 0;
-    private static int quantidadeProdutos = 0;
-    private static int totalDescontos = 0;
-    private static int totalDividas = 0;
 
     public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {
         Dexter.withContext(activity)
@@ -68,6 +66,10 @@ public class RelatorioDiariaVenda {
 
     private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {
         MainActivity.getProgressBar();
+        long totalVendas = 0;
+        int quantidadeProdutos = 0;
+        int totalDescontos = 0;
+        int totalDividas = 0;
         if (new File(path).exists())
             new File(path).delete();
         try {
@@ -93,6 +95,9 @@ public class RelatorioDiariaVenda {
                 totalVendas += venda.getTotal_venda();
                 totalDescontos += venda.getDesconto();
                 totalDividas += venda.getDivida();
+                Log.i("RELATORIO", venda.getTotal_venda() + "");
+                Log.i("RELATORIO", venda.getDesconto() + "");
+                Log.i("RELATORIO", venda.getDivida() + "\n\n");
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.cliente), activity.getString(R.string.referencia), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, TextUtils.split(venda.getNome_cliente(), "-")[0], venda.getReferenciaFactura(), font, font);
@@ -110,8 +115,9 @@ public class RelatorioDiariaVenda {
             }
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.produtos), Element.ALIGN_CENTER, titleFont);
-            int quantidadeProdutosDistinto = produtoVendas.size();
+            Map<String, Long> quantidadeProdutosDistinto = new HashMap<>();
             for (ProdutoVenda produto : produtoVendas) {
+                quantidadeProdutosDistinto.put(produto.getNome_produto(), produto.getId());
                 quantidadeProdutos += produto.getQuantidade();
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.prod), activity.getString(R.string.venda), titleFont, titleFont);
@@ -125,7 +131,7 @@ public class RelatorioDiariaVenda {
             addNewLineWithLeftAndRight(document, activity.getString(R.string.num_ven), activity.getString(R.string.total), titleFont, titleFont);
             addNewLineWithLeftAndRight(document, String.valueOf(quantidadeVendas), Ultilitario.formatPreco(String.valueOf(totalVendas)), font, font);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.num_pro), activity.getString(R.string.num_pro_dist), titleFont, titleFont);
-            addNewLineWithLeftAndRight(document, String.valueOf(quantidadeProdutos), String.valueOf(quantidadeProdutosDistinto), font, font);
+            addNewLineWithLeftAndRight(document, String.valueOf(quantidadeProdutos), String.valueOf(quantidadeProdutosDistinto.size()), font, font);
             addNewLineWithLeftAndRight(document, activity.getString(R.string.tot_des), activity.getString(R.string.tot_div), titleFont, titleFont);
             addNewLineWithLeftAndRight(document, Ultilitario.formatPreco(String.valueOf(totalDescontos)), Ultilitario.formatPreco(String.valueOf(totalDividas)), font, font);
             addLineSeparator(document);
