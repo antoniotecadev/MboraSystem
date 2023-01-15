@@ -1049,7 +1049,6 @@ public class FacturaFragment extends Fragment {
             total = totalGer; // Total com IVA e sem desconto
             valorBase = valorGer; // Total sem IVA e sem desconto - Total Ilíquido = valorBase sem desconto e sem iva, Total Líquido = valorBase com desconto e sem iva
             valorTotalIva = ivaGer; // Total IVA sem desconto
-//            binding.textTotal.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(totalGer)));
             binding.textTotalILiquido.setText(getText(R.string.tot_iliq) + ": " + Ultilitario.formatPreco(String.valueOf(valorGer)));
             binding.txtTotILiq.setText(Ultilitario.formatPreco(String.valueOf(valorGer)).replaceAll("Kz", ""));
             binding.txtTot.setText(Ultilitario.formatPreco(String.valueOf(totalGer)).replaceAll("Kz", ""));
