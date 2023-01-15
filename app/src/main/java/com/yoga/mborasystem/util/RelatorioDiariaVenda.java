@@ -44,18 +44,18 @@ public class RelatorioDiariaVenda {
     private static int totalDescontos = 0;
     private static int totalDividas = 0;
 
-    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, Handler handler, View view) {
+    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {
         Dexter.withContext(activity)
                 .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler, view);
+                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, data, handler, view);
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, handler, view);
+                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, data, handler, view);
                     }
 
                     @Override
@@ -65,7 +65,7 @@ public class RelatorioDiariaVenda {
                 }).check();
     }
 
-    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, Handler handler, View view) {
+    private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();
@@ -83,7 +83,7 @@ public class RelatorioDiariaVenda {
             Font font = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, context.getString(R.string.nif) + " " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, context.getString(R.string.tel) + " " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
-            addNewItem(document, activity.getString(R.string.data) + Ultilitario.getDateCurrent(), Element.ALIGN_LEFT, font);
+            addNewItem(document, activity.getString(R.string.data) + data, Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.vendas), Element.ALIGN_CENTER, titleFont);
             int quantidadeVendas = vendas.size();

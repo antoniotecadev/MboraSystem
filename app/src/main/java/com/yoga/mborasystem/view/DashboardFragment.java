@@ -335,8 +335,8 @@ public class DashboardFragment extends Fragment {
         }));
 
         vendaViewModel.getProdutosVendaLiveData().observe(getViewLifecycleOwner(), new EventObserver<>(produtos -> {
-            facturaPath = "relatorio_de_venda_diaria_" + Ultilitario.getDateCurrent() + ".pdf";
-            guardarImprimirRelatorioVendaDiaria(idItem, facturaPath, this.vendas, produtos);
+            facturaPath = "relatorio_de_venda_diaria_" + this.data + ".pdf";
+            guardarImprimirRelatorioVendaDiaria(idItem, facturaPath, this.vendas, produtos, this.data);
         }));
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
@@ -447,14 +447,14 @@ public class DashboardFragment extends Fragment {
         mCubicValueLineChart.addSeries(series);
     }
 
-    private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath, List<Venda> venda, List<ProdutoVenda> produtoVendas) {
+    private void guardarImprimirRelatorioVendaDiaria(int i, String facturaPath, List<Venda> venda, List<ProdutoVenda> produtoVendas, String data) {
         Handler handler = new Handler(Looper.getMainLooper());
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             if (i == 0)
-                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler, getView());
+                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, this.data, handler, getView());
             else if (i == 1)
-                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, handler, getView());
+                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, this.data, handler, getView());
         });
     }
 
