@@ -367,7 +367,7 @@ public class VendaFragment extends Fragment {
                 h.binding.textCliente.setText(TextUtils.split(venda.getNome_cliente(), "-")[0]);
                 h.binding.textReferencia.setText(isNotaCredito ? venda.getReferenciaNC() + " -> " + venda.getReferenciaFactura() : venda.getReferenciaFactura());
                 h.binding.textQtProd.setText(String.valueOf(venda.getQuantidade()));
-                h.binding.textTotVend.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())));
+                h.binding.textTotVend.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda() - venda.getValor_iva())));
                 h.binding.textView27.setText(getString(R.string.desconto) + "(" + venda.getPercentagemDesconto() + "%)");
                 h.binding.textDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getDesconto())));
                 h.binding.textTotDesc.setText(Ultilitario.formatPreco(String.valueOf(venda.getTotal_desconto())));
