@@ -10,8 +10,6 @@ import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -135,10 +133,7 @@ public class RelatorioDiariaVenda {
             handler.post(() -> Snackbar.make(view, activity.getString(R.string.rel_ven_dia_gua), Snackbar.LENGTH_LONG).show());
             addFileContentProvider(activity.getApplicationContext(), "/Relatorios/" + facturaPath);
             if (!isGuardar)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                    printPDF(activity, activity.getBaseContext(), facturaPath, "Relatorios");
-                else
-                    Ultilitario.showToast(activity.getBaseContext(), Color.parseColor("#795548"), activity.getString(R.string.precisa_kitkat_maior), R.drawable.ic_toast_erro);
+                printPDF(activity, activity.getBaseContext(), facturaPath, "Relatorios");
         } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
