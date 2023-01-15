@@ -95,9 +95,6 @@ public class RelatorioDiariaVenda {
                 totalVendas += venda.getTotal_venda();
                 totalDescontos += venda.getDesconto();
                 totalDividas += venda.getDivida();
-                Log.i("RELATORIO", venda.getTotal_venda() + "");
-                Log.i("RELATORIO", venda.getDesconto() + "");
-                Log.i("RELATORIO", venda.getDivida() + "\n\n");
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.cliente), activity.getString(R.string.referencia), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, TextUtils.split(venda.getNome_cliente(), "-")[0], venda.getReferenciaFactura(), font, font);
