@@ -77,12 +77,12 @@ public class RelatorioDiariaVenda {
             document.setMargins(10, 5, 0, 0);
             document.open();
             document.addCreationDate();
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 40.0f, Font.BOLD, BaseColor.BLACK);
+            Font titleFont = new Font(Font.FontFamily.HELVETICA, 30.0f, Font.BOLD, BaseColor.BLACK);
             addNewItem(document, activity.getString(R.string.rel_vend) + "(" + cliente.getNomeEmpresa() + ")", Element.ALIGN_CENTER, titleFont);
-            Font bairroRuaFont = new Font(Font.FontFamily.HELVETICA, 36.0f, Font.NORMAL, BaseColor.BLACK);
+            Font bairroRuaFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, cliente.getBairro() + "\n" + cliente.getRua(), Element.ALIGN_CENTER, bairroRuaFont);
             addLineSpace(document);
-            Font font = new Font(Font.FontFamily.HELVETICA, 36.0f, Font.NORMAL, BaseColor.BLACK);
+            Font font = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, context.getString(R.string.nif) + " " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, context.getString(R.string.tel) + " " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
             addNewItem(document, activity.getString(R.string.data) + Ultilitario.getDateCurrent(), Element.ALIGN_LEFT, font);
