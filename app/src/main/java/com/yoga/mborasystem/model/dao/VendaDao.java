@@ -217,7 +217,7 @@ public abstract class VendaDao {
             produtoVenda.setCodigoMotivoIsencao(produto.getValue().getCodigoMotivoIsencao());
             produtoVenda.setQuantidade(quantidade);
             produtoVenda.setPreco_total(precoTotalUnit.get(produto.getKey()));
-            produtoVenda.setCodigo_Barra(produto.getValue().getCodigoBarra());
+            produtoVenda.setCodigo_Barra(produto.getValue().getCodigoBarra() + "-" + venda.getReferenciaFactura() + "/" + idvenda);
             produtoVenda.setPreco_fornecedor(produto.getValue().getPrecofornecedor());
             produtoVenda.setIva(produto.getValue().isIva());
             produtoVenda.setPercentagemIva(produto.getValue().getPercentagemIva());

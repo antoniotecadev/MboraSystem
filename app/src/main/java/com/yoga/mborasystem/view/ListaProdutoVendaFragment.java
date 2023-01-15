@@ -3,6 +3,7 @@ package com.yoga.mborasystem.view;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,7 @@ public class ListaProdutoVendaFragment extends Fragment {
                             precoProdutoFronecedor.setText(getString(R.string.preco_fornecedor) + ": " + Ultilitario.formatPreco(String.valueOf(produto.getPreco_fornecedor())));
                             quantidadeProduto.setText(getText(R.string.quantidade) + ": " + produto.getQuantidade());
                             referenciaProduto.setText(getText(R.string.referencia) + ": MSP" + produto.getId() + " " + getString(R.string.iva) + ": " + produto.getPercentagemIva() + "%");
-                            codigoQr.setText("CB: " + produto.getCodigo_Barra());
+                            codigoQr.setText("CB: " + TextUtils.split(produto.getCodigo_Barra(), "-")[0]);
                             if (produto.isIva()) {
                                 estadoProduto.setChecked(true);
                                 estadoProduto.setTextColor(Color.BLUE);
