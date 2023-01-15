@@ -6,6 +6,7 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewItem;
 import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndRight;
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
+import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
 
 import android.Manifest;
 import android.app.Activity;
@@ -83,7 +84,8 @@ public class RelatorioDiariaVenda {
             Font font = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.NORMAL, BaseColor.BLACK);
             addNewItem(document, context.getString(R.string.nif) + " " + cliente.getNifbi(), Element.ALIGN_LEFT, font);
             addNewItem(document, context.getString(R.string.tel) + " " + cliente.getTelefone() + " / " + cliente.getTelefonealternativo(), Element.ALIGN_LEFT, font);
-            addNewItem(document, activity.getString(R.string.data) + data, Element.ALIGN_LEFT, font);
+            addNewItem(document, activity.getString(R.string.data) + " " + data, Element.ALIGN_LEFT, font);
+            addNewItem(document, activity.getString(R.string.dat_ems) + ": " + getDateCurrent(), Element.ALIGN_LEFT, font);
             addLineSeparator(document);
             addNewItem(document, activity.getString(R.string.vendas), Element.ALIGN_CENTER, titleFont);
             int quantidadeVendas = vendas.size();
