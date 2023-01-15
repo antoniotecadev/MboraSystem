@@ -133,7 +133,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/tot_liq"
+                android:text="@string/total"
                 android:textColor="@color/textColor"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
