@@ -128,7 +128,6 @@ public class CriarFactura {
             }
             addLineSeparator(document);
             addNewLineWithLeftAndRight(document, "Total Ilíquido", formatPreco(String.valueOf(valorBase)), font, font);
-//            addNewLineWithLeftAndRight(document, "Total Líquido", Ultilitario.formatPreco(String.valueOf(percDesc == 0 ? valorBase : getValueWithDesconto(valorBase, percDesc))), font, font);
             addNewLineWithLeftAndRight(document, "Total Imposto", formatPreco(String.valueOf(percDesc == 0 ? valorTotalIva : getValueWithDesconto(valorTotalIva, percDesc))), font, font);
             addNewLineWithLeftAndRight(document, "Desconto" + "(" + percDesc + "%)", formatPreco(desconto.getText().toString()), font, font);
             addNewLineWithLeftAndRight(document, "Total a Pagar", formatPreco(String.valueOf(totalDesconto)), font, font);
