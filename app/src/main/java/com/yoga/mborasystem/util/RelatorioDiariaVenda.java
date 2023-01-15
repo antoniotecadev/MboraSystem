@@ -98,7 +98,7 @@ public class RelatorioDiariaVenda {
                 addNewLineWithLeftAndRight(document, TextUtils.split(venda.getNome_cliente(), "-")[0], venda.getReferenciaFactura(), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.quantidade), activity.getString(R.string.tot_iliq), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, String.valueOf(venda.getQuantidade()), Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda() - venda.getValor_iva())), font, font);
-                addNewLineWithLeftAndRight(document, activity.getString(R.string.desconto), activity.getString(R.string.total), titleFont, titleFont);
+                addNewLineWithLeftAndRight(document, activity.getString(R.string.desconto) + "(" + venda.getPercentagemDesconto() + "%)", activity.getString(R.string.total), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, Ultilitario.formatPreco(String.valueOf(venda.getDesconto())), Ultilitario.formatPreco(String.valueOf(venda.getTotal_desconto())), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.valor_pago), activity.getString(R.string.dvd), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, Ultilitario.formatPreco(String.valueOf(venda.getValor_pago())), Ultilitario.formatPreco(String.valueOf(venda.getDivida())), font, font);
