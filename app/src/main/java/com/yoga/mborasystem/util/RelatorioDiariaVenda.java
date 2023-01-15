@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -94,7 +95,7 @@ public class RelatorioDiariaVenda {
                 totalDividas += venda.getDivida();
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.cliente), activity.getString(R.string.referencia), titleFont, titleFont);
-                addNewLineWithLeftAndRight(document, venda.getNome_cliente(), venda.getReferenciaFactura(), font, font);
+                addNewLineWithLeftAndRight(document, TextUtils.split(venda.getNome_cliente(), "-")[0], venda.getReferenciaFactura(), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.quantidade), activity.getString(R.string.total), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, String.valueOf(venda.getQuantidade()), Ultilitario.formatPreco(String.valueOf(venda.getTotal_venda())), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.desconto), activity.getString(R.string.total_desc), titleFont, titleFont);
