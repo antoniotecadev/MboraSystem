@@ -18,7 +18,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -138,7 +137,7 @@ public class RelatorioDiariaVenda {
             addLineSpace(document);
             addNewItem(document, "MboraSystem", Element.ALIGN_CENTER, titleFont);
             document.close();
-            handler.post(() -> Snackbar.make(view, activity.getString(R.string.rel_ven_dia_gua), Snackbar.LENGTH_LONG).show());
+            handler.post(() -> Toast.makeText(context, activity.getString(R.string.rel_ven_dia_gua) + "/Relatorios/" + facturaPath, Toast.LENGTH_LONG).show());
             addFileContentProvider(activity.getApplicationContext(), "/Relatorios/" + facturaPath);
             if (!isGuardar)
                 printPDF(activity, activity.getBaseContext(), facturaPath, "Relatorios");
