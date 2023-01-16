@@ -17,6 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentDashboardBinding;
@@ -37,14 +45,6 @@ import org.eazegraph.lib.models.PieModel;
 import org.eazegraph.lib.models.ValueLinePoint;
 import org.eazegraph.lib.models.ValueLineSeries;
 
-import androidx.annotation.NonNull;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -56,8 +56,8 @@ public class DashboardFragment extends Fragment {
     private String facturaPath, data;
 
     private int idItem;
-
     private long totalVenda = 0;
+    private int totalDesconto;
     private long totalPrecoFornecedor = 0;
     private VendaViewModel vendaViewModel;
     private FragmentDashboardBinding binding;
@@ -114,7 +114,6 @@ public class DashboardFragment extends Fragment {
                 for (ProdutoVenda pdVd : produtoVendas)
                     produtosMenosVendidos(mBarChartme, pdVd.getNome_produto(), pdVd.getPreco_total(), pdVd.getQuantidade());
         });
-
         vendaViewModel.consultarVendasDashboard(false, null);
         vendaViewModel.getVendasDashboard().observe(getViewLifecycleOwner(), vendas -> {
             if (vendas.isEmpty())
@@ -125,10 +124,11 @@ public class DashboardFragment extends Fragment {
                 long jan = 0, fev = 0, mar = 0, abr = 0, mai = 0, jun = 0, jul = 0, ago = 0, set = 0, out = 0, nov = 0, dez = 0;
                 int v1 = 0, v2 = 0, v3 = 0, v4 = 0, v5 = 0, v6 = 0, v7 = 0, v8 = 0, v9 = 0, v10 = 0, v11 = 0, v12 = 0, v13 = 0, v14 = 0, v15 = 0, v16 = 0, v17 = 0, v18 = 0, v19 = 0, v20 = 0, v21 = 0, v22 = 0, v23 = 0, v24 = 0, v25 = 0, v26 = 0, v27 = 0, v28 = 0, v29 = 0, v30 = 0, v31 = 0;
                 int cv1 = 0, cv2 = 0, cv3 = 0, cv4 = 0, cv5 = 0, cv6 = 0, cv7 = 0, cv8 = 0, cv9 = 0, cv10 = 0, cv11 = 0, cv12 = 0, cv13 = 0, cv14 = 0, cv15 = 0, cv16 = 0, cv17 = 0, cv18 = 0, cv19 = 0, cv20 = 0, cv21 = 0, cv22 = 0, cv23 = 0, cv24 = 0, cv25 = 0, cv26 = 0, cv27 = 0, cv28 = 0, cv29 = 0, cv30 = 0, cv31 = 0;
+                totalDesconto = 0;
                 for (Venda venda : vendas) {
                     String[] data = TextUtils.split(venda.getData_cria(), "-");
                     if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
-
+                        totalDesconto += venda.getDesconto();
                         binding.qtdVenda.setText(getString(R.string.qtd_vd) + ": " + ++qtv);
 
                         if (data[1].trim().equalsIgnoreCase("janeiro")) {
@@ -272,7 +272,7 @@ public class DashboardFragment extends Fragment {
 
                 totalVenda = jan + fev + mar + abr + mai + jun + jul + ago + set + out + nov + dez;
 
-                binding.valTotVd.setText(getString(R.string.vendas) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda)));
+                binding.valTotVd.setText(getString(R.string.vendas) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda - totalDesconto)));
 
                 nivelVendasMensais(mCubicValueLineChartQuant, true, janc, fevc, marc, abrc, maic, junc, julc, agoc, setc, outc, novc, dezc);
                 nivelVendasMensais(mCubicValueLineChartVal, false, jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez);
@@ -293,12 +293,12 @@ public class DashboardFragment extends Fragment {
                 }
                 binding.valCusto.setText(getString(R.string.cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
                 mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
-
-                if (totalVenda > totalPrecoFornecedor) {
-                    binding.valLucro.setText(getString(R.string.lc) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda - totalPrecoFornecedor)));
-                    mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (totalVenda - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
+                long total = totalVenda - totalDesconto;
+                if (total > totalPrecoFornecedor) {
+                    binding.valLucro.setText(getString(R.string.lc) + ": " + Ultilitario.formatPreco(String.valueOf(total - totalPrecoFornecedor)));
+                    mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (total - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
                 } else
-                    binding.valLucro.setText(getString(R.string.lc) + ": " + (totalVenda - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
+                    binding.valLucro.setText(getString(R.string.lc) + ": " + (total - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
             }
         });
 
