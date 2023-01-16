@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -39,7 +40,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -266,11 +266,11 @@ public class DocumentoFragment extends Fragment {
                         if (dataInicio.getText().toString().isEmpty()) {
                             this.dialogExportarDocumentoSaft();
                             dataInicio.requestFocus();
-                            Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.pri_dat_vaz), R.drawable.ic_toast_erro);
+                            showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.pri_dat_vaz), R.drawable.ic_toast_erro);
                         } else if (dataFim.getText().toString().isEmpty()) {
                             this.dialogExportarDocumentoSaft();
                             dataFim.requestFocus();
-                            Ultilitario.showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
+                            showToast(requireContext(), Color.rgb(200, 0, 0), getString(R.string.seg_dat_vaz), R.drawable.ic_toast_erro);
                         } else if (sdf.parse(dataFim.getText().toString()).compareTo(sdf.parse(dataInicio.getText().toString())) >= 0) {
                             MainActivity.getProgressBar();
                             vendaViewModel.getVendaSaft(dataInicio.getText().toString(), dataFim.getText().toString());
@@ -427,11 +427,11 @@ public class DocumentoFragment extends Fragment {
                                             if (file.exists())
                                                 requireContext().deleteFile(file.getName());
                                             else {
-                                                Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                                showToast(requireContext(), Color.rgb(102, 153, 0), titulo + " " + getString(R.string.elmnd), R.drawable.ic_toast_feito);
                                                 getDocumentPDF(pasta, title, msg, false, null, "", false);
                                             }
                                         } else {
-                                            Snackbar.make(v, titulo + " " + getString(R.string.elmnd), Snackbar.LENGTH_LONG).show();
+                                            showToast(requireContext(), Color.rgb(102, 153, 0), titulo + " " + getString(R.string.elmnd), R.drawable.ic_toast_feito);
                                             getDocumentPDF(pasta, title, msg, false, null, "", false);
                                         }
                                     }).show();
