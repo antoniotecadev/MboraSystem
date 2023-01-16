@@ -7,13 +7,13 @@ import static com.yoga.mborasystem.util.FormatarDocumento.addNewLineWithLeftAndR
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
 import static com.yoga.mborasystem.util.Ultilitario.addFileContentProvider;
 import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
+import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -105,7 +105,7 @@ public class RelatorioDiariaVenda {
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.valor_pago), activity.getString(R.string.dvd), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, Ultilitario.formatPreco(String.valueOf(venda.getValor_pago())), Ultilitario.formatPreco(String.valueOf(venda.getDivida())), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.base), activity.getString(R.string.tot_imp), titleFont, titleFont);
-                addNewLineWithLeftAndRight(document, Ultilitario.formatPreco(String.valueOf(venda.getValor_base())), Ultilitario.formatPreco(String.valueOf(venda.getValor_iva())), font, font);
+                addNewLineWithLeftAndRight(document, Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_base() : getValueWithDesconto(venda.getValor_base(), venda.getPercentagemDesconto()))), Ultilitario.formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_iva() : getValueWithDesconto(venda.getValor_iva(), venda.getPercentagemDesconto()))), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.forma_pagamento), venda.getPagamento(), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.dat_ven), venda.getData_cria(), font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.operador), (venda.getIdoperador() > 0 ? " MSU" + venda.getIdoperador() : " MSA" + venda.getIdoperador()), font, font);
