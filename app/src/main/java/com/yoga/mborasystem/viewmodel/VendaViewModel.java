@@ -6,6 +6,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -249,13 +250,13 @@ public class VendaViewModel extends AndroidViewModel {
                         try {
                             String hashVenda = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(context, "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(context, "public_key.der").getAbsolutePath()));
                             if (hashVenda == null)
-                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
+                                showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
                             else {
                                 insertHashVenda(context, hashVenda.trim(), idvenda, false, null);
                             }
                             setValueSharedPreferences(context, "dataemissao", getDataFormatMonth(venda.getData_cria()) + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
                         } catch (Exception e) {
-                            Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
+                            showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
                         }
                         MainActivity.dismissProgressBar();
                         FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada(referenciaFactura).setPrecoTotal(totalVenda).setIdvenda(idvenda);
@@ -265,7 +266,7 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         MainActivity.dismissProgressBar();
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_nao_efectuada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_nao_efectuada) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
@@ -283,7 +284,7 @@ public class VendaViewModel extends AndroidViewModel {
                         setValueSharedPreferences(context, "hashvenda", hashVenda);
                         getGuardarPdfLiveData().setValue(new Event<>(idvenda));
                     }
-                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
+                }, e -> showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
     }
 
     @SuppressLint("CheckResult")
@@ -295,11 +296,11 @@ public class VendaViewModel extends AndroidViewModel {
                 List<Cliente> cliente;
                 cliente = clienteRepository.clienteExiste();
                 if (cliente.isEmpty())
-                    handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.dados_admin_nao), R.drawable.ic_toast_erro));
+                    handler.post(() -> showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.dados_admin_nao), R.drawable.ic_toast_erro));
                 else
                     getAdminMasterLiveData().postValue(cliente);
             } catch (Exception e) {
-                handler.post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
+                handler.post(() -> showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro));
             }
         });
     }
@@ -313,7 +314,7 @@ public class VendaViewModel extends AndroidViewModel {
                         getListaVendasLiveData().postValue(vendas);
                     else
                         getListaVendasLiveData().setValue(vendas);
-                }, e -> new Handler(Looper.getMainLooper()).post(() -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                }, e -> new Handler(Looper.getMainLooper()).post(() -> showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void consultarVendasDashboard(boolean isReport, String data) {
@@ -325,7 +326,7 @@ public class VendaViewModel extends AndroidViewModel {
                         getVendasGuardarImprimir().setValue(new Event<>(vendas));
                     else
                         getVendasDashboard().setValue(vendas);
-                }, e -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
+                }, e -> showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public LiveData<Long> getQuantidadeVenda(boolean isNotaCredito, long idcliente, boolean isDivida, long idusuario, boolean isData, String data, LifecycleOwner lifecycleOwner) {
@@ -350,12 +351,12 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.venda_impo), R.drawable.ic_toast_feito);
+                        showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.venda_impo), R.drawable.ic_toast_feito);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_n_impo) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.venda_n_impo) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
@@ -364,7 +365,7 @@ public class VendaViewModel extends AndroidViewModel {
         compositeDisposable.add(vendaRepository.getProdutosVenda(idvenda, codQr, data, isGuardarImprimir, isForDocumentSaft, idvendaList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(produtos -> getProdutosVendaLiveData().setValue(new Event<>(produtos)), throwable -> Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
+                .subscribe(produtos -> getProdutosVendaLiveData().setValue(new Event<>(produtos)), throwable -> showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_lista_produto) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void getVendaSaft(String dataInicio, String dataFim) {
@@ -373,7 +374,7 @@ public class VendaViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(vendas -> getVendasParaExportar().setValue(new Event<>(vendas)), throwable -> {
                     MainActivity.dismissProgressBar();
-                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
+                    showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.falha_venda) + "\n" + throwable.getMessage(), R.drawable.ic_toast_erro);
                 }));
     }
 
@@ -390,12 +391,12 @@ public class VendaViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.div_liq), R.drawable.ic_toast_feito);
+                        showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.div_liq), R.drawable.ic_toast_feito);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.div_n_liq) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.div_n_liq) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
@@ -419,7 +420,7 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         if (isLixeira || eliminarTodasLixeira)
-                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
+                            showToast(getApplication(), Color.rgb(102, 153, 0), eliminarTodasLixeira ? getApplication().getString(R.string.vends_elims) : getApplication().getString(R.string.vend_elim), R.drawable.ic_toast_feito);
                         else {
                             int taxPayable = venda.getDesconto() == 0 ? venda.getValor_iva() : getValueWithDesconto(venda.getValor_iva(), venda.getPercentagemDesconto());
                             int grossTotal = venda.getDesconto() == 0 ? taxPayable + venda.getValor_base() : getValueWithDesconto(venda.getTotal_venda(), venda.getPercentagemDesconto());
@@ -428,19 +429,19 @@ public class VendaViewModel extends AndroidViewModel {
                             try {
                                 String hashVendaNC = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(getApplication(), "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(getApplication(), "public_key.der").getAbsolutePath()));
                                 if (hashVendaNC == null)
-                                    Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
+                                    showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
                                 else {
                                     insertHashVenda(getApplication(), hashVendaNC.trim(), venda.getId(), true, venda);
                                 }
                             } catch (Exception e) {
-                                Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
+                                showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
                             }
                         }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_elim) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
@@ -459,14 +460,14 @@ public class VendaViewModel extends AndroidViewModel {
                     @Override
                     public void onComplete() {
                         if (todasVendas)
-                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vends_rests), R.drawable.ic_toast_feito);
+                            showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vends_rests), R.drawable.ic_toast_feito);
                         else
-                            Ultilitario.showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_rest), R.drawable.ic_toast_feito);
+                            showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.vend_rest), R.drawable.ic_toast_feito);
                     }
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
+                        showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.vend_n_rest) + "\n" + e.getMessage(), R.drawable.ic_toast_erro);
                     }
                 });
     }
