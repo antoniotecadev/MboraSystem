@@ -119,7 +119,7 @@ public class RelatorioDiariaVenda {
                 quantidadeProdutos += produto.getQuantidade();
                 addLineSeparator(document);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.prod), activity.getString(R.string.venda), titleFont, titleFont);
-                addNewLineWithLeftAndRight(document, produto.getNome_produto(), TextUtils.split(produto.getCodigo_Barra(), "-")[1], font, font);
+                addNewLineWithLeftAndRight(document, produto.getNome_produto() + " (" + produto.getPercentagemIva() + "%)", TextUtils.split(produto.getCodigo_Barra(), "-")[1], font, font);
                 addNewLineWithLeftAndRight(document, activity.getString(R.string.quantidade), activity.getString(R.string.total), titleFont, titleFont);
                 addNewLineWithLeftAndRight(document, String.valueOf(produto.getQuantidade()), formatPreco(String.valueOf(produto.getPreco_total())), font, font);
             }

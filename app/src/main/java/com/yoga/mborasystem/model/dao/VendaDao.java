@@ -100,7 +100,7 @@ public abstract class VendaDao {
     @Query("SELECT * FROM produtosvendas WHERE idvenda = :idvenda OR codigo_Barra = :codQr")
     abstract Maybe<List<ProdutoVenda>> getProdutoVenda(long idvenda, String codQr);
 
-    @Query("SELECT pdv.idpdvd, pdv.id, pdv.preco_fornecedor, pdv.iva, pdv.idvenda, pdv.nome_produto, pdv.codigo_Barra, pdv.quantidade, pdv.preco_total" +
+    @Query("SELECT pdv.idpdvd, pdv.id, pdv.preco_fornecedor, pdv.iva, pdv.percentagemIva, pdv.idvenda, pdv.nome_produto, pdv.codigo_Barra, pdv.quantidade, pdv.preco_total" +
             " FROM produtosvendas AS pdv  INNER JOIN vendas AS vd ON pdv.idvenda = vd.id" +
             " WHERE vd.referenciaNC = '' AND vd.data_cria LIKE '%' || :data || '%'")
     public abstract Maybe<List<ProdutoVenda>> getProdutoVenda(String data);
