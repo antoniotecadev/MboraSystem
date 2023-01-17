@@ -362,7 +362,7 @@
     <string name="graf_vend">Graphiques avec données de vente</string>
     <string name="cst">Frais</string>
     <string name="lc">Profit</string>
-    <string name="qtd_vd">Qté des ventes dans l\'année en cours</string>
+    <string name="qtd_vd">Qté des ventes</string>
     <string name="qtd_pd">Qté de produits créés</string>
     <string name="vd_ms">Ventes mensuelles</string>
     <string name="vd_dr_ms">Ventes quotidiennes</string>

@@ -362,7 +362,7 @@
     <string name="graf_vend">Charts with sales data</string>
     <string name="cst">Costs</string>
     <string name="lc">Profit</string>
-    <string name="qtd_vd">Qty of sales in the current year</string>
+    <string name="qtd_vd">Qty of sales</string>
     <string name="qtd_pd">Qty of products created</string>
     <string name="vd_ms">Monthly sales</string>
     <string name="vd_dr_ms">Daily sales</string>

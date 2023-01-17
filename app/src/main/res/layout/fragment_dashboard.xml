@@ -114,12 +114,6 @@
                 android:layout_marginTop="@dimen/margem_lateral_formulario"
                 android:background="?android:attr/listDivider" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/margem_lateral_formulario"
-                android:background="?android:attr/listDivider" />
-
             <TextView
                 android:id="@+id/vend"
                 android:layout_width="wrap_content"

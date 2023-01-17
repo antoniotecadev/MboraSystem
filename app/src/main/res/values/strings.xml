@@ -386,7 +386,7 @@
     <string name="graf_vend">Gráficos com dados de vendas</string>
     <string name="cst">Custos</string>
     <string name="lc">Lucro</string>
-    <string name="qtd_vd">Qtd vendas no ano actual</string>
+    <string name="qtd_vd">Qtd vendas</string>
     <string name="qtd_pd">Qtd produtos criados</string>
     <string name="vd_ms">Vendas Mensais</string>
     <string name="vd_dr_ms">Vendas diárias</string>
