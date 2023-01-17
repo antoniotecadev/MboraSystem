@@ -118,14 +118,16 @@ public class DashboardFragment extends Fragment {
             if (vendas.isEmpty())
                 Toast.makeText(getContext(), getString(R.string.venda_nao_encontrada), Toast.LENGTH_LONG).show();
             else {
-                int qtv = 0, qtpv = 0;
+                int qtv = 0, qtpv = 0, totalDesconto = 0;
                 int janc = 0, fevc = 0, marc = 0, abrc = 0, maic = 0, junc = 0, julc = 0, agoc = 0, setc = 0, outc = 0, novc = 0, dezc = 0;
                 long jan = 0, fev = 0, mar = 0, abr = 0, mai = 0, jun = 0, jul = 0, ago = 0, set = 0, out = 0, nov = 0, dez = 0;
                 int v1 = 0, v2 = 0, v3 = 0, v4 = 0, v5 = 0, v6 = 0, v7 = 0, v8 = 0, v9 = 0, v10 = 0, v11 = 0, v12 = 0, v13 = 0, v14 = 0, v15 = 0, v16 = 0, v17 = 0, v18 = 0, v19 = 0, v20 = 0, v21 = 0, v22 = 0, v23 = 0, v24 = 0, v25 = 0, v26 = 0, v27 = 0, v28 = 0, v29 = 0, v30 = 0, v31 = 0;
                 int cv1 = 0, cv2 = 0, cv3 = 0, cv4 = 0, cv5 = 0, cv6 = 0, cv7 = 0, cv8 = 0, cv9 = 0, cv10 = 0, cv11 = 0, cv12 = 0, cv13 = 0, cv14 = 0, cv15 = 0, cv16 = 0, cv17 = 0, cv18 = 0, cv19 = 0, cv20 = 0, cv21 = 0, cv22 = 0, cv23 = 0, cv24 = 0, cv25 = 0, cv26 = 0, cv27 = 0, cv28 = 0, cv29 = 0, cv30 = 0, cv31 = 0;
+
                 for (Venda venda : vendas) {
                     String[] data = TextUtils.split(venda.getData_cria(), "-");
                     if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
+                        totalDesconto += venda.getDesconto();
                         qtpv += venda.getQuantidade();
                         binding.qtdVenda.setText(getString(R.string.qtd_vd) + ": " + ++qtv);
                         binding.qtdProduto.setText(getString(R.string.qtd_pd_vd) + ": " + qtpv);
@@ -269,8 +271,8 @@ public class DashboardFragment extends Fragment {
                 }
 
                 totalVenda = jan + fev + mar + abr + mai + jun + jul + ago + set + out + nov + dez;
-
                 binding.valTotVd.setText(getString(R.string.vendas) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda)));
+                binding.valTotDt.setText(getString(R.string.desconto) + ": " + Ultilitario.formatPreco(String.valueOf(totalDesconto)));
 
                 nivelVendasMensais(mCubicValueLineChartQuant, true, janc, fevc, marc, abrc, maic, junc, julc, agoc, setc, outc, novc, dezc);
                 nivelVendasMensais(mCubicValueLineChartVal, false, jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez);
