@@ -135,7 +135,7 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
             email.requestFocus();
             email.setError(getApplication().getString(R.string.email_invalido));
-        } else if (!verificarEmail(activity, email.getText().toString(), true))
+        } else if (operacao.equals(Ultilitario.Operacao.CRIAR) && !verificarEmail(activity, email.getText().toString(), true))
             email.requestFocus();
         else if (nomeEmpresa.length() < 4) {
             nomeEmpresa.requestFocus();
