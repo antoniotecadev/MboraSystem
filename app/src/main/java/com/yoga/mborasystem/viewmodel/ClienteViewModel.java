@@ -11,6 +11,7 @@ import static com.yoga.mborasystem.util.Ultilitario.isCampoVazio;
 import static com.yoga.mborasystem.util.Ultilitario.isEmailValido;
 import static com.yoga.mborasystem.util.Ultilitario.isNumeroValido;
 import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.verificarEmail;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -34,7 +35,6 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -62,7 +62,6 @@ public class ClienteViewModel extends AndroidViewModel {
 
     private byte estado;
     private String codigo;
-    private boolean isNewUser;
     private final Bundle bundle;
     private final Cliente cliente;
     private Disposable disposable;
@@ -496,27 +495,6 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
         bairros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return bairros;
-    }
-
-    public boolean verificarEmail(Activity a, String email, boolean isCadastroActualizar) {
-        if (email.isEmpty())
-            Toast.makeText(a, a.getString(R.string.dig_eml), Toast.LENGTH_LONG).show();
-        else {
-            MainActivity.getProgressBar();
-            FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(a, task -> {
-                if (task.isSuccessful()) {
-                    isNewUser = task.getResult().getSignInMethods().isEmpty();
-                    if (isNewUser) {
-                        if (!isCadastroActualizar)
-                            alertDialog(a.getString(R.string.email_valido), a.getString(R.string.email_valido_msg), a, R.drawable.ic_baseline_done_24);
-                    } else
-                        alertDialog(a.getString(R.string.email_invalido), a.getString(R.string.email_invalido_msg), a, R.drawable.ic_baseline_close_24);
-                } else
-                    alertDialog(a.getString(R.string.erro), task.getException().getMessage(), a, R.drawable.ic_baseline_privacy_tip_24);
-                MainActivity.dismissProgressBar();
-            });
-        }
-        return isNewUser;
     }
 
     @Override

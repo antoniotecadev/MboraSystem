@@ -55,6 +55,7 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonObject;
@@ -105,6 +106,7 @@ public class Ultilitario {
     private static Float parsed;
     private static Locale pt_AO;
     public static String categoria = "";
+    private static boolean isNewUser;
 
     public static final String MBORASYSTEM = "8e67fe66551c69731085ffb8d7746f6fec923b1af4f27066ba903219f0c60fb9";
     public static boolean isLocal = true;
@@ -1334,5 +1336,26 @@ public class Ultilitario {
             Ultilitario.alertDialog(context.getString(R.string.erro), context.getString(R.string.conec_wif_dad), context, R.drawable.ic_baseline_privacy_tip_24);
         }
         return false;
+    }
+
+    public static boolean verificarEmail(Activity a, String email, boolean isCadastroActualizar) {
+        if (email.isEmpty())
+            Toast.makeText(a, a.getString(R.string.dig_eml), Toast.LENGTH_LONG).show();
+        else {
+            MainActivity.getProgressBar();
+            FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(a, task -> {
+                if (task.isSuccessful()) {
+                    isNewUser = task.getResult().getSignInMethods().isEmpty();
+                    if (isNewUser) {
+                        if (!isCadastroActualizar)
+                            alertDialog(a.getString(R.string.email_valido), a.getString(R.string.email_valido_msg), a, R.drawable.ic_baseline_done_24);
+                    } else
+                        alertDialog(a.getString(R.string.email_invalido), a.getString(R.string.email_invalido_msg), a, R.drawable.ic_baseline_close_24);
+                } else
+                    alertDialog(a.getString(R.string.erro), task.getException().getMessage(), a, R.drawable.ic_baseline_privacy_tip_24);
+                MainActivity.dismissProgressBar();
+            });
+        }
+        return isNewUser;
     }
 }
