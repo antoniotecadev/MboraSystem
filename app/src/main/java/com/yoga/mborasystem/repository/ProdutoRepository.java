@@ -84,10 +84,6 @@ public class ProdutoRepository {
         return produtoDao.getProdutosExport(idcat);
     }
 
-    public LiveData<Long> getProdutos() {
-        return produtoDao.getProdutos();
-    }
-
     public LiveData<List<ProdutoDao.Fornecedor>> getPrecoFornecedor(String ano) {
         return produtoDao.getPrecoFornecedor(ano);
     }

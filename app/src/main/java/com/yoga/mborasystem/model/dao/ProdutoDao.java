@@ -39,9 +39,6 @@ public interface ProdutoDao {
     @Query("SELECT * FROM produtos WHERE estado = 3 ORDER BY produtos.id DESC")
     PagingSource<Integer, Produto> getProdutosLixeira();
 
-    @Query("SELECT count(id) FROM produtos WHERE estado != 3")
-    LiveData<Long> getProdutos();
-
     @Query("SELECT distinct(pdv.id), pdv.preco_fornecedor, pdv.data_cria FROM produtosvendas AS pdv" +
             " INNER JOIN vendas AS vd ON pdv.idvenda = vd.id WHERE vd.referenciaNC = ''" +
             "AND vd.data_cria  LIKE '%' || :ano GROUP BY pdv.id")

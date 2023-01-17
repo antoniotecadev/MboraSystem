@@ -104,7 +104,7 @@ public class ProdutoViewModel extends AndroidViewModel {
             codigoBarra.setError(getApplication().getString(R.string.codigobarra_invalido));
         } else if (isCampoVazio(String.valueOf(idcategoria)) || numero.matcher(String.valueOf(idcategoria)).find()) {
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.idcategoria_nao_encontrado), R.drawable.ic_toast_erro);
-        }else if(!checkIva.isChecked() && taxaIva > 0){
+        } else if (!checkIva.isChecked() && taxaIva > 0) {
             preco.requestFocus();
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.mc_cx_iv), R.drawable.ic_toast_erro);
             checkIva.setError(getApplication().getString(R.string.iva));
@@ -248,7 +248,7 @@ public class ProdutoViewModel extends AndroidViewModel {
                     else {
                         try {
                             getListaProdutosPaging().setValue(produto);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_LONG).show());
                         }
                     }
@@ -274,10 +274,6 @@ public class ProdutoViewModel extends AndroidViewModel {
 
     public LiveData<List<ProdutoDao.Fornecedor>> getPrecoFornecedor(String ano) {
         return produtoRepository.getPrecoFornecedor(ano);
-    }
-
-    public LiveData<Long> consultarProdutos() {
-        return produtoRepository.getProdutos();
     }
 
     public void validarProdutoFiltro(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {

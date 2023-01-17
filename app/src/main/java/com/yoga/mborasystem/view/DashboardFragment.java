@@ -283,8 +283,6 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        produtoViewModel.consultarProdutos().observe(getViewLifecycleOwner(), quantProd -> binding.qtdProd.setText(getString(R.string.qtd_pd) + ": " + quantProd));
-
         produtoViewModel.getPrecoFornecedor(dataActual[2].trim()).observe(getViewLifecycleOwner(), fornecedor -> {
             if (!fornecedor.isEmpty()) {
                 for (ProdutoDao.Fornecedor preco : fornecedor)
