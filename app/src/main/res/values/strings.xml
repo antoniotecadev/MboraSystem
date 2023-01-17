@@ -754,6 +754,8 @@
     <string name="tot_imp">Total Imposto</string>
     <string name="tot_pag">Total a Pagar</string>
     <string name="qtd_pd_vd">Qtd de produtos vendidos</string>
+    <string name="psv_cst">Possíveis custos</string>
+    <string name="psv_lc">Possíveis lucros</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

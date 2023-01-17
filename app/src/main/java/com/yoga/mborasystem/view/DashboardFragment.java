@@ -290,14 +290,14 @@ public class DashboardFragment extends Fragment {
                 for (ProdutoDao.Fornecedor preco : fornecedor)
                     totalPrecoFornecedor += preco.preco_fornecedor;
 
-                binding.valCusto.setText(getString(R.string.cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
-                mPieChart.addPieSlice(new PieModel(getString(R.string.cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
+                binding.valCusto.setText(getString(R.string.psv_cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
+                mPieChart.addPieSlice(new PieModel(getString(R.string.psv_cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
                 long total = totalVenda - totalDesconto;
                 if (total > totalPrecoFornecedor) {
-                    binding.valLucro.setText(getString(R.string.lc) + ": " + Ultilitario.formatPreco(String.valueOf(total - totalPrecoFornecedor)));
-                    mPieChart.addPieSlice(new PieModel(getString(R.string.lc), (total - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
+                    binding.valLucro.setText(getString(R.string.psv_lc) + ": " + Ultilitario.formatPreco(String.valueOf(total - totalPrecoFornecedor)));
+                    mPieChart.addPieSlice(new PieModel(getString(R.string.psv_lc), (total - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
                 } else
-                    binding.valLucro.setText(getString(R.string.lc) + ": " + (total - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
+                    binding.valLucro.setText(getString(R.string.psv_lc) + ": " + (total - totalPrecoFornecedor) / 100 + " " + getString(R.string.lucro_negativo));
             }
         });
 
