@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.model.dao;
 
+import androidx.annotation.Keep;
 import androidx.lifecycle.LiveData;
 import androidx.paging.PagingSource;
 import androidx.room.Dao;
@@ -41,8 +42,16 @@ public interface ProdutoDao {
     @Query("SELECT count(id) FROM produtos WHERE estado != 3")
     LiveData<Long> getProdutos();
 
-    @Query("SELECT * FROM produtos WHERE estado != 3")
-    LiveData<List<Produto>> getPrecoFornecedor();
+    @Query("SELECT distinct(pdv.id), pdv.preco_fornecedor, pdv.data_cria FROM produtosvendas AS pdv" +
+            " INNER JOIN vendas AS vd ON pdv.idvenda = vd.id WHERE vd.referenciaNC = ''" +
+            "AND vd.data_cria  LIKE '%' || :ano GROUP BY pdv.id")
+    LiveData<List<Fornecedor>> getPrecoFornecedor(String ano);
+
+    @Keep
+    class Fornecedor {
+        public int id;
+        public long preco_fornecedor;
+    }
 
     @Query("SELECT COUNT(id) FROM produtos  WHERE idcategoria = :idcategoria AND estado != 3")
     LiveData<Long> getQuantidadeProduto(long idcategoria);

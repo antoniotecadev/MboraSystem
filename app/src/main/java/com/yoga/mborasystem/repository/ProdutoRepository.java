@@ -88,8 +88,8 @@ public class ProdutoRepository {
         return produtoDao.getProdutos();
     }
 
-    public LiveData<List<Produto>> getPrecoFornecedor() {
-        return produtoDao.getPrecoFornecedor();
+    public LiveData<List<ProdutoDao.Fornecedor>> getPrecoFornecedor(String ano) {
+        return produtoDao.getPrecoFornecedor(ano);
     }
 
     public void restaurarProduto(int estado, long idproduto, boolean todosProdutoss) {

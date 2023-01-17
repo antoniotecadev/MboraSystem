@@ -28,6 +28,7 @@ import androidx.paging.rxjava3.PagingRx;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 import com.yoga.mborasystem.R;
+import com.yoga.mborasystem.model.dao.ProdutoDao;
 import com.yoga.mborasystem.model.entidade.Produto;
 import com.yoga.mborasystem.repository.ProdutoRepository;
 import com.yoga.mborasystem.util.Event;
@@ -271,8 +272,8 @@ public class ProdutoViewModel extends AndroidViewModel {
         return produtoRepository.getQuantidadeProduto(idcategoria, isLixeira);
     }
 
-    public LiveData<List<Produto>> getPrecoFornecedor() {
-        return produtoRepository.getPrecoFornecedor();
+    public LiveData<List<ProdutoDao.Fornecedor>> getPrecoFornecedor(String ano) {
+        return produtoRepository.getPrecoFornecedor(ano);
     }
 
     public LiveData<Long> consultarProdutos() {
