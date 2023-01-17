@@ -57,7 +57,6 @@ public class DashboardFragment extends Fragment {
 
     private int idItem;
     private long totalVenda = 0;
-    private int totalDesconto;
     private long totalPrecoFornecedor = 0;
     private VendaViewModel vendaViewModel;
     private FragmentDashboardBinding binding;
@@ -124,49 +123,47 @@ public class DashboardFragment extends Fragment {
                 long jan = 0, fev = 0, mar = 0, abr = 0, mai = 0, jun = 0, jul = 0, ago = 0, set = 0, out = 0, nov = 0, dez = 0;
                 int v1 = 0, v2 = 0, v3 = 0, v4 = 0, v5 = 0, v6 = 0, v7 = 0, v8 = 0, v9 = 0, v10 = 0, v11 = 0, v12 = 0, v13 = 0, v14 = 0, v15 = 0, v16 = 0, v17 = 0, v18 = 0, v19 = 0, v20 = 0, v21 = 0, v22 = 0, v23 = 0, v24 = 0, v25 = 0, v26 = 0, v27 = 0, v28 = 0, v29 = 0, v30 = 0, v31 = 0;
                 int cv1 = 0, cv2 = 0, cv3 = 0, cv4 = 0, cv5 = 0, cv6 = 0, cv7 = 0, cv8 = 0, cv9 = 0, cv10 = 0, cv11 = 0, cv12 = 0, cv13 = 0, cv14 = 0, cv15 = 0, cv16 = 0, cv17 = 0, cv18 = 0, cv19 = 0, cv20 = 0, cv21 = 0, cv22 = 0, cv23 = 0, cv24 = 0, cv25 = 0, cv26 = 0, cv27 = 0, cv28 = 0, cv29 = 0, cv30 = 0, cv31 = 0;
-                totalDesconto = 0;
                 for (Venda venda : vendas) {
                     String[] data = TextUtils.split(venda.getData_cria(), "-");
                     if (data[2].trim().equalsIgnoreCase(dataActual[2].trim())) {
-                        totalDesconto += venda.getDesconto();
                         qtpv += venda.getQuantidade();
                         binding.qtdVenda.setText(getString(R.string.qtd_vd) + ": " + ++qtv);
                         binding.qtdProduto.setText(getString(R.string.qtd_pd_vd) + ": " + qtpv);
                         if (data[1].trim().equalsIgnoreCase("janeiro")) {
-                            jan += venda.getTotal_venda();
+                            jan += venda.getTotal_venda() - venda.getDesconto();
                             ++janc;
                         } else if (data[1].trim().equalsIgnoreCase("fevereiro")) {
-                            fev += venda.getTotal_venda();
+                            fev += venda.getTotal_venda() - venda.getDesconto();
                             ++fevc;
                         } else if (data[1].trim().equalsIgnoreCase("março")) {
-                            mar += venda.getTotal_venda();
+                            mar += venda.getTotal_venda() - venda.getDesconto();
                             ++marc;
                         } else if (data[1].trim().equalsIgnoreCase("abril")) {
-                            abr += venda.getTotal_venda();
+                            abr += venda.getTotal_venda() - venda.getDesconto();
                             ++abrc;
                         } else if (data[1].trim().equalsIgnoreCase("maio")) {
-                            mai += venda.getTotal_venda();
+                            mai += venda.getTotal_venda() - venda.getDesconto();
                             ++maic;
                         } else if (data[1].trim().equalsIgnoreCase("junho")) {
-                            jun += venda.getTotal_venda();
+                            jun += venda.getTotal_venda() - venda.getDesconto();
                             ++junc;
                         } else if (data[1].trim().equalsIgnoreCase("julho")) {
-                            jul += venda.getTotal_venda();
+                            jul += venda.getTotal_venda() - venda.getDesconto();
                             ++julc;
                         } else if (data[1].trim().equalsIgnoreCase("agosto")) {
-                            ago += venda.getTotal_venda();
+                            ago += venda.getTotal_venda() - venda.getDesconto();
                             ++agoc;
                         } else if (data[1].trim().equalsIgnoreCase("setembro")) {
-                            set += venda.getTotal_venda();
+                            set += venda.getTotal_venda() - venda.getDesconto();
                             ++setc;
                         } else if (data[1].trim().equalsIgnoreCase("outubro")) {
-                            out += venda.getTotal_venda();
+                            out += venda.getTotal_venda() - venda.getDesconto();
                             ++outc;
                         } else if (data[1].trim().equalsIgnoreCase("novembro")) {
-                            nov += venda.getTotal_venda();
+                            nov += venda.getTotal_venda() - venda.getDesconto();
                             ++novc;
                         } else if (data[1].trim().equalsIgnoreCase("dezembro")) {
-                            dez += venda.getTotal_venda();
+                            dez += venda.getTotal_venda() - venda.getDesconto();
                             ++dezc;
                         }
                     }
@@ -174,97 +171,97 @@ public class DashboardFragment extends Fragment {
                     if (data[1].trim().equalsIgnoreCase(dataActual[1].trim())) {
 
                         if (data[0].trim().equalsIgnoreCase("01")) {
-                            v1 += venda.getTotal_venda();
+                            v1 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv1;
                         } else if (data[0].trim().equalsIgnoreCase("02")) {
-                            v2 += venda.getTotal_venda();
+                            v2 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv2;
                         } else if (data[0].trim().equalsIgnoreCase("03")) {
-                            v3 += venda.getTotal_venda();
+                            v3 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv3;
                         } else if (data[0].trim().equalsIgnoreCase("04")) {
-                            v4 += venda.getTotal_venda();
+                            v4 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv4;
                         } else if (data[0].trim().equalsIgnoreCase("05")) {
-                            v5 += venda.getTotal_venda();
+                            v5 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv5;
                         } else if (data[0].trim().equalsIgnoreCase("06")) {
-                            v6 += venda.getTotal_venda();
+                            v6 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv6;
                         } else if (data[0].trim().equalsIgnoreCase("07")) {
-                            v7 += venda.getTotal_venda();
+                            v7 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv7;
                         } else if (data[0].trim().equalsIgnoreCase("08")) {
-                            v8 += venda.getTotal_venda();
+                            v8 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv8;
                         } else if (data[0].trim().equalsIgnoreCase("09")) {
-                            v9 += venda.getTotal_venda();
+                            v9 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv9;
                         } else if (data[0].trim().equalsIgnoreCase("10")) {
-                            v10 += venda.getTotal_venda();
+                            v10 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv10;
                         } else if (data[0].trim().equalsIgnoreCase("11")) {
-                            v11 += venda.getTotal_venda();
+                            v11 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv11;
                         } else if (data[0].trim().equalsIgnoreCase("12")) {
-                            v12 += venda.getTotal_venda();
+                            v12 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv12;
                         } else if (data[0].trim().equalsIgnoreCase("13")) {
-                            v13 += venda.getTotal_venda();
+                            v13 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv13;
                         } else if (data[0].trim().equalsIgnoreCase("14")) {
-                            v14 += venda.getTotal_venda();
+                            v14 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv14;
                         } else if (data[0].trim().equalsIgnoreCase("15")) {
-                            v15 += venda.getTotal_venda();
+                            v15 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv15;
                         } else if (data[0].trim().equalsIgnoreCase("16")) {
-                            v16 += venda.getTotal_venda();
+                            v16 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv16;
                         } else if (data[0].trim().equalsIgnoreCase("17")) {
-                            v17 += venda.getTotal_venda();
+                            v17 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv17;
                         } else if (data[0].trim().equalsIgnoreCase("18")) {
-                            v18 += venda.getTotal_venda();
+                            v18 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv18;
                         } else if (data[0].trim().equalsIgnoreCase("19")) {
-                            v19 += venda.getTotal_venda();
+                            v19 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv19;
                         } else if (data[0].trim().equalsIgnoreCase("20")) {
-                            v20 += venda.getTotal_venda();
+                            v20 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv20;
                         } else if (data[0].trim().equalsIgnoreCase("21")) {
-                            v21 += venda.getTotal_venda();
+                            v21 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv21;
                         } else if (data[0].trim().equalsIgnoreCase("22")) {
-                            v22 += venda.getTotal_venda();
+                            v22 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv22;
                         } else if (data[0].trim().equalsIgnoreCase("23")) {
-                            v23 += venda.getTotal_venda();
+                            v23 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv23;
                         } else if (data[0].trim().equalsIgnoreCase("24")) {
-                            v24 += venda.getTotal_venda();
+                            v24 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv24;
                         } else if (data[0].trim().equalsIgnoreCase("25")) {
-                            v25 += venda.getTotal_venda();
+                            v25 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv25;
                         } else if (data[0].trim().equalsIgnoreCase("26")) {
-                            v26 += venda.getTotal_venda();
+                            v26 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv26;
                         } else if (data[0].trim().equalsIgnoreCase("27")) {
-                            v27 += venda.getTotal_venda();
+                            v27 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv27;
                         } else if (data[0].trim().equalsIgnoreCase("28")) {
-                            v28 += venda.getTotal_venda();
+                            v28 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv28;
                         } else if (data[0].trim().equalsIgnoreCase("29")) {
-                            v29 += venda.getTotal_venda();
+                            v29 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv29;
                         } else if (data[0].trim().equalsIgnoreCase("30")) {
-                            v30 += venda.getTotal_venda();
+                            v30 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv30;
                         } else if (data[0].trim().equalsIgnoreCase("31")) {
-                            v31 += venda.getTotal_venda();
+                            v31 += venda.getTotal_venda() - venda.getDesconto();
                             ++cv31;
                         }
                     }
@@ -273,7 +270,7 @@ public class DashboardFragment extends Fragment {
 
                 totalVenda = jan + fev + mar + abr + mai + jun + jul + ago + set + out + nov + dez;
 
-                binding.valTotVd.setText(getString(R.string.vendas) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda - totalDesconto)));
+                binding.valTotVd.setText(getString(R.string.vendas) + ": " + Ultilitario.formatPreco(String.valueOf(totalVenda)));
 
                 nivelVendasMensais(mCubicValueLineChartQuant, true, janc, fevc, marc, abrc, maic, junc, julc, agoc, setc, outc, novc, dezc);
                 nivelVendasMensais(mCubicValueLineChartVal, false, jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez);
@@ -290,7 +287,7 @@ public class DashboardFragment extends Fragment {
 
                 binding.valCusto.setText(getString(R.string.psv_cst) + ": " + Ultilitario.formatPreco(String.valueOf(totalPrecoFornecedor)));
                 mPieChart.addPieSlice(new PieModel(getString(R.string.psv_cst), (totalPrecoFornecedor / 100), Color.parseColor("#EC7063")));
-                long total = totalVenda - totalDesconto;
+                long total = totalVenda;
                 if (total > totalPrecoFornecedor) {
                     binding.valLucro.setText(getString(R.string.psv_lc) + ": " + Ultilitario.formatPreco(String.valueOf(total - totalPrecoFornecedor)));
                     mPieChart.addPieSlice(new PieModel(getString(R.string.psv_lc), (total - totalPrecoFornecedor) / 100, Color.parseColor("#58D68D")));
