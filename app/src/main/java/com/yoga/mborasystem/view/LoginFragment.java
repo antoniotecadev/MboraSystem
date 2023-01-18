@@ -154,7 +154,7 @@ public class LoginFragment extends Fragment {
             bundle.putString("nome", usuario.getNome());
             bundle.putString("datacria", dataCria[0] + "/ ");
             if (dataCria[1].trim().isEmpty()) {
-                bundle.putInt("idusuario", (int) usuario.getId());
+                bundle.putLong("idusuario", usuario.getId());
                 Ultilitario.setBooleanPreference(requireContext(), false, "master");
                 Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_navigation, bundle);
             } else {

@@ -185,7 +185,7 @@ public class HomeFragment extends Fragment {
         binding.btnUsuario.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment));
 
         binding.btnProduto.setOnClickListener(v -> {
-            HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsMaster(isMaster).setIdUsuario(requireArguments().getInt("idusuario", 0));
+            HomeFragmentDirections.ActionHomeFragmentToCategoriaProdutoFragment direction = HomeFragmentDirections.actionHomeFragmentToCategoriaProdutoFragment().setIsMaster(isMaster).setIdUsuario(requireArguments().getLong("idusuario", 0));
             Navigation.findNavController(requireView()).navigate(direction);
         });
 
@@ -301,7 +301,7 @@ public class HomeFragment extends Fragment {
                         break;
                     case R.id.dialogAlterarCodigoPin:
                         bundle.putString("nome", getArguments().getString("nome"));
-                        bundle.putLong("idusuario", getArguments().getInt("idusuario"));
+                        bundle.putLong("idusuario", getArguments().getLong("idusuario"));
                         bundle.putString("datacria", getArguments().getString("datacria"));
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
                         break;

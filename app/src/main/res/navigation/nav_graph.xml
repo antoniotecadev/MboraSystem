@@ -209,8 +209,8 @@
                 app:argType="boolean" />
             <argument
                 android:name="idUsuario"
-                app:argType="integer"
-                android:defaultValue="0" />
+                app:argType="long"
+                android:defaultValue="0L" />
         </fragment>
         <fragment
             android:id="@+id/listProdutoFragment"

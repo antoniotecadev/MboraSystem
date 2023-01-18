@@ -42,7 +42,8 @@ public class CategoriaProdutoFragment extends Fragment {
     private boolean vazio;
     private Bundle bundle;
     private GroupAdapter adapter;
-    private int quantidade, idusuario;
+    private long idusuario;
+    private int quantidade;
     private boolean isLixeira, isMaster;
     private FragmentCategoriaProdutoBinding binding;
     private CategoriaProdutoViewModel categoriaProdutoViewModel;
