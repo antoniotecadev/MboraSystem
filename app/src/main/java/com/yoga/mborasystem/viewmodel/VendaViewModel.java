@@ -224,7 +224,7 @@ public class VendaViewModel extends AndroidViewModel {
         venda.setTotal_venda(totalVenda);
         venda.setDivida(valorDivida);
         venda.setValor_pago(valorPago);
-        venda.setEstado(Ultilitario.UM);
+        venda.setEstado(1);
         venda.setData_cria(dataEmissao.isEmpty() ? Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()) : dataEmissao);
         venda.setIdoperador(idoperador);
         venda.setIdclicant(idcliente);
