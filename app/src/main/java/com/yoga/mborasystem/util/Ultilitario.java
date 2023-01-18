@@ -1232,9 +1232,9 @@ public class Ultilitario {
     public static void setValueUsuarioMaster(Bundle bundle, List<Cliente> cliente, Context context) {
         bundle.putString("nome", cliente.get(0).getNome() + " " + cliente.get(0).getSobrenome());
         bundle.putParcelable("cliente", cliente.get(0));
-        Ultilitario.setBooleanPreference(context, true, "master");
-        Ultilitario.setValueSharedPreferences(context, "imei", cliente.get(0).getImei());
-        Ultilitario.setValueSharedPreferences(context, "nomeempresa", cliente.get(0).getNomeEmpresa());
+        setBooleanPreference(context, true, "master");
+        setValueSharedPreferences(context, "imei", cliente.get(0).getImei());
+        setValueSharedPreferences(context, "nomeempresa", cliente.get(0).getNomeEmpresa());
     }
 
     public static String getDeviceUniqueID(Activity activity) {
