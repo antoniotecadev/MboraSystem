@@ -6,12 +6,12 @@ android {
     signingConfigs {
         debug {}
     }
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.yoga.mborasystem"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
