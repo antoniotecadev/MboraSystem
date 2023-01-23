@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -48,6 +49,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
@@ -257,6 +259,7 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setCodigoPlus("");
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPerfilUrl("");
+                        cliente.setToken(getToken());
                         mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful())
                                 errorClienteUser = task.getException().getMessage();
@@ -268,6 +271,21 @@ public class CadastrarClienteFragment extends Fragment {
                     } else
                         alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 });
+    }
+
+    private String token;
+
+    private String getToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(requireContext(), "Fetching FCM registration token failed " + task.getException(), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    // Get new FCM registration token
+                    token = task.getResult();
+                });
+        return token;
     }
 
     private final ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(

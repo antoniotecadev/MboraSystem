@@ -1,22 +1,34 @@
 package com.yoga.mborasystem;
 
+import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.definirModoEscuro;
 import static com.yoga.mborasystem.util.Ultilitario.getDataSplitDispositivo;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
 import static com.yoga.mborasystem.util.Ultilitario.setBooleanPreference;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -25,9 +37,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.view.FacturaFragment;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,12 +56,13 @@ public class MainActivity extends AppCompatActivity {
     public static DrawerLayout drawerLayout;
     public static ProgressDialog progressDialog;
     public static NavigationView navigationView;
+    private static final String CHANNEL_ID = "HEADS_UP_NOTIFICATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (!getDataSplitDispositivo(Ultilitario.getValueSharedPreferences(getApplicationContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent()))))
+        if (!getDataSplitDispositivo(getValueSharedPreferences(getApplicationContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent()))))
             setBooleanPreference(getApplicationContext(), false, "estado_conta");
 
         definirModoEscuro(getApplicationContext());
@@ -89,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
                 navigationView.getMenu().clear();
             }
         });
+        asNotificationPermission();
+        createNotificationChannel();
     }
 
     public static void setVisibilityProgressBar(int view) {
@@ -113,6 +134,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void asNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED)
+                requestPermissionLauncherNotification.launch(Manifest.permission.POST_NOTIFICATIONS);
+    }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherNotification = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+                if (!result)
+                    alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_rec_not), this, R.drawable.ic_baseline_privacy_tip_24);
+            }
+    );
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Informação de novidades", NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Mensagem enviada pela YOGA");
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -132,6 +176,48 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (Fragment fragment : Objects.requireNonNull(getSupportFragmentManager().getPrimaryNavigationFragment()).getChildFragmentManager().getFragments()) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    public static class MyFirebaseMessagingService extends FirebaseMessagingService {
+        @Override
+        public void onMessageReceived(@NonNull RemoteMessage message) {
+            super.onMessageReceived(message);
+            if (message.getNotification() != null) {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_baseline_store_24)
+                        .setContentTitle(message.getNotification().getTitle())
+                        .setContentText(message.getNotification().getBody())
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message.getNotification().getBody()))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setCategory(NotificationCompat.CATEGORY_MESSAGE);
+
+                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+                notificationManagerCompat.notify((int) message.getSentTime(), builder.build());
+            }
+        }
+        /**
+         * There are two scenarios when onNewToken is called:
+         * 1) When a new token is generated on initial app startup
+         * 2) Whenever an existing token is changed
+         * Under #2, there are three scenarios when the existing token is changed:
+         * A) App is restored to a new device
+         * B) User uninstalls/reinstalls the app
+         * C) User clears app data
+         */
+        @Override
+        public void onNewToken(@NonNull String token) {
+            // If you want to send messages to this application instance or
+            // manage this apps subscriptions on the server side, send the
+            // FCM registration token to your app server.
+            Map<String, Object> update = new HashMap<>();
+            String imei = getValueSharedPreferences(this, "imei", "0000000000");
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
+            update.put("/" + imei + "/token", token);
+            mDatabase.updateChildren(update).addOnCompleteListener(task -> {
+                if (!task.isSuccessful())
+                    alertDialog("Update Token", task.getException().getMessage(), this, R.drawable.ic_baseline_close_24);
+            });
         }
     }
 }
