@@ -15,10 +15,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -184,11 +187,13 @@ public class MainActivity extends AppCompatActivity {
         public void onMessageReceived(@NonNull RemoteMessage message) {
             super.onMessageReceived(message);
             if (message.getNotification() != null) {
+                String titulo = message.getNotification().getTitle();
+                String corpo = message.getNotification().getBody();
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_store_24)
-                        .setContentTitle(message.getNotification().getTitle())
-                        .setContentText(message.getNotification().getBody())
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message.getNotification().getBody()))
+                        .setContentTitle(titulo)
+                        .setContentText(corpo)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(corpo))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
