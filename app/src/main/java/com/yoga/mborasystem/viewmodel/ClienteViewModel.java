@@ -39,6 +39,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -330,6 +331,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     private void salvarParceiro(Cliente cliente, Activity activity) {
+        FirebaseMessaging messaging = FirebaseMessaging.getInstance();
         String URL = getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/contacts";
         Ion.with(getApplication().getApplicationContext())
                 .load("POST", URL)
@@ -358,6 +360,8 @@ public class ClienteViewModel extends AndroidViewModel {
                     try {
                         String retorno = jsonObject.get("insert").getAsString();
                         if (retorno.equals("ok")) {
+                            messaging.subscribeToTopic(cliente.getMunicipio());
+                            messaging.subscribeToTopic("imei_" + cliente.getImei());
                             setValueSharedPreferences(getApplication(), "regime_iva", cliente.getRegimeIva());
                             getValido().postValue(Ultilitario.Operacao.CRIAR);
                             showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
@@ -368,6 +372,8 @@ public class ClienteViewModel extends AndroidViewModel {
                             eliminarParceiro(cliente);
                         }
                     } catch (Exception ex) {
+                        messaging.unsubscribeFromTopic(cliente.getMunicipio());
+                        messaging.unsubscribeFromTopic("imei_" + cliente.getImei());
                         getValido().postValue(Ultilitario.Operacao.NENHUMA);
                         showToast(getApplication(), Color.rgb(204, 0, 0), "Online Storege:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
                         eliminarParceiro(cliente);
