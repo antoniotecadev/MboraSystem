@@ -763,6 +763,7 @@
     <string name="ntfc_vd_desac">Notificação desactivada</string>
     <string name="rsm_vd_part">Resumo de venda partilhado</string>
     <string name="avs_con_int_not">O resumo das vendas serão partilhadas via internet após venda com um outro dispositivo, onde a sua conta MboraSystem estiver configurada. Se não estiver conectado a internet as vendas não serão efectuadas, a não ser que desactive a notificação de venda.</string>
+    <string name="key_fcm_not_exi">Chave do FCM não encotrado</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

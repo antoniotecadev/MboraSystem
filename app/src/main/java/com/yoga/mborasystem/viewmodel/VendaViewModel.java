@@ -33,6 +33,9 @@ import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
@@ -303,20 +306,30 @@ public class VendaViewModel extends AndroidViewModel {
         json2.addProperty("body", resumoVenda);
         json1.add("notification", json2);
 
-        String chave = "AAAA7nu_waA:APA91bGbM9mbMQeu-BN0ArnKW_cvDG1J_pCQWydeUgbDile3lxg93b8I0cQxijn0dO7O9FbHO5Iwmnlr_M5WoEqWEGYbubXA4u_kh9xeIO86oVXD2vmOWwEfiIKZRJkRIb6MX195QTBY";
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("mborasystem").child("keyfcm");
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot result = task.getResult();
+                if (result.exists()) {
+                    Ion.with(getApplication().getApplicationContext())
+                            .load("POST", "https://fcm.googleapis.com/fcm/send")
+                            .setHeader("Content-Type", "application/json; charset=utf-8")
+                            .setHeader("Authorization", "key=" + result.getValue().toString())
+                            .setJsonObjectBody(json1)
+                            .asJsonObject().setCallback((e, r) -> {
+                                if (e != null)
+                                    showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
+                                else
+                                    showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.rsm_vd_part), R.drawable.ic_toast_feito);
+                            });
+                } else
+                    showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.key_fcm_not_exi), R.drawable.ic_toast_erro);
+            } else {
+                showToast(getApplication(), Color.rgb(204, 0, 0), task.getException().getMessage(), R.drawable.ic_toast_erro);
+            }
 
-        Ion.with(getApplication().getApplicationContext())
-                .load("POST", "https://fcm.googleapis.com/fcm/send")
-                .setHeader("Content-Type", "application/json; charset=utf-8")
-                .setHeader("Authorization", "key=" + chave)
-                .setJsonObjectBody(json1)
-                .asJsonObject().setCallback((e, result) -> {
-                    if (e != null)
-                        showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
-                    else
-                        showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.rsm_vd_part), R.drawable.ic_toast_feito);
-                    MainActivity.dismissProgressBar();
-                });
+        });
+        MainActivity.dismissProgressBar();
     }
 
     @SuppressLint("CheckResult")
