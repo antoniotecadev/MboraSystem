@@ -242,13 +242,13 @@ public class VendaViewModel extends AndroidViewModel {
                         try {
                             String hashVenda = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(context, "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(context, "public_key.der").getAbsolutePath()));
                             if (hashVenda == null)
-                                showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
+                                showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_erro);
                             else {
                                 insertHashVenda(context, hashVenda.trim(), idvenda, false, venda);
                             }
                             setValueSharedPreferences(context, "dataemissao", getDataFormatMonth(venda.getData_cria()) + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
                         } catch (Exception e) {
-                            showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
+                            showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
                         }
                         MainActivity.dismissProgressBar();
                         FacturaFragmentDirections.ActionFacturaFragmentToDialogVendaEfectuada action = FacturaFragmentDirections.actionFacturaFragmentToDialogVendaEfectuada(referenciaFactura).setPrecoTotal(totalVenda).setIdvenda(idvenda);
@@ -278,7 +278,7 @@ public class VendaViewModel extends AndroidViewModel {
                         if (getBooleanValue(getApplication(), "notificacao_venda"))
                             partilharResumoVenda(vd);
                     }
-                }, e -> showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
+                }, e -> showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro)));
     }
 
     public void partilharResumoVenda(Venda venda) {
@@ -474,12 +474,12 @@ public class VendaViewModel extends AndroidViewModel {
                             try {
                                 String hashVendaNC = EncriptaDecriptaRSA.assinar(vd, EncriptaDecriptaRSA.getPrivateKey(getFilePathCache(getApplication(), "private_key.der").getAbsolutePath()), EncriptaDecriptaRSA.getPublicKey(getFilePathCache(getApplication(), "public_key.der").getAbsolutePath()));
                                 if (hashVendaNC == null)
-                                    showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
+                                    showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_erro);
                                 else {
                                     insertHashVenda(getApplication(), hashVendaNC.trim(), venda.getId(), true, venda);
                                 }
                             } catch (Exception e) {
-                                showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito);
+                                showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
                             }
                         }
                     }
