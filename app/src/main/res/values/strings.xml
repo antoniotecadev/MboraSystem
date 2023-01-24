@@ -757,6 +757,12 @@
     <string name="psv_cst">Possíveis custos</string>
     <string name="psv_lc">Possíveis lucros</string>
     <string name="sm_perm_n_pod_rec_not">Sem permissão não vai poder receber notificações.</string>
+    <string name="notitificacao">Notificação</string>
+    <string name="ntfc_venda">Notificação de venda</string>
+    <string name="ntfc_vd_acti">Notificação activada</string>
+    <string name="ntfc_vd_desac">Notificação desactivada</string>
+    <string name="rsm_vd_part">Resumo de venda partilhado</string>
+    <string name="avs_con_int_not">O resumo das vendas serão partilhadas via internet após venda com um outro dispositivo, onde a sua conta MboraSystem estiver configurada. Se não estiver conectado a internet as vendas não serão efectuadas, a não ser que desactive a notificação de venda.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

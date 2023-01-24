@@ -1,6 +1,10 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
+import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
+import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +26,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
@@ -33,7 +39,6 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
 
     private String codigoIdioma;
     private ListPreference motivoIsento;
-
 
     @NonNull
     @Override
@@ -52,6 +57,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         ListPreference taxaIva = findPreference("taxa_iva");
         motivoIsento = findPreference("motivo_isencao");
         ListPreference modEsc = findPreference("mod_esc");
+        SwitchPreferenceCompat notificaoVenda = findPreference("notificacao_venda");
 
         if (modEsc != null) {
             modEsc.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -68,7 +74,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         if (bloAut != null) {
             bloAut.setOnPreferenceChangeListener((preference, newValue) -> {
                 if (!bloAut.isChecked())
-                    Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.bloaut_msg), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    alertDialog(getString(R.string.avs), getString(R.string.bloaut_msg), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 return true;
             });
         }
@@ -91,7 +97,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
                         if (codigoPin.toString().length() != 6 || !usuarioRepository.confirmarCodigoPin(Ultilitario.gerarHash(codigoPin.toString())).isEmpty())
                             handler.post(() -> {
                                 pin.setText("");
-                                Ultilitario.showToast(requireContext(), Color.rgb(204, 0, 0), requireContext().getString(R.string.codigopin_invalido), R.drawable.ic_toast_erro);
+                                showToast(requireContext(), Color.rgb(204, 0, 0), requireContext().getString(R.string.codigopin_invalido), R.drawable.ic_toast_erro);
                             });
                     } catch (Exception e) {
                         handler.post(() -> Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show());
@@ -128,6 +134,36 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
                         return false;
                 }
                 getSelectedIdioma(requireActivity(), codigoIdioma, newValue.toString(), false, false);
+                return true;
+            });
+        }
+
+        if (notificaoVenda != null) {
+            notificaoVenda.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (conexaoInternet(requireContext())) {
+                    FirebaseMessaging messaging = FirebaseMessaging.getInstance();
+                    String imei = getValueSharedPreferences(requireContext(), "imei", "");
+                    if (!notificaoVenda.isChecked() && !imei.isEmpty())
+                        messaging.subscribeToTopic(imei).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                alertDialog(getString(R.string.ntfc_vd_acti), getString(R.string.avs_con_int_not), requireContext(), R.drawable.ic_baseline_done_24);
+                            } else
+                                alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        });
+                    else if (!imei.isEmpty())
+                        messaging.unsubscribeFromTopic(imei).addOnCompleteListener(task -> {
+                            if (task.isSuccessful())
+                                showToast(requireContext(), Color.rgb(102, 153, 0), getString(R.string.ntfc_vd_desac), R.drawable.ic_toast_feito);
+                            else
+                                alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        });
+                    else {
+                        alertDialog(getString(R.string.erro), getString(R.string.imei_n_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        return false;
+                    }
+                    MainActivity.dismissProgressBar();
+                } else
+                    return false;
                 return true;
             });
         }

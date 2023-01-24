@@ -13,6 +13,16 @@
         app:useSimpleSummaryProvider="true" />
 
     <PreferenceCategory
+        android:title="@string/notitificacao"
+        tools:ignore="TouchTargetSizeCheck">
+        <SwitchPreferenceCompat
+            android:key="notificacao_venda"
+            android:title="@string/ntfc_venda"
+            app:icon="@drawable/ic_baseline_notifications_24"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/fctrc"
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreferenceCompat

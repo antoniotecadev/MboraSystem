@@ -1,6 +1,8 @@
 package com.yoga.mborasystem.viewmodel;
 
+import static com.yoga.mborasystem.util.Ultilitario.formatPreco;
 import static com.yoga.mborasystem.util.Ultilitario.formatarValor;
+import static com.yoga.mborasystem.util.Ultilitario.getBooleanValue;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getFilePathCache;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
@@ -31,6 +33,8 @@ import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.JsonObject;
+import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -89,60 +93,51 @@ public class VendaViewModel extends AndroidViewModel {
     MutableLiveData<Event<String>> dataExport, dataVenda, dataDocumento, enviarWhatsApp;
 
     public MutableLiveData<Long> getQuantidadeVenda() {
-        if (quantidade == null)
-            quantidade = new MutableLiveData<>();
+        if (quantidade == null) quantidade = new MutableLiveData<>();
         return quantidade;
     }
 
     public MutableLiveData<Event<Long>> getPrintLiveData() {
-        if (imprimir == null)
-            imprimir = new MutableLiveData<>();
+        if (imprimir == null) imprimir = new MutableLiveData<>();
         return imprimir;
     }
 
     public MutableLiveData<Event<Venda>> getPrintNCLiveData() {
-        if (imprimirNC == null)
-            imprimirNC = new MutableLiveData<>();
+        if (imprimirNC == null) imprimirNC = new MutableLiveData<>();
         return imprimirNC;
     }
 
     public MutableLiveData<Event<Long>> getGuardarPdfLiveData() {
-        if (guardarPdf == null)
-            guardarPdf = new MutableLiveData<>();
+        if (guardarPdf == null) guardarPdf = new MutableLiveData<>();
         return guardarPdf;
     }
 
     public MutableLiveData<Event<Long>> partilharPdfLiveData() {
-        if (partilhar == null)
-            partilhar = new MutableLiveData<>();
+        if (partilhar == null) partilhar = new MutableLiveData<>();
         return partilhar;
     }
 
     public MutableLiveData<Event<String>> getEnviarWhatsAppLiveData() {
-        if (enviarWhatsApp == null)
-            enviarWhatsApp = new MutableLiveData<>();
+        if (enviarWhatsApp == null) enviarWhatsApp = new MutableLiveData<>();
         return enviarWhatsApp;
     }
 
     MutableLiveData<List<Cliente>> dataAdminMaster;
 
     public MutableLiveData<List<Cliente>> getAdminMasterLiveData() {
-        if (dataAdminMaster == null)
-            dataAdminMaster = new MutableLiveData<>();
+        if (dataAdminMaster == null) dataAdminMaster = new MutableLiveData<>();
         return dataAdminMaster;
     }
 
     MutableLiveData<Event<AlertDialog>> dialog;
 
     public MutableLiveData<Event<AlertDialog>> getAlertDialogLiveData() {
-        if (dialog == null)
-            dialog = new MutableLiveData<>();
+        if (dialog == null) dialog = new MutableLiveData<>();
         return dialog;
     }
 
     public MutableLiveData<Boolean> getSelectedDataMutableLiveData() {
-        if (selectedData == null)
-            selectedData = new MutableLiveData<>();
+        if (selectedData == null) selectedData = new MutableLiveData<>();
         return selectedData;
     }
 
@@ -150,44 +145,37 @@ public class VendaViewModel extends AndroidViewModel {
     MutableLiveData<Event<List<Venda>>> vendas, vendasGuardarImprimir;
 
     public MutableLiveData<PagingData<Venda>> getListaVendasLiveData() {
-        if (listaVendas == null)
-            listaVendas = new MutableLiveData<>();
+        if (listaVendas == null) listaVendas = new MutableLiveData<>();
         return listaVendas;
     }
 
     public MutableLiveData<Event<List<Venda>>> getVendasGuardarImprimir() {
-        if (vendasGuardarImprimir == null)
-            vendasGuardarImprimir = new MutableLiveData<>();
+        if (vendasGuardarImprimir == null) vendasGuardarImprimir = new MutableLiveData<>();
         return vendasGuardarImprimir;
     }
 
     public MutableLiveData<Event<String>> getDataExportAppLiveData() {
-        if (dataExport == null)
-            dataExport = new MutableLiveData<>();
+        if (dataExport == null) dataExport = new MutableLiveData<>();
         return dataExport;
     }
 
     public MutableLiveData<Event<String>> getVendaDatatAppLiveData() {
-        if (dataVenda == null)
-            dataVenda = new MutableLiveData<>();
+        if (dataVenda == null) dataVenda = new MutableLiveData<>();
         return dataVenda;
     }
 
     public MutableLiveData<Event<String>> getDocumentoDatatAppLiveData() {
-        if (dataDocumento == null)
-            dataDocumento = new MutableLiveData<>();
+        if (dataDocumento == null) dataDocumento = new MutableLiveData<>();
         return dataDocumento;
     }
 
     public MutableLiveData<Event<List<Venda>>> getVendasParaExportar() {
-        if (vendas == null)
-            vendas = new MutableLiveData<>();
+        if (vendas == null) vendas = new MutableLiveData<>();
         return vendas;
     }
 
     public MutableLiveData<Event<Boolean>> getExportarLocalLiveData() {
-        if (exportLocal == null)
-            exportLocal = new MutableLiveData<>();
+        if (exportLocal == null) exportLocal = new MutableLiveData<>();
         return exportLocal;
     }
 
@@ -211,6 +199,7 @@ public class VendaViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     public void cadastrarVenda(Context context, String txtNomeCliente, TextInputEditText desconto, int percentagemDesconto, int quantidade, int valorBase, String referenciaFactura, int valorIva, String formaPagamento, int totalDesconto, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, int valorDivida, int valorPago, long idoperador, long idcliente, String dataEmissao, View view) {
+        MainActivity.getProgressBar();
         venda.setId(0);
         venda.setNome_cliente(txtNomeCliente);
         venda.setDesconto(Ultilitario.removerKZ(desconto));
@@ -252,7 +241,7 @@ public class VendaViewModel extends AndroidViewModel {
                             if (hashVenda == null)
                                 showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.err_ass), R.drawable.ic_toast_feito);
                             else {
-                                insertHashVenda(context, hashVenda.trim(), idvenda, false, null);
+                                insertHashVenda(context, hashVenda.trim(), idvenda, false, venda);
                             }
                             setValueSharedPreferences(context, "dataemissao", getDataFormatMonth(venda.getData_cria()) + " " + TextUtils.split(venda.getData_cria_hora(), "T")[1]);
                         } catch (Exception e) {
@@ -283,8 +272,51 @@ public class VendaViewModel extends AndroidViewModel {
                     } else {
                         setValueSharedPreferences(context, "hashvenda", hashVenda);
                         getGuardarPdfLiveData().setValue(new Event<>(idvenda));
+                        if (getBooleanValue(getApplication(), "notificacao_venda"))
+                            partilharResumoVenda(vd);
                     }
                 }, e -> showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_feito)));
+    }
+
+    public void partilharResumoVenda(Venda venda) {
+        MainActivity.getProgressBar();
+        String resumoVenda = "DATA: " + venda.getData_cria_hora() + " " +
+                "REFERÊNCIA: " + venda.getReferenciaFactura() + "\n" +
+                "CONSUMIDOR FINAL: " + TextUtils.split(venda.getNome_cliente(), "-")[0] + "\n" +
+                "QUANTIDADE PRODUTO: " + venda.getQuantidade() + "\n" +
+                "TOTAL ILÍQUIDO: " + formatPreco(String.valueOf(venda.getTotal_venda() - venda.getValor_iva())) + "\n" +
+                "DESCONTO" + "(" + venda.getPercentagemDesconto() + "%): " + formatPreco(String.valueOf(venda.getDesconto())) + "\n" +
+                "TOTAL: " + formatPreco(String.valueOf(venda.getTotal_desconto())) + " " +
+                "VALOR PAGO: " + formatPreco(String.valueOf(venda.getValor_pago())) + "\n" +
+                "DÍVIDA: " + formatPreco(String.valueOf(venda.getDivida())) + " " +
+                "BASE: " + formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_base() : getValueWithDesconto(venda.getValor_base(), venda.getPercentagemDesconto()))) + "\n" +
+                "TOTAL IMPOSTO: " + formatPreco(String.valueOf(venda.getDesconto() == 0 ? venda.getValor_iva() : getValueWithDesconto(venda.getValor_iva(), venda.getPercentagemDesconto()))) + "\n" +
+                "FORMA DE PAGAMENTO: " + venda.getPagamento();
+
+        JsonObject json1 = new JsonObject();
+        JsonObject json2 = new JsonObject();
+
+        String imei = getValueSharedPreferences(getApplication(), "imei", "");
+
+        json1.addProperty("to", "/topics/" + imei);
+        json2.addProperty("title", "✅ VENDA EFECTUADA");
+        json2.addProperty("body", resumoVenda);
+        json1.add("notification", json2);
+
+        String chave = "AAAA7nu_waA:APA91bGbM9mbMQeu-BN0ArnKW_cvDG1J_pCQWydeUgbDile3lxg93b8I0cQxijn0dO7O9FbHO5Iwmnlr_M5WoEqWEGYbubXA4u_kh9xeIO86oVXD2vmOWwEfiIKZRJkRIb6MX195QTBY";
+
+        Ion.with(getApplication().getApplicationContext())
+                .load("POST", "https://fcm.googleapis.com/fcm/send")
+                .setHeader("Content-Type", "application/json; charset=utf-8")
+                .setHeader("Authorization", "key=" + chave)
+                .setJsonObjectBody(json1)
+                .asJsonObject().setCallback((e, result) -> {
+                    if (e != null)
+                        showToast(getApplication(), Color.rgb(204, 0, 0), e.getMessage(), R.drawable.ic_toast_erro);
+                    else
+                        showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.rsm_vd_part), R.drawable.ic_toast_feito);
+                    MainActivity.dismissProgressBar();
+                });
     }
 
     @SuppressLint("CheckResult")

@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
+import static com.yoga.mborasystem.util.Ultilitario.getBooleanValue;
 import static com.yoga.mborasystem.util.Ultilitario.getDataEmissao;
 import static com.yoga.mborasystem.util.Ultilitario.getDataSplitDispositivo;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
@@ -844,8 +845,11 @@ public class FacturaFragment extends Fragment {
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         if (getDataSplitDispositivo(getValueSharedPreferences(requireContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent())))
                                 && Ultilitario.getBooleanPreference(requireContext(), "estado_conta") || true) {
-                            MainActivity.getProgressBar();
-                            vendaViewModel.cadastrarVenda(requireContext(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, binding.textDesconto, percDesc, finalQuantidadeProduto, valorBase, referenciaFactura, valorTotalIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
+                            if (getBooleanValue(requireContext(), "notificacao_venda")) {
+                                if (conexaoInternet(requireContext()))
+                                    vendaViewModel.cadastrarVenda(requireContext(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, binding.textDesconto, percDesc, finalQuantidadeProduto, valorBase, referenciaFactura, valorTotalIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
+                            } else
+                                vendaViewModel.cadastrarVenda(requireContext(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, binding.textDesconto, percDesc, finalQuantidadeProduto, valorBase, referenciaFactura, valorTotalIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
                         } else {
                             if (conexaoInternet(requireContext()))
                                 estadoConta(cliente.getImei(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, finalQuantidadeProduto);
