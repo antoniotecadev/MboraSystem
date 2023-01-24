@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Informação de novidades", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Informações do aplicativo", NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Mensagem enviada pela YOGA");
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
