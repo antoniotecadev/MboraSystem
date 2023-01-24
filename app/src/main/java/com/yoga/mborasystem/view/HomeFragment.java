@@ -334,7 +334,7 @@ public class HomeFragment extends Fragment {
                                 } else
                                     showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
                                 MainActivity.dismissProgressBar();
-                                alertDialog(getString(R.string.forma_pagamento), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
+                                alertDialog(getString(R.string.forma_pagamento).replace(":", ""), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
                             } else {
                                 MainActivity.dismissProgressBar();
                                 alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
