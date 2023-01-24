@@ -324,12 +324,13 @@ public class VendaViewModel extends AndroidViewModel {
                             });
                 } else
                     showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.key_fcm_not_exi), R.drawable.ic_toast_erro);
+                MainActivity.dismissProgressBar();
             } else {
+                MainActivity.dismissProgressBar();
                 showToast(getApplication(), Color.rgb(204, 0, 0), task.getException().getMessage(), R.drawable.ic_toast_erro);
             }
 
         });
-        MainActivity.dismissProgressBar();
     }
 
     @SuppressLint("CheckResult")

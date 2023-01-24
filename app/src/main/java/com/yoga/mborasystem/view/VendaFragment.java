@@ -2,13 +2,16 @@ package com.yoga.mborasystem.view;
 
 
 import static com.yoga.mborasystem.util.FormatarDocumento.printPDF;
+import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getBooleanPreference;
+import static com.yoga.mborasystem.util.Ultilitario.getBooleanValue;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
+import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -408,6 +411,20 @@ public class VendaFragment extends Fragment {
                                     Snackbar.make(requireView(), getText(R.string.sem_dvd), Snackbar.LENGTH_LONG).show();
                                 else
                                     caixaDialogo(getString(R.string.liq_div) + " (" + venda.getReferenciaFactura() + ")", getString(R.string.enc_div_vend), true, false, venda);
+                                return false;
+                            });
+                            menu.add(getString(R.string.partilhar) + " " + getString(R.string.venda)).setOnMenuItemClickListener(item -> {
+                                new AlertDialog.Builder(requireContext())
+                                        .setTitle(venda.getReferenciaFactura())
+                                        .setMessage(getString(R.string.avs_con_int_not))
+                                        .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                                        .setPositiveButton(getString(R.string.partilhar), (dialogInterface, i) -> {
+                                            if (getBooleanValue(requireContext(), "notificacao_venda")) {
+                                                if (conexaoInternet(requireContext()))
+                                                    vendaViewModel.partilharResumoVenda(venda);
+                                            } else
+                                                showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.ntfc_vd_desac), R.drawable.ic_toast_erro);
+                                        }).show();
                                 return false;
                             });
                             menu.add(TextUtils.split(venda.getNome_cliente(), "-")[2]).setEnabled(false);
