@@ -488,11 +488,11 @@ public class ClienteViewModel extends AndroidViewModel {
                             bairros.add(parceiro.get("br").getAsString());
                         }
                         if (bairros.getItem(1).isEmpty())
-                            alertDialog(c.getString(R.string.erro), c.getString(R.string.br_na_enc_mun), c, R.drawable.ic_baseline_privacy_tip_24);
+                            showToast(getApplication(), Color.rgb(204, 0, 0), c.getString(R.string.br_na_enc_mun), R.drawable.ic_toast_erro);
                         else
                             Snackbar.make(v, c.getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
                     } catch (Exception ex) {
-                        alertDialog(c.getString(R.string.erro), ex.getMessage(), c, R.drawable.ic_baseline_privacy_tip_24);
+                        showToast(getApplication(), Color.rgb(204, 0, 0), ex.getMessage(), R.drawable.ic_toast_erro);
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
