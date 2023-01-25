@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
+import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getBooleanValue;
 import static com.yoga.mborasystem.util.Ultilitario.getDataEmissao;
 import static com.yoga.mborasystem.util.Ultilitario.getDataSplitDispositivo;
@@ -1171,7 +1172,7 @@ public class FacturaFragment extends Fragment {
     private String mensagem, dispositivo, contactos;
 
     private void estadoConta(String imei, String nomeIDNIFcliente, int quantidadeProduto) {
-        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/" + imei + "/estado";
+        String URL = getAPN(requireActivity()) + "contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
                 .asJsonArray()

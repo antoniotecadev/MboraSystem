@@ -2,7 +2,6 @@ package com.yoga.mborasystem.viewmodel;
 
 import static com.yoga.mborasystem.util.Ultilitario.Existe.NAO;
 import static com.yoga.mborasystem.util.Ultilitario.Existe.SIM;
-import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getAPN;
@@ -332,7 +331,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     private void salvarParceiro(Cliente cliente, Activity activity) {
         FirebaseMessaging messaging = FirebaseMessaging.getInstance();
-        String URL = getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/contacts";
+        String URL = getAPN(getApplication().getApplicationContext()) + "contacts";
         Ion.with(getApplication().getApplicationContext())
                 .load("POST", URL)
                 .setBodyParameter("account_id", "1")
@@ -433,7 +432,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
     public void verificarCodigoEquipa(String codigoEquipa, Cliente cliente, Activity activity) {
         if (conexaoInternet(getApplication().getApplicationContext())) {
-            String URL = getAPN(getApplication().getApplicationContext()) + "/mborasystem-admin/public/api/equipas/" + codigoEquipa + "/verificar";
+            String URL = getAPN(getApplication().getApplicationContext()) + "equipas/" + codigoEquipa + "/verificar";
             Ion.with(getApplication().getApplicationContext())
                     .load(URL)
                     .asJsonArray()
@@ -481,7 +480,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     public ArrayAdapter<String> consultarBairros(Context c, String municipio, View v) {
-        String URL = getAPN(c) + "/mborasystem-admin/public/api/" + municipio.trim().replaceAll("\\s+", "%20") + "/bairros";
+        String URL = getAPN(c) + municipio.trim().replaceAll("\\s+", "%20") + "/bairros";
         ArrayAdapter<String> bairros = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item);
         Ion.with(c)
                 .load(URL)

@@ -4,6 +4,7 @@ import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
+import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
@@ -294,10 +295,10 @@ public class HomeFragment extends Fragment {
                         Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
                         break;
                     case R.id.termosCondicoes:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/termoscondicoes")));
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "termoscondicoes")));
                         break;
                     case R.id.politicaPrivacidade:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/politicaprivacidade")));
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "politicaprivacidade")));
                         break;
                     case R.id.dialogAlterarCodigoPin:
                         bundle.putString("nome", getArguments().getString("nome"));
@@ -441,7 +442,7 @@ public class HomeFragment extends Fragment {
         mapTipoPagamento.put("6", tipo[2]);
         mapTipoPagamento.put("12", tipo[3]);
 
-        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/contacts/" + imei + "/estado";
+        String URL = getAPN(requireActivity()) + "contacts/" + imei + "/estado";
         Ion.with(requireActivity())
                 .load(URL)
                 .asJsonArray()

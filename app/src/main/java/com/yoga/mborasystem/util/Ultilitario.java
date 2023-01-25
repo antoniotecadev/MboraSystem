@@ -103,6 +103,12 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class Ultilitario {
 
+    public static native String baseUrlFromJNI();
+    public static native String tokenFCMFromJNI();
+    static {
+        System.loadLibrary("native-lib");
+    }
+
     private static Float parsed;
     private static Locale pt_AO;
     public static String categoria = "";
@@ -634,7 +640,7 @@ public class Ultilitario {
     public static void storageImageAndProduct(String imei, ImageView imageView, Map<String, String> detalhes, Context context) {
         String filename = UUID.randomUUID().toString();
         StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
-        String URL = getAPN(context) + "/mborasystem-admin/public/api/produtos/mbora/" + imei;
+        String URL = getAPN(context) + "produtos/mbora/" + imei;
         Ion.with(context)
                 .load(URL)
                 .asJsonArray()
@@ -645,7 +651,7 @@ public class Ultilitario {
                         int quantidadeProdutoRegistado = quantidade.get("quantidade_produto").getAsInt();
                         if (quantidadeProdutoRegistado < quantidadeProdutoPacote) {
                             Ion.with(context)
-                                    .load("POST", getAPN(context) + "/mborasystem-admin/public/api/produtos/mbora/store")
+                                    .load("POST", getAPN(context) + "produtos/mbora/store")
                                     .setBodyParameter("imei", imei)
                                     .setBodyParameter("idcategoria", detalhes.get("idcategoria"))
                                     .setBodyParameter("nome", detalhes.get("nome"))
@@ -866,7 +872,7 @@ public class Ultilitario {
 
     public static String getAPN(Context context) {
         String apn = PreferenceManager.getDefaultSharedPreferences(context).getString("apn", "");
-        return apn.isEmpty() ? context.getString(R.string.apn_mborasystem) : apn;
+        return apn.isEmpty() ? baseUrlFromJNI() : apn;
     }
 
     public static boolean getActivarAutenticacaoBiometrica(Context context) {
@@ -1277,7 +1283,7 @@ public class Ultilitario {
 
     public static void acercaMboraSystem(Context context, Activity activity) {
         if (conexaoInternet(context)) {
-            String URL = Ultilitario.getAPN(context) + "/mborasystem-admin/public/api/contacts/contactos";
+            String URL = getAPN(context) + "contacts/contactos";
             Ion.with(activity).load(URL).asJsonArray().setCallback((e, jsonElements) -> {
                 try {
                     JsonObject parceiro = jsonElements.get(0).getAsJsonObject();

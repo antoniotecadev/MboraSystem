@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialogSelectImage;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
+import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
@@ -683,7 +684,7 @@ public class ListProdutoFragment extends Fragment {
             });
 
     private void getCategorias(ArrayAdapter<String> categorias, View view, AppCompatSpinner categoriasSpinner) {
-        String URL = Ultilitario.getAPN(requireActivity()) + "/mborasystem-admin/public/api/categorias/mbora";
+        String URL = getAPN(requireActivity()) + "categorias/mbora";
         Ion.with(requireActivity())
                 .load(URL)
                 .asJsonArray()
