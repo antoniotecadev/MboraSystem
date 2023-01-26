@@ -487,15 +487,15 @@ public class ClienteViewModel extends AndroidViewModel {
                 .asJsonArray()
                 .setCallback((e, jsonElements) -> {
                     try {
-                        bairros.add("");
-                        for (int i = 0; i < jsonElements.size(); i++) {
-                            JsonObject parceiro = jsonElements.get(i).getAsJsonObject();
-                            bairros.add(parceiro.get("br").getAsString());
-                        }
-                        if (bairros.getItem(1).isEmpty())
+                        if (jsonElements.size() > 0) {
+                            bairros.add("");
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                JsonObject br = jsonElements.get(i).getAsJsonObject();
+                                bairros.add(br.get("br").getAsString());
+                            }
+                            showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.br_car), R.drawable.ic_toast_feito);
+                        } else
                             showToast(getApplication(), Color.rgb(204, 0, 0), c.getString(R.string.br_na_enc_mun), R.drawable.ic_toast_erro);
-                        else
-                            Snackbar.make(v, c.getString(R.string.br_car), Snackbar.LENGTH_LONG).show();
                     } catch (Exception ex) {
                         showToast(getApplication(), Color.rgb(204, 0, 0), ex.getMessage(), R.drawable.ic_toast_erro);
                     } finally {
