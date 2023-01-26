@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
+import static com.yoga.mborasystem.util.Ultilitario.getBooleanPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -58,6 +60,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         motivoIsento = findPreference("motivo_isencao");
         ListPreference modEsc = findPreference("mod_esc");
         SwitchPreferenceCompat notificaoVenda = findPreference("notificacao_venda");
+        PreferenceCategory  categoriaNotificacao = findPreference("categoria_notificacao");
 
         if (modEsc != null) {
             modEsc.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -139,6 +142,10 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         }
 
         if (notificaoVenda != null) {
+            if(!getBooleanPreference(requireContext(), "master")){
+                notificaoVenda.setVisible(false);
+                categoriaNotificacao.setVisible(false);
+            }
             notificaoVenda.setOnPreferenceChangeListener((preference, newValue) -> {
                 if (conexaoInternet(requireContext())) {
                     FirebaseMessaging messaging = FirebaseMessaging.getInstance();

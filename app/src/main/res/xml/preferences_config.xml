@@ -13,6 +13,7 @@
         app:useSimpleSummaryProvider="true" />
 
     <PreferenceCategory
+        android:key="categoria_notificacao"
         android:title="@string/notitificacao"
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreferenceCompat
