@@ -261,6 +261,7 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPerfilUrl("");
                         cliente.setToken(getToken());
+                        binding.buttonCriarConta.setEnabled(false);
                         mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful())
                                 errorClienteUser = task.getException().getMessage();

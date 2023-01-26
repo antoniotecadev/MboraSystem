@@ -32,7 +32,7 @@ public class Cliente implements Parcelable {
     private String bairro;
     private String rua;
     private String imei;
-    @Ignore private String token;
+    private String token;
     @Ignore private String id;
     @Ignore private String codigoEquipa;
     @Ignore private String data_cria;
