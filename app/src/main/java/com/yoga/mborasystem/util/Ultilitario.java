@@ -104,7 +104,9 @@ import javax.crypto.spec.PBEKeySpec;
 public class Ultilitario {
 
     public static native String baseUrlFromJNI();
+
     public static native String tokenFCMFromJNI();
+
     static {
         System.loadLibrary("native-lib");
     }
@@ -1348,7 +1350,6 @@ public class Ultilitario {
         if (email.isEmpty())
             Toast.makeText(a, a.getString(R.string.dig_eml), Toast.LENGTH_LONG).show();
         else {
-            MainActivity.getProgressBar();
             FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(a, task -> {
                 if (task.isSuccessful()) {
                     isNewUser = task.getResult().getSignInMethods().isEmpty();
@@ -1359,7 +1360,6 @@ public class Ultilitario {
                         alertDialog(a.getString(R.string.email_invalido), a.getString(R.string.email_invalido_msg), a, R.drawable.ic_baseline_close_24);
                 } else
                     alertDialog(a.getString(R.string.erro), task.getException().getMessage(), a, R.drawable.ic_baseline_privacy_tip_24);
-                MainActivity.dismissProgressBar();
             });
         }
         return isNewUser;
