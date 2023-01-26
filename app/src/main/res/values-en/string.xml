@@ -413,9 +413,6 @@
     <string name="vend_n_rest">Sale not restored.</string>
     <string name="ano">Year</string>
     <string name="arg_null">Null argument</string>
-    <string-array name="provincias">
-        <item>Luanda</item>
-    </string-array>
     <string-array name="quantidade">
         <item>1</item>
         <item>2</item>

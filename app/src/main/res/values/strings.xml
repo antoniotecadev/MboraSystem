@@ -453,7 +453,7 @@
     <string name="brz">Bronze</string>
     <string name="alm">Alumínio</string>
     <string name="oro">Ouro</string>
-    <string-array name="provincias">
+    <string-array translatable="false" name="provincias">
         <item>Luanda</item>
     </string-array>
     <string-array name="municipios">
