@@ -260,7 +260,6 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setCodigoPlus("");
                         cliente.setFotoCapaUrl("");
                         cliente.setFotoPerfilUrl("");
-                        cliente.setToken(getToken());
                         binding.buttonCriarConta.setEnabled(false);
                         mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful())
@@ -273,21 +272,6 @@ public class CadastrarClienteFragment extends Fragment {
                     } else
                         alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 });
-    }
-
-    private String token;
-
-    private String getToken() {
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Fetching FCM registration token failed " + task.getException(), Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    // Get new FCM registration token
-                    token = task.getResult();
-                });
-        return token;
     }
 
     private final ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(

@@ -32,7 +32,6 @@ public class Cliente implements Parcelable {
     private String bairro;
     private String rua;
     private String imei;
-    private String token;
     @Ignore private String id;
     @Ignore private String codigoEquipa;
     @Ignore private String data_cria;
@@ -73,14 +72,6 @@ public class Cliente implements Parcelable {
             return new Cliente[size];
         }
     };
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public long getIdcliente() {
         return idcliente;

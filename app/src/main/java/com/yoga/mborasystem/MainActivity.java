@@ -210,19 +210,20 @@ public class MainActivity extends AppCompatActivity {
          * B) User uninstalls/reinstalls the app
          * C) User clears app data
          */
-        @Override
-        public void onNewToken(@NonNull String token) {
-            // If you want to send messages to this application instance or
-            // manage this apps subscriptions on the server side, send the
-            // FCM registration token to your app server.
-            Map<String, Object> update = new HashMap<>();
-            String imei = getValueSharedPreferences(this, "imei", "0000000000");
-            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
-            update.put("/" + imei + "/token", token);
-            mDatabase.updateChildren(update).addOnCompleteListener(task -> {
-                if (!task.isSuccessful())
-                    alertDialog("Update Token", task.getException().getMessage(), this, R.drawable.ic_baseline_close_24);
-            });
-        }
+
+//        @Override
+//        public void onNewToken(@NonNull String token) {
+//            // If you want to send messages to this application instance or
+//            // manage this apps subscriptions on the server side, send the
+//            // FCM registration token to your app server.
+//            Map<String, Object> update = new HashMap<>();
+//            String imei = getValueSharedPreferences(this, "imei", "0000000000");
+//            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
+//            update.put("/" + imei + "/token", token);
+//            mDatabase.updateChildren(update).addOnCompleteListener(task -> {
+//                if (!task.isSuccessful())
+//                    alertDialog("Update Token", task.getException().getMessage(), this, R.drawable.ic_baseline_close_24);
+//            });
+//        }
     }
 }
