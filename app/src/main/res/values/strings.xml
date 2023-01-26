@@ -454,7 +454,25 @@
     <string name="alm">Alumínio</string>
     <string name="oro">Ouro</string>
     <string-array translatable="false" name="provincias">
+        <item> </item>
+        <item>Bengo</item>
+        <item>Benguela</item>
+        <item>Bié</item>
+        <item>Cabinda</item>
+        <item>Cuando Cubango</item>
+        <item>Cunene</item>
+        <item>Huambo</item>
+        <item>Huíla</item>
+        <item>Kwanza Norte</item>
+        <item>Kwanza Sul</item>
         <item>Luanda</item>
+        <item>Lunda Norte</item>
+        <item>Lunda Sul</item>
+        <item>Malanje</item>
+        <item>Moxico</item>
+        <item>Namibe</item>
+        <item>Uíge</item>
+        <item>Zaire</item>
     </string-array>
     <string-array name="municipios">
         <item> </item>
@@ -762,6 +780,8 @@
     <string name="rsm_vd_part">Resumo de venda partilhada</string>
     <string name="avs_con_int_not">O resumo das vendas serão partilhadas via internet após venda com um outro dispositivo, onde a sua conta MboraSystem estiver configurada. Se não estiver conectado a internet as vendas não serão efectuadas, a não ser que desactive a notificação de venda.</string>
     <string name="key_fcm_not_exi">Chave do FCM não encotrado</string>
+    <string name="mc_na_enc_pv">Municípios não encotrados nesta província.</string>
+    <string name="mc_car">Municípios carregados</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

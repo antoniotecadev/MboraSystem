@@ -506,6 +506,34 @@ public class ClienteViewModel extends AndroidViewModel {
         return bairros;
     }
 
+    public ArrayAdapter<String> consultarMunicipios(Context c, String provincia) {
+        String URL = getAPN(c) + provincia.trim().replaceAll("\\s+", "%20") + "/municipios";
+        ArrayAdapter<String> municipios = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item);
+        municipios.clear();
+        Ion.with(c)
+                .load(URL)
+                .asJsonArray()
+                .setCallback((e, jsonElements) -> {
+                    try {
+                        if (jsonElements.size() > 0) {
+                            municipios.add("");
+                            for (int i = 0; i < jsonElements.size(); i++) {
+                                JsonObject mc = jsonElements.get(i).getAsJsonObject();
+                                municipios.add(mc.get("mc").getAsString());
+                            }
+                            showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.mc_car), R.drawable.ic_toast_feito);
+                        } else
+                            showToast(getApplication(), Color.rgb(204, 0, 0), c.getString(R.string.mc_na_enc_pv), R.drawable.ic_toast_erro);
+                    } catch (Exception ex) {
+                        showToast(getApplication(), Color.rgb(204, 0, 0), ex.getMessage(), R.drawable.ic_toast_erro);
+                    } finally {
+                        MainActivity.dismissProgressBar();
+                    }
+                });
+        municipios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return municipios;
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();

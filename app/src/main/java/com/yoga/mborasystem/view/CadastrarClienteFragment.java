@@ -91,9 +91,23 @@ public class CadastrarClienteFragment extends Fragment {
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
-        Ultilitario.spinnerMunicipios(requireContext(), binding.spinnerMunicipios);
 
         binding.buttonVerificarEmail.setOnClickListener(view -> verificarEmail(requireActivity(), binding.editTextEmail.getText().toString(), false));
+
+        binding.spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (conexaoInternet(requireContext()))
+                    if (!parent.getItemAtPosition(position).toString().isEmpty()) {
+                        binding.spinnerMunicipios.setAdapter(clienteViewModel.consultarMunicipios(requireContext(), parent.getItemAtPosition(position).toString()));
+                    } else
+                        MainActivity.dismissProgressBar();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
