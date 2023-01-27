@@ -2,7 +2,6 @@ package com.yoga.mborasystem.caixadialogo;
 
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
-import static com.yoga.mborasystem.util.Ultilitario.verificarEmail;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -98,7 +97,6 @@ public class DialogAlterarCliente extends DialogFragment {
                 Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        binding.buttonVerificarEmail.setOnClickListener(view -> verificarEmail(requireActivity(), binding.editTextEmail.getText().toString(), false));
         return dialog;
     }
 

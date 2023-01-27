@@ -1345,23 +1345,4 @@ public class Ultilitario {
         }
         return false;
     }
-
-    public static boolean verificarEmail(Activity a, String email, boolean isCadastroActualizar) {
-        if (email.isEmpty())
-            Toast.makeText(a, a.getString(R.string.dig_eml), Toast.LENGTH_LONG).show();
-        else {
-            FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(a, task -> {
-                if (task.isSuccessful()) {
-                    isNewUser = task.getResult().getSignInMethods().isEmpty();
-                    if (isNewUser) {
-                        if (!isCadastroActualizar)
-                            alertDialog(a.getString(R.string.email_valido), a.getString(R.string.email_valido_msg), a, R.drawable.ic_baseline_done_24);
-                    } else
-                        alertDialog(a.getString(R.string.email_invalido), a.getString(R.string.email_invalido_msg), a, R.drawable.ic_baseline_close_24);
-                } else
-                    alertDialog(a.getString(R.string.erro), task.getException().getMessage(), a, R.drawable.ic_baseline_privacy_tip_24);
-            });
-        }
-        return isNewUser;
-    }
 }

@@ -9,7 +9,6 @@ import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
-import static com.yoga.mborasystem.util.Ultilitario.verificarEmail;
 
 import android.Manifest;
 import android.app.Activity;
@@ -30,7 +29,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -90,8 +88,6 @@ public class CadastrarClienteFragment extends Fragment {
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
-
-        binding.buttonVerificarEmail.setOnClickListener(view -> verificarEmail(requireActivity(), binding.editTextEmail.getText().toString(), false));
 
         binding.spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
