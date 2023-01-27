@@ -60,7 +60,17 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         motivoIsento = findPreference("motivo_isencao");
         ListPreference modEsc = findPreference("mod_esc");
         SwitchPreferenceCompat notificaoVenda = findPreference("notificacao_venda");
+        SwitchPreferenceCompat atalhoFacturacao = findPreference("atalfact");
         PreferenceCategory  categoriaNotificacao = findPreference("categoria_notificacao");
+        PreferenceCategory  categoriaAutenticacao = findPreference("categoria_autenticacao");
+        PreferenceCategory  categoriaDadosComerciais = findPreference("categoria_dados_comerciais");
+
+        if(!getBooleanPreference(requireContext(), "master")){
+            atalhoFacturacao.setVisible(false);
+            categoriaNotificacao.setVisible(false);
+            categoriaAutenticacao.setVisible(false);
+            categoriaDadosComerciais.setVisible(false);
+        }
 
         if (modEsc != null) {
             modEsc.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -142,10 +152,6 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         }
 
         if (notificaoVenda != null) {
-            if(!getBooleanPreference(requireContext(), "master")){
-                notificaoVenda.setVisible(false);
-                categoriaNotificacao.setVisible(false);
-            }
             notificaoVenda.setOnPreferenceChangeListener((preference, newValue) -> {
                 if (conexaoInternet(requireContext())) {
                     FirebaseMessaging messaging = FirebaseMessaging.getInstance();

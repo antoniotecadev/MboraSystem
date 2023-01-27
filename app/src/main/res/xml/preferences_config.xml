@@ -64,6 +64,7 @@
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory
+        android:key="categoria_autenticacao"
         android:title="@string/aut"
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreferenceCompat
@@ -91,6 +92,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="categoria_dados_comerciais"
         android:title="@string/dds_cmc"
         tools:ignore="TouchTargetSizeCheck">
         <EditTextPreference
