@@ -14,7 +14,6 @@ import static com.yoga.mborasystem.util.Ultilitario.setValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.setValueUsuarioMaster;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 import static com.yoga.mborasystem.util.Ultilitario.validateSenhaPin;
-import static com.yoga.mborasystem.util.Ultilitario.verificarEmail;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,7 +34,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.messaging.FirebaseMessaging;
