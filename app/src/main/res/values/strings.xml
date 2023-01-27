@@ -782,6 +782,7 @@
     <string name="key_fcm_not_exi">Chave do FCM não encotrado</string>
     <string name="mc_na_enc_pv">Municípios não encotrados nesta província.</string>
     <string name="mc_car">Municípios carregados</string>
+    <string name="provincia_invalida">Província não é válida</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>

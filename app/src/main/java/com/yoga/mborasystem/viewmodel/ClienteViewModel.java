@@ -143,6 +143,8 @@ public class ClienteViewModel extends AndroidViewModel {
         else if (nomeEmpresa.length() < 4) {
             nomeEmpresa.requestFocus();
             nomeEmpresa.setError(getApplication().getString(R.string.nome_curto));
+        } else if (isCampoVazio(Objects.requireNonNull(provincia.getSelectedItem().toString()))) {
+            showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.provincia_invalida), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(municipio.getSelectedItem().toString()))) {
             showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.municipio_invalido), R.drawable.ic_toast_erro);
         } else if (isCampoVazio(Objects.requireNonNull(bairro.getText()).toString()) || letraNumero.matcher(bairro.getText().toString()).find()) {
