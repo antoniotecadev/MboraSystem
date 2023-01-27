@@ -50,7 +50,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.databinding.FragmentCadastrarClienteBinding;
@@ -226,13 +225,7 @@ public class CadastrarClienteFragment extends Fragment {
 
                 getViewLifecycleOwner());
 
-        requireActivity().
-
-                getOnBackPressedDispatcher().
-
-                addCallback(getViewLifecycleOwner(), Ultilitario.
-
-                        sairApp(getActivity(), getContext()));
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), Ultilitario.sairApp(getActivity(), getContext()));
         return binding.getRoot();
     }
 
@@ -241,11 +234,26 @@ public class CadastrarClienteFragment extends Fragment {
     }
 
     private void cadastrarParceiro() {
-        try {
-            imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
-            clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei, getRegimeIva(), requireActivity());
-        } catch (Exception e) {
-            Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+        if (binding.editTextEmail.getText().toString().isEmpty()) {
+            binding.editTextEmail.requestFocus();
+            binding.editTextEmail.setError(requireContext().getString(R.string.dig_eml));
+        } else {
+            FirebaseAuth.getInstance().fetchSignInMethodsForEmail(binding.editTextEmail.getText().toString()).addOnCompleteListener(requireActivity(), task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().getSignInMethods().isEmpty()) {
+                        try {
+                            imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
+                            clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei, getRegimeIva(), requireActivity());
+                        } catch (Exception e) {
+                            alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                    } else {
+                        binding.editTextEmail.requestFocus();
+                        binding.editTextEmail.setError(requireContext().getString(R.string.email_invalido_msg));
+                    }
+                } else
+                    alertDialog(requireContext().getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            });
         }
     }
 
