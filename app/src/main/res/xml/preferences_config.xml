@@ -24,6 +24,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="categoria_localizacao"
+        android:title="@string/localizacao"
+        tools:ignore="TouchTargetSizeCheck">
+        <SwitchPreferenceCompat
+            android:key="localizacao_empresa"
+            android:title="@string/lcz_act_mbr"
+            app:icon="@drawable/ic_baseline_add_location_24"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/fctrc"
         tools:ignore="TouchTargetSizeCheck">
         <SwitchPreferenceCompat

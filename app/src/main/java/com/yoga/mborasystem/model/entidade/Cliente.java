@@ -35,8 +35,6 @@ public class Cliente implements Parcelable {
     @Ignore private String id;
     @Ignore private String codigoEquipa;
     @Ignore private String data_cria;
-    @Ignore private String latitude;
-    @Ignore private String longitude;
     @Ignore private String uid;
     @Ignore private String fotoPerfilUrl;
     @Ignore private String fotoCapaUrl;
@@ -207,22 +205,6 @@ public class Cliente implements Parcelable {
 
     public void setData_cria(String data_cria) {
         this.data_cria = data_cria;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
     }
 
     public String getUid() {

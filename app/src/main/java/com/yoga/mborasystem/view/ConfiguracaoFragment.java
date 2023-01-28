@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.MainActivity.dismissProgressBar;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getBooleanPreference;
@@ -7,10 +8,15 @@ import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,8 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -28,25 +37,35 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationTokenSource;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.repository.UsuarioRepository;
 import com.yoga.mborasystem.util.Ultilitario;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 
 public class ConfiguracaoFragment extends PreferenceFragmentCompat {
 
+    private boolean isDone;
     private String codigoIdioma;
     private ListPreference motivoIsento;
+    private CancellationTokenSource cancellationTokenSource;
 
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         view.setBackgroundColor(getResources().getColor(R.color.backgroundColor));
+        cancellationTokenSource = new CancellationTokenSource();
         return view;
     }
 
@@ -54,6 +73,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_config, rootKey);
         SwitchPreferenceCompat bloAut = findPreference("bloaut");
+        SwitchPreferenceCompat localizacaoEmpresa = findPreference("localizacao_empresa");
         EditTextPreference pin = findPreference("pinadmin");
         ListPreference listaIdioma = findPreference("lista_idioma");
         ListPreference taxaIva = findPreference("taxa_iva");
@@ -61,15 +81,21 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
         ListPreference modEsc = findPreference("mod_esc");
         SwitchPreferenceCompat notificaoVenda = findPreference("notificacao_venda");
         SwitchPreferenceCompat atalhoFacturacao = findPreference("atalfact");
-        PreferenceCategory  categoriaNotificacao = findPreference("categoria_notificacao");
-        PreferenceCategory  categoriaAutenticacao = findPreference("categoria_autenticacao");
-        PreferenceCategory  categoriaDadosComerciais = findPreference("categoria_dados_comerciais");
+        PreferenceCategory categoriaNotificacao = findPreference("categoria_notificacao");
+        PreferenceCategory categoriaLocalizacao = findPreference("categoria_localizacao");
+        PreferenceCategory categoriaAutenticacao = findPreference("categoria_autenticacao");
+        PreferenceCategory categoriaDadosComerciais = findPreference("categoria_dados_comerciais");
 
-        if(!getBooleanPreference(requireContext(), "master")){
-            atalhoFacturacao.setVisible(false);
-            categoriaNotificacao.setVisible(false);
-            categoriaAutenticacao.setVisible(false);
-            categoriaDadosComerciais.setVisible(false);
+        if (!getBooleanPreference(requireContext(), "master")) {
+            try {
+                atalhoFacturacao.setVisible(false);
+                categoriaNotificacao.setVisible(false);
+                categoriaLocalizacao.setVisible(false);
+                categoriaAutenticacao.setVisible(false);
+                categoriaDadosComerciais.setVisible(false);
+            } catch (NullPointerException e) {
+                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
 
         if (modEsc != null) {
@@ -89,6 +115,30 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
                 if (!bloAut.isChecked())
                     alertDialog(getString(R.string.avs), getString(R.string.bloaut_msg), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 return true;
+            });
+        }
+
+        if (localizacaoEmpresa != null) {
+            localizacaoEmpresa.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (!localizacaoEmpresa.isChecked()) {
+                    new AlertDialog.Builder(requireContext())
+                            .setIcon(R.drawable.ic_baseline_add_location_24)
+                            .setTitle(getString(R.string.localizacao))
+                            .setMessage(getString(R.string.msg_lcz_act_mbr))
+                            .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                            .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                LocationManager service = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+                                if (service.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                                    locationPermissionRequest.launch(new String[]{
+                                            Manifest.permission.ACCESS_FINE_LOCATION,
+                                            Manifest.permission.ACCESS_COARSE_LOCATION
+                                    });
+                                else
+                                    requireActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }).show();
+                } else
+                    updateLatitudeLongitude(0, 0);
+                return isDone;
             });
         }
 
@@ -174,7 +224,7 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
                         alertDialog(getString(R.string.erro), getString(R.string.imei_n_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         return false;
                     }
-                    MainActivity.dismissProgressBar();
+                    dismissProgressBar();
                 } else
                     return false;
                 return true;
@@ -184,5 +234,61 @@ public class ConfiguracaoFragment extends PreferenceFragmentCompat {
 
     private void desabilitarMotivoIsencao(String taxa, ListPreference motivoIsento) {
         motivoIsento.setEnabled(taxa.equals("0"));
+    }
+
+    private void usarLocalizacaoActual() {
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken())
+                .addOnSuccessListener(location -> updateLatitudeLongitude(location.getLatitude(), location.getLongitude())).addOnFailureListener(exception -> {
+                    isDone = false;
+                    dismissProgressBar();
+                    alertDialog(getString(R.string.erro), exception.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                });
+    }
+
+    private void updateLatitudeLongitude(double latitude, double longitude) {
+        String imei = getValueSharedPreferences(requireContext(), "imei", "");
+        if (imei.isEmpty()) {
+            isDone = false;
+            dismissProgressBar();
+            showToast(requireContext(), Color.rgb(204, 0, 0), requireContext().getString(R.string.imei_n_enc), R.drawable.ic_toast_erro);
+        } else {
+            if (conexaoInternet(requireContext())) {
+                Map<String, Object> update = new HashMap<>();
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
+                update.put("/" + imei + "/latitude", latitude);
+                update.put("/" + imei + "/longitude", longitude);
+                mDatabase.updateChildren(update).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        isDone = true;
+                        alertDialog(getString(R.string.lcz_def), getString(R.string.lttd) + ": " + latitude + "\n" + getString(R.string.lgtd) + ": " + longitude, requireContext(), R.drawable.ic_baseline_done_24);
+                    } else {
+                        isDone = false;
+                        alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    }
+                });
+            }
+        }
+    }
+
+    ActivityResultLauncher<String[]> locationPermissionRequest =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                        Boolean fineLocationGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
+                        Boolean coarseLocationGranted = result.get(Manifest.permission.ACCESS_COARSE_LOCATION);
+                        if (fineLocationGranted != null && fineLocationGranted)
+                            usarLocalizacaoActual();
+                        else if (coarseLocationGranted != null && coarseLocationGranted)
+                            usarLocalizacaoActual();
+                        else {
+                            isDone = false;
+                            alertDialog(getString(R.string.erro), getString(R.string.sm_perm_loc_n_pod_cri), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                    }
+            );
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        cancellationTokenSource.cancel();
     }
 }

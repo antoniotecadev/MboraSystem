@@ -12,15 +12,12 @@ import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,10 +37,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -68,16 +61,12 @@ public class CadastrarClienteFragment extends Fragment {
     private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
     private String errorClienteUser = "", imei, uriPath;
-    private CancellationTokenSource cancellationTokenSource;
-    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
-        cancellationTokenSource = new CancellationTokenSource();
         clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
     }
 
     @Override
@@ -130,16 +119,7 @@ public class CadastrarClienteFragment extends Fragment {
             }
         });
 
-        binding.buttonCriarConta.setOnClickListener(v -> {
-            LocationManager service = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-            if (service.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                locationPermissionRequest.launch(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                });
-            else
-                requireActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-        });
+        binding.buttonCriarConta.setOnClickListener(v -> cadastrarParceiro());
         binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "termoscondicoes"))));
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
@@ -259,11 +239,6 @@ public class CadastrarClienteFragment extends Fragment {
                     Cliente cliente = new Cliente();
                     if (task.isSuccessful()) {
                         String uid = task.getResult().getUser().getUid();
-                        fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken())
-                                .addOnSuccessListener(location -> {
-                                    cliente.setLatitude(String.valueOf(location.getLatitude()));
-                                    cliente.setLongitude(String.valueOf(location.getLongitude()));
-                                }).addOnFailureListener(exception -> Ultilitario.alertDialog(getString(R.string.erro), exception.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24));
                         cliente.setId("");
                         cliente.setUid(uid);
                         cliente.setImei(imei);
@@ -326,23 +301,9 @@ public class CadastrarClienteFragment extends Fragment {
                 }
             });
 
-    ActivityResultLauncher<String[]> locationPermissionRequest =
-            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                        Boolean fineLocationGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
-                        Boolean coarseLocationGranted = result.get(Manifest.permission.ACCESS_COARSE_LOCATION);
-                        if (fineLocationGranted != null && fineLocationGranted)
-                            cadastrarParceiro();
-                        else if (coarseLocationGranted != null && coarseLocationGranted)
-                            cadastrarParceiro();
-                        else
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_loc_n_pod_cri), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                    }
-            );
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        cancellationTokenSource.cancel();
     }
 }

@@ -783,6 +783,12 @@
     <string name="mc_na_enc_pv">Municípios não encotrados nesta província.</string>
     <string name="mc_car">Municípios carregados</string>
     <string name="provincia_invalida">Província não é válida</string>
+    <string name="localizacao">Localização</string>
+    <string name="lcz_act_mbr">Localização actual no Mbora</string>
+    <string name="msg_lcz_act_mbr">Definir a localização actual do dispositivo como a localização da empresa no aplicativo Mbora.</string>
+    <string name="lcz_def">Localização definida</string>
+    <string name="lttd">Latitude</string>
+    <string name="lgtd">Longitude</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
