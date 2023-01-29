@@ -65,7 +65,6 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     Pattern numero = Pattern.compile("[^0-9]");
-    Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9- ]");
 
     private boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
@@ -87,7 +86,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, String tipo, AppCompatSpinner unidade, String codigoMotivoIsecao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer taxaIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, Boolean continuar, long idcategoria) {
-        if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
+        if (isCampoVazio(nome.getText().toString()) || Ultilitario.letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
         } else if (isCampoVazio(Objects.requireNonNull(precofornecedor.getText()).toString())) {
@@ -279,7 +278,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoFiltro(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
@@ -304,7 +303,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNome(long idcat, TextInputEditText idprodnome, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else {
@@ -353,7 +352,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomeCodBarPreco(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, TextInputEditText precoMin, TextInputEditText precoMax, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
@@ -377,7 +376,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomePrecoEstado(long idcat, TextInputEditText idprodnome, TextInputEditText precoMin, TextInputEditText precoMax, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
@@ -398,7 +397,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomeCodBarEstado(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
@@ -436,7 +435,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomePreco(long idcat, TextInputEditText idprodnome, TextInputEditText precoMin, TextInputEditText precoMax, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else if (isCampoVazio(Objects.requireNonNull(precoMin.getText()).toString())) {
@@ -456,7 +455,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomeCodBar(long idcat, TextInputEditText idprodnome, TextInputEditText codigoBar, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else if (isCampoVazio(Objects.requireNonNull(codigoBar.getText()).toString()) || numero.matcher(codigoBar.getText().toString()).find()) {
@@ -472,7 +471,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProdutoNomeEstado(long idcat, TextInputEditText idprodnome, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estadoProd, AlertDialog dialog) {
         if (isCampoVazio(String.valueOf(idcat)))
             Ultilitario.showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.id_categoria_vazio), R.drawable.ic_toast_erro);
-        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || letraNumero.matcher(idprodnome.getText().toString()).find()) {
+        else if (isCampoVazio(Objects.requireNonNull(idprodnome.getText()).toString()) || Ultilitario.letraNumero.matcher(idprodnome.getText().toString()).find()) {
             idprodnome.requestFocus();
             idprodnome.setError(getApplication().getString(R.string.nome_referencia_invalida));
         } else {
