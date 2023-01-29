@@ -65,7 +65,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     }
 
     Pattern numero = Pattern.compile("[^0-9]");
-    Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9-/,()&%@ ]");
+    Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9- ]");
 
     private boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
