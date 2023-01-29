@@ -15,7 +15,9 @@ import com.yoga.mborasystem.model.entidade.Categoria;
 import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.rxjava3.core.Maybe;
 
@@ -82,16 +84,21 @@ public class CategoriaRepository {
 
     public void importarCategorias(List<String> categorias, Context context, Handler handler, AlertDialog dialog) {
 
-        Categoria categoria = new Categoria();
+        Categoria ct = new Categoria();
         try {
-            for (String ct : categorias) {
-                String[] cat = ct.split(",");
-                categoria.setId(0);
-                categoria.setCategoria(cat[0]);
-                categoria.setDescricao(cat[1]);
-                categoria.setEstado(Integer.parseInt(cat[2]));
-                categoria.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
-                categoriaDao.insert(categoria);
+            Map<Long, String> categoriaList = new HashMap<>();
+            for (Categoria categoria : categoriaDao.getCategoriaExport())
+                categoriaList.put(categoria.getId(), categoria.getCategoria());
+            for (String ctr : categorias) {
+                String[] cat = ctr.split(",");
+                if (!categoriaList.containsValue(cat[0])) {
+                    ct.setId(0);
+                    ct.setCategoria(cat[0]);
+                    ct.setDescricao(cat[1]);
+                    ct.setEstado(Integer.parseInt(cat[2]));
+                    ct.setData_cria(Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent()));
+                    categoriaDao.insert(ct);
+                }
             }
             dialog.dismiss();
             handler.post(() -> Ultilitario.showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.cats_impo), R.drawable.ic_toast_feito));

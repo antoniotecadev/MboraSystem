@@ -19,6 +19,9 @@ public interface CategoriaDao {
     @Insert
     void insert(Categoria categoria);
 
+    @Query("SELECT * FROM categorias ORDER BY id DESC")
+    List<Categoria> getCategoriaExport() throws Exception;
+
     @Query("UPDATE categorias SET categoria = :nome, descricao = :desc, estado = :est, data_modifica = :data WHERE id = :id")
     void update(String nome, String desc, int est, String data, long id);
 
