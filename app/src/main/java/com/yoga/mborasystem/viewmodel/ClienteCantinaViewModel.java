@@ -122,7 +122,7 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         if (!isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) && ((this.nif.matcher(Objects.requireNonNull(nif.getText()).toString()).find()) || Objects.requireNonNull(nif.getText()).toString().length() > 14 || Objects.requireNonNull(nif.getText()).toString().length() < 10)) {
             nif.requestFocus();
             nif.setError(getApplication().getString(R.string.nifbi_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
-        } else if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letraNumero.matcher(nomeCliente.getText().toString()).find()) {
+        } else if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
             nomeCliente.requestFocus();
             nomeCliente.setError(getApplication().getString(R.string.nome_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
         } else if (numero.matcher(telefone.getText().toString()).find() || (!isCampoVazio(Objects.requireNonNull(telefone.getText()).toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
