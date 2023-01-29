@@ -471,6 +471,7 @@ public class HomeFragment extends Fragment {
                             sb.append(getString(R.string.Numero_Telefone_Alternativo).replace("*", ": ")).append(parceiro.get("alternative_phone").getAsString()).append("\n");
                             sb.append(getString(R.string.Email).replace("*", ": ")).append(parceiro.get("email").getAsString()).append("\n");
                             sb.append(getString(R.string.empresa).replace("*", ": ")).append(parceiro.get("empresa").getAsString()).append("\n");
+                            sb.append(getString(R.string.provincia).replace("*", ": ")).append(parceiro.get("provincia").getAsString()).append("\n");
                             sb.append(getString(R.string.municipio).replace("*", ": ")).append(parceiro.get("municipality").getAsString()).append("\n");
                             sb.append(getString(R.string.bairro).replace("*", ": ")).append(parceiro.get("district").getAsString()).append("\n");
                             sb.append(getString(R.string.rua).replace("*", ": ")).append(parceiro.get("street").getAsString()).append("\n");
