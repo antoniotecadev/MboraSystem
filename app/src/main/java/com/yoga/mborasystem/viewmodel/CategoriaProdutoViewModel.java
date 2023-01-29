@@ -31,7 +31,6 @@ import com.yoga.mborasystem.util.Ultilitario;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import autodispose2.AutoDispose;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
@@ -62,8 +61,6 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
         categoriaRepository = new CategoriaRepository(application);
     }
 
-    Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-Û0-9- ]");
-
     private MutableLiveData<PagingData<Categoria>> listaCategorias;
 
     public MutableLiveData<PagingData<Categoria>> getListaCategorias() {
@@ -85,10 +82,10 @@ public class CategoriaProdutoViewModel extends AndroidViewModel {
     }
 
     public void validarCategoria(Ultilitario.Operacao operacao, EditText nome, EditText descricao, SwitchMaterial estado, AlertDialog dialog, long idcategoria) {
-        if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
+        if (isCampoVazio(nome.getText().toString()) || Ultilitario.letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.nome_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
-        } else if (letraNumero.matcher(descricao.getText().toString()).find()) {
+        } else if (Ultilitario.letraNumero.matcher(descricao.getText().toString()).find()) {
             nome.requestFocus();
             nome.setError(getApplication().getString(R.string.descricao_invalida) + ", " + getApplication().getString(R.string.evt_crt_esp));
         } else {
