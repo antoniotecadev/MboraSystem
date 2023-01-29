@@ -66,6 +66,8 @@ public class DialogAlterarCliente extends DialogFragment {
 
             Cliente cliente = getArguments().getParcelable("cliente");
 
+            clienteViewModel.getMunicipios(binding.spinnerProvincias, binding.spinnerMunicipios);
+
             binding.editTextNome.setText(cliente.getNome());
             binding.editTextSobreNome.setText(cliente.getSobrenome());
             binding.editTextNif.setText(cliente.getNifbi());

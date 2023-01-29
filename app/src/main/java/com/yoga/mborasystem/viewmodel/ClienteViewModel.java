@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -505,7 +506,7 @@ public class ClienteViewModel extends AndroidViewModel {
         return bairros;
     }
 
-    public ArrayAdapter<String> consultarMunicipios(Context c, String provincia) {
+    private ArrayAdapter<String> consultarMunicipios(Context c, String provincia) {
         String URL = getAPN(c) + provincia.trim().replaceAll("\\s+", "%20") + "/municipios";
         ArrayAdapter<String> municipios = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item);
         municipios.clear();
@@ -531,6 +532,25 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
         municipios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return municipios;
+    }
+
+
+    public void getMunicipios(AppCompatSpinner spinnerProvincias, AppCompatSpinner spinnerMunicipios) {
+        final int[] count = {0};
+        spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                count[0] += 1;
+                if (!parent.getItemAtPosition(position).toString().isEmpty() && count[0] > 1) {
+                    if (conexaoInternet(getApplication()))
+                        spinnerMunicipios.setAdapter(consultarMunicipios(getApplication(), parent.getItemAtPosition(position).toString()));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     @Override

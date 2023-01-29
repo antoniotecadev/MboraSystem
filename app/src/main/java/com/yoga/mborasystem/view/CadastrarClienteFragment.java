@@ -9,6 +9,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
+import static com.yoga.mborasystem.util.Ultilitario.spinnerProvincias;
 
 import android.Manifest;
 import android.app.Activity;
@@ -76,23 +77,8 @@ public class CadastrarClienteFragment extends Fragment {
 
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
-        Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
-
-        binding.spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (conexaoInternet(requireContext()))
-                    if (!parent.getItemAtPosition(position).toString().isEmpty()) {
-                        binding.spinnerMunicipios.setAdapter(clienteViewModel.consultarMunicipios(requireContext(), parent.getItemAtPosition(position).toString()));
-                    } else
-                        MainActivity.dismissProgressBar();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
+        spinnerProvincias(requireContext(), binding.spinnerProvincias);
+        clienteViewModel.getMunicipios(binding.spinnerProvincias, binding.spinnerMunicipios);
         binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
