@@ -89,7 +89,7 @@ public class ProdutoViewModel extends AndroidViewModel {
     public void validarProduto(Ultilitario.Operacao operacao, long id, EditText nome, String tipo, AppCompatSpinner unidade, String codigoMotivoIsecao, TextInputEditText preco, TextInputEditText precofornecedor, EditText quantidade, EditText codigoBarra, MaterialCheckBox checkIva, Integer taxaIva, @SuppressLint("UseSwitchCompatOrMaterialCode") SwitchCompat estado, SwitchCompat stock, AlertDialog dialog, Boolean continuar, long idcategoria) {
         if (isCampoVazio(nome.getText().toString()) || letraNumero.matcher(nome.getText().toString()).find()) {
             nome.requestFocus();
-            nome.setError(getApplication().getString(R.string.nome_invalido));
+            nome.setError(getApplication().getString(R.string.nome_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
         } else if (isCampoVazio(Objects.requireNonNull(precofornecedor.getText()).toString())) {
             precofornecedor.requestFocus();
             precofornecedor.setError(getApplication().getString(R.string.preco_invalido));
