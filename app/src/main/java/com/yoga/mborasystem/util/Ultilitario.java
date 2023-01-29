@@ -1104,7 +1104,7 @@ public class Ultilitario {
     }
 
     public static void spinnerMunicipios(Context context, AppCompatSpinner municipios, String municipio) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, new String[]{municipio});
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, new String[]{municipio});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         municipios.setAdapter(adapter);
     }

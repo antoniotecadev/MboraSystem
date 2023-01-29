@@ -541,7 +541,10 @@ public class ClienteViewModel extends AndroidViewModel {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 count[0] += 1;
-                if (!parent.getItemAtPosition(position).toString().isEmpty() && count[0] > 1) {
+                boolean isEmpty = parent.getItemAtPosition(position).toString().isEmpty();
+                if (isEmpty)
+                    spinnerMunicipios.setAdapter(new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_item, new String[]{""}));
+                else if (count[0] > 1) {
                     if (conexaoInternet(getApplication()))
                         spinnerMunicipios.setAdapter(consultarMunicipios(getApplication(), parent.getItemAtPosition(position).toString()));
                 }
