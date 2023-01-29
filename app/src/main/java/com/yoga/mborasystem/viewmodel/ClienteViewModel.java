@@ -479,7 +479,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
     }
 
-    public ArrayAdapter<String> consultarBairros(Context c, String municipio, View v) {
+    private ArrayAdapter<String> consultarBairros(Context c, String municipio) {
         String URL = getAPN(c) + municipio.trim().replaceAll("\\s+", "%20") + "/bairros";
         ArrayAdapter<String> bairros = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item);
         Ion.with(c)
@@ -547,6 +547,24 @@ public class ClienteViewModel extends AndroidViewModel {
                 else if (count[0] > 1) {
                     if (conexaoInternet(getApplication()))
                         spinnerMunicipios.setAdapter(consultarMunicipios(getApplication(), parent.getItemAtPosition(position).toString()));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    public void getBairros(AppCompatSpinner spinnerMunicipios, AppCompatSpinner spinnerBairros) {
+        spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).toString().isEmpty())
+                    spinnerBairros.setAdapter(new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_item, new String[]{""}));
+                else {
+                    if (conexaoInternet(getApplication()))
+                        spinnerBairros.setAdapter(consultarBairros(getApplication(), parent.getItemAtPosition(position).toString()));
                 }
             }
 

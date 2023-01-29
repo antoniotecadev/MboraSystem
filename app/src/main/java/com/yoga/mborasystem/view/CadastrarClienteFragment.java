@@ -79,20 +79,7 @@ public class CadastrarClienteFragment extends Fragment {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         spinnerProvincias(requireContext(), binding.spinnerProvincias);
         clienteViewModel.getMunicipios(binding.spinnerProvincias, binding.spinnerMunicipios);
-        binding.spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (conexaoInternet(requireContext()))
-                    if (!parent.getItemAtPosition(position).toString().isEmpty()) {
-                        binding.spinnerBairros.setAdapter(clienteViewModel.consultarBairros(requireContext(), parent.getItemAtPosition(position).toString(), requireView()));
-                    } else
-                        MainActivity.dismissProgressBar();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        clienteViewModel.getBairros(binding.spinnerMunicipios, binding.spinnerBairros);
 
         binding.spinnerBairros.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
