@@ -3,6 +3,8 @@ package com.yoga.mborasystem.caixadialogo;
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.setItemselectedSpinner;
+import static com.yoga.mborasystem.util.Ultilitario.spinnerMunicipios;
+import static com.yoga.mborasystem.util.Ultilitario.spinnerProvincias;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -43,8 +45,7 @@ public class DialogAlterarCliente extends DialogFragment {
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
 
-        Ultilitario.spinnerProvincias(requireContext(), binding.spinnerProvincias);
-        Ultilitario.spinnerMunicipios(requireContext(), binding.spinnerMunicipios);
+        spinnerProvincias(requireContext(), binding.spinnerProvincias);
         setItemselectedSpinner(requireContext(), R.array.array_regime_iva_posicao, getValueSharedPreferences(requireContext(), "regime_iva", "0"), binding.spinnerRegimeIva);
 
         binding.buttonTermoCondicao.setVisibility(View.GONE);
@@ -75,6 +76,7 @@ public class DialogAlterarCliente extends DialogFragment {
             binding.editTextBairro.setText(cliente.getBairro());
 
             setItemselectedSpinner(requireContext(), R.array.provincias, cliente.getProvincia(), binding.spinnerProvincias);
+            spinnerMunicipios(requireContext(), binding.spinnerMunicipios, cliente.getMunicipio());
 
             binding.editTextRua.setText(cliente.getRua());
             binding.editTextIMEI.setText(cliente.getImei());

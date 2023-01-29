@@ -88,6 +88,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1102,8 +1103,8 @@ public class Ultilitario {
         provincias.setAdapter(adapter);
     }
 
-    public static void spinnerMunicipios(Context context, AppCompatSpinner municipios) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.municipios, android.R.layout.simple_spinner_item);
+    public static void spinnerMunicipios(Context context, AppCompatSpinner municipios, String municipio) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, new String[]{municipio});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         municipios.setAdapter(adapter);
     }
