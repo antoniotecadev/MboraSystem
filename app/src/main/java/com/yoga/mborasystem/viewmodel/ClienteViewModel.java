@@ -341,6 +341,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 .setBodyParameter("phone", cliente.getTelefone())
                 .setBodyParameter("alternative_phone", cliente.getTelefonealternativo())
                 .setBodyParameter("empresa", cliente.getNomeEmpresa())
+                .setBodyParameter("provincia", cliente.getProvincia())
                 .setBodyParameter("municipality", cliente.getMunicipio())
                 .setBodyParameter("district", cliente.getBairro())
                 .setBodyParameter("street", cliente.getRua())

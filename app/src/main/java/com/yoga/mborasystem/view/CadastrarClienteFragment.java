@@ -248,6 +248,7 @@ public class CadastrarClienteFragment extends Fragment {
                         cliente.setTelefone(binding.editTextNumeroTelefone.getText().toString());
                         cliente.setTelefonealternativo(binding.editTextNumeroTelefoneAlternativo.getText().toString());
                         cliente.setNomeEmpresa(binding.editTextNomeEmpresa.getText().toString());
+                        cliente.setProvincia(binding.spinnerProvincias.getSelectedItem().toString());
                         cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
                         cliente.setBairro(binding.editTextBairro.getText().toString());
                         cliente.setRua(binding.editTextRua.getText().toString());
