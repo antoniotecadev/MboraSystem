@@ -120,8 +120,8 @@ public class Ultilitario {
     public static final String MBORASYSTEM = "8e67fe66551c69731085ffb8d7746f6fec923b1af4f27066ba903219f0c60fb9";
     public static boolean isLocal = true;
     private static String formatted, current = "";
-    public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç. ]");
-    public static Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç0-9\n ]");
+    public static Pattern letras = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç ]");
+    public static Pattern letraNumero = Pattern.compile("[^a-zA-Zá-úà-ùã-õâ-ûÁ-ÚÀ-ÙÃ-ÕÂ-ÛÇç0-9 ]");
     public static final int EXPORTAR_CATEGORIA = 3, IMPORTAR_CATEGORIA = 4;
     public static final int ZERO = 0, UM = 1, DOIS = 2, TRES = 3, QUATRO = 4, LENGTH_TOAST = 100, LENGTH_LONG = 10;
 

@@ -75,7 +75,8 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
         return !Patterns.PHONE.matcher(numero).matches();
     }
 
-    public static Pattern letraNumero = Pattern.compile("[^a-zA-Z0-9]");
+    private final Pattern numero = Pattern.compile("[^0-9]");
+    private final Pattern nif = Pattern.compile("[^a-zA-Z0-9]");
 
     public void criarCliente(TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
         validarCliente(0, "", "", Ultilitario.Operacao.CRIAR, nif, nomeCliente, telefone, email, endereco, dialog);
@@ -118,21 +119,21 @@ public class ClienteCantinaViewModel extends AndroidViewModel {
     }
 
     private void validarCliente(long idcliente, String nifbi, String nome, Ultilitario.Operacao operacao, TextInputEditText nif, TextInputEditText nomeCliente, TextInputEditText telefone, TextInputEditText email, TextInputEditText endereco, AlertDialog dialog) {
-        if (!isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) && ((letraNumero.matcher(Objects.requireNonNull(nif.getText()).toString()).find()) || Objects.requireNonNull(nif.getText()).toString().length() > 14 || Objects.requireNonNull(nif.getText()).toString().length() < 10)) {
+        if (!isCampoVazio(Objects.requireNonNull(nif.getText()).toString()) && ((this.nif.matcher(Objects.requireNonNull(nif.getText()).toString()).find()) || Objects.requireNonNull(nif.getText()).toString().length() > 14 || Objects.requireNonNull(nif.getText()).toString().length() < 10)) {
             nif.requestFocus();
-            nif.setError(getApplication().getString(R.string.nifbi_invalido));
-        } else if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letras.matcher(nomeCliente.getText().toString()).find()) {
+            nif.setError(getApplication().getString(R.string.nifbi_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
+        } else if (isCampoVazio(Objects.requireNonNull(nomeCliente.getText()).toString()) || Ultilitario.letraNumero.matcher(nomeCliente.getText().toString()).find()) {
             nomeCliente.requestFocus();
-            nomeCliente.setError(getApplication().getString(R.string.nome_invalido));
-        } else if ((!isCampoVazio(Objects.requireNonNull(telefone.getText()).toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
+            nomeCliente.setError(getApplication().getString(R.string.nome_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
+        } else if (numero.matcher(telefone.getText().toString()).find() || (!isCampoVazio(Objects.requireNonNull(telefone.getText()).toString()) && isNumeroValido(telefone.getText().toString())) || (!isCampoVazio(telefone.getText().toString()) && telefone.length() < 9)) {
             telefone.requestFocus();
-            telefone.setError(getApplication().getString(R.string.numero_invalido));
+            telefone.setError(getApplication().getString(R.string.numero_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
         } else if (isEmailValido(Objects.requireNonNull(email.getText()).toString())) {
             email.requestFocus();
             email.setError(getApplication().getString(R.string.email_invalido));
         } else if (!isCampoVazio(Objects.requireNonNull(endereco.getText()).toString()) && Ultilitario.letraNumero.matcher(endereco.getText().toString()).find()) {
             endereco.requestFocus();
-            endereco.setError(getApplication().getString(R.string.endereco_invalido));
+            endereco.setError(getApplication().getString(R.string.endereco_invalido) + ", " + getApplication().getString(R.string.evt_crt_esp));
         } else {
             MainActivity.getProgressBar();
             clienteCantina.setNif(nif.getText().toString().trim());
