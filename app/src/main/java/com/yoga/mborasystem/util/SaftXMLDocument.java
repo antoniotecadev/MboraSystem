@@ -119,7 +119,7 @@ public class SaftXMLDocument {
         criarElemento(doc, "DateCreated", header, dataHora[0]);
         criarElemento(doc, "TaxEntity", header, "Global"); // Ficheiro de Logística e Tesouraria
         criarElemento(doc, "ProductCompanyTaxID", header, "5000999784"); // Identificação fiscal da entidade produtora do software
-        criarElemento(doc, "SoftwareValidationNumber", header, "000/AGT/0000");
+        criarElemento(doc, "SoftwareValidationNumber", header, "393/AGT/2023");
         criarElemento(doc, "ProductID", header, "MBORASYSTEM/YOGA - TECNOLOGIA, COMERCIO E SERVIÇOS, LDA");
         criarElemento(doc, "ProductVersion", header, "1.0");
         criarElemento(doc, "Telephone", header, cliente.getTelefone());
