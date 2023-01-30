@@ -40,6 +40,20 @@ public class CategoriaData extends AsyncTask<Void, Void, Void> {
         categorias.put(context.getString(R.string.padaria_pastelaria), context.getString(R.string.pao_bolo_pasteis_bolinho));
         categorias.put(context.getString(R.string.peixaria), context.getString(R.string.peixe_lagosta_caranguejo));
         categorias.put(context.getString(R.string.talho_congelados), context.getString(R.string.carne_frango_salsicha));
+        categorias.put("Cigarro", "SL Yes Aspen etc");
+        categorias.put("Gelo", "Cubos Triturado Escama etc");
+        categorias.put("Cortes de cabelo", "Francês Galo Careca etc");
+        categorias.put("Manicure e Pedicure", "");
+        categorias.put("Tranças de cabelo", "");
+        categorias.put("Maquiagem", "");
+        categorias.put("Hamburguer", "");
+        categorias.put("Prato principal", "");
+        categorias.put("Sobremessas", "");
+        categorias.put("Comprimidos", "");
+        categorias.put("Fotografia", "");
+        categorias.put("Música", "");
+        categorias.put("Carros e Motas", "");
+
 
         ContentValues contentValues = new ContentValues();
         String dataCria = Ultilitario.monthInglesFrances(Ultilitario.getDateCurrent());
