@@ -2,7 +2,6 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
-import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
