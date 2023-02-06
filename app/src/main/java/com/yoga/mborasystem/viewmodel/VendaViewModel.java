@@ -280,7 +280,6 @@ public class VendaViewModel extends AndroidViewModel {
     }
 
     public void partilharResumoVenda(Venda venda) {
-        MainActivity.getProgressBar();
         String resumoVenda = "DATA: " + venda.getData_cria_hora() + " " +
                 "REFERÊNCIA: " + venda.getReferenciaFactura() + "\n" +
                 "CONSUMIDOR FINAL: " + TextUtils.split(venda.getNome_cliente(), "-")[0] + "\n" +
