@@ -1,6 +1,7 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
+import static com.yoga.mborasystem.util.Ultilitario.activityResultContracts;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
@@ -12,6 +13,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.importDB;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
@@ -23,10 +25,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -517,16 +522,14 @@ public class HomeFragment extends Fragment {
             }
     );
 
-    private ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), result -> {
-                if (result) {
-                    MainActivity.getProgressBar();
-                    executor = Executors.newSingleThreadExecutor();
-                    executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
-                } else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_imp_bd), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
+    private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> activityResultContracts(requireContext(), result.getResultCode() == Activity.RESULT_OK, uriPath)
     );
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> activityResultContracts(requireContext(), result, uriPath)
+    );
+
     private ActivityResultLauncher<String> requestPermissionLauncherExportDataBase = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result)
@@ -535,6 +538,17 @@ public class HomeFragment extends Fragment {
                     Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_expo_db), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
     );
+
+    private void launchIntentPermission(boolean containsUri) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        if (containsUri) {
+            Uri uri_ = Uri.fromParts("package", requireActivity().getPackageName(), null);
+            intent.setData(uri_);
+        }
+        requestIntentPermissionLauncherImportDataBase.launch(intent);
+    }
+
     ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -557,7 +571,18 @@ public class HomeFragment extends Fragment {
                                         String stringHash = TextUtils.split(uriPath, "-")[2];
                                         byte[] bytesHash = getHash(reverse(getDeviceUniqueID(requireActivity())) + "-" + reverse(cliente.getImei()));
                                         if (bytesToHex(bytesHash).equals(stringHash)) {
-                                            requestPermissionLauncherImportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                                if (Environment.isExternalStorageManager())
+                                                    importDB(requireContext(), uriPath);
+                                                else {
+                                                    try {
+                                                        launchIntentPermission(true);
+                                                    } catch (Exception e) {
+                                                        launchIntentPermission(false);
+                                                    }
+                                                }
+                                            } else
+                                                requestPermissionLauncherImportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                                         } else
                                             alertDialog(getString(R.string.erro), getString(R.string.inc_bd), requireContext(), R.drawable.ic_baseline_close_24);
                                     } catch (Exception e) {

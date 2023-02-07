@@ -1,11 +1,13 @@
 package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
+import static com.yoga.mborasystem.util.Ultilitario.activityResultContracts;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getPositionSpinner;
+import static com.yoga.mborasystem.util.Ultilitario.importDB;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 import static com.yoga.mborasystem.util.Ultilitario.spinnerProvincias;
@@ -15,9 +17,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,12 +56,9 @@ import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class CadastrarClienteFragment extends Fragment {
 
-    private ExecutorService executor;
     private DatabaseReference mDatabase;
     private ClienteViewModel clienteViewModel;
     private FragmentCadastrarClienteBinding binding;
@@ -241,16 +243,24 @@ public class CadastrarClienteFragment extends Fragment {
                 });
     }
 
-    private final ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), result -> {
-                if (result) {
-                    MainActivity.getProgressBar();
-                    executor = Executors.newSingleThreadExecutor();
-                    executor.execute(() -> Ultilitario.importDB(requireContext(), new Handler(Looper.getMainLooper()), uriPath));
-                } else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_imp_bd), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
+    private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> activityResultContracts(requireContext(), result.getResultCode() == Activity.RESULT_OK, uriPath)
     );
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherImportDataBase = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> activityResultContracts(requireContext(), result, uriPath)
+    );
+
+    private void launchIntentPermission(boolean containsUri) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        if (containsUri) {
+            Uri uri_ = Uri.fromParts("package", requireActivity().getPackageName(), null);
+            intent.setData(uri_);
+        }
+        requestIntentPermissionLauncherImportDataBase.launch(intent);
+    }
+
     ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -268,7 +278,20 @@ public class CadastrarClienteFragment extends Fragment {
                                 .setTitle(getString(R.string.impoBd))
                                 .setMessage(uri.getPath() + "\n\n" + getString(R.string.imp_elim_bd))
                                 .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> requestPermissionLauncherImportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                        if (Environment.isExternalStorageManager())
+                                            importDB(requireContext(), uriPath);
+                                        else {
+                                            try {
+                                                launchIntentPermission(true);
+                                            } catch (Exception e) {
+                                                launchIntentPermission(false);
+                                            }
+                                        }
+                                    } else
+                                        requestPermissionLauncherImportDataBase.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                                })
                                 .show();
                     }
                 }

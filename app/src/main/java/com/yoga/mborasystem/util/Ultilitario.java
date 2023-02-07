@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -55,7 +56,6 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonObject;
@@ -88,7 +88,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +96,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 import javax.crypto.SecretKeyFactory;
@@ -1202,34 +1203,39 @@ public class Ultilitario {
         }
     }
 
-    public static void importDB(Context context, Handler handler, String fileName) {
-        try {
+    public static void importDB(Context context, String fileName) {
+        MainActivity.getProgressBar();
+        Handler handler = new Handler(Looper.getMainLooper());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
             File sd, data, backupDB, currentDB;
             sd = Environment.getExternalStorageDirectory();
             data = Environment.getDataDirectory();
-            if (sd.canWrite()) {
-                String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
-                String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + fileName;
-                backupDB = new File(data, currentDBPath);
-                currentDB = new File(sd, backupDBPath);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    File dbshm = new File(backupDB.getPath() + "-shm");
-                    File dbwal = new File(backupDB.getPath() + "-wal");
-                    if (dbshm.exists()) dbshm.delete();
-                    if (dbwal.exists()) dbwal.delete();
+            try {
+                if (sd.canWrite()) {
+                    String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
+                    String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + fileName;
+                    backupDB = new File(data, currentDBPath);
+                    currentDB = new File(sd, backupDBPath);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        File dbshm = new File(backupDB.getPath() + "-shm");
+                        File dbwal = new File(backupDB.getPath() + "-wal");
+                        if (dbshm.exists()) dbshm.delete();
+                        if (dbwal.exists()) dbwal.delete();
+                    }
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    handler.post(() -> new AlertDialog.Builder(context).setCancelable(false).setIcon(R.drawable.ic_baseline_done_24).setTitle(context.getString(R.string.bd_impo)).setMessage(context.getString(R.string.app_fis)).setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> System.exit(0)).show());
                 }
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-                handler.post(() -> new AlertDialog.Builder(context).setCancelable(false).setIcon(R.drawable.ic_baseline_done_24).setTitle(context.getString(R.string.bd_impo)).setMessage(context.getString(R.string.app_fis)).setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> System.exit(0)).show());
+            } catch (Exception e) {
+                handler.post(() -> alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24));
+            } finally {
+                MainActivity.dismissProgressBar();
             }
-        } catch (Exception e) {
-            handler.post(() -> alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24));
-        } finally {
-            MainActivity.dismissProgressBar();
-        }
+        });
     }
 
     public static String reverse(String str) {
@@ -1346,4 +1352,12 @@ public class Ultilitario {
         }
         return false;
     }
+
+    public static void activityResultContracts(Context context, boolean result, String uriPath) {
+        if (result)
+            importDB(context, uriPath);
+        else
+            alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_perm_n_pod_imp_bd), context, R.drawable.ic_baseline_privacy_tip_24);
+    }
+
 }
