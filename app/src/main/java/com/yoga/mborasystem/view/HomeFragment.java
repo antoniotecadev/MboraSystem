@@ -2,20 +2,19 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.acercaMboraSystem;
 import static com.yoga.mborasystem.util.Ultilitario.activityResultContracts;
+import static com.yoga.mborasystem.util.Ultilitario.activityResultContractsSelectFile;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
-import static com.yoga.mborasystem.util.Ultilitario.bytesToHex;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
-import static com.yoga.mborasystem.util.Ultilitario.getHash;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
-import static com.yoga.mborasystem.util.Ultilitario.importDB;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
+import static com.yoga.mborasystem.util.Ultilitario.uriPath;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -25,14 +24,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.provider.Settings;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -86,7 +81,7 @@ public class HomeFragment extends Fragment {
     private boolean isOpen = false, isMaster;
     private ClienteViewModel clienteViewModel;
     private Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
-    private String idioma, codigoIdioma, nomeOperador, uriPath, languageCode = "";
+    private String idioma, codigoIdioma, nomeOperador, languageCode = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -539,59 +534,10 @@ public class HomeFragment extends Fragment {
             }
     );
 
-    private void launchIntentPermission(boolean containsUri) {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-        if (containsUri) {
-            Uri uri_ = Uri.fromParts("package", requireActivity().getPackageName(), null);
-            intent.setData(uri_);
-        }
-        requestIntentPermissionLauncherImportDataBase.launch(intent);
-    }
-
     ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    Uri uri;
-                    if (data != null) {
-                        uri = data.getData();
-                        try {
-                            uriPath = TextUtils.split(uri.getPath(), "/")[4];
-                        } catch (IndexOutOfBoundsException e) {
-                            alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                        }
-                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
-                                .setTitle(getString(R.string.impoBd))
-                                .setMessage(uri.getPath() + "\n\n" + getString(R.string.imp_elim_bd))
-                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
-                                    try {
-                                        String stringHash = TextUtils.split(uriPath, "-")[2];
-                                        byte[] bytesHash = getHash(reverse(getDeviceUniqueID(requireActivity())) + "-" + reverse(cliente.getImei()));
-                                        if (bytesToHex(bytesHash).equals(stringHash)) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                                if (Environment.isExternalStorageManager())
-                                                    importDB(requireContext(), uriPath);
-                                                else {
-                                                    try {
-                                                        launchIntentPermission(true);
-                                                    } catch (Exception e) {
-                                                        launchIntentPermission(false);
-                                                    }
-                                                }
-                                            } else
-                                                requestPermissionLauncherImportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                                        } else
-                                            alertDialog(getString(R.string.erro), getString(R.string.inc_bd), requireContext(), R.drawable.ic_baseline_close_24);
-                                    } catch (Exception e) {
-                                        alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                                    }
-                                })
-                                .show();
-                    }
-                }
+                if (result.getResultCode() == Activity.RESULT_OK)
+                    activityResultContractsSelectFile(requireActivity(), requireContext(), false, cliente.getImei(), result, requestPermissionLauncherImportDataBase, requestIntentPermissionLauncherImportDataBase);
             });
 
     private void exportarBD() {

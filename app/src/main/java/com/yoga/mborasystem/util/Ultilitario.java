@@ -47,6 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -1203,7 +1204,7 @@ public class Ultilitario {
         }
     }
 
-    public static void importDB(Context context, String fileName) {
+    public static void importDB(Context context, String uriPath) {
         MainActivity.getProgressBar();
         Handler handler = new Handler(Looper.getMainLooper());
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -1214,9 +1215,9 @@ public class Ultilitario {
             try {
                 if (sd.canWrite()) {
                     String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
-                    String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + fileName;
+                    String[] backupDBPath = TextUtils.split(uriPath, ":");
                     backupDB = new File(data, currentDBPath);
-                    currentDB = new File(sd, backupDBPath);
+                    currentDB = new File(sd, backupDBPath[1] + ":" + backupDBPath[2] + ":" + backupDBPath[3]);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         File dbshm = new File(backupDB.getPath() + "-shm");
                         File dbwal = new File(backupDB.getPath() + "-wal");
@@ -1360,4 +1361,57 @@ public class Ultilitario {
             alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_perm_n_pod_imp_bd), context, R.drawable.ic_baseline_privacy_tip_24);
     }
 
+    private static void launchIntentPermission(boolean containsUri, Context context, ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        if (containsUri) {
+            Uri uri_ = Uri.fromParts("package", context.getPackageName(), null);
+            intent.setData(uri_);
+        }
+        requestIntentPermissionLauncherImportDataBase.launch(intent);
+    }
+
+    public static String uriPath;
+
+    public static void activityResultContractsSelectFile(Activity activity, Context context, boolean isCreateUser, String imei, ActivityResult result, ActivityResultLauncher<String> requestPermissionLauncherImportDataBase, ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase) {
+        Intent data = result.getData();
+        Uri uri;
+        if (data != null) {
+            uri = data.getData();
+            try {
+                uriPath = uri.getPath();
+                new androidx.appcompat.app.AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                        .setTitle(context.getString(R.string.impoBd))
+                        .setMessage(uri.getPath() + "\n\n" + context.getString(R.string.imp_elim_bd))
+                        .setNegativeButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+                        .setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> {
+                            try {
+                                String stringHash = TextUtils.split(uriPath, "-")[2];
+                                byte[] bytesHash = getHash(reverse(getDeviceUniqueID(activity)) + "-" + reverse(imei));
+                                if (isCreateUser || bytesToHex(bytesHash).equals(stringHash)) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                        if (Environment.isExternalStorageManager())
+                                            importDB(context, uriPath);
+                                        else {
+                                            try {
+                                                launchIntentPermission(true, context, requestIntentPermissionLauncherImportDataBase);
+                                            } catch (Exception e) {
+                                                launchIntentPermission(false, null, requestIntentPermissionLauncherImportDataBase);
+                                            }
+                                        }
+                                    } else
+                                        requestPermissionLauncherImportDataBase.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                                } else
+                                    alertDialog(context.getString(R.string.erro), context.getString(R.string.inc_bd), context, R.drawable.ic_baseline_close_24);
+                            } catch (Exception e) {
+                                alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+                            }
+                        })
+                        .show();
+            } catch (IndexOutOfBoundsException e) {
+                alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+            }
+        }
+    }
 }
