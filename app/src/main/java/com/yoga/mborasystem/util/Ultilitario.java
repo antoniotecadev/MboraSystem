@@ -1184,7 +1184,7 @@ public class Ultilitario {
             File data = Environment.getDataDirectory();
             if (sd.canWrite()) {
                 String hora = TextUtils.split(getDateCurrent(), "-")[3];
-                String nameDB = "database-mborasystem-" + bytesToHex(bytesID) + "-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora + ".db";
+                String nameDB = "database-mborasystem-" + bytesToHex(bytesID) + "-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora.replaceAll(":",".") + ".db";
                 String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
                 String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + nameDB;
                 File currentDB = new File(data, currentDBPath);
