@@ -1389,7 +1389,7 @@ public class Ultilitario {
                             try {
                                 String stringHash = TextUtils.split(uriPath, "-")[2];
                                 byte[] bytesHash = getHash(reverse(getDeviceUniqueID(activity)) + "-" + reverse(imei));
-                                if (isCreateUser || true || bytesToHex(bytesHash).equals(stringHash)) {
+                                if (isCreateUser || bytesToHex(bytesHash).equals(stringHash)) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                         if (Environment.isExternalStorageManager())
                                             importDB(context, uriPath);
