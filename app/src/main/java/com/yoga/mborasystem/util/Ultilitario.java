@@ -1387,9 +1387,9 @@ public class Ultilitario {
                         .setNegativeButton(context.getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
                         .setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> {
                             try {
-                                String stringHash = TextUtils.split(uriPath, "-")[2];
+                                String[] stringHash = TextUtils.split(uriPath, "-");
                                 byte[] bytesHash = getHash(reverse(getDeviceUniqueID(activity)) + "-" + reverse(imei));
-                                if (isCreateUser || bytesToHex(bytesHash).equals(stringHash)) {
+                                if (isCreateUser || bytesToHex(bytesHash).equals(stringHash[stringHash.length - 4])) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                         if (Environment.isExternalStorageManager())
                                             importDB(context, uriPath);
