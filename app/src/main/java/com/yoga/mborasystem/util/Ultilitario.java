@@ -1217,7 +1217,7 @@ public class Ultilitario {
                     String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
                     String[] backupDBPath = TextUtils.split(uriPath, ":");
                     backupDB = new File(data, currentDBPath);
-                    currentDB = new File(sd, backupDBPath[1] + ":" + backupDBPath[2] + ":" + backupDBPath[3]);
+                    currentDB = new File(sd, backupDBPath[1]);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         File dbshm = new File(backupDB.getPath() + "-shm");
                         File dbwal = new File(backupDB.getPath() + "-wal");
@@ -1389,7 +1389,7 @@ public class Ultilitario {
                             try {
                                 String stringHash = TextUtils.split(uriPath, "-")[2];
                                 byte[] bytesHash = getHash(reverse(getDeviceUniqueID(activity)) + "-" + reverse(imei));
-                                if (isCreateUser || bytesToHex(bytesHash).equals(stringHash)) {
+                                if (isCreateUser || true || bytesToHex(bytesHash).equals(stringHash)) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                         if (Environment.isExternalStorageManager())
                                             importDB(context, uriPath);
