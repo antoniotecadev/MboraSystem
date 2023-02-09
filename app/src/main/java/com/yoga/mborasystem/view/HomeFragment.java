@@ -153,10 +153,8 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
                     break;
                 case R.id.dashboardFragmentH:
-                    if (isMaster) {
-                        MainActivity.getProgressBar();
-                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
-                    }
+                    if (isMaster)
+                        entrarDashboard();
                     break;
                 case R.id.facturaFragmentH:
                     entrarFacturacao();
@@ -195,8 +193,7 @@ public class HomeFragment extends Fragment {
 
         binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment));
         binding.btnDashboard.setOnClickListener(v -> {
-            MainActivity.getProgressBar();
-            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
+            entrarDashboard();
         });
 
         clienteViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
@@ -435,6 +432,17 @@ public class HomeFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_facturaFragment, bundle);
     }
 
+    private void entrarDashboard() {
+        boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherDashboard, requestPermissionLauncherDashboard, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (isExternalStorageManager)
+            entrarDashboardDanied();
+    }
+
+    private void entrarDashboardDanied() {
+        MainActivity.getProgressBar();
+        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dashboardFragment);
+    }
+
     private boolean isFinish;
 
     private void estadoConta(String imei) {
@@ -554,7 +562,7 @@ public class HomeFragment extends Fragment {
         if (result)
             entrarVendasPermissionDanied(isNotaCredito);
         else
-            alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_ent_ven), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_ent), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
     }
 
     private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherVendas = registerForActivityResult(
@@ -562,6 +570,19 @@ public class HomeFragment extends Fragment {
 
     private final ActivityResultLauncher<String> requestPermissionLauncherVendas = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), this::activityResultContractsVendas);
+
+    private void activityResultContractsDashboard(Boolean result) {
+        if (result)
+            entrarDashboardDanied();
+        else
+            alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_ent), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+    }
+
+    private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherDashboard = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> activityResultContractsDashboard(result.getResultCode() == Activity.RESULT_OK));
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherDashboard = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), this::activityResultContractsDashboard);
 
     @Override
     public void onDestroyView() {
