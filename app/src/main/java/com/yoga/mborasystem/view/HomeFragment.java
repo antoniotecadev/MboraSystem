@@ -6,6 +6,7 @@ import static com.yoga.mborasystem.util.Ultilitario.activityResultContractsSelec
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.exportBD;
+import static com.yoga.mborasystem.util.Ultilitario.gerarCodigoQr;
 import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
@@ -17,6 +18,7 @@ import static com.yoga.mborasystem.util.Ultilitario.launchPermissionDocumentSaft
 import static com.yoga.mborasystem.util.Ultilitario.launchPermissionImportExportDB;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
+import static com.yoga.mborasystem.util.Ultilitario.showToastOrAlertDialogQrCode;
 import static com.yoga.mborasystem.util.Ultilitario.uriPath;
 
 import android.Manifest;
@@ -24,11 +26,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,7 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -56,8 +55,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;
-import com.google.zxing.BarcodeFormat;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.koushikdutta.ion.Ion;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
@@ -110,7 +107,9 @@ public class HomeFragment extends Fragment {
                     Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
                     break;
                 case R.id.gerarQrCode:
-                    getQrCode();
+                    boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherQrCode, requestPermissionLauncherQrCode, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    if (isExternalStorageManager)
+                        getQrCode();
                     break;
                 case R.id.sairApp:
                     sairApp();
@@ -192,9 +191,7 @@ public class HomeFragment extends Fragment {
         binding.btnVenda.setOnClickListener(v -> entrarVendas(isNotaCredito = false));
 
         binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment));
-        binding.btnDashboard.setOnClickListener(v -> {
-            entrarDashboard();
-        });
+        binding.btnDashboard.setOnClickListener(v -> entrarDashboard());
 
         clienteViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
             if (operacao == Ultilitario.Operacao.ACTUALIZAR) {
@@ -280,7 +277,9 @@ public class HomeFragment extends Fragment {
                             estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
                         break;
                     case R.id.gerarCodigoQr:
-                        getQrCode();
+                        boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherQrCode, requestPermissionLauncherQrCode, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        if (isExternalStorageManager)
+                            getQrCode();
                         break;
                     case R.id.config:
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
@@ -356,20 +355,9 @@ public class HomeFragment extends Fragment {
 
     private void getQrCode() {
         if (isMaster)
-            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei()), true, requestPermissionLauncherSaveQrCode, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
+            showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(cliente.getImei(), requireContext()), true, cliente.getNome() + " " + cliente.getSobrenome(), cliente.getNomeEmpresa(), cliente.getImei());
         else
-            Ultilitario.showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), true, requestPermissionLauncherSaveQrCode, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
-    }
-
-    private Bitmap gerarCodigoQr(String imei) {
-        Bitmap bitmap = null;
-        try {
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            bitmap = barcodeEncoder.encodeBitmap(imei, BarcodeFormat.QR_CODE, 500, 500);
-        } catch (Exception e) {
-            Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-        }
-        return bitmap;
+            showToastOrAlertDialogQrCode(requireContext(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""), requireContext()), true, getArguments().getString("nome", ""), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", ""), Ultilitario.getValueSharedPreferences(requireContext(), "imei", ""));
     }
 
     private void animationLixeira(Animation animation, Animation animationLixo, boolean isOpen) {
@@ -527,16 +515,6 @@ public class HomeFragment extends Fragment {
     private final ActivityResultLauncher<String> requestPermissionLauncherViewDocument = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> activityResultContractsViewDocument(result));
 
-    private final ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), result -> {
-                if (result) {
-                    String bitmapPath = MediaStore.Images.Media.insertImage(requireContext().getContentResolver(), gerarCodigoQr(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "")), Ultilitario.getValueSharedPreferences(requireContext(), "nomeempresa", "").replace(".", " ").replace(",", " "), null);
-                    Toast.makeText(requireContext(), bitmapPath, Toast.LENGTH_LONG).show();
-                } else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_gua_cod_qr), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-    );
-
     private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> activityResultContracts(requireContext(), result.getResultCode() == Activity.RESULT_OK, uriPath)
     );
@@ -583,6 +561,19 @@ public class HomeFragment extends Fragment {
 
     private final ActivityResultLauncher<String> requestPermissionLauncherDashboard = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), this::activityResultContractsDashboard);
+
+    private void activityResultContractsQrCode(Boolean result) {
+        if (result)
+            getQrCode();
+        else
+            alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_gua_cod_qr), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+    }
+
+    private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherQrCode = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> activityResultContractsQrCode(result.getResultCode() == Activity.RESULT_OK));
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherQrCode = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), this::activityResultContractsQrCode);
 
     @Override
     public void onDestroyView() {

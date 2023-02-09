@@ -60,6 +60,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonObject;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.koushikdutta.ion.Ion;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
@@ -154,7 +156,7 @@ public class Ultilitario {
     }
 
     @SuppressLint({"WrongConstant", "UseCompatLoadingForDrawables"})
-    public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser, ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode, String nome, String estabalecimento, String imei) {
+    public static void showToastOrAlertDialogQrCode(Context context, Bitmap qrCode, boolean isQrCodeUser, String nome, String estabalecimento, String imei) {
         View view = LayoutInflater.from(context).inflate(R.layout.image_layout, null);
         goneViews(view);
         ImageView img = view.findViewById(R.id.image);
@@ -168,7 +170,10 @@ public class Ultilitario {
             toast.show();
         } else {
             img.setBackground(context.getResources().getDrawable(R.drawable.border_image));
-            new androidx.appcompat.app.AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(R.string.cod_qr).setMessage(context.getString(R.string.nm) + ": " + nome + "\n" + context.getString(R.string.emps) + ": " + estabalecimento + "\n" + context.getString(R.string.imei) + ": " + imei).setView(view).setNeutralButton(context.getString(R.string.guardar), (dialogInterface, i) -> requestPermissionLauncherSaveQrCode.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)).setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> {
+            new androidx.appcompat.app.AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_store_24).setTitle(R.string.cod_qr).setMessage(context.getString(R.string.nm) + ": " + nome + "\n" + context.getString(R.string.emps) + ": " + estabalecimento + "\n" + context.getString(R.string.imei) + ": " + imei).setView(view).setNeutralButton(context.getString(R.string.guardar), (dialogInterface, i) -> {
+                String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), gerarCodigoQr(getValueSharedPreferences(context, "imei", ""), context), getValueSharedPreferences(context, "nomeempresa", "").replace(".", " ").replace(",", " "), null);
+                Toast.makeText(context, bitmapPath, Toast.LENGTH_LONG).show();
+            }).setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> {
                 try {
                     partilharImagem(context, qrCode, estabalecimento.replace(".", "").replace(",", "").trim());
                 } catch (IOException e) {
@@ -176,6 +181,17 @@ public class Ultilitario {
                 }
             }).setPositiveButton(R.string.fechar, (dialogInterface, i) -> dialogInterface.dismiss()).show();
         }
+    }
+
+    public static Bitmap gerarCodigoQr(String imei, Context context) {
+        Bitmap bitmap = null;
+        try {
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            bitmap = barcodeEncoder.encodeBitmap(imei, BarcodeFormat.QR_CODE, 500, 500);
+        } catch (Exception e) {
+            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
+        }
+        return bitmap;
     }
 
     @SuppressLint("Range")
@@ -1407,7 +1423,7 @@ public class Ultilitario {
     public static boolean launchPermissionDocumentSaftInvoice(Context context, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager())
-              return true;
+                return true;
             else
                 launchIntentPermission(context, requestIntentPermission);
         } else
