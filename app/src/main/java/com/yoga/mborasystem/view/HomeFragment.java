@@ -13,6 +13,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.launchPermissionDocumentSaftInvoice;
 import static com.yoga.mborasystem.util.Ultilitario.launchPermissionImportExportDB;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
@@ -171,7 +172,9 @@ public class HomeFragment extends Fragment {
                     entrarProdutosLx();
                     break;
                 case R.id.documentoFragmentMenu:
-                    requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherViewDocument, requestPermissionLauncherViewDocument, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (isExternalStorageManager)
+                        activityResultContractsViewDocument(isExternalStorageManager);
                     break;
                 default:
                     break;
@@ -496,16 +499,21 @@ public class HomeFragment extends Fragment {
                 });
     }
 
-    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), result -> {
-                if (result) {
-                    bundle.putParcelable("cliente", cliente);
-                    bundle.putBoolean("master", isMaster);
-                    Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
-                } else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_prm_na_vis_doc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-    );
+    private void activityResultContractsViewDocument(Boolean result) {
+        if (result) {
+            bundle.putParcelable("cliente", cliente);
+            bundle.putBoolean("master", isMaster);
+            Navigation.findNavController(requireView()).navigate(R.id.documentoFragment, bundle);
+        } else
+            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_prm_na_vis_doc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+    }
+
+    private ActivityResultLauncher<Intent> requestIntentPermissionLauncherViewDocument = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> activityResultContractsViewDocument(result.getResultCode() == Activity.RESULT_OK));
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherViewDocument = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> activityResultContractsViewDocument(result));
+
     private final ActivityResultLauncher<String> requestPermissionLauncherSaveQrCode = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), result -> {
                 if (result) {

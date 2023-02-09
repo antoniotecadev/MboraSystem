@@ -2,7 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
-import static com.yoga.mborasystem.util.Ultilitario.launchPermissionSaftInvoice;
+import static com.yoga.mborasystem.util.Ultilitario.launchPermissionDocumentSaftInvoice;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
@@ -211,7 +211,7 @@ public class DocumentoFragment extends Fragment {
                                                   if (menuItem.getItemId() == R.id.itemData)
                                                       getData(0);
                                                   else if (menuItem.getItemId() == R.id.itemSaft) {
-                                                      boolean isExternalStorageManager = launchPermissionSaftInvoice(requireContext(), requestIntentPermissionLauncherExportFileSAFT, requestPermissionLauncherExportFileSAFT, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                                      boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherExportFileSAFT, requestPermissionLauncherExportFileSAFT, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                                                       if (isExternalStorageManager)
                                                           dialogExportarDocumentoSaft();
                                                   }

@@ -1404,7 +1404,7 @@ public class Ultilitario {
             requestPermission.launch(permission);
     }
 
-    public static boolean launchPermissionSaftInvoice(Context context, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
+    public static boolean launchPermissionDocumentSaftInvoice(Context context, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager())
               return true;
