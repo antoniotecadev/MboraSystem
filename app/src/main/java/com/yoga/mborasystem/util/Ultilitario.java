@@ -1184,7 +1184,7 @@ public class Ultilitario {
             File data = Environment.getDataDirectory();
             if (sd.canWrite()) {
                 String hora = TextUtils.split(getDateCurrent(), "-")[3];
-                String nameDB = "database-mborasystem-" + bytesToHex(bytesID) + "-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora.replaceAll(":",".") + ".db";
+                String nameDB = "database-mborasystem-" + bytesToHex(bytesID) + "-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora.replaceAll(":", ".") + ".db";
                 String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
                 String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + nameDB;
                 File currentDB = new File(data, currentDBPath);
@@ -1371,6 +1371,21 @@ public class Ultilitario {
         requestIntentPermissionLauncherImportDataBase.launch(intent);
     }
 
+    public static void launchPermissionImportDB(Context context, String uriPath, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager())
+                importDB(context, uriPath);
+            else {
+                try {
+                    launchIntentPermission(true, context, requestIntentPermission);
+                } catch (Exception e) {
+                    launchIntentPermission(false, null, requestIntentPermission);
+                }
+            }
+        } else
+            requestPermission.launch(permission);
+    }
+
     public static String uriPath;
 
     public static void activityResultContractsSelectFile(Activity activity, Context context, boolean isCreateUser, String imei, ActivityResult result, ActivityResultLauncher<String> requestPermissionLauncherImportDataBase, ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase) {
@@ -1389,20 +1404,9 @@ public class Ultilitario {
                             try {
                                 String[] stringHash = TextUtils.split(uriPath, "-");
                                 byte[] bytesHash = getHash(reverse(getDeviceUniqueID(activity)) + "-" + reverse(imei));
-                                if (isCreateUser || bytesToHex(bytesHash).equals(stringHash[stringHash.length - 4])) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                        if (Environment.isExternalStorageManager())
-                                            importDB(context, uriPath);
-                                        else {
-                                            try {
-                                                launchIntentPermission(true, context, requestIntentPermissionLauncherImportDataBase);
-                                            } catch (Exception e) {
-                                                launchIntentPermission(false, null, requestIntentPermissionLauncherImportDataBase);
-                                            }
-                                        }
-                                    } else
-                                        requestPermissionLauncherImportDataBase.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-                                } else
+                                if (isCreateUser || bytesToHex(bytesHash).equals(stringHash[stringHash.length - 4]))
+                                    launchPermissionImportDB(context, uriPath, requestIntentPermissionLauncherImportDataBase, requestPermissionLauncherImportDataBase, Manifest.permission.READ_EXTERNAL_STORAGE);
+                                else
                                     alertDialog(context.getString(R.string.erro), context.getString(R.string.inc_bd), context, R.drawable.ic_baseline_close_24);
                             } catch (Exception e) {
                                 alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
