@@ -633,7 +633,7 @@ public class FacturaFragment extends Fragment {
                     File dir = new File(String.valueOf(android.os.Environment.getExternalStorageDirectory()));
                     partilharDocumento(dir.getPath() + "/MboraSystem/Facturas/" + facturaPath, requireContext(), "application/pdf", getString(R.string.part_doc) + " " + facturaPath);
                 } else
-                    CriarFactura.getPemissionAcessStoregeExternal(false, false, false, "", "", isGuardar, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorTotalIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, getDataEmissao(requireContext()), referenciaFactura + "/" + idvenda, getValueSharedPreferences(requireContext(), "hashvenda", ""));
+                    CriarFactura.criarDocumentoFacturaReciboNotaCredito(false, false, false, "", "", isGuardar, getActivity(), getContext(), facturaPath, cliente, requireArguments().getLong("idoperador", 0), binding.txtNomeCliente, binding.textDesconto, Integer.parseInt(binding.spinnerDesconto.getSelectedItem().toString()), valorBase, valorTotalIva, getFormaPamento(binding), totaldesconto, valorPago, troco, total, produtos, precoTotal, getDataEmissao(requireContext()), referenciaFactura + "/" + idvenda, getValueSharedPreferences(requireContext(), "hashvenda", ""));
             } else
                 Toast.makeText(requireContext(), getString(R.string.venda_vazia), Toast.LENGTH_SHORT).show();
         }

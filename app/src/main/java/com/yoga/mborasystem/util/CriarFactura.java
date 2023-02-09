@@ -13,7 +13,6 @@ import static com.yoga.mborasystem.util.Ultilitario.getRasaoISE;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -31,12 +30,6 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.BarcodeQRCode;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -49,28 +42,11 @@ import java.util.Map;
 
 public class CriarFactura {
 
-    public static void getPemissionAcessStoregeExternal(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorTotalIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
-        Dexter.withContext(activity)
-                .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorTotalIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorTotalIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-
-                    }
-                }).check();
+    public static void criarDocumentoFacturaReciboNotaCredito(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorTotalIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
+        createPdfFile(isSegundaVia, isAnulado, isAnuladoSegundaVia, motivoEmissaoNC, refFR, isGuardar, Common.getAppPath("Facturas") + facturaPath, facturaPath, activity, context, cliente, idOperador, txtNomeCliente, desconto, percDesc, valorBase, valorTotalIva, formaPagamento, totalDesconto, valorPago, troco, totalVenda, produtos, precoTotalUnit, dataEmissao, refFRNC, hash);
     }
 
-    private static void createPdfFile(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorTotalIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
+    public static void createPdfFile(boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia, String motivoEmissaoNC, String refFR, boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, Long idOperador, AppCompatAutoCompleteTextView txtNomeCliente, TextInputEditText desconto, int percDesc, int valorBase, int valorTotalIva, String formaPagamento, int totalDesconto, int valorPago, int troco, int totalVenda, Map<Long, Produto> produtos, Map<Long, Integer> precoTotalUnit, String dataEmissao, String refFRNC, String hash) {
         MainActivity.getProgressBar();
         if (new File(path).exists())
             new File(path).delete();

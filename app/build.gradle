@@ -148,8 +148,6 @@ dependencies {
 
     //itext for genereted pdf
     implementation 'com.itextpdf:itextg:5.5.10'
-    //Permission
-    implementation 'com.karumi:dexter:6.2.3'
 
     // Gráfico
     implementation 'com.github.blackfizz:eazegraph:1.2.2@aar'

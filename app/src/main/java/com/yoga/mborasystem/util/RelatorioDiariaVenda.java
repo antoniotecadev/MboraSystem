@@ -10,7 +10,6 @@ import static com.yoga.mborasystem.util.Ultilitario.formatPreco;
 import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -23,12 +22,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.yoga.mborasystem.MainActivity;
 import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.entidade.Cliente;
@@ -43,25 +36,8 @@ import java.util.Map;
 
 public class RelatorioDiariaVenda {
 
-    public static void getPemissionAcessStoregeExternal(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {
-        Dexter.withContext(activity)
-                .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, data, handler, view);
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, data, handler, view);
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-
-                    }
-                }).check();
+    public static void criarDocumento(boolean isGuardar, Activity activity, Context context, String facturaPath, Cliente cliente, List<Venda> venda, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {
+        createPdfFile(isGuardar, Common.getAppPath("Relatorios") + facturaPath, facturaPath, activity, context, cliente, venda, produtoVendas, data, handler, view);
     }
 
     private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {

@@ -1,6 +1,6 @@
 package com.yoga.mborasystem.view;
 
-import static com.yoga.mborasystem.util.RelatorioDiariaVenda.getPemissionAcessStoregeExternal;
+import static com.yoga.mborasystem.util.RelatorioDiariaVenda.criarDocumento;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -448,9 +448,9 @@ public class DashboardFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             if (i == 0)
-                getPemissionAcessStoregeExternal(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, this.data, handler, getView());
+                criarDocumento(true, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, this.data, handler, getView());
             else if (i == 1)
-                getPemissionAcessStoregeExternal(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, this.data, handler, getView());
+                criarDocumento(false, getActivity(), requireContext(), facturaPath, cliente, venda, produtoVendas, this.data, handler, getView());
         });
     }
 
