@@ -1383,6 +1383,14 @@ public class Ultilitario {
         requestIntentPermissionLauncherImportExportDataBase.launch(intent);
     }
 
+    private static void launchIntentPermission(Context context, ActivityResultLauncher<Intent> requestIntentPermission) {
+        try {
+            launchIntentPermission(true, context, requestIntentPermission);
+        } catch (Exception e) {
+            launchIntentPermission(false, null, requestIntentPermission);
+        }
+    }
+
     public static void launchPermissionImportExportDB(Context context, String uriPath, String deviceID, String imei, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager())
@@ -1390,15 +1398,21 @@ public class Ultilitario {
                     exportDB(context, deviceID, imei);
                 else
                     importDB(context, uriPath);
-            else {
-                try {
-                    launchIntentPermission(true, context, requestIntentPermission);
-                } catch (Exception e) {
-                    launchIntentPermission(false, null, requestIntentPermission);
-                }
-            }
+            else
+                launchIntentPermission(context, requestIntentPermission);
         } else
             requestPermission.launch(permission);
+    }
+
+    public static boolean launchPermissionSaftInvoice(Context context, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager())
+              return true;
+            else
+                launchIntentPermission(context, requestIntentPermission);
+        } else
+            requestPermission.launch(permission);
+        return false;
     }
 
     public static String uriPath;

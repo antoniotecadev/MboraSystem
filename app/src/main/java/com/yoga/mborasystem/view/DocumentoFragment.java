@@ -2,6 +2,7 @@ package com.yoga.mborasystem.view;
 
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getPdfList;
+import static com.yoga.mborasystem.util.Ultilitario.launchPermissionSaftInvoice;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 
 import android.Manifest;
@@ -29,6 +30,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -41,12 +44,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.GroupieViewHolder;
 import com.xwray.groupie.Item;
@@ -214,24 +211,9 @@ public class DocumentoFragment extends Fragment {
                                                   if (menuItem.getItemId() == R.id.itemData)
                                                       getData(0);
                                                   else if (menuItem.getItemId() == R.id.itemSaft) {
-                                                      Dexter.withContext(requireContext())
-                                                              .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                                              .withListener(new PermissionListener() {
-                                                                  @Override
-                                                                  public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                                                                      dialogExportarDocumentoSaft();
-                                                                  }
-
-                                                                  @Override
-                                                                  public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                                                                      dialogExportarDocumentoSaft();
-                                                                  }
-
-                                                                  @Override
-                                                                  public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-
-                                                                  }
-                                                              }).check();
+                                                      boolean isExternalStorageManager = launchPermissionSaftInvoice(requireContext(), requestIntentPermissionLauncherExportFileSAFT, requestPermissionLauncherExportFileSAFT, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                                      if (isExternalStorageManager)
+                                                          dialogExportarDocumentoSaft();
                                                   }
                                                   return NavigationUI.onNavDestinationSelected(menuItem, navController);
                                               }
@@ -240,6 +222,12 @@ public class DocumentoFragment extends Fragment {
                 getViewLifecycleOwner());
         return binding.getRoot();
     }
+
+    private ActivityResultLauncher<String> requestPermissionLauncherExportFileSAFT = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> dialogExportarDocumentoSaft());
+
+    private ActivityResultLauncher<Intent> requestIntentPermissionLauncherExportFileSAFT = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> dialogExportarDocumentoSaft());
 
     private void dialogExportarDocumentoSaft() {
         android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getContext());
