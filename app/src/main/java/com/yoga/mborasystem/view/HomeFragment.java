@@ -5,6 +5,7 @@ import static com.yoga.mborasystem.util.Ultilitario.activityResultContracts;
 import static com.yoga.mborasystem.util.Ultilitario.activityResultContractsSelectFile;
 import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
+import static com.yoga.mborasystem.util.Ultilitario.exportBD;
 import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDevice;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
@@ -12,6 +13,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getDeviceUniqueID;
 import static com.yoga.mborasystem.util.Ultilitario.getIdIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getSelectedIdioma;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
+import static com.yoga.mborasystem.util.Ultilitario.launchPermissionImportExportDB;
 import static com.yoga.mborasystem.util.Ultilitario.reverse;
 import static com.yoga.mborasystem.util.Ultilitario.showToast;
 import static com.yoga.mborasystem.util.Ultilitario.uriPath;
@@ -25,8 +27,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,7 +70,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class HomeFragment extends Fragment {
 
@@ -288,7 +287,7 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
                         break;
                     case R.id.expoBd:
-                        requestPermissionLauncherExportDataBase.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        launchPermissionImportExportDB(requireContext(), null, getDeviceUniqueID(requireContext()), cliente.getImei(), requestIntentPermissionLauncherExportDataBase, requestPermissionLauncherExportDataBase, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                         break;
                     case R.id.impoBd:
                         Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
@@ -525,26 +524,18 @@ public class HomeFragment extends Fragment {
             new ActivityResultContracts.RequestPermission(), result -> activityResultContracts(requireContext(), result, uriPath)
     );
 
-    private ActivityResultLauncher<String> requestPermissionLauncherExportDataBase = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), result -> {
-                if (result)
-                    exportarBD();
-                else
-                    Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_expo_db), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-    );
-
     ActivityResultLauncher<Intent> importarBaseDeDados = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK)
                     activityResultContractsSelectFile(requireActivity(), requireContext(), false, cliente.getImei(), result, requestPermissionLauncherImportDataBase, requestIntentPermissionLauncherImportDataBase);
             });
 
-    private void exportarBD() {
-        MainActivity.getProgressBar();
-        executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> Ultilitario.exportDB(requireContext(), new Handler(Looper.getMainLooper()), getDeviceUniqueID(requireActivity()), cliente.getImei()));
-    }
+    private ActivityResultLauncher<String> requestPermissionLauncherExportDataBase = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> exportBD(result, requireContext(), cliente.getImei())
+    );
+
+    ActivityResultLauncher<Intent> requestIntentPermissionLauncherExportDataBase = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> exportBD(result.getResultCode() == Activity.RESULT_OK, requireContext(), cliente.getImei()));
 
     @Override
     public void onDestroyView() {

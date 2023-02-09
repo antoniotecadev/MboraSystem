@@ -1165,43 +1165,55 @@ public class Ultilitario {
         }
     }
 
-    public static void exportDB(Context context, Handler handler, String deviceID, String imei) {
-        try {
-            byte[] bytesID = getHash(reverse(deviceID) + "-" + reverse(imei));
-            WeakReference<Context> contextWeakReference = new WeakReference<>(context);
-            AppDataBase appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
-            String query = "PRAGMA wal_checkpoint(full)";
-            Cursor cursor = appDataBase.query(query, null);
-            if (cursor.moveToFirst()) {
-                cursor.getInt(0);
-                cursor.getInt(1);
-                cursor.getInt(2);
-            }
-            cursor.close();
-            File direct = new File(Environment.getExternalStorageDirectory() + "/MboraSystem/DATABASE-BACKUP");
-            if (!direct.exists()) direct.mkdirs();
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
-            if (sd.canWrite()) {
-                String hora = TextUtils.split(getDateCurrent(), "-")[3];
-                String nameDB = "database-mborasystem-" + bytesToHex(bytesID) + "-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora.replaceAll(":", ".") + ".db";
-                String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
-                String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + nameDB;
-                File currentDB = new File(data, currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
+    public static void exportBD(Boolean result, Context context, String imei) {
+        if (result)
+            exportDB(context, getDeviceUniqueID(context), imei);
+        else
+            alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_perm_n_pod_expo_db), context, R.drawable.ic_baseline_privacy_tip_24);
+    }
 
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-                handler.post(() -> new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_done_24).setTitle(context.getString(R.string.bd_expo)).setMessage(context.getString(R.string.dds_exp) + "\n\n" + backupDB).setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss()).setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> partilharDocumento(Common.getAppPath("DATABASE-BACKUP") + nameDB, context, "application/db", context.getString(R.string.partilhar))).show());
+    private static void exportDB(Context context, String deviceID, String imei) {
+        MainActivity.getProgressBar();
+        Handler handler = new Handler(Looper.getMainLooper());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                byte[] bytesID = getHash(reverse(deviceID) + "-" + reverse(imei));
+                WeakReference<Context> contextWeakReference = new WeakReference<>(context);
+                AppDataBase appDataBase = AppDataBase.getAppDataBase(contextWeakReference.get());
+                String query = "PRAGMA wal_checkpoint(full)";
+                Cursor cursor = appDataBase.query(query, null);
+                if (cursor.moveToFirst()) {
+                    cursor.getInt(0);
+                    cursor.getInt(1);
+                    cursor.getInt(2);
+                }
+                cursor.close();
+                File direct = new File(Environment.getExternalStorageDirectory() + "/MboraSystem/DATABASE-BACKUP");
+                if (!direct.exists()) direct.mkdirs();
+                File sd = Environment.getExternalStorageDirectory();
+                File data = Environment.getDataDirectory();
+                if (sd.canWrite()) {
+                    String hora = TextUtils.split(getDateCurrent(), "-")[3];
+                    String nameDB = "database-mborasystem-" + bytesToHex(bytesID) + "-" + getDataFormatMonth(monthInglesFrances(getDateCurrent())) + "T" + hora.replaceAll(":", ".") + ".db";
+                    String currentDBPath = "//data//" + "com.yoga.mborasystem" + "//databases//" + "database-mborasystem";
+                    String backupDBPath = "/MboraSystem/DATABASE-BACKUP/" + nameDB;
+                    File currentDB = new File(data, currentDBPath);
+                    File backupDB = new File(sd, backupDBPath);
+
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    handler.post(() -> new AlertDialog.Builder(context).setIcon(R.drawable.ic_baseline_done_24).setTitle(context.getString(R.string.bd_expo)).setMessage(context.getString(R.string.dds_exp) + "\n\n" + backupDB).setPositiveButton(context.getString(R.string.ok), (dialogInterface, i) -> dialogInterface.dismiss()).setNegativeButton(context.getString(R.string.partilhar), (dialogInterface, i) -> partilharDocumento(Common.getAppPath("DATABASE-BACKUP") + nameDB, context, "application/db", context.getString(R.string.partilhar))).show());
+                }
+            } catch (Exception e) {
+                handler.post(() -> alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24));
+            } finally {
+                MainActivity.dismissProgressBar();
             }
-        } catch (Exception e) {
-            handler.post(() -> alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24));
-        } finally {
-            MainActivity.dismissProgressBar();
-        }
+        });
     }
 
     public static void importDB(Context context, String uriPath) {
@@ -1253,8 +1265,8 @@ public class Ultilitario {
         setValueSharedPreferences(context, "nomeempresa", cliente.get(0).getNomeEmpresa());
     }
 
-    public static String getDeviceUniqueID(Activity activity) {
-        return Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+    public static String getDeviceUniqueID(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     public static byte[] getHash(String text) throws NoSuchAlgorithmException {
@@ -1361,20 +1373,23 @@ public class Ultilitario {
             alertDialog(context.getString(R.string.erro), context.getString(R.string.sm_perm_n_pod_imp_bd), context, R.drawable.ic_baseline_privacy_tip_24);
     }
 
-    private static void launchIntentPermission(boolean containsUri, Context context, ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase) {
+    private static void launchIntentPermission(boolean containsUri, Context context, ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportExportDataBase) {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
         if (containsUri) {
             Uri uri_ = Uri.fromParts("package", context.getPackageName(), null);
             intent.setData(uri_);
         }
-        requestIntentPermissionLauncherImportDataBase.launch(intent);
+        requestIntentPermissionLauncherImportExportDataBase.launch(intent);
     }
 
-    public static void launchPermissionImportDB(Context context, String uriPath, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
+    public static void launchPermissionImportExportDB(Context context, String uriPath, String deviceID, String imei, ActivityResultLauncher<Intent> requestIntentPermission, ActivityResultLauncher<String> requestPermission, String permission) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager())
-                importDB(context, uriPath);
+                if (uriPath == null)
+                    exportDB(context, deviceID, imei);
+                else
+                    importDB(context, uriPath);
             else {
                 try {
                     launchIntentPermission(true, context, requestIntentPermission);
@@ -1405,7 +1420,7 @@ public class Ultilitario {
                                 String[] stringHash = TextUtils.split(uriPath, "-");
                                 byte[] bytesHash = getHash(reverse(getDeviceUniqueID(activity)) + "-" + reverse(imei));
                                 if (isCreateUser || bytesToHex(bytesHash).equals(stringHash[stringHash.length - 4]))
-                                    launchPermissionImportDB(context, uriPath, requestIntentPermissionLauncherImportDataBase, requestPermissionLauncherImportDataBase, Manifest.permission.READ_EXTERNAL_STORAGE);
+                                    launchPermissionImportExportDB(context, uriPath, null, null, requestIntentPermissionLauncherImportDataBase, requestPermissionLauncherImportDataBase, Manifest.permission.READ_EXTERNAL_STORAGE);
                                 else
                                     alertDialog(context.getString(R.string.erro), context.getString(R.string.inc_bd), context, R.drawable.ic_baseline_close_24);
                             } catch (Exception e) {
