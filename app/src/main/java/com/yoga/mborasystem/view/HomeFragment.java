@@ -70,13 +70,12 @@ import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 public class HomeFragment extends Fragment {
 
     private Bundle bundle;
     private Cliente cliente;
-    private ExecutorService executor;
+    private boolean isNotaCredito;
     private FragmentHomeBinding binding;
     private boolean isOpen = false, isMaster;
     private ClienteViewModel clienteViewModel;
@@ -135,7 +134,7 @@ public class HomeFragment extends Fragment {
 
         binding.floatingActionButtonProduto.setOnClickListener(v -> entrarProdutosLx());
 
-        binding.floatingActionButtonVendaLixo.setOnClickListener(v -> entrarVendas(true));
+//        binding.floatingActionButtonVendaLixo.setOnClickListener();
 
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
@@ -148,7 +147,7 @@ public class HomeFragment extends Fragment {
                         Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
                     break;
                 case R.id.vendaFragmentH:
-                    entrarVendas(false);
+                    entrarVendas(isNotaCredito = false);
                     break;
                 case R.id.listaClienteFragmentH:
                     Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
@@ -163,7 +162,7 @@ public class HomeFragment extends Fragment {
                     entrarFacturacao();
                     break;
                 case R.id.vendaFragmentNotaCredito:
-                    entrarVendas(true);
+                    entrarVendas(isNotaCredito = true);
                     break;
                 case R.id.categoriaProdutoFragmentLx:
                     entrarCategoriasLx();
@@ -192,7 +191,7 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(requireView()).navigate(direction);
         });
 
-        binding.btnVenda.setOnClickListener(v -> entrarVendas(false));
+        binding.btnVenda.setOnClickListener(v -> entrarVendas(isNotaCredito = false));
 
         binding.btnCliente.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment));
         binding.btnDashboard.setOnClickListener(v -> {
@@ -418,6 +417,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void entrarVendas(boolean isNotaCredito) {
+        boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherVendas, requestPermissionLauncherVendas, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (isExternalStorageManager)
+            entrarVendasPermissionDanied(isNotaCredito);
+    }
+
+    private void entrarVendasPermissionDanied(boolean isNotaCredito) {
         MainActivity.getProgressBar();
         HomeFragmentDirections.ActionHomeFragmentToVendaFragment direction = HomeFragmentDirections.actionHomeFragmentToVendaFragment(cliente).setIsNotaCredito(isNotaCredito).setIsMaster(isMaster);
         Navigation.findNavController(requireView()).navigate(direction);
@@ -544,6 +549,19 @@ public class HomeFragment extends Fragment {
 
     ActivityResultLauncher<Intent> requestIntentPermissionLauncherExportDataBase = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> exportBD(result.getResultCode() == Activity.RESULT_OK, requireContext(), cliente.getImei()));
+
+    private void activityResultContractsVendas(Boolean result) {
+        if (result)
+            entrarVendasPermissionDanied(isNotaCredito);
+        else
+            alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_ent_ven), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+    }
+
+    private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherVendas = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> activityResultContractsVendas(result.getResultCode() == Activity.RESULT_OK));
+
+    private final ActivityResultLauncher<String> requestPermissionLauncherVendas = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), this::activityResultContractsVendas);
 
     @Override
     public void onDestroyView() {
