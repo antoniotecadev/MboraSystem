@@ -1,5 +1,6 @@
 package com.yoga.mborasystem.view;
 
+import static com.yoga.mborasystem.util.Ultilitario.alertDialog;
 import static com.yoga.mborasystem.util.Ultilitario.conexaoInternet;
 import static com.yoga.mborasystem.util.Ultilitario.getAPN;
 import static com.yoga.mborasystem.util.Ultilitario.getBooleanValue;
@@ -8,6 +9,7 @@ import static com.yoga.mborasystem.util.Ultilitario.getDataSplitDispositivo;
 import static com.yoga.mborasystem.util.Ultilitario.getDetailDeviceString;
 import static com.yoga.mborasystem.util.Ultilitario.getValueSharedPreferences;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
+import static com.yoga.mborasystem.util.Ultilitario.launchPermissionDocumentSaftInvoice;
 import static com.yoga.mborasystem.util.Ultilitario.monthInglesFrances;
 import static com.yoga.mborasystem.util.Ultilitario.partilharDocumento;
 import static com.yoga.mborasystem.util.Ultilitario.restartActivity;
@@ -18,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -402,7 +405,7 @@ public class FacturaFragment extends Fragment {
                     binding.textValorDivida.setText("" + ((total - desconto) - valorPago));
                 else {
                     buttonView.setChecked(false);
-                    Ultilitario.alertDialog(getString(R.string.dvd), getString(R.string.no_pos_apl_div), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    alertDialog(getString(R.string.dvd), getString(R.string.no_pos_apl_div), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                 }
             } else {
                 binding.switchEdit.setChecked(false);
@@ -489,52 +492,19 @@ public class FacturaFragment extends Fragment {
                         showToast(getContext(), Color.rgb(102, 153, 0), getString(R.string.dat_ems) + ": " + data, R.drawable.ic_toast_feito);
                     } else {
                         dataEmissao = "";
-                        Ultilitario.alertDialog(getString(R.string.dat_nao_sel), getString(R.string.dat_ems_nao_dat_act), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        alertDialog(getString(R.string.dat_nao_sel), getString(R.string.dat_ems_nao_dat_act), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                     }
                 }
             } catch (ParseException e) {
                 dataEmissao = "";
-                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             }
         }));
 
         binding.btnEfectuarVenda.setOnClickListener(v -> {
-            facturaPath = "";
-            if (isCheckedFormaPagamento()) {
-                if (valorPago > 0 || binding.checkboxSemValorPago.isChecked()) {
-                    String[] nomeIDNIFcliente;
-                    if (binding.txtNomeCliente.getText().toString().trim().isEmpty())
-                        nomeIDNIFcliente = TextUtils.split(getString(R.string.csm_fnl), "-");
-                    else
-                        nomeIDNIFcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
-
-                    referenciaFactura = "FR " + (dataEmissao.isEmpty() ? TextUtils.split(Ultilitario.getDateCurrent(), "-")[2].trim() : TextUtils.split(dataEmissao, "-")[2].trim());
-                    if (binding.checkboxDivida.isChecked()) {
-                        if (valorDivida > 0) {
-                            if (nomeIDNIFcliente.length == 3 && Long.parseLong(nomeIDNIFcliente[1].trim()) > 0) {
-                                dialogVerificarVenda(nomeIDNIFcliente);
-                            } else {
-                                binding.txtNomeCliente.requestFocus();
-                                binding.txtNomeCliente.setError(getString(R.string.dvd_atri_cl_cad));
-                            }
-                        } else {
-                            binding.textValorDivida.requestFocus();
-                            binding.textValorDivida.setError(getString(R.string.dt_vl_dv));
-                        }
-                    } else {
-                        if (nomeIDNIFcliente.length == 3 || binding.txtNomeCliente.getText().toString().trim().isEmpty())
-                            dialogVerificarVenda(nomeIDNIFcliente);
-                        else {
-                            binding.txtNomeCliente.requestFocus();
-                            binding.txtNomeCliente.setError(getString(R.string.cliente_nao_encontrado));
-                        }
-                    }
-                } else {
-                    binding.textValorPago.requestFocus();
-                    binding.textValorPago.setError(getString(R.string.digite_valor_pago));
-                }
-            } else
-                showToast(getContext(), Color.rgb(250, 170, 5), getString(R.string.selecciona_forma_pagamento), R.drawable.ic_toast_erro);
+            boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncher, requestPermissionLauncher, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (isExternalStorageManager)
+                dialogVerificarVenda();
         });
 
         vendaViewModel.getDataAdminMaster();
@@ -669,6 +639,45 @@ public class FacturaFragment extends Fragment {
         }
     }
 
+    private void dialogVerificarVenda() {
+        facturaPath = "";
+        if (isCheckedFormaPagamento()) {
+            if (valorPago > 0 || binding.checkboxSemValorPago.isChecked()) {
+                String[] nomeIDNIFcliente;
+                if (binding.txtNomeCliente.getText().toString().trim().isEmpty())
+                    nomeIDNIFcliente = TextUtils.split(getString(R.string.csm_fnl), "-");
+                else
+                    nomeIDNIFcliente = TextUtils.split(binding.txtNomeCliente.getText().toString(), "-");
+
+                referenciaFactura = "FR " + (dataEmissao.isEmpty() ? TextUtils.split(Ultilitario.getDateCurrent(), "-")[2].trim() : TextUtils.split(dataEmissao, "-")[2].trim());
+                if (binding.checkboxDivida.isChecked()) {
+                    if (valorDivida > 0) {
+                        if (nomeIDNIFcliente.length == 3 && Long.parseLong(nomeIDNIFcliente[1].trim()) > 0) {
+                            dialogVerificarVenda(nomeIDNIFcliente);
+                        } else {
+                            binding.txtNomeCliente.requestFocus();
+                            binding.txtNomeCliente.setError(getString(R.string.dvd_atri_cl_cad));
+                        }
+                    } else {
+                        binding.textValorDivida.requestFocus();
+                        binding.textValorDivida.setError(getString(R.string.dt_vl_dv));
+                    }
+                } else {
+                    if (nomeIDNIFcliente.length == 3 || binding.txtNomeCliente.getText().toString().trim().isEmpty())
+                        dialogVerificarVenda(nomeIDNIFcliente);
+                    else {
+                        binding.txtNomeCliente.requestFocus();
+                        binding.txtNomeCliente.setError(getString(R.string.cliente_nao_encontrado));
+                    }
+                }
+            } else {
+                binding.textValorPago.requestFocus();
+                binding.textValorPago.setError(getString(R.string.digite_valor_pago));
+            }
+        } else
+            showToast(getContext(), Color.rgb(250, 170, 5), getString(R.string.selecciona_forma_pagamento), R.drawable.ic_toast_erro);
+    }
+
     private void showHiddenComponent(int view, boolean isDesconto, boolean isDivida, boolean isFormaPagamento) {
         if (isDesconto) {
             binding.spinnerDesconto.setVisibility(view);
@@ -786,7 +795,7 @@ public class FacturaFragment extends Fragment {
         int somatorio = (dinheiroValorPago + cartaoValorPago + depValorPago + transfValorPago);
         int valor = valorPago - somatorio;
         if (somatorio > valorPago) {
-            Ultilitario.alertDialog(getString(R.string.forma_pagamento), getString(R.string.smt_siff), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            alertDialog(getString(R.string.forma_pagamento), getString(R.string.smt_siff), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             return 0;
         } else
             return valor;
@@ -862,7 +871,7 @@ public class FacturaFragment extends Fragment {
                     })
                     .show();
         } else
-            Ultilitario.alertDialog(getString(R.string.forma_pagamento), getString(R.string.smt_siff), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+            alertDialog(getString(R.string.forma_pagamento), getString(R.string.smt_siff), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
     }
 
     private void openCamera() {
@@ -982,7 +991,7 @@ public class FacturaFragment extends Fragment {
 
         private void adicionarProduto(long id, Produto produto, View v, boolean b) {
             if (produto.getQuantidade() == 0 && produto.isStock())
-                Ultilitario.alertDialog(getString(R.string.sem_prod_stoc), getString(R.string.sem_prod_stoc_msg, produto.getNome()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                alertDialog(getString(R.string.sem_prod_stoc), getString(R.string.sem_prod_stoc_msg, produto.getNome()), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             else {
                 estado.put(id, true);
                 produtos.put(id, produto);
@@ -1106,7 +1115,7 @@ public class FacturaFragment extends Fragment {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         if ((Integer.parseInt(parent.getItemAtPosition(position).toString()) > produto.getQuantidade()) && produto.isStock()) {
                             qt.setSelection(0);
-                            Ultilitario.alertDialog(getString(R.string.avs_stock), getString(R.string.quant_prod_dispo, String.valueOf(produto.getQuantidade())), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                            alertDialog(getString(R.string.avs_stock), getString(R.string.quant_prod_dispo, String.valueOf(produto.getQuantidade())), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } else {
                             quantidade = Integer.parseInt(parent.getItemAtPosition(position).toString());
                             totalUnit = produto.getPreco() * quantidade;
@@ -1190,7 +1199,7 @@ public class FacturaFragment extends Fragment {
                         mensagem = (!equalsDevice ? getString(R.string.inco_desp) + "\n\n" : "") + (isFinish ? getString(R.string.prazterm) : "") + "\n\nYOGA:" + contactos;
                         if (isFinish || !equalsDevice) {
                             MainActivity.dismissProgressBar();
-                            Ultilitario.alertDialog(isFinish ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
+                            alertDialog(isFinish ? getString(R.string.cont_des) : getString(R.string.act), mensagem, requireContext(), isFinish ? R.drawable.ic_baseline_person_add_disabled_24 : R.drawable.ic_baseline_person_pin_24);
                             Ultilitario.setBooleanPreference(requireContext(), false, "estado_conta");
                             Ultilitario.setValueSharedPreferences(requireContext(), "data", "00-00-0000");
                         } else {
@@ -1213,6 +1222,19 @@ public class FacturaFragment extends Fragment {
                     }
                 });
     }
+
+    private void activityResultContracts(Boolean result) {
+        if (result)
+            dialogVerificarVenda();
+        else
+            alertDialog(getString(R.string.erro), getString(R.string.sm_perm_n_pod_efe_ven), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+    }
+
+    private final ActivityResultLauncher<Intent> requestIntentPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> activityResultContracts(result.getResultCode() == Activity.RESULT_OK));
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), this::activityResultContracts);
 
     @Override
     public void onResume() {
@@ -1272,6 +1294,6 @@ public class FacturaFragment extends Fragment {
                 if (result)
                     openCamera();
                 else
-                    Ultilitario.alertDialog(getString(R.string.avs), getString(R.string.noa_scan_codbar), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                    alertDialog(getString(R.string.avs), getString(R.string.noa_scan_codbar), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
             });
 }

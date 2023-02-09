@@ -790,6 +790,7 @@
     <string name="lttd">Latitude</string>
     <string name="lgtd">Longitude</string>
     <string name="evt_crt_esp">evite caracteres especiais.</string>
+    <string name="sm_perm_n_pod_efe_ven">Sem permissão não pode efectuar venda.</string>
     <string-array name="array_rela_vend_diar">
         <item>Guardar PDF</item>
         <item>Guardar + Imprimir</item>
