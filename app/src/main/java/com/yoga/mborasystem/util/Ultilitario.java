@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -59,6 +60,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -71,6 +73,7 @@ import com.yoga.mborasystem.R;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.entidade.Cliente;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -661,6 +664,23 @@ public class Ultilitario {
     public static void storageImageAndProduct(String imei, ImageView imageView, Map<String, String> detalhes, Context context) {
         String filename = UUID.randomUUID().toString();
         StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
+
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = storeRef.putBytes(data);
+        uploadTask.addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24))
+                .addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url ->
+                        savedProduct(imei, imageView, filename, detalhes, url.toString(), context)
+                ).addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24)));
+
+    }
+
+    private static void savedProduct(String imei, ImageView imageView, String filename, Map<String, String> detalhes, String url, Context context) {
         String URL = getAPN(context) + "produtos/mbora/" + imei;
         Ion.with(context)
                 .load(URL)
@@ -678,7 +698,7 @@ public class Ultilitario {
                                     .setBodyParameter("nome", detalhes.get("nome"))
                                     .setBodyParameter("preco", detalhes.get("preco"))
                                     .setBodyParameter("quantidade", detalhes.get("quantidade"))
-                                    .setBodyParameter("urlImage", "mbora.png")
+                                    .setBodyParameter("urlImage", filename)
                                     .setBodyParameter("codigo_barra", detalhes.get("codigo_barra"))
                                     .setBodyParameter("tag", detalhes.get("tag"))
                                     .asJsonObject()
@@ -690,26 +710,15 @@ public class Ultilitario {
                                             else if (retorno.equals("erro")) {
                                                 String throwable = jsonObject.get("throwable").getAsString();
                                                 tentarNovamente(imei, imageView, detalhes, context, throwable);
-                                                //Eliminar imagem
+                                                FirebaseStorage.getInstance().getReferenceFromUrl(url).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                                             }
                                         } catch (Exception ex) {
                                             tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
-                                            //Eliminar imagem
+                                            FirebaseStorage.getInstance().getReferenceFromUrl(url).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                                         } finally {
                                             MainActivity.dismissProgressBar();
                                         }
                                     });
-
-//                            imageView.setDrawingCacheEnabled(true);
-//                            imageView.buildDrawingCache();
-//                            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-//                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-//                            byte[] data = baos.toByteArray();
-//
-//                            UploadTask uploadTask = storeRef.putBytes(data);
-//                            uploadTask.addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24)).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
-//                            }).addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24)));
                         } else {
                             String msg = context.getString(R.string.prod) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoPacote + "\n" +
                                     context.getString(R.string.prod_regi) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoRegistado;
@@ -717,6 +726,7 @@ public class Ultilitario {
                         }
                     } catch (Exception ex) {
                         tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
+                        FirebaseStorage.getInstance().getReferenceFromUrl(url).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
@@ -736,59 +746,6 @@ public class Ultilitario {
                 })
                 .show();
     }
-
-//    public static void storageImageProductInFirebase(String imei, ImageView imageView, List<String> detalhes, Context context) {
-//        MainActivity.getProgressBar();
-//        String filename = UUID.randomUUID().toString();
-//        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("produtos/" + imei);
-//        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
-//
-//        imageView.setDrawingCacheEnabled(true);
-//        imageView.buildDrawingCache();
-//        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-//        byte[] data = baos.toByteArray();
-//        mDatabase.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                long countProduct = task.getResult().getChildrenCount();
-//                long quantidadeProduto = Long.parseLong(getValueSharedPreferences(context, "pac_qtd_pro", "0"));
-////                if (countProduct <= quantidadeProduto) {
-//                if (true) {
-//                    UploadTask uploadTask = storeRef.putBytes(data);
-//                    uploadTask.addOnFailureListener(e -> {
-//                        MainActivity.dismissProgressBar();
-//                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-//                    }).addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url -> {
-//                        Map<String, String> produto = new HashMap<>();
-//                        String key = mDatabase.push().getKey();
-//                        produto.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                        produto.put("nome", detalhes.get(0));
-//                        produto.put("preco", detalhes.get(1));
-//                        produto.put("codigoBarra", detalhes.get(2));
-//                        produto.put("categoria", detalhes.get(3));
-//                        produto.put("urlImage", url.toString());
-//                        produto.put("endereco", detalhes.get(4));
-//                        produto.put("empresa", detalhes.get(5));
-//                        produto.put("imei", detalhes.get(6));
-//                        mDatabase.child(key).setValue(produto).addOnSuccessListener(unused -> {
-//                            MainActivity.dismissProgressBar();
-//                            alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get(0) + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get(1)) + "\n" + (detalhes.get(2).isEmpty() ? "" : "CB: " + detalhes.get(2)), context, R.drawable.ic_baseline_done_24);
-//                        }).addOnFailureListener(e -> {
-//                            FirebaseStorage.getInstance().getReferenceFromUrl(url.toString()).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
-//                            MainActivity.dismissProgressBar();
-//                            alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-//                        });
-//                    }).addOnFailureListener(e -> {
-//                        MainActivity.dismissProgressBar();
-//                        alertDialog(context.getString(R.string.erro), e.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-//                    }));
-//                } else
-//                    alertDialog(context.getString(R.string.erro), context.getString(R.string.atg_limit) + countProduct, context, R.drawable.ic_baseline_privacy_tip_24);
-//            } else
-//                alertDialog(context.getString(R.string.erro), task.getException().getMessage(), context, R.drawable.ic_baseline_privacy_tip_24);
-//        });
-//    }
 
     public static boolean isCampoVazio(String valor) {
         return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
