@@ -333,7 +333,7 @@ public class ClienteViewModel extends AndroidViewModel {
         String URL = getAPN(getApplication().getApplicationContext()) + "contacts";
         Ion.with(getApplication().getApplicationContext())
                 .load("POST", URL)
-                .setBodyParameter("account_id", "3")
+                .setBodyParameter("account_id", "1")
                 .setBodyParameter("codigo_equipa", cliente.getCodigoEquipa())
                 .setBodyParameter("first_name", cliente.getNome())
                 .setBodyParameter("last_name", cliente.getSobrenome())
