@@ -89,7 +89,7 @@ public class CadastrarClienteFragment extends Fragment {
             }
         });
 
-        binding.buttonCriarConta.setOnClickListener(v -> cadastrarParceiro());
+        binding.buttonCriarConta.setOnClickListener(v -> criarContaEmpresa());
         binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "termoscondicoes"))));
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
@@ -179,7 +179,7 @@ public class CadastrarClienteFragment extends Fragment {
         return getPositionSpinner(requireContext(), binding.spinnerRegimeIva, R.array.array_regime_iva_valor, R.array.array_regime_iva_posicao, "0");
     }
 
-    private void cadastrarParceiro() {
+    private void criarContaEmpresa() {
         if (binding.editTextEmail.getText().toString().isEmpty()) {
             binding.editTextEmail.requestFocus();
             binding.editTextEmail.setError(requireContext().getString(R.string.dig_eml));
