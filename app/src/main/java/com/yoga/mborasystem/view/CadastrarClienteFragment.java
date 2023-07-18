@@ -56,7 +56,7 @@ import java.util.Random;
 public class CadastrarClienteFragment extends Fragment {
 
     private DatabaseReference mDatabase;
-    private ClienteViewModel clienteViewModel;
+    private ClienteViewModel empresaViewModel;
     private FragmentCadastrarClienteBinding binding;
     private String errorClienteUser = "", imei;
 
@@ -64,7 +64,7 @@ public class CadastrarClienteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
-        clienteViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
+        empresaViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
     @Override
@@ -75,8 +75,8 @@ public class CadastrarClienteFragment extends Fragment {
     private View criarCliente(LayoutInflater inflater, ViewGroup container) {
         binding = FragmentCadastrarClienteBinding.inflate(inflater, container, false);
         spinnerProvincias(requireContext(), binding.spinnerProvincias);
-        clienteViewModel.getMunicipios(binding.spinnerProvincias, binding.spinnerMunicipios);
-        clienteViewModel.getBairros(binding.spinnerMunicipios, binding.spinnerBairros);
+        empresaViewModel.getMunicipios(binding.spinnerProvincias, binding.spinnerMunicipios);
+        empresaViewModel.getBairros(binding.spinnerMunicipios, binding.spinnerBairros);
 
         binding.spinnerBairros.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -93,7 +93,7 @@ public class CadastrarClienteFragment extends Fragment {
         binding.buttonTermoCondicao.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "termoscondicoes"))));
         binding.checkTermoCondicao.setOnCheckedChangeListener((buttonView, isChecked) -> binding.buttonCriarConta.setEnabled(isChecked));
 
-        clienteViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
+        empresaViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
             switch (operacao) {
                 case CRIAR:
                     saveUserInFirebase(imei);
@@ -189,7 +189,7 @@ public class CadastrarClienteFragment extends Fragment {
                     if (task.getResult().getSignInMethods().isEmpty()) {
                         try {
                             imei = System.currentTimeMillis() / 1000 + String.valueOf(new Random().nextInt((100000 - 1) + 1) + 1);
-                            clienteViewModel.validarCliente(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei, getRegimeIva(), requireActivity());
+                            empresaViewModel.validarDadosEmpresa(Ultilitario.Operacao.CRIAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, imei, getRegimeIva(), requireActivity());
                         } catch (Exception e) {
                             alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         }
