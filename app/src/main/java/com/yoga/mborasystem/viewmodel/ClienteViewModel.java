@@ -316,7 +316,7 @@ public class ClienteViewModel extends AndroidViewModel {
 
                     @Override
                     public void onComplete() {
-                        salvarParceiro(cliente, activity);
+                        registarEmpresa(cliente, activity);
                     }
 
                     @Override
@@ -328,7 +328,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 });
     }
 
-    private void salvarParceiro(Cliente cliente, Activity activity) {
+    private void registarEmpresa(Cliente cliente, Activity activity) {
         FirebaseMessaging messaging = FirebaseMessaging.getInstance();
         String URL = getAPN(getApplication().getApplicationContext()) + "contacts";
         Ion.with(getApplication().getApplicationContext())
