@@ -477,8 +477,8 @@
     <string name="eqp_n_enc">Équipe introuvable</string>
     <string name="dds_elim">Données de partenaire supprimées</string>
     <string name="dds_n_elim">Les données du partenaire ne sont pas supprimées</string>
-    <string name="parc_sv">Partenaire sauvé</string>
-    <string name="parc_n_sv">Partenaire non enregistré</string>
+    <string name="emp_reg">Société enregistrée</string>
+    <string name="emp_n_reg">Société non enregistrée</string>
     <string name="elim_tds">Supprimer tout</string>
     <string name="elim_tdas">Supprimer tout</string>
     <string name="tem_cert_elim_vds">Voulez-vous vraiment supprimer définitivement toutes les ventes de la corbeille ?</string>

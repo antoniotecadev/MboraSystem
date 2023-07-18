@@ -477,8 +477,8 @@
     <string name="eqp_n_enc">Team not found</string>
     <string name="dds_elim">Deleted partner data</string>
     <string name="dds_n_elim">Partner data not deleted</string>
-    <string name="parc_sv">Partner saved</string>
-    <string name="parc_n_sv">Partner not saved</string>
+    <string name="emp_reg">Registered company</string>
+    <string name="emp_n_reg">Unregistered company</string>
     <string name="elim_tds">Delete All</string>
     <string name="elim_tdas">Delete All</string>
     <string name="tem_cert_elim_vds">Are you sure you want to permanently delete all sales from the recycle bin?</string>

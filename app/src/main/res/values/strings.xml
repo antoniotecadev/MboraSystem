@@ -527,8 +527,8 @@
     <string name="eqp_n_enc">Equipa não encontrada</string>
     <string name="dds_elim">Dados de parceiro eliminados</string>
     <string name="dds_n_elim">Dados de parceiro não eliminados</string>
-    <string name="parc_sv">Parceiro salvo</string>
-    <string name="parc_n_sv">Parceiro não salvo</string>
+    <string name="emp_reg">Empresa registada</string>
+    <string name="emp_n_reg">Empresa não registada</string>
     <string name="elim_tds">Eliminar Todos</string>
     <string name="elim_tdas">Eliminar Todas</string>
     <string name="tem_cert_elim_vds">Tem certeza que quer eliminar permanentemente  todas as vendas da lixeira?</string>
