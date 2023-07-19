@@ -260,7 +260,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void empresaExiste(boolean limitCadastro, Cliente c, Context context, View view, Activity activity) {
+    public void contaExiste(boolean limitCadastro, Cliente c, Context context, View view, Activity activity) {
         executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
@@ -447,7 +447,7 @@ public class ClienteViewModel extends AndroidViewModel {
                                 MainActivity.dismissProgressBar();
                                 showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), getApplication().getString(R.string.eqp_n_enc), R.drawable.ic_toast_erro);
                             } else
-                                empresaExiste(true, cliente, null, null, activity);
+                                contaExiste(true, cliente, null, null, activity);
                         } catch (Exception ex) {
                             MainActivity.dismissProgressBar();
                             showToast(getApplication().getApplicationContext(), Color.rgb(204, 0, 0), "Cod. Team:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
