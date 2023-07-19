@@ -368,14 +368,14 @@ public class ClienteViewModel extends AndroidViewModel {
                             String throwable = jsonObject.get("throwable").getAsString();
                             showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.emp_n_reg) + ", " + throwable, R.drawable.ic_toast_erro);
                             getValido().postValue(Ultilitario.Operacao.NENHUMA);
-                            eliminarParceiro(cliente);
+                            eliminarConta(cliente);
                         }
                     } catch (Exception ex) {
                         messaging.unsubscribeFromTopic(cliente.getMunicipio());
                         messaging.unsubscribeFromTopic("imei_" + cliente.getImei());
                         getValido().postValue(Ultilitario.Operacao.NENHUMA);
                         showToast(getApplication(), Color.rgb(204, 0, 0), "Online Storege:\n" + ex.getMessage(), R.drawable.ic_toast_erro);
-                        eliminarParceiro(cliente);
+                        eliminarConta(cliente);
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
@@ -456,7 +456,7 @@ public class ClienteViewModel extends AndroidViewModel {
         }
     }
 
-    private void eliminarParceiro(Cliente cliente) {
+    private void eliminarConta(Cliente cliente) {
         Completable.fromAction(() -> clienteRepository.delete(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
