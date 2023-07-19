@@ -60,7 +60,7 @@ public class CadastrarClienteFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ClienteViewModel empresaViewModel;
     private FragmentCadastrarClienteBinding binding;
-    private String errorClienteUser = "", imei;
+    private String error = "", imei;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -215,10 +215,10 @@ public class CadastrarClienteFragment extends Fragment {
                         binding.buttonCriarConta.setEnabled(false);
                         mDatabase.child(imei).setValue(empresa).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful())
-                                errorClienteUser = task.getException().getMessage();
+                                error = task.getException().getMessage();
                         }));
                         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                            CadastrarClienteFragmentDirections.ActionCadastrarClienteFragmentToBloquearFragment cadastrarClienteBinding = CadastrarClienteFragmentDirections.actionCadastrarClienteFragmentToBloquearFragment().setErrorCreateUser(errorClienteUser.isEmpty() ? "" : errorClienteUser).setIsCreateUser(true);
+                            CadastrarClienteFragmentDirections.ActionCadastrarClienteFragmentToBloquearFragment cadastrarClienteBinding = CadastrarClienteFragmentDirections.actionCadastrarClienteFragmentToBloquearFragment().setErrorCreateUser(error.isEmpty() ? "" : error).setIsCreateUser(true);
                             Navigation.findNavController(requireView()).navigate(cadastrarClienteBinding);
                         }, 1000);
                     } else
