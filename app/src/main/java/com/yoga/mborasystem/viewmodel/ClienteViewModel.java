@@ -269,7 +269,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 cliente = clienteRepository.clienteExiste();
                 if (cliente.isEmpty()) {
                     if (limitCadastro)
-                        cadastrarCliente(c, activity);
+                        criarConta(c, activity);
                     else {
                         handler.post(() -> getResultado(Ultilitario.Existe.NAO, null, view, null));
                         MainActivity.dismissProgressBar();
@@ -304,7 +304,7 @@ public class ClienteViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void cadastrarCliente(Cliente cliente, Activity activity) {
+    public void criarConta(Cliente cliente, Activity activity) {
         Completable.fromAction(() -> clienteRepository.insert(cliente))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
