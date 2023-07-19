@@ -208,8 +208,8 @@ public class CadastrarClienteFragment extends Fragment {
     private void sendNoticationMboraSystemAdmin(String imei) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(Objects.requireNonNull(binding.editTextEmail.getText()).toString(), Objects.requireNonNull(binding.editTextSenha.getText()).toString())
                 .addOnCompleteListener(requireActivity(), task -> {
-                    Map<String, String> empresa = new HashMap<>();
                     if (task.isSuccessful()) {
+                        Map<String, String> empresa = new HashMap<>();
                         empresa.put("id", "");
                         empresa.put("imei", imei);
                         binding.buttonCriarConta.setEnabled(false);
@@ -217,13 +217,17 @@ public class CadastrarClienteFragment extends Fragment {
                             if (!task1.isSuccessful())
                                 error = task.getException().getMessage();
                         }));
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                            CadastrarClienteFragmentDirections.ActionCadastrarClienteFragmentToBloquearFragment cadastrarClienteBinding = CadastrarClienteFragmentDirections.actionCadastrarClienteFragmentToBloquearFragment().setErrorCreateUser(error.isEmpty() ? "" : error).setIsCreateUser(true);
-                            Navigation.findNavController(requireView()).navigate(cadastrarClienteBinding);
-                        }, 1000);
+                        navegarTelaBloqueio(error.isEmpty() ? "" : error);
                     } else
-                        alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        navegarTelaBloqueio(task.getException().getMessage());
                 });
+    }
+
+    private void navegarTelaBloqueio(String error) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            CadastrarClienteFragmentDirections.ActionCadastrarClienteFragmentToBloquearFragment cadastrarClienteBinding = CadastrarClienteFragmentDirections.actionCadastrarClienteFragmentToBloquearFragment().setErrorCreateUser(error.isEmpty() ? "" : error).setIsCreateUser(true);
+            Navigation.findNavController(requireView()).navigate(cadastrarClienteBinding);
+        }, 1000);
     }
 
     private final ActivityResultLauncher<Intent> requestIntentPermissionLauncherImportDataBase = registerForActivityResult(
