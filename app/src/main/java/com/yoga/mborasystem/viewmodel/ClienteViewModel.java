@@ -363,10 +363,10 @@ public class ClienteViewModel extends AndroidViewModel {
                             messaging.subscribeToTopic("imei_" + cliente.getImei());
                             setValueSharedPreferences(getApplication(), "regime_iva", cliente.getRegimeIva());
                             getValido().postValue(Ultilitario.Operacao.CRIAR);
-                            showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.parc_sv), R.drawable.ic_toast_feito);
+                            showToast(getApplication(), Color.rgb(102, 153, 0), getApplication().getString(R.string.emp_reg), R.drawable.ic_toast_feito);
                         } else if (retorno.equals("erro")) {
                             String throwable = jsonObject.get("throwable").getAsString();
-                            showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.parc_n_sv) + ", " + throwable, R.drawable.ic_toast_erro);
+                            showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.emp_n_reg) + ", " + throwable, R.drawable.ic_toast_erro);
                             getValido().postValue(Ultilitario.Operacao.NENHUMA);
                             eliminarParceiro(cliente);
                         }
