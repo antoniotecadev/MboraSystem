@@ -50,6 +50,8 @@ import com.yoga.mborasystem.model.entidade.ContaBancaria;
 import com.yoga.mborasystem.util.Ultilitario;
 import com.yoga.mborasystem.viewmodel.ClienteViewModel;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -206,27 +208,12 @@ public class CadastrarClienteFragment extends Fragment {
     private void saveUserInFirebase(String imei) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(Objects.requireNonNull(binding.editTextEmail.getText()).toString(), Objects.requireNonNull(binding.editTextSenha.getText()).toString())
                 .addOnCompleteListener(requireActivity(), task -> {
-                    Cliente cliente = new Cliente();
+                    Map<String, String> empresa = new HashMap<>();
                     if (task.isSuccessful()) {
-                        String uid = task.getResult().getUser().getUid();
-                        cliente.setId("");
-                        cliente.setUid(uid);
-                        cliente.setImei(imei);
-                        cliente.setNome(binding.editTextNome.getText().toString());
-                        cliente.setSobrenome(binding.editTextSobreNome.getText().toString());
-                        cliente.setEmail(binding.editTextEmail.getText().toString());
-                        cliente.setTelefone(binding.editTextNumeroTelefone.getText().toString());
-                        cliente.setTelefonealternativo(binding.editTextNumeroTelefoneAlternativo.getText().toString());
-                        cliente.setNomeEmpresa(binding.editTextNomeEmpresa.getText().toString());
-                        cliente.setProvincia(binding.spinnerProvincias.getSelectedItem().toString());
-                        cliente.setMunicipio(binding.spinnerMunicipios.getSelectedItem().toString());
-                        cliente.setBairro(binding.editTextBairro.getText().toString());
-                        cliente.setRua(binding.editTextRua.getText().toString());
-                        cliente.setCodigoPlus("");
-                        cliente.setFotoCapaUrl("");
-                        cliente.setFotoPerfilUrl("");
+                        empresa.put("id", "");
+                        empresa.put("imei", imei);
                         binding.buttonCriarConta.setEnabled(false);
-                        mDatabase.child(imei).setValue(cliente).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
+                        mDatabase.child(imei).setValue(empresa).addOnFailureListener(e -> FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(task1 -> {
                             if (!task1.isSuccessful())
                                 errorClienteUser = task.getException().getMessage();
                         }));
