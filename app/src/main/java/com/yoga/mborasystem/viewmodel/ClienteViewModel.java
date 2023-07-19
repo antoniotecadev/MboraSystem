@@ -276,7 +276,7 @@ public class ClienteViewModel extends AndroidViewModel {
                     }
                 } else {
                     if (limiteRegisto)
-                        showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_cliente_ja_existe), R.drawable.ic_toast_erro);
+                        showToast(getApplication(), Color.rgb(204, 0, 0), getApplication().getString(R.string.conta_ja_existe), R.drawable.ic_toast_erro);
                     else
                         handler.post(() -> getResultado(SIM, context, view, cliente));
                     MainActivity.dismissProgressBar();

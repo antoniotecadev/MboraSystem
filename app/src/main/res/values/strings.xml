@@ -164,7 +164,7 @@
     <string name="termo_condicao">Termos e condições</string>
     <string name="aceito_termo_condicao">Aceito</string>
     <string name="politica_privacidade">Política de privacidade</string>
-    <string name="conta_cliente_ja_existe">Já existe uma conta Parceiro para este App</string>
+    <string name="conta_ja_existe">Já existe uma conta</string>
     <string name="conta">Conta</string>
     <string name="ok">OK</string>
     <string name="tentar_novamente">Tente novamente após 1 minuto</string>

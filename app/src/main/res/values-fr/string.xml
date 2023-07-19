@@ -152,7 +152,7 @@
     <string name="termo_condicao">Termes et conditions</string>
     <string name="aceito_termo_condicao">Accepté</string>
     <string name="politica_privacidade">Politique de confidentialité</string>
-    <string name="conta_cliente_ja_existe">Il existe déjà un compte client pour cette application</string>
+    <string name="conta_ja_existe">Il existe déjà un compte</string>
     <string name="conta">Compte</string>
     <string name="ok">d\'accord</string>
     <string name="tentar_novamente">Réessayez après 1 minute</string>
