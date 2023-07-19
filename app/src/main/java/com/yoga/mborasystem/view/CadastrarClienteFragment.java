@@ -98,7 +98,7 @@ public class CadastrarClienteFragment extends Fragment {
         empresaViewModel.getValido().observe(getViewLifecycleOwner(), operacao -> {
             switch (operacao) {
                 case CRIAR:
-                    saveUserInFirebase(imei);
+                    sendNoticationMboraSystemAdmin(imei);
                     break;
                 case NENHUMA:
                     Ultilitario.dialogConta(getString(R.string.conta_nao_criada), getContext()).show();
@@ -205,7 +205,7 @@ public class CadastrarClienteFragment extends Fragment {
         }
     }
 
-    private void saveUserInFirebase(String imei) {
+    private void sendNoticationMboraSystemAdmin(String imei) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(Objects.requireNonNull(binding.editTextEmail.getText()).toString(), Objects.requireNonNull(binding.editTextSenha.getText()).toString())
                 .addOnCompleteListener(requireActivity(), task -> {
                     Map<String, String> empresa = new HashMap<>();
