@@ -476,8 +476,8 @@
     <string name="cdg_equipa">Code YOGA*</string>
     <string name="cod_eqp_inv">Invalid YOGA code</string>
     <string name="eqp_n_enc">Team not found</string>
-    <string name="dds_elim">Deleted partner data</string>
-    <string name="dds_n_elim">Partner data not deleted</string>
+    <string name="dds_elim">Deleted company data</string>
+    <string name="dds_n_elim">Company data not deleted</string>
     <string name="emp_reg">Registered company</string>
     <string name="emp_n_reg">Unregistered company</string>
     <string name="elim_tds">Delete All</string>
@@ -675,7 +675,7 @@
     <string name="autent">Authenticated.</string>
     <string name="nvm">(Cloud)</string>
     <string name="prod_env_mbo">Product shipped</string>
-    <string name="sm_perm_loc_n_pod_cri">Without location permission cannot create partner account.</string>
+    <string name="sm_perm_loc_n_pod_cri">Without location permission cannot create company account.</string>
     <string name="term_sess_nuve">sign out</string>
     <string name="sess_nuve_term">User session terminated.</string>
     <string name="img_prod_eli">Product image deleted.</string>

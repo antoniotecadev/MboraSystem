@@ -526,8 +526,8 @@
     <string name="cdg_equipa">Código YOGA*</string>
     <string name="cod_eqp_inv">Código YOGA inválido</string>
     <string name="eqp_n_enc">Equipa não encontrada</string>
-    <string name="dds_elim">Dados de parceiro eliminados</string>
-    <string name="dds_n_elim">Dados de parceiro não eliminados</string>
+    <string name="dds_elim">Dados de empresa eliminados</string>
+    <string name="dds_n_elim">Dados de empresa não eliminados</string>
     <string name="emp_reg">Empresa registada</string>
     <string name="emp_n_reg">Empresa não registada</string>
     <string name="elim_tds">Eliminar Todos</string>
@@ -726,7 +726,7 @@
     <string name="autent">Autenticado.</string>
     <string name="nvm">(Nuvem)</string>
     <string name="prod_env_mbo">Produto enviado</string>
-    <string name="sm_perm_loc_n_pod_cri">Sem permissão de localização não pode criar conta de parceiro.</string>
+    <string name="sm_perm_loc_n_pod_cri">Sem permissão de localização não pode criar conta da empresa.</string>
     <string name="term_sess_nuve">Terminar sessão</string>
     <string name="sess_nuve_term">Sessão de usuário terminada.</string>
     <string name="img_prod_eli">Imagem de produto eliminada.</string>
