@@ -41,7 +41,6 @@ public class RelatorioDiariaVenda {
     }
 
     private static void createPdfFile(boolean isGuardar, String path, String facturaPath, Activity activity, Context context, Cliente cliente, List<Venda> vendas, List<ProdutoVenda> produtoVendas, String data, Handler handler, View view) {
-        MainActivity.getProgressBar();
         long totalVendas = 0;
         int quantidadeProdutos = 0;
         int totalDescontos = 0;
