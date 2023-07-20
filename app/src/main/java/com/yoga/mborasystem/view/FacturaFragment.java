@@ -854,7 +854,7 @@ public class FacturaFragment extends Fragment {
                     )
                     .setPositiveButton(R.string.vender, (dialog, which) -> {
                         if (getDataSplitDispositivo(getValueSharedPreferences(requireContext(), "data", "00-00-0000")).equals(getDataSplitDispositivo(monthInglesFrances(Ultilitario.getDateCurrent())))
-                                && Ultilitario.getBooleanPreference(requireContext(), "estado_conta") || true) {
+                                && Ultilitario.getBooleanPreference(requireContext(), "estado_conta")) {
                             if (getBooleanValue(requireContext(), "notificacao_venda")) {
                                 if (conexaoInternet(requireContext()))
                                     vendaViewModel.cadastrarVenda(requireContext(), nomeIDNIFcliente[0].trim() + "-" + idcliente + "-" + nif, binding.textDesconto, percDesc, finalQuantidadeProduto, valorBase, referenciaFactura, valorTotalIva, getFormaPamento(binding), totaldesconto, total, produtos, precoTotal, valorDivida, valorPago, requireArguments().getLong("idoperador", 0), idcliente, dataEmissao, getView());
