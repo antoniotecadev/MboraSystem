@@ -97,13 +97,7 @@ public class DialogAlterarCliente extends DialogFragment {
             }
         });
         //Actualizar(reutilizando o Button)
-        binding.buttonCriarConta.setOnClickListener(view -> {
-            try {
-                clienteViewModel.validarDadosEmpresa(Ultilitario.Operacao.ACTUALIZAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, "0", getRegimeIva(), requireActivity());
-            } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        binding.buttonCriarConta.setOnClickListener(view -> clienteViewModel.validarDadosEmpresa(Ultilitario.Operacao.ACTUALIZAR, binding.editTextNome, binding.editTextSobreNome, binding.editTextNif, binding.editTextNumeroTelefone, binding.editTextNumeroTelefoneAlternativo, binding.editTextEmail, binding.editTextNomeEmpresa, binding.spinnerProvincias, binding.spinnerMunicipios, binding.editTextBairro, binding.editTextRua, binding.editTextSenha, binding.editTextSenhaNovamente, binding.editTextCodigoEquipa, "0", getRegimeIva(), requireActivity()));
         return dialog;
     }
 
