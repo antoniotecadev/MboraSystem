@@ -43,6 +43,7 @@
     <string name="nifbi_incompleto">FNI incomplet</string>
     <string name="numero_incompleto">"Numéro incomplet"</string>
     <string name="senha_invalida">Le mot de passe n\'est pas valide</string>
+    <string name="senha_minima">Au moins 8 caractères</string>
     <string name="codigopin_incompleto">Le code PIN nécessite 6 chiffres</string>
     <string name="pin_diferente">Code PIN différent</string>
     <string name="entrar_conta">Me connecter à mon compte</string>

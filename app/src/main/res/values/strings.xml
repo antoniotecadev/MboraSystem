@@ -52,6 +52,7 @@
     <string name="nifbi_incompleto">NIF incompleto</string>
     <string name="numero_incompleto">"Número incompleto "</string>
     <string name="senha_invalida">Senha não é válida</string>
+    <string name="senha_minima">No mínimo 8 caracteres</string>
     <string name="codigopin_incompleto">O código PIN requer 6 dígitos</string>
     <string name="pin_diferente">Código PIN diferente</string>
     <string name="entrar_conta">Entrar em minha conta</string>

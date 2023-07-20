@@ -154,6 +154,9 @@ public class ClienteViewModel extends AndroidViewModel {
         } else if ((isCampoVazio(Objects.requireNonNull(senha.getText()).toString()) || letraNumero.matcher(senha.getText().toString()).find()) && operacao == Ultilitario.Operacao.CRIAR) {
             senha.requestFocus();
             senha.setError(getApplication().getString(R.string.senha_invalida));
+        } else if (senha.length() < 8) {
+            senha.requestFocus();
+            senha.setError(getApplication().getString(R.string.senha_minima));
         } else if ((isCampoVazio(Objects.requireNonNull(senhaNovamente.getText()).toString()) || letraNumero.matcher(senhaNovamente.getText().toString()).find()) && operacao == Ultilitario.Operacao.CRIAR) {
             senhaNovamente.requestFocus();
             senhaNovamente.setError(getApplication().getString(R.string.senha_invalida));
@@ -180,7 +183,7 @@ public class ClienteViewModel extends AndroidViewModel {
             cliente.setRua(rua.getText().toString());
             cliente.setRegimeIva(regimeIva);
             if (operacao.equals(Ultilitario.Operacao.CRIAR)) {
-                cliente.setSenha(Ultilitario.generateKey(senha.getText().toString().toCharArray()));
+                cliente.setSenha(senha.getText().toString());
                 cliente.setImei(imei);
                 cliente.setCodigoEquipa(codigoEquipa.getText().toString());
                 verificarCodigoEquipa(codigoEquipa.getText().toString(), cliente, activity);
@@ -339,6 +342,7 @@ public class ClienteViewModel extends AndroidViewModel {
                 .setBodyParameter("last_name", cliente.getSobrenome())
                 .setBodyParameter("nif_bi", cliente.getNifbi())
                 .setBodyParameter("email", cliente.getEmail())
+                .setBodyParameter("password", cliente.getSenha())
                 .setBodyParameter("phone", cliente.getTelefone())
                 .setBodyParameter("alternative_phone", cliente.getTelefonealternativo())
                 .setBodyParameter("empresa", cliente.getNomeEmpresa())

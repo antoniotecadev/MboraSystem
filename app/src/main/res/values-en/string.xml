@@ -43,6 +43,7 @@
     <string name="nifbi_incompleto">NIF incompleto</string>
     <string name="numero_incompleto">"Incomplete number"</string>
     <string name="senha_invalida">Password is not valid</string>
+    <string name="senha_minima">At least 8 characters</string>
     <string name="codigopin_incompleto">PIN code requires 6 digits</string>
     <string name="pin_diferente">Different PIN code</string>
     <string name="entrar_conta">log into my account</string>

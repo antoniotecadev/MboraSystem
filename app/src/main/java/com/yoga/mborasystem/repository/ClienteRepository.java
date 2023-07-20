@@ -5,8 +5,11 @@ import android.content.Context;
 import com.yoga.mborasystem.model.connectiondatabase.AppDataBase;
 import com.yoga.mborasystem.model.dao.ClienteDao;
 import com.yoga.mborasystem.model.entidade.Cliente;
+import com.yoga.mborasystem.util.Ultilitario;
 
 import java.lang.ref.WeakReference;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 public class ClienteRepository {
@@ -22,7 +25,8 @@ public class ClienteRepository {
         this.context = context;
     }
 
-    public void insert(Cliente cliente) {
+    public void insert(Cliente cliente) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        cliente.setSenha(Ultilitario.generateKey(cliente.getSenha().toCharArray()));
         clienteDao.insert(cliente);
     }
 
