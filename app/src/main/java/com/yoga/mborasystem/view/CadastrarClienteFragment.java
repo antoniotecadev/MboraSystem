@@ -64,7 +64,7 @@ public class CadastrarClienteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = FirebaseDatabase.getInstance().getReference("parceiros");
+        mDatabase = FirebaseDatabase.getInstance().getReference("empresas");
         empresaViewModel = new ViewModelProvider(requireActivity()).get(ClienteViewModel.class);
     }
 
