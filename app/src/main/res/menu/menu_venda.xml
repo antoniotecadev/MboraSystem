@@ -23,11 +23,13 @@
 <!--    <item-->
 <!--        android:id="@+id/exportarvenda"-->
 <!--        android:title="@string/exp_venda"-->
+<!--        android:visible="false"-->
 <!--        app:showAsAction="never"/>-->
 
 <!--    <item-->
 <!--        android:id="@+id/importarvenda"-->
 <!--        android:title="@string/imp_venda"-->
+<!--        android:visible="false"-->
 <!--        app:showAsAction="never"/>-->
 
     <item
@@ -36,17 +38,18 @@
         android:title="@string/calc"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
-        android:id="@+id/btnEliminarTodosLixo"
-        android:icon="@drawable/ic_eliminar"
-        android:title="@string/elim_tdas"
-        app:showAsAction="ifRoom|collapseActionView" />
+<!--    <item-->
+<!--        android:id="@+id/btnEliminarTodosLixo"-->
+<!--        android:icon="@drawable/ic_eliminar"-->
+<!--        android:visible="false"-->
+<!--        android:title="@string/elim_tdas"-->
+<!--        app:showAsAction="ifRoom|collapseActionView" />-->
 
-    <item
-        android:id="@+id/btnRestaurarTodosLixo"
-        android:icon="@android:drawable/ic_menu_revert"
-        android:visible="false"
-        android:title="@string/rest_tdas"
-        app:showAsAction="ifRoom|collapseActionView" />
+<!--    <item-->
+<!--        android:id="@+id/btnRestaurarTodosLixo"-->
+<!--        android:icon="@android:drawable/ic_menu_revert"-->
+<!--        android:visible="false"-->
+<!--        android:title="@string/rest_tdas"-->
+<!--        app:showAsAction="ifRoom|collapseActionView" />-->
 
 </menu>

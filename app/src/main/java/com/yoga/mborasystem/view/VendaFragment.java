@@ -238,22 +238,6 @@ public class VendaFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.menu_venda, menu);
-                if (isNotaCredito) {
-//                    menu.findItem(R.id.exportarvenda).setVisible(false);
-//                    menu.findItem(R.id.importarvenda).setVisible(false);
-                    if (!isMaster) {
-                        menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
-                        menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
-                    }
-                } else {
-                    menu.findItem(R.id.btnEliminarTodosLixo).setVisible(false);
-                    menu.findItem(R.id.btnRestaurarTodosLixo).setVisible(false);
-                }
-//                if (!isMaster) {
-//                    menu.findItem(R.id.exportarvenda).setVisible(false);
-//                    menu.findItem(R.id.importarvenda).setVisible(false);
-//                }
-
                 SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
                 MenuItem menuItem = menu.findItem(R.id.app_bar_search);
                 SearchView searchView = (SearchView) menuItem.getActionView();
@@ -301,6 +285,8 @@ public class VendaFragment extends Fragment {
                         VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario).setIsNotaCredito(isNotaCredito);
                         Navigation.findNavController(requireView()).navigate(direction);
                         break;
+//                    PORQUÊ QUE O CÓDIGO ESTÁ COMENTADO
+//                    A IMPORTAÇÃO DESORGANIZADA PODE GERAR SEQUÊNCIA DE SÉRIE DA FACTURA ERRADAS, PODENDO ASSIM GERAR ERROS AO EMITIR O FICHEIRO SAFT, FUTURAMENTE PODERÁ SE IMPLEMENTAR UMA SOLUÇÃO QUE PERMITA EXPORTAR E IMPORTAR VENDAS SEM OCORRER OS ERROS REFERIDOS.
 //                    case R.id.exportarvenda:
 //                        exportarVenda();
 //                        break;
@@ -428,14 +414,16 @@ public class VendaFragment extends Fragment {
                                 return false;
                             });
                             menu.add(TextUtils.split(venda.getNome_cliente(), "-")[2]).setEnabled(false);
-//                                menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
-//                                    caixaDialogo(getString(R.string.env_lx), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
-//                                    return false;
-//                                });
-//                            menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
-//                                caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
-//                                return false;
-//                            });
+//                          PORQUÊ QUE O CÓDIGO ESTÁ COMENTADO
+//                          SEGUNDO AS NORMAS DA AGT, PARA GERAR O FICHEIRO SAFT SEM ERROS: AS VENDAS NÃO PODEM SER ELIMINADAS DIRECTAMENTE, EMITIR UMA NOTA DE CRÉDITO PARA ANULAR A VENDA É A SOLUÇÃO MAIS ADEQUADA
+//                          menu.add(getString(R.string.env_lx)).setOnMenuItemClickListener(item -> {
+//                              caixaDialogo(getString(R.string.env_lx), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_lix), false, false, venda);
+//                              return false;
+//                          });
+//                          menu.add(getString(R.string.elim_vend)).setOnMenuItemClickListener(item -> {
+//                              caixaDialogo(getString(R.string.elim_vend_perm), "(" + venda.getReferenciaFactura() + ")\n" + getString(R.string.env_vend_n_lix), false, true, venda);
+//                              return false;
+//                          });
                         }
                     } else {
                         menu.add(getString(R.string.imprimir)).setOnMenuItemClickListener(item -> {
@@ -446,6 +434,8 @@ public class VendaFragment extends Fragment {
                             Ultilitario.alertDialog(getString(R.string.mt_nt_ct), venda.getMotivoEmissaoNC(), requireContext(), R.drawable.ic_baseline_dry_24);
                             return false;
                         });
+//                          PORQUÊ QUE O CÓDIGO ESTÁ COMENTADO
+//                          SEGUNDO AS NORMAS DA AGT, PARA GERAR O FICHEIRO SAFT SEM ERROS: AS VENDAS NÃO PODEM SER ELIMINADAS DIRECTAMENTE, EMITIR UMA NOTA DE CRÉDITO PARA ANULAR A VENDA É A SOLUÇÃO MAIS ADEQUADA
 //                            if (isMaster) {
 //                                menu.add(getString(R.string.rest)).setOnMenuItemClickListener(item -> {
 //                                    restaurarVenda(venda.getReferenciaFactura(), venda.getId());
@@ -599,29 +589,29 @@ public class VendaFragment extends Fragment {
         }
     }
 
-    ActivityResultLauncher<Intent> importVendaActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    Uri uri;
-                    if (data != null) {
-                        uri = data.getData();
-                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
-                                .setTitle(getString(R.string.importar))
-                                .setMessage(getFileName(uri, requireContext()))
-                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
-                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
-                                    try {
-                                        readTextFromUri(uri);
-                                    } catch (IOException e) {
-                                        Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                                    }
-                                })
-                                .show();
-                    }
-                }
-            });
+//    ActivityResultLauncher<Intent> importVendaActivityResultLauncher = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(), result -> {
+//                if (result.getResultCode() == Activity.RESULT_OK) {
+//                    Intent data = result.getData();
+//                    Uri uri;
+//                    if (data != null) {
+//                        uri = data.getData();
+//                        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+//                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+//                                .setTitle(getString(R.string.importar))
+//                                .setMessage(getFileName(uri, requireContext()))
+//                                .setNegativeButton(getString(R.string.cancelar), (dialogInterface, i) -> dialogInterface.dismiss())
+//                                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+//                                    try {
+//                                        readTextFromUri(uri);
+//                                    } catch (IOException e) {
+//                                        Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+//                                    }
+//                                })
+//                                .show();
+//                    }
+//                }
+//        });
 
     ActivityResultLauncher<Intent> exportVendaActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
