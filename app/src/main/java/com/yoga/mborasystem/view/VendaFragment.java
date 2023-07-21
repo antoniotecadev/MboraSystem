@@ -7,7 +7,6 @@ import static com.yoga.mborasystem.util.Ultilitario.getBooleanPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getBooleanValue;
 import static com.yoga.mborasystem.util.Ultilitario.getDataFormatMonth;
 import static com.yoga.mborasystem.util.Ultilitario.getDateCurrent;
-import static com.yoga.mborasystem.util.Ultilitario.getFileName;
 import static com.yoga.mborasystem.util.Ultilitario.getIntPreference;
 import static com.yoga.mborasystem.util.Ultilitario.getValueWithDesconto;
 import static com.yoga.mborasystem.util.Ultilitario.setIntPreference;
@@ -552,10 +551,10 @@ public class VendaFragment extends Fragment {
 
     }
 
-    private void exportarVenda() {
-        VendaFragmentDirections.ActionVendaFragmentToDialogExportarImportarVenda direction = VendaFragmentDirections.actionVendaFragmentToDialogExportarImportarVenda().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
-        Navigation.findNavController(requireView()).navigate(direction);
-    }
+//    private void exportarVenda() {
+//        VendaFragmentDirections.ActionVendaFragmentToDialogExportarImportarVenda direction = VendaFragmentDirections.actionVendaFragmentToDialogExportarImportarVenda().setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario);
+//        Navigation.findNavController(requireView()).navigate(direction);
+//    }
 
     private void dialogEliminarReataurarTodasVendasLixeira(String titulo, String msg, boolean isEliminar) {
         if (vazio)
@@ -635,23 +634,23 @@ public class VendaFragment extends Fragment {
                     Toast.makeText(requireActivity(), R.string.scaner_cod_qr_cancel, Toast.LENGTH_LONG).show();
             });
 
-    public void readTextFromUri(Uri uri) throws IOException {
-        executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            List<String> vendas = new ArrayList<>();
-            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
-                 BufferedReader reader = new BufferedReader(
-                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    vendas.add(line);
-                }
-            } catch (Exception e) {
-                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-            }
-            vendaViewModel.importarVenda(vendas);
-        });
-    }
+//    public void readTextFromUri(Uri uri) throws IOException {
+//        executor = Executors.newSingleThreadExecutor();
+//        executor.execute(() -> {
+//            List<String> vendas = new ArrayList<>();
+//            try (InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+//                 BufferedReader reader = new BufferedReader(
+//                         new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+//                String line;
+//                while ((line = reader.readLine()) != null) {
+//                    vendas.add(line);
+//                }
+//            } catch (Exception e) {
+//                Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+//            }
+//            vendaViewModel.importarVenda(vendas);
+//        });
+//    }
 
     private void imprimirFacturaNotaCredito(Venda vd, boolean isSegundaVia, boolean isAnulado, boolean isAnuladoSegundaVia) {
         pTtU = new HashMap<>();
