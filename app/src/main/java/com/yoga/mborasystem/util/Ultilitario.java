@@ -675,12 +675,12 @@ public class Ultilitario {
         UploadTask uploadTask = storeRef.putBytes(data);
         uploadTask.addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24))
                 .addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url ->
-                        savedProduct(imei, imageView, filename, detalhes, url.toString(), context)
+                        savedProduct(imei, imageView, detalhes, url.toString(), context)
                 ).addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24)));
 
     }
 
-    private static void savedProduct(String imei, ImageView imageView, String filename, Map<String, String> detalhes, String url, Context context) {
+    private static void savedProduct(String imei, ImageView imageView, Map<String, String> detalhes, String urlImage, Context context) {
         String URL = getAPN(context) + "produtos/mbora/" + imei;
         Ion.with(context)
                 .load(URL)
@@ -698,7 +698,7 @@ public class Ultilitario {
                                     .setBodyParameter("nome", detalhes.get("nome"))
                                     .setBodyParameter("preco", detalhes.get("preco"))
                                     .setBodyParameter("quantidade", detalhes.get("quantidade"))
-                                    .setBodyParameter("urlImage", filename)
+                                    .setBodyParameter("urlImage", urlImage)
                                     .setBodyParameter("codigo_barra", detalhes.get("codigo_barra"))
                                     .setBodyParameter("tag", detalhes.get("tag"))
                                     .asJsonObject()
@@ -710,11 +710,11 @@ public class Ultilitario {
                                             else if (retorno.equals("erro")) {
                                                 String throwable = jsonObject.get("throwable").getAsString();
                                                 tentarNovamente(imei, imageView, detalhes, context, throwable);
-                                                FirebaseStorage.getInstance().getReferenceFromUrl(url).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
+                                                FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                                             }
                                         } catch (Exception ex) {
                                             tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
-                                            FirebaseStorage.getInstance().getReferenceFromUrl(url).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
+                                            FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                                         } finally {
                                             MainActivity.dismissProgressBar();
                                         }
@@ -726,7 +726,7 @@ public class Ultilitario {
                         }
                     } catch (Exception ex) {
                         tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
-                        FirebaseStorage.getInstance().getReferenceFromUrl(url).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
+                        FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                     } finally {
                         MainActivity.dismissProgressBar();
                     }
