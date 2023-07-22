@@ -632,7 +632,7 @@ public class Ultilitario {
     //    private static void signInFirebase(Activity activity, String email, String password, AlertDialog alertDialog, ActivityResultLauncher<Intent> imageActivityResultLauncher) {
 //        MainActivity.getProgressBar();
 //        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("empresas");
 //        mAuth.signInWithEmailAndPassword(email, password)
 //                .addOnCompleteListener(activity, task -> {
 //                    if (task.isSuccessful()) {
@@ -662,8 +662,8 @@ public class Ultilitario {
 //                });
 //    }
     public static void storageImageAndProduct(String imei, ImageView imageView, Map<String, String> detalhes, Context context) {
-        String filename = UUID.randomUUID().toString();
-        StorageReference storeRef = FirebaseStorage.getInstance().getReference("parceiros/" + imei + "/imagens/produtos/" + filename);
+        String filename = "foto_produto_" + UUID.randomUUID().toString();
+        StorageReference storeRef = FirebaseStorage.getInstance().getReference("empresas/empresa_" + imei + "/foto/" + filename);
 
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();

@@ -698,7 +698,7 @@ public class ListProdutoFragment extends Fragment {
                         if (categorias.getItem(1).isEmpty())
                             Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.ct_na_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         else {
-                            infoProduto(view, categoriasSpinner);
+                            informacaoProduto(view, categoriasSpinner);
                             Snackbar.make(requireView(), getString(R.string.ct_car), Snackbar.LENGTH_LONG).show();
                         }
                     } catch (Exception ex) {
@@ -717,7 +717,7 @@ public class ListProdutoFragment extends Fragment {
                 });
     }
 
-    private void infoProduto(View view, AppCompatSpinner caSpinner) {
+    private void informacaoProduto(View view, AppCompatSpinner caSpinner) {
         new AlertDialog.Builder(requireContext())
                 .setIcon(R.drawable.ic_baseline_cloud_upload_24)
                 .setView(view)
@@ -746,7 +746,7 @@ public class ListProdutoFragment extends Fragment {
 //            new ActivityResultContracts.RequestPermission(), result -> {
 //                if (result) {
 //                    if (verifyAuthenticationInFirebase() != null) {
-//                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("parceiros");
+//                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("empresas");
 //                        reference.child(getValueSharedPreferences(requireContext(), "imei", "0000000000")).get().addOnCompleteListener(task -> {
 //                            if (task.isSuccessful()) {
 //                                MainActivity.dismissProgressBar();
