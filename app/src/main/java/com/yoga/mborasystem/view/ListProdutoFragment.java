@@ -697,24 +697,28 @@ public class ListProdutoFragment extends Fragment {
                             categorias.add(categoria.get("id").getAsInt() + "-" + categoria.get("nome").getAsString());
                         }
                         if (categorias.getItem(1).isEmpty())
-                            Ultilitario.alertDialog(getString(R.string.erro), getString(R.string.ct_na_enc), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                            tentarNovamenteCarregarCategorias(categorias, view, categoriasSpinner, getString(R.string.ct_na_enc));
                         else {
                             informacaoProduto(view, categoriasSpinner);
                             Snackbar.make(requireView(), getString(R.string.ct_car), Snackbar.LENGTH_LONG).show();
                         }
                     } catch (Exception ex) {
-                        new android.app.AlertDialog.Builder(requireContext())
-                                .setIcon(R.drawable.ic_baseline_privacy_tip_24)
-                                .setTitle(getString(R.string.erro))
-                                .setMessage(ex.getMessage())
-                                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
-                                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
-                                    dialog.dismiss();
-                                    getCategorias(categorias, view, categoriasSpinner);
-                                })
-                                .show();
+                        tentarNovamenteCarregarCategorias(categorias, view, categoriasSpinner, ex.getMessage());
                     }
                 });
+    }
+
+    private void tentarNovamenteCarregarCategorias(ArrayAdapter<String> categorias, View view, AppCompatSpinner categoriasSpinner, String message) {
+        new AlertDialog.Builder(requireContext())
+                .setIcon(R.drawable.ic_baseline_privacy_tip_24)
+                .setTitle(getString(R.string.erro))
+                .setMessage(message)
+                .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
+                    dialog.dismiss();
+                    getCategorias(categorias, view, categoriasSpinner);
+                })
+                .show();
     }
 
     private void informacaoProduto(View view, AppCompatSpinner caSpinner) {
