@@ -706,9 +706,10 @@ public class Ultilitario {
                                     .setCallback((exception, jsonObject) -> {
                                         try {
                                             String retorno = jsonObject.get("insert").getAsString();
-                                            if (retorno.equals("ok"))
+                                            if (retorno.equals("ok")) {
+                                                MainActivity.dismissProgressBar();
                                                 alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get("nome") + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get("preco")) + "\n" + (detalhes.get("codigo_barra").isEmpty() ? "" : "CB: " + detalhes.get("codigo_barra")), context, R.drawable.ic_baseline_done_24);
-                                            else if (retorno.equals("erro")) {
+                                            } else if (retorno.equals("erro")) {
                                                 String throwable = jsonObject.get("throwable").getAsString();
                                                 tentarNovamente(imei, imageView, detalhes, context, throwable);
                                                 FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
@@ -716,11 +717,10 @@ public class Ultilitario {
                                         } catch (Exception ex) {
                                             tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
                                             FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
-                                        } finally {
-                                            MainActivity.dismissProgressBar();
                                         }
                                     });
                         } else {
+                            MainActivity.dismissProgressBar();
                             String msg = context.getString(R.string.prod) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoPacote + "\n" +
                                     context.getString(R.string.prod_regi) + "(" + context.getString(R.string.mbora) + "): " + quantidadeProdutoRegistado;
                             alertDialog(context.getString(R.string.erro), msg + "\n\n" + context.getString(R.string.atg_limit), context, R.drawable.ic_baseline_privacy_tip_24);
@@ -728,13 +728,12 @@ public class Ultilitario {
                     } catch (Exception ex) {
                         tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
                         FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
-                    } finally {
-                        MainActivity.dismissProgressBar();
                     }
                 });
     }
 
     private static void tentarNovamente(String imei, ImageView imageView, Map<String, String> detalhes, Context context, String exception) {
+        MainActivity.dismissProgressBar();
         new AlertDialog.Builder(context)
                 .setIcon(R.drawable.ic_baseline_privacy_tip_24)
                 .setTitle(context.getString(R.string.erro))
