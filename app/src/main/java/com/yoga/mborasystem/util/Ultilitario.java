@@ -676,12 +676,12 @@ public class Ultilitario {
         UploadTask uploadTask = storeRef.putBytes(data);
         uploadTask.addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24))
                 .addOnSuccessListener(taskSnapshot -> storeRef.getDownloadUrl().addOnSuccessListener(url ->
-                        savedProduct(imei, imageView, detalhes, url.toString(), context)
+                        salvarProduto(imei, imageView, detalhes, url.toString(), context)
                 ).addOnFailureListener(ex -> alertDialog(context.getString(R.string.erro), ex.getMessage(), context, R.drawable.ic_baseline_privacy_tip_24)));
 
     }
 
-    private static void savedProduct(String imei, ImageView imageView, Map<String, String> detalhes, String urlImage, Context context) {
+    private static void salvarProduto(String imei, ImageView imageView, Map<String, String> detalhes, String urlImage, Context context) {
         String URL = getAPN(context) + "produtos/mbora/" + imei;
         Ion.with(context)
                 .load(URL)
@@ -711,11 +711,11 @@ public class Ultilitario {
                                                 alertDialog(context.getString(R.string.prod_env_mbo), context.getString(R.string.prod) + ": " + detalhes.get("nome") + "\n" + context.getString(R.string.preco) + ": " + formatPreco(detalhes.get("preco")) + "\n" + (detalhes.get("codigo_barra").isEmpty() ? "" : "CB: " + detalhes.get("codigo_barra")), context, R.drawable.ic_baseline_done_24);
                                             } else if (retorno.equals("erro")) {
                                                 String throwable = jsonObject.get("throwable").getAsString();
-                                                tentarNovamente(imei, imageView, detalhes, context, throwable);
+                                                tentarNovamenteSalvarProduto(imei, imageView, detalhes, context, throwable);
                                                 FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                                             }
                                         } catch (Exception ex) {
-                                            tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
+                                            tentarNovamenteSalvarProduto(imei, imageView, detalhes, context, ex.getMessage());
                                             FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                                         }
                                     });
@@ -726,13 +726,13 @@ public class Ultilitario {
                             alertDialog(context.getString(R.string.erro), msg + "\n\n" + context.getString(R.string.atg_limit), context, R.drawable.ic_baseline_privacy_tip_24);
                         }
                     } catch (Exception ex) {
-                        tentarNovamente(imei, imageView, detalhes, context, ex.getMessage());
+                        tentarNovamenteSalvarProduto(imei, imageView, detalhes, context, ex.getMessage());
                         FirebaseStorage.getInstance().getReferenceFromUrl(urlImage).delete().addOnSuccessListener(unused -> showToast(context, Color.rgb(102, 153, 0), context.getString(R.string.img_prod_eli), R.drawable.ic_toast_feito)).addOnFailureListener(e1 -> showToast(context, Color.rgb(204, 0, 0), context.getString(R.string.img_prod_nao_eli), R.drawable.ic_toast_erro));
                     }
                 });
     }
 
-    private static void tentarNovamente(String imei, ImageView imageView, Map<String, String> detalhes, Context context, String exception) {
+    private static void tentarNovamenteSalvarProduto(String imei, ImageView imageView, Map<String, String> detalhes, Context context, String exception) {
         MainActivity.dismissProgressBar();
         new AlertDialog.Builder(context)
                 .setIcon(R.drawable.ic_baseline_privacy_tip_24)
