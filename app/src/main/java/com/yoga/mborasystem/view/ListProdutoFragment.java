@@ -673,7 +673,7 @@ public class ListProdutoFragment extends Fragment {
                             img.setScaleType(ImageView.ScaleType.FIT_START);
                             img.setImageBitmap(selectedImage);
                             if (conexaoInternet(requireContext()))
-                                getCategorias(categorias, view, categoriasSpinner);
+                                carregarCategorias(categorias, view, categoriasSpinner);
                         } catch (Exception e) {
                             Ultilitario.alertDialog(getString(R.string.erro), e.getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
                         } finally {
@@ -683,7 +683,7 @@ public class ListProdutoFragment extends Fragment {
                 }
             });
 
-    private void getCategorias(ArrayAdapter<String> categorias, View view, AppCompatSpinner categoriasSpinner) {
+    private void carregarCategorias(ArrayAdapter<String> categorias, View view, AppCompatSpinner categoriasSpinner) {
         MainActivity.getProgressBar();
         String URL = getAPN(requireActivity()) + "categorias/mbora";
         Ion.with(requireActivity())
@@ -716,7 +716,7 @@ public class ListProdutoFragment extends Fragment {
                 .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
                     dialog.dismiss();
-                    getCategorias(categorias, view, categoriasSpinner);
+                    carregarCategorias(categorias, view, categoriasSpinner);
                 })
                 .show();
     }
