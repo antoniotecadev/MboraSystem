@@ -684,6 +684,7 @@ public class ListProdutoFragment extends Fragment {
             });
 
     private void getCategorias(ArrayAdapter<String> categorias, View view, AppCompatSpinner categoriasSpinner) {
+        MainActivity.getProgressBar();
         String URL = getAPN(requireActivity()) + "categorias/mbora";
         Ion.with(requireActivity())
                 .load(URL)
@@ -709,7 +710,6 @@ public class ListProdutoFragment extends Fragment {
                                 .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
                                 .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
                                     dialog.dismiss();
-                                    MainActivity.getProgressBar();
                                     getCategorias(categorias, view, categoriasSpinner);
                                 })
                                 .show();
@@ -727,7 +727,6 @@ public class ListProdutoFragment extends Fragment {
                     if (caSpinner.getSelectedItem().toString().isEmpty())
                         Snackbar.make(requireView(), getString(R.string.sl_ct_pd), Snackbar.LENGTH_LONG).show();
                     else {
-                        MainActivity.getProgressBar();
                         detalhes.put("idcategoria", TextUtils.split(caSpinner.getSelectedItem().toString(), "-")[0]);
                         storageImageAndProduct(getValueSharedPreferences(requireContext(), "imei", "0000000000"), view.findViewById(R.id.image), detalhes, requireContext());
                     }

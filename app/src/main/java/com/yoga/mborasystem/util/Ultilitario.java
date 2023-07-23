@@ -662,6 +662,7 @@ public class Ultilitario {
 //                });
 //    }
     public static void storageImageAndProduct(String imei, ImageView imageView, Map<String, String> detalhes, Context context) {
+        MainActivity.getProgressBar();
         String filename = "foto_produto_" + UUID.randomUUID().toString();
         StorageReference storeRef = FirebaseStorage.getInstance().getReference("empresas/empresa_" + imei + "/foto/" + filename);
 
@@ -741,7 +742,6 @@ public class Ultilitario {
                 .setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(R.string.tent_nov, (dialog, which) -> {
                     dialog.dismiss();
-                    MainActivity.getProgressBar();
                     storageImageAndProduct(imei, imageView, detalhes, context);
                 })
                 .show();
