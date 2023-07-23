@@ -122,7 +122,6 @@ public class Ultilitario {
     private static Float parsed;
     private static Locale pt_AO;
     public static String categoria = "";
-    private static boolean isNewUser;
 
     public static final String MBORASYSTEM = "8e67fe66551c69731085ffb8d7746f6fec923b1af4f27066ba903219f0c60fb9";
     public static boolean isLocal = true;
