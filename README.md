@@ -123,7 +123,7 @@ See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🧑‍💻 Author
+## 👨‍💻 Author
 
 - **António Teca** [Linkedin](https://www.linkedin.com/in/antoniotecadev)
 
