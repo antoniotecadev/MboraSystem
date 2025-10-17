@@ -109,6 +109,22 @@ Para ver click na imagem
 
 ---
 
-*Este projeto é certificado pela AGT (Autoridade Geral Tributária) e atende a todos os requisitos legais para gestão e facturação.*
+*Este Aplicativo é certificado pela AGT (Autoridade Geral Tributária) e atende a todos os requisitos legais para gestão e facturação.*
 
 [Vamos Colaborar 🤝](#vamos-colaborar)
+
+## 📜 License
+
+This project is **proprietary**.  
+All rights reserved © 2025 António Teca.  
+You may not use, copy, modify, or distribute any part of this project without express written permission.
+
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🧑‍💻 Author
+
+- **António Teca** [Linkedin](https://www.linkedin.com/in/antoniotecadev)
+
+---
