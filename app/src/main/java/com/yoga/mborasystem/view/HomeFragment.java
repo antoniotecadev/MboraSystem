@@ -102,20 +102,15 @@ public class HomeFragment extends Fragment {
         Toolbar toolbar = binding.toolbar;
         toolbar.inflateMenu(R.menu.menu_bloquear);
         toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.bloquearFragment:
-                    Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
-                    break;
-                case R.id.gerarQrCode:
-                    boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherQrCode, requestPermissionLauncherQrCode, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    if (isExternalStorageManager)
-                        getQrCode();
-                    break;
-                case R.id.sairApp:
-                    sairApp();
-                    break;
-                default:
-                    break;
+            int itemId = item.getItemId();
+            if (itemId == R.id.bloquearFragment) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_global_bloquearFragment);
+            } else if (itemId == R.id.gerarQrCode) {
+                boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherQrCode, requestPermissionLauncherQrCode, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (isExternalStorageManager)
+                    getQrCode();
+            } else if (itemId == R.id.sairApp) {
+                sairApp();
             }
             return false;
         });
@@ -137,43 +132,31 @@ public class HomeFragment extends Fragment {
 
         MainActivity.navigationView.setNavigationItemSelectedListener(item -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-            switch (item.getItemId()) {
-                case R.id.categoriaProdutoFragmentH:
-                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
-                    break;
-                case R.id.usuarioFragmentH:
-                    if (isMaster)
-                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
-                    break;
-                case R.id.vendaFragmentH:
-                    entrarVendas(isNotaCredito = false);
-                    break;
-                case R.id.listaClienteFragmentH:
-                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
-                    break;
-                case R.id.dashboardFragmentH:
-                    if (isMaster)
-                        entrarDashboard();
-                    break;
-                case R.id.facturaFragmentH:
-                    entrarFacturacao();
-                    break;
-                case R.id.vendaFragmentNotaCredito:
-                    entrarVendas(isNotaCredito = true);
-                    break;
-                case R.id.categoriaProdutoFragmentLx:
-                    entrarCategoriasLx();
-                    break;
-                case R.id.produtoFragmentLx:
-                    entrarProdutosLx();
-                    break;
-                case R.id.documentoFragmentMenu:
-                    boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherViewDocument, requestPermissionLauncherViewDocument, Manifest.permission.READ_EXTERNAL_STORAGE);
-                    if (isExternalStorageManager)
-                        activityResultContractsViewDocument(isExternalStorageManager);
-                    break;
-                default:
-                    break;
+            int itemId = item.getItemId();
+            if (itemId == R.id.categoriaProdutoFragmentH) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_categoriaProdutoFragment, isUserMaster());
+            } else if (itemId == R.id.usuarioFragmentH) {
+                if (isMaster)
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_usuarioFragment, isUserMaster());
+            } else if (itemId == R.id.vendaFragmentH) {
+                entrarVendas(isNotaCredito = false);
+            } else if (itemId == R.id.listaClienteFragmentH) {
+                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_listaClienteFragment, isUserMaster());
+            } else if (itemId == R.id.dashboardFragmentH) {
+                if (isMaster)
+                    entrarDashboard();
+            } else if (itemId == R.id.facturaFragmentH) {
+                entrarFacturacao();
+            } else if (itemId == R.id.vendaFragmentNotaCredito) {
+                entrarVendas(isNotaCredito = true);
+            } else if (itemId == R.id.categoriaProdutoFragmentLx) {
+                entrarCategoriasLx();
+            } else if (itemId == R.id.produtoFragmentLx) {
+                entrarProdutosLx();
+            } else if (itemId == R.id.documentoFragmentMenu) {
+                boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherViewDocument, requestPermissionLauncherViewDocument, Manifest.permission.READ_EXTERNAL_STORAGE);
+                if (isExternalStorageManager)
+                    activityResultContractsViewDocument(isExternalStorageManager);
             }
             MainActivity.drawerLayout.closeDrawer(GravityCompat.START);
             return NavigationUI.onNavDestinationSelected(item, navController);
@@ -230,118 +213,103 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                switch (menuItem.getItemId()) {
-                    case R.id.idioma:
-                        new AlertDialog.Builder(requireContext())
-                                .setCancelable(false)
-                                .setIcon(R.drawable.ic_baseline_store_24)
-                                .setTitle(R.string.alt_idm)
-                                .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(requireContext()), (dialogInterface, i) -> {
-                                    switch (i) {
-                                        case 0:
-                                            idioma = "Francês";
-                                            codigoIdioma = "fr";
-                                            break;
-                                        case 1:
-                                            idioma = "Inglês";
-                                            codigoIdioma = "en";
-                                            break;
-                                        case 2:
-                                            idioma = "Português";
-                                            codigoIdioma = "pt";
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                })
-                                .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> {
-                                    codigoIdioma = null;
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.idioma) {
+                    new AlertDialog.Builder(requireContext())
+                            .setCancelable(false)
+                            .setIcon(R.drawable.ic_baseline_store_24)
+                            .setTitle(R.string.alt_idm)
+                            .setSingleChoiceItems(R.array.array_idioma, getIdIdioma(requireContext()), (dialogInterface, i) -> {
+                                switch (i) {
+                                    case 0:
+                                        idioma = "Francês";
+                                        codigoIdioma = "fr";
+                                        break;
+                                    case 1:
+                                        idioma = "Inglês";
+                                        codigoIdioma = "en";
+                                        break;
+                                    case 2:
+                                        idioma = "Português";
+                                        codigoIdioma = "pt";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            })
+                            .setNegativeButton(R.string.cancelar, (dialogInterface, i) -> {
+                                codigoIdioma = null;
+                                dialogInterface.dismiss();
+                            })
+                            .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                                if (codigoIdioma == null || languageCode.equalsIgnoreCase(codigoIdioma))
                                     dialogInterface.dismiss();
-                                })
-                                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-                                    if (codigoIdioma == null || languageCode.equalsIgnoreCase(codigoIdioma))
-                                        dialogInterface.dismiss();
-                                    else
-                                        getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false);
-                                }).show();
-                        break;
-                    case R.id.device:
-                        getDetailDevice(requireContext());
-                        break;
-                    case R.id.dialogAlterarCliente:
-                        bundle.putParcelable("cliente", cliente);
-                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
-                        break;
-                    case R.id.estadoCliente:
-                        if (conexaoInternet(requireContext()))
-                            estadoConta(Ultilitario.getValueSharedPreferences(requireContext(), "imei", "0000000000"));
-                        break;
-                    case R.id.gerarCodigoQr:
-                        boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherQrCode, requestPermissionLauncherQrCode, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                        if (isExternalStorageManager)
-                            getQrCode();
-                        break;
-                    case R.id.config:
-                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
-                        break;
-                    case R.id.expoBd:
-                        launchPermissionImportExportDB(requireContext(), null, getDeviceUniqueID(requireContext()), cliente.getImei(), requestIntentPermissionLauncherExportDataBase, requestPermissionLauncherExportDataBase, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                        break;
-                    case R.id.impoBd:
-                        Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
-                        break;
-                    case R.id.termosCondicoes:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "termoscondicoes")));
-                        break;
-                    case R.id.politicaPrivacidade:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "politicaprivacidade")));
-                        break;
-                    case R.id.dialogAlterarCodigoPin:
-                        bundle.putString("nome", getArguments().getString("nome"));
-                        bundle.putLong("idusuario", getArguments().getLong("idusuario"));
-                        bundle.putString("datacria", getArguments().getString("datacria"));
-                        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
-                        break;
-                    case R.id.acercaMborasytem:
-                        acercaMboraSystem(requireContext(), requireActivity());
-                        break;
-                    case R.id.formaPagamento:
-                        MainActivity.getProgressBar();
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
-                        reference.get().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                StringBuilder ddbc = new StringBuilder();
-                                DataSnapshot snapshot = task.getResult();
-                                if (snapshot.exists()) {
-                                    String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
-                                    ddbc.append(getString(R.string.info_pagamento, detalhe)).append("\n\n");
-                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                        if (dataSnapshot.exists()) {
-                                            ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
-                                            if (cb.getNome() != null) {
-                                                ddbc.append(getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
-                                                ddbc.append(getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
-                                                ddbc.append(getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
-                                                ddbc.append(getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
-                                                ddbc.append("\n\n");
-                                            }
-                                        } else
-                                            showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
-                                    }
-                                } else
-                                    showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
-                                MainActivity.dismissProgressBar();
-                                alertDialog(getString(R.string.forma_pagamento).replace(":", ""), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
-                            } else {
-                                MainActivity.dismissProgressBar();
-                                alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
-                            }
-                        });
-                        break;
-                    case R.id.itemSair:
-                        sairApp();
-                        break;
-                    default:
+                                else
+                                    getSelectedIdioma(requireActivity(), codigoIdioma, idioma, true, false);
+                            }).show();
+                } else if (itemId == R.id.device) {
+                    getDetailDevice(requireContext());
+                } else if (itemId == R.id.dialogAlterarCliente) {
+                    bundle.putParcelable("cliente", cliente);
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogAlterarCliente, bundle);
+                } else if (itemId == R.id.estadoCliente) {
+                    if (conexaoInternet(requireContext()))
+                        estadoConta(getValueSharedPreferences(requireContext(), "imei", "0000000000"));
+                } else if (itemId == R.id.gerarCodigoQr) {
+                    boolean isExternalStorageManager = launchPermissionDocumentSaftInvoice(requireContext(), requestIntentPermissionLauncherQrCode, requestPermissionLauncherQrCode, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    if (isExternalStorageManager)
+                        getQrCode();
+                } else if (itemId == R.id.config) {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_configuracaoFragment);
+                } else if (itemId == R.id.expoBd) {
+                    launchPermissionImportExportDB(requireContext(), null, getDeviceUniqueID(requireContext()), cliente.getImei(), requestIntentPermissionLauncherExportDataBase, requestPermissionLauncherExportDataBase, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                } else if (itemId == R.id.impoBd) {
+                    Ultilitario.importarCategoriasProdutosClientes(importarBaseDeDados, requireActivity(), true);
+                } else if (itemId == R.id.termosCondicoes) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "termoscondicoes")));
+                } else if (itemId == R.id.politicaPrivacidade) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getAPN(requireActivity()) + "politicaprivacidade")));
+                } else if (itemId == R.id.dialogAlterarCodigoPin) {
+                    bundle.putString("nome", getArguments().getString("nome"));
+                    bundle.putLong("idusuario", getArguments().getLong("idusuario"));
+                    bundle.putString("datacria", getArguments().getString("datacria"));
+                    Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_dialogSenha, bundle);
+                } else if (itemId == R.id.acercaMborasytem) {
+                    acercaMboraSystem(requireContext(), requireActivity());
+                } else if (itemId == R.id.formaPagamento) {
+                    MainActivity.getProgressBar();
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("yoga").child("contabancaria");
+                    reference.get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            StringBuilder ddbc = new StringBuilder();
+                            DataSnapshot snapshot = task.getResult();
+                            if (snapshot.exists()) {
+                                String detalhe = snapshot.child("informacao").child("detalhe").getValue().toString();
+                                ddbc.append(getString(R.string.info_pagamento, detalhe)).append("\n\n");
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    if (dataSnapshot.exists()) {
+                                        ContaBancaria cb = snapshot.child(dataSnapshot.getKey()).getValue(ContaBancaria.class);
+                                        if (cb.getNome() != null) {
+                                            ddbc.append(getString(R.string.nm_bc)).append(": ").append(cb.getNome()).append("\n");
+                                            ddbc.append(getString(R.string.ppt_bc)).append(": ").append(cb.getProprietario()).append("\n");
+                                            ddbc.append(getString(R.string.nib_bc)).append(": ").append(cb.getNib()).append("\n");
+                                            ddbc.append(getString(R.string.iban_bc)).append(": ").append(cb.getIban()).append("\n");
+                                            ddbc.append("\n\n");
+                                        }
+                                    } else
+                                        showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                                }
+                            } else
+                                showToast(requireContext(), Color.rgb(204, 0, 0), getString(R.string.dds_n_enc), R.drawable.ic_toast_erro);
+                            MainActivity.dismissProgressBar();
+                            alertDialog(getString(R.string.forma_pagamento).replace(":", ""), ddbc.toString(), requireContext(), R.drawable.ic_baseline_store_24);
+                        } else {
+                            MainActivity.dismissProgressBar();
+                            alertDialog(getString(R.string.erro), task.getException().getMessage(), requireContext(), R.drawable.ic_baseline_privacy_tip_24);
+                        }
+                    });
+                } else if (itemId == R.id.itemSair) {
+                    sairApp();
                 }
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }

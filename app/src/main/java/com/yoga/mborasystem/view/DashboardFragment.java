@@ -343,22 +343,18 @@ public class DashboardFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                switch (menuItem.getItemId()) {
-                    case R.id.relatorioDiarioVenda:
-                        new AlertDialog.Builder(getActivity())
-                                .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
-                                .setTitle(R.string.rel_dia_ven)
-                                .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
-                                    idItem = i;
-                                    DashboardFragmentDirections.ActionDashboardFragmentToDatePickerFragment direction = DashboardFragmentDirections.actionDashboardFragmentToDatePickerFragment(false);
-                                    Navigation.findNavController(requireView()).navigate(direction);
-                                }).show();
-                        break;
-                    case R.id.calculadoraFragmentItem:
-                        Navigation.findNavController(requireView()).navigate(R.id.action_dashboardFragment_to_calculadoraFragment);
-                        break;
-                    default:
-                        break;
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.relatorioDiarioVenda) {
+                    new AlertDialog.Builder(getActivity())
+                            .setIcon(R.drawable.ic_baseline_insert_drive_file_24)
+                            .setTitle(R.string.rel_dia_ven)
+                            .setItems(R.array.array_rela_vend_diar, (dialogInterface, i) -> {
+                                idItem = i;
+                                DashboardFragmentDirections.ActionDashboardFragmentToDatePickerFragment direction = DashboardFragmentDirections.actionDashboardFragmentToDatePickerFragment(false);
+                                Navigation.findNavController(requireView()).navigate(direction);
+                            }).show();
+                } else if (itemId == R.id.calculadoraFragmentItem) {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_dashboardFragment_to_calculadoraFragment);
                 }
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }

@@ -115,68 +115,49 @@ public class CalculadoraFragment extends DialogFragment implements View.OnClickL
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.button_zero:
-                if (addNumber("0")) equalClicked = false;
-                break;
-            case R.id.button_one:
-                if (addNumber("1")) equalClicked = false;
-                break;
-            case R.id.button_two:
-                if (addNumber("2")) equalClicked = false;
-                break;
-            case R.id.button_three:
-                if (addNumber("3")) equalClicked = false;
-                break;
-            case R.id.button_four:
-                if (addNumber("4")) equalClicked = false;
-                break;
-            case R.id.button_five:
-                if (addNumber("5")) equalClicked = false;
-                break;
-            case R.id.button_six:
-                if (addNumber("6")) equalClicked = false;
-                break;
-            case R.id.button_seven:
-                if (addNumber("7")) equalClicked = false;
-                break;
-            case R.id.button_eight:
-                if (addNumber("8")) equalClicked = false;
-                break;
-            case R.id.button_nine:
-                if (addNumber("9")) equalClicked = false;
-                break;
-            case R.id.button_addition:
-                if (addOperand("+")) equalClicked = false;
-                break;
-            case R.id.button_subtraction:
-                if (addOperand("-")) equalClicked = false;
-                break;
-            case R.id.button_multiplication:
-                if (addOperand("x")) equalClicked = false;
-                break;
-            case R.id.button_division:
-                if (addOperand("\u00F7")) equalClicked = false;
-                break;
-            case R.id.button_percent:
-                if (addOperand("%")) equalClicked = false;
-                break;
-            case R.id.button_dot:
-                if (addDot()) equalClicked = false;
-                break;
-            case R.id.button_parentheses:
-                if (addParenthesis()) equalClicked = false;
-                break;
-            case R.id.button_clear:
-                textViewInputNumbers.setText("");
-                openParenthesis = 0;
-                dotUsed = false;
-                equalClicked = false;
-                break;
-            case R.id.button_equal:
-                if (textViewInputNumbers.getText().toString() != null && !textViewInputNumbers.getText().toString().equals(""))
-                    calculate(textViewInputNumbers.getText().toString());
-                break;
+        int id = view.getId();
+        if (id == R.id.button_zero) {
+            if (addNumber("0")) equalClicked = false;
+        } else if (id == R.id.button_one) {
+            if (addNumber("1")) equalClicked = false;
+        } else if (id == R.id.button_two) {
+            if (addNumber("2")) equalClicked = false;
+        } else if (id == R.id.button_three) {
+            if (addNumber("3")) equalClicked = false;
+        } else if (id == R.id.button_four) {
+            if (addNumber("4")) equalClicked = false;
+        } else if (id == R.id.button_five) {
+            if (addNumber("5")) equalClicked = false;
+        } else if (id == R.id.button_six) {
+            if (addNumber("6")) equalClicked = false;
+        } else if (id == R.id.button_seven) {
+            if (addNumber("7")) equalClicked = false;
+        } else if (id == R.id.button_eight) {
+            if (addNumber("8")) equalClicked = false;
+        } else if (id == R.id.button_nine) {
+            if (addNumber("9")) equalClicked = false;
+        } else if (id == R.id.button_addition) {
+            if (addOperand("+")) equalClicked = false;
+        } else if (id == R.id.button_subtraction) {
+            if (addOperand("-")) equalClicked = false;
+        } else if (id == R.id.button_multiplication) {
+            if (addOperand("x")) equalClicked = false;
+        } else if (id == R.id.button_division) {
+            if (addOperand("\u00F7")) equalClicked = false;
+        } else if (id == R.id.button_percent) {
+            if (addOperand("%")) equalClicked = false;
+        } else if (id == R.id.button_dot) {
+            if (addDot()) equalClicked = false;
+        } else if (id == R.id.button_parentheses) {
+            if (addParenthesis()) equalClicked = false;
+        } else if (id == R.id.button_clear) {
+            textViewInputNumbers.setText("");
+            openParenthesis = 0;
+            dotUsed = false;
+            equalClicked = false;
+        } else if (id == R.id.button_equal) {
+            if (textViewInputNumbers.getText().toString() != null && !textViewInputNumbers.getText().toString().equals(""))
+                calculate(textViewInputNumbers.getText().toString());
         }
 
     }

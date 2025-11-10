@@ -136,33 +136,29 @@ public class VendaFragment extends Fragment {
         });
 
         binding.bottomNav.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.tdsVd:
-                    isDivida = false;
-                    if (idcliente > 0)
-                        requireActivity().setTitle(nomeCliente);
-                    else if (idusuario > 0)
-                        requireActivity().setTitle(nomeUsuario);
-                    else
-                        requireActivity().setTitle(getString(R.string.vds));
+            int itemId = item.getItemId();
+            if (itemId == R.id.tdsVd) {
+                isDivida = false;
+                if (idcliente > 0)
+                    requireActivity().setTitle(nomeCliente);
+                else if (idusuario > 0)
+                    requireActivity().setTitle(nomeUsuario);
+                else
+                    requireActivity().setTitle(getString(R.string.vds));
 
-                    vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, false, idusuario, false, null, getViewLifecycleOwner());
-                    consultarVendas(false, false, false, null);
-                    break;
-                case R.id.vdDvd:
-                    isDivida = true;
-                    if (idcliente > 0)
-                        requireActivity().setTitle(nomeCliente);
-                    else if (idusuario > 0)
-                        requireActivity().setTitle(nomeUsuario);
-                    else
-                        requireActivity().setTitle(getString(R.string.dvd));
+                vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, false, idusuario, false, null, getViewLifecycleOwner());
+                consultarVendas(false, false, false, null);
+            } else if (itemId == R.id.vdDvd) {
+                isDivida = true;
+                if (idcliente > 0)
+                    requireActivity().setTitle(nomeCliente);
+                else if (idusuario > 0)
+                    requireActivity().setTitle(nomeUsuario);
+                else
+                    requireActivity().setTitle(getString(R.string.dvd));
 
-                    vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, true, idusuario, false, null, getViewLifecycleOwner());
-                    consultarVendas(false, true, false, null);
-                    break;
-                default:
-                    break;
+                vendaViewModel.getQuantidadeVenda(isNotaCredito, idcliente, true, idusuario, false, null, getViewLifecycleOwner());
+                consultarVendas(false, true, false, null);
             }
             return true;
         });
@@ -276,15 +272,13 @@ public class VendaFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment);
-                switch (menuItem.getItemId()) {
-                    case R.id.btnScannerBack:
-                        scanearCodigoQr();
-                        break;
-                    case R.id.btnData:
-                        VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario).setIsNotaCredito(isNotaCredito);
-                        Navigation.findNavController(requireView()).navigate(direction);
-                        break;
-//                    PORQUÊ QUE O CÓDIGO ESTÁ COMENTADO
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.btnScannerBack) {
+                    scanearCodigoQr();
+                } else if (itemId == R.id.btnData) {
+                    VendaFragmentDirections.ActionVendaFragmentToDatePickerFragment direction = VendaFragmentDirections.actionVendaFragmentToDatePickerFragment(true).setIdcliente(idcliente).setIsDivida(isDivida).setIdusuario(idusuario).setIsNotaCredito(isNotaCredito);
+                    Navigation.findNavController(requireView()).navigate(direction);
+                    //                    PORQUÊ QUE O CÓDIGO ESTÁ COMENTADO
 //                    A IMPORTAÇÃO DESORGANIZADA PODE GERAR SEQUÊNCIA DE SÉRIE DA FACTURA ERRADAS, PODENDO ASSIM GERAR ERROS AO EMITIR O FICHEIRO SAFT, FUTURAMENTE PODERÁ SE IMPLEMENTAR UMA SOLUÇÃO QUE PERMITA EXPORTAR E IMPORTAR VENDAS SEM OCORRER OS ERROS REFERIDOS.
 //                    case R.id.exportarvenda:
 //                        exportarVenda();
@@ -293,17 +287,12 @@ public class VendaFragment extends Fragment {
 //                        //Importa as vendas
 //                        Ultilitario.importarCategoriasProdutosClientes(importVendaActivityResultLauncher, null, false);
 //                        break;
-                    case R.id.btnEliminarTodosLixo:
-                        dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
-                        break;
-                    case R.id.btnRestaurarTodosLixo:
-                        dialogEliminarReataurarTodasVendasLixeira(getString(R.string.rest_vds), getString(R.string.rest_tdas_vds), false);
-                        break;
-                    case R.id.calculadoraFragmentItem:
-                        Navigation.findNavController(requireView()).navigate(R.id.action_vendaFragment_to_calculadoraFragment);
-                        break;
-                    default:
-                        break;
+                } else if (itemId == R.id.btnEliminarTodosLixo) {
+                    dialogEliminarReataurarTodasVendasLixeira(getString(R.string.elim_vends), getString(R.string.tem_cert_elim_vds), true);
+                } else if (itemId == R.id.btnRestaurarTodosLixo) {
+                    dialogEliminarReataurarTodasVendasLixeira(getString(R.string.rest_vds), getString(R.string.rest_tdas_vds), false);
+                } else if (itemId == R.id.calculadoraFragmentItem) {
+                    Navigation.findNavController(requireView()).navigate(R.id.action_vendaFragment_to_calculadoraFragment);
                 }
                 return NavigationUI.onNavDestinationSelected(menuItem, navController);
             }

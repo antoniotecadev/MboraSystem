@@ -16,7 +16,9 @@ android {
     signingConfigs {
         debug {}
     }
-    compileSdkVersion 33
+    compileSdkVersion 36
+
+    namespace 'com.yoga.mborasystem'
 
     defaultConfig {
         applicationId "com.yoga.mborasystem"
@@ -115,7 +117,8 @@ dependencies {
 //    annotationProcessor "com.github.bumptech.glide: compiler: 4.12.0"
 
     // Goupie
-    implementation "com.xwray:groupie:2.9.0"
+    implementation "com.github.lisawray.groupie:groupie:2.10.0"
+    implementation "com.github.lisawray.groupie:groupie-viewbinding:2.10.0"
 
     // Paging library
     def paging_version = "3.1.1"

@@ -104,17 +104,13 @@ public class DocumentoFragment extends Fragment {
         pasta = "Facturas";
         getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null, "", false);
         binding.bottomNav.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.factura:
-                    pasta = "Facturas";
-                    getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null, "", false);
-                    break;
-                case R.id.relatorio:
-                    pasta = "Relatorios";
-                    getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, false, null, "", false);
-                    break;
-                default:
-                    break;
+            int itemId = item.getItemId();
+            if (itemId == R.id.factura) {
+                pasta = "Facturas";
+                getDocumentPDF(pasta, R.string.fact_vend, R.string.fac_n_enc, false, null, "", false);
+            } else if (itemId == R.id.relatorio) {
+                pasta = "Relatorios";
+                getDocumentPDF(pasta, R.string.rel_dia_ven, R.string.rel_n_enc, false, null, "", false);
             }
             return true;
         });
