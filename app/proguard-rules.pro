@@ -54,3 +54,15 @@
 
     -keep class javax.**  { *; }
     -keep class org.**  { *; }
+
+    # proguard
+    # Regras para Rhino (motor de JavaScript, MUITO IMPORTANTE)-keep class org.mozilla.javascript.** { *; }
+    -dontwarn org.mozilla.javascript.**
+
+    # Regras para Groupie (pode ser necessário se usar reflexão)
+    -keep public class * extends com.xwray.groupie.Group { <init>(); }
+    -keep class com.xwray.groupie.viewbinding.GroupieViewHolder { <init>(...); }
+
+    # Please add these rules to your existing keep rules in order to suppress warnings.
+    # This is generated automatically by the Android Gradle plugin.
+    -dontwarn sun.reflect.CallerSensitive
